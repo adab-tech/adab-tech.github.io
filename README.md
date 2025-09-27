@@ -7,7 +7,7 @@ Built as a lightweight, zero-dependency static site, it offers structured lesson
 🌐 Live Demo
 This project is hosted live on GitHub Pages. Click the link below to start exploring:
 
-[Your GitHub Pages URL Here, e.g., username.github.io/HausaExplorer]
+adab-tech.github.io/hausa_explorer.html
 
 ✨ Features
 The application is structured into three main views, prioritizing easy navigation and efficient learning:
@@ -53,9 +53,10 @@ Clone the Repository:
 
 git clone [https://github.com/](https://github.com/)[YourUsername]/HausaExplorer.git
 
+
 Local Run: Simply open the index.html file in any web browser (file:///path/to/HausaExplorer/index.html).
 
 GitHub Pages: As currently set up, deployment requires only configuring the repository's Settings > Pages to serve from the main branch root directory.
 
 🤝 Contribution
-We welcome suggestions for dictionary enhancements, new cultural facts, or improvements to the quiz logic! Feel free to open an Issue or submit a Pull Request.
+We welcome suggestions for dictionary enhancements, new cultural facts, or improvements to the quiz logic! Feel free to open an Issue or submit a Pull Request
