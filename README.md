@@ -1,5 +1,5 @@
 🌍 Hausa Explorer: Language & Culture Web App
-Kunnawa! (Let's Go!)
+
 The Hausa Explorer is a comprehensive, single-page educational application designed to introduce users of all levels—from children to language professionals—to the Hausa language and rich cultural heritage.
 
 Built as a lightweight, zero-dependency static site, it offers structured lessons, an extensive dictionary, and interactive quizzes, all instantly accessible in the browser.
@@ -38,7 +38,7 @@ Visual Progress: Tracks score and displays results for immediate feedback.
 🛠️ Technology Stack
 This application is designed for maximum performance and deployability using a purely static stack:
 
-HTML5: The core structure of the entire application.
+HTML5: The core structure of the application.
 
 JavaScript (Vanilla JS): Handles all logic, state management, search functionality, and quiz generation.
 
@@ -51,10 +51,9 @@ The project is designed as a single-file static website (index.html) for ultimat
 
 Clone the Repository:
 
-git clone [https://github.com/](https://github.com/)[YourUsername]/HausaExplorer.git
+git clone [https://github.com/adab-tech/hausa_explorer.git](https://github.com/adab-tech/hausa_explorer.git)
 
-
-Local Run: Simply open the index.html file in any web browser (file:///path/to/HausaExplorer/index.html).
+Local Run: Simply open the index.html file in any web browser (file:///path/to/hausa_explorer/index.html).
 
 GitHub Pages: As currently set up, deployment requires only configuring the repository's Settings > Pages to serve from the main branch root directory.
 
