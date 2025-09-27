@@ -1,5 +1,5 @@
 🌍 Hausa Explorer: Language & Culture Web App
-Kunnawa! (Let's Go!)
+
 The Hausa Explorer is a comprehensive, single-page educational application designed to introduce users of all levels—from children to language professionals—to the Hausa language and rich cultural heritage.
 
 Built as a lightweight, zero-dependency static site, it offers structured lessons, an extensive dictionary, and interactive quizzes, all instantly accessible in the browser.
