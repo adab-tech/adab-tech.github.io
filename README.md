@@ -1,5 +1,5 @@
 🌍 Hausa Explorer: Language & Culture Web App
-
+Kunnawa! (Let's Go!)
 The Hausa Explorer is a comprehensive, single-page educational application designed to introduce users of all levels—from children to language professionals—to the Hausa language and rich cultural heritage.
 
 Built as a lightweight, zero-dependency static site, it offers structured lessons, an extensive dictionary, and interactive quizzes, all instantly accessible in the browser.
@@ -47,19 +47,15 @@ Tailwind CSS: Used for a fully responsive, modern, and visually appealing UI/UX,
 Zero Dependencies: No frameworks (like React or Vue) or external API keys are required.
 
 🚀 Deployment
-The project is designed as a single-file static website (index.html) for ultimate deployment simplicity.
+The project is designed as a single-file static website (hausa_explorer.html) for ultimate deployment simplicity.
 
 Clone the Repository:
 
-git clone [https://github.com/adab-tech/hausa_explorer.git](https://github.com/adab-tech/hausa_explorer.git)
+git clone [https://github.com/adab-tech/adab-tech.github.io.git](https://github.com/adab-tech/adab-tech.github.io.git)
 
-Local Run: Simply open the index.html file in any web browser (file:///path/to/hausa_explorer/index.html).
+Local Run: Simply open the project HTML file, hausa_explorer.html, in any web browser.
 
-GitHub Pages: As currently set up, deployment requires only configuring the repository's Settings > Pages to serve from the main branch root directory.
-
-Local Run: Simply open the index.html file in any web browser (file:///path/to/hausa_explorer/index.html).
-
-GitHub Pages: As currently set up, deployment requires only configuring the repository's Settings > Pages to serve from the main branch root directory.
+GitHub Pages: Deployment is automatic since the repository is named adab-tech.github.io. Ensure the file hausa_explorer.html is located in the root directory.
 
 🤝 Contribution
 We welcome suggestions for dictionary enhancements, new cultural facts, or improvements to the quiz logic! Feel free to open an Issue or submit a Pull Request
