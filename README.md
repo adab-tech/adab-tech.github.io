@@ -51,7 +51,7 @@ The project is designed as a single-file static website (index.html) for ultimat
 
 Clone the Repository:
 
-git clone [https://github.com/adab-tech/hausa_explorer.git](https://github.com/adab-tech/hausa_explorer.git)
+git clone [https://github.com/adab-tech.github.io/hausa_explorer.git](https://github.com/adab-tech.github.io/hausa_explorer.git)
 
 Local Run: Simply open the index.html file in any web browser (file:///path/to/hausa_explorer/index.html).
 
