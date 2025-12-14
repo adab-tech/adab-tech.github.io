@@ -63,19 +63,25 @@ class HausaEvaluator:
             if char in text:
                 results['special_chars_used'].append(char)
         
-        # Check for common substitution errors
-        error_patterns = {
-            'b ': 'ɓ',  # Should be implosive
-            "'y": 'ƴ',   # Should be glottalized y
-            'k ': 'ƙ',   # Should be ejective k
-            'd ': 'ɗ'    # Should be implosive d
-        }
+        # Check for common substitution errors using word boundaries
+        # Look for regular 'b', 'd', 'k' where special characters might be needed
+        import re
         
-        for pattern, correct in error_patterns.items():
-            if pattern in text and correct not in text:
-                results['warnings'].append(
-                    f"Possible missing {correct}: found '{pattern}'"
-                )
+        # These are hints, not strict rules, since context matters
+        if re.search(r'\bb\w', text, re.IGNORECASE) and 'ɓ' not in text:
+            results['warnings'].append(
+                "Found 'b' at word start - check if implosive ɓ is needed"
+            )
+        
+        if re.search(r'\bd\w', text, re.IGNORECASE) and 'ɗ' not in text:
+            results['warnings'].append(
+                "Found 'd' at word start - check if implosive ɗ is needed"
+            )
+        
+        if re.search(r'\bk\w', text, re.IGNORECASE) and 'ƙ' not in text:
+            results['warnings'].append(
+                "Found 'k' in text - check if ejective ƙ is needed"
+            )
         
         # Analyze phoneme usage
         text_lower = text.lower()
@@ -339,10 +345,10 @@ class HausaEvaluator:
         Returns:
             Complete evaluation report
         """
+        from datetime import datetime
+        
         report = {
-            'timestamp': logging.Formatter().formatTime(logging.LogRecord(
-                '', 0, '', 0, '', (), None
-            )),
+            'timestamp': datetime.now().isoformat(),
             'phoneme_alignment': self.calculate_phoneme_alignment(reference, hypothesis),
             'tonal_accuracy': self.calculate_tonal_accuracy(reference, hypothesis),
             'text_validation': self.validate_hausa_text(hypothesis)
