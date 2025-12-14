@@ -6,6 +6,10 @@ A comprehensive AI-powered chatbot system for fluent Hausa language conversation
 - **GPT Models** for natural language understanding
 - **Google Cloud Speech-to-Text** for voice input
 - **Google Cloud Text-to-Speech** for voice output
+- **Microsoft Azure Speech Services** for native Hausa voice synthesis
+- **Mozilla Common Voice Hausa Dataset** for enhanced training
+- **Multiple Dataset Sources** (JW300, OPUS, HausaNLP)
+- **Evaluation Metrics** for phoneme alignment and tonal accuracy
 - **Interactive Web Interface** for seamless user experience
 - **Autonomous Training System** for continuous self-improvement
 
@@ -13,14 +17,39 @@ A comprehensive AI-powered chatbot system for fluent Hausa language conversation
 
 ### Core Capabilities
 - ✅ **Hausa Language Processing**: Fine-tuned GPT model for Hausa understanding and generation
-- ✅ **Speech-to-Text**: Convert Hausa voice input to text using Google Cloud API
-- ✅ **Text-to-Speech**: Generate natural Hausa audio responses
+- ✅ **Dual Speech-to-Text**: Google Cloud + Azure STT for improved accuracy
+- ✅ **Native Voice Synthesis**: Azure neural voices (ha-NG-AbeoNaural, ha-NG-SamuelNeural)
+- ✅ **Multiple Dataset Support**: Mozilla Common Voice, JW300, OPUS, HausaNLP
+- ✅ **Quality Evaluation**: Phoneme alignment and tonal accuracy validation
 - ✅ **Bilingual Support**: Handle both Hausa and English inputs
 - ✅ **Real-time Chat**: Instant responses with conversation history
 - ✅ **Voice Visualization**: Audio waveform animation during recording
 - ✅ **Autonomous Training**: Continuous self-improvement through automatic fine-tuning
 
-### Autonomous Training System 🔥 NEW
+### Enhanced Voice Capabilities 🎙️ NEW
+- **Native Hausa Accents**: Azure neural voices fine-tuned for authentic pronunciation
+- **Dual TTS Providers**: Google Cloud and Azure for reliability and quality
+- **Adjustable Speech Parameters**: Control speaking rate, pitch, and tone
+- **Voice Selection**: Multiple Hausa voices (male/female)
+- **Superior Intonation**: Proper tonal patterns for Hausa language
+
+### Dataset Integration 📚 NEW
+- **Mozilla Common Voice**: 10,000+ validated Hausa speech samples
+- **JW300 Parallel Corpus**: 100,000+ Hausa-English sentence pairs
+- **OPUS Multi-Domain**: Technical, conversational, and formal Hausa text
+- **HausaNLP Resources**: Specialized linguistic datasets
+- **Automated Loading**: One-click dataset download and integration
+- **Format Conversion**: Unified preprocessing across all sources
+
+### Evaluation & Quality Metrics 📊 NEW
+- **Phoneme Alignment**: Validates pronunciation at phoneme level
+- **Tonal Accuracy**: Measures tone mark correctness
+- **Cultural Validation**: Assesses cultural appropriateness
+- **Special Character Detection**: Validates Hausa characters (ɓ, ɗ, ƙ, ƴ)
+- **WER/CER Metrics**: Word and character error rates
+- **Comprehensive Reports**: Detailed evaluation with overall scores
+
+### Autonomous Training System 🔥
 The chatbot now includes a revolutionary autonomous training system that allows it to train itself continuously:
 - **Automatic Data Collection**: Every conversation is logged for future training
 - **Scheduled Training**: Automatically triggers fine-tuning when enough data is collected
@@ -33,6 +62,7 @@ The chatbot now includes a revolutionary autonomous training system that allows 
 - Modern, responsive UI built with Tailwind CSS
 - Flask-based REST API backend
 - Secure API key management
+- Multi-cloud integration (Google Cloud + Azure)
 - Cross-platform compatibility
 - Easy deployment to cloud platforms
 
@@ -45,6 +75,11 @@ adab-tech.github.io/
 ├── backend/
 │   ├── app.py                  # Flask API server
 │   ├── data_preprocessing.py   # Data preparation utilities
+│   ├── dataset_loader.py       # Multi-dataset loader
+│   ├── azure_speech.py         # Azure Speech Services integration
+│   ├── evaluation_metrics.py   # Evaluation framework
+│   ├── fine_tune.py            # Fine-tuning utilities
+│   ├── autonomous_trainer.py   # Autonomous training system
 │   ├── requirements.txt        # Python dependencies
 │   └── .env.example           # Environment variables template
 └── README_CHATBOT.md          # This file
@@ -99,11 +134,31 @@ Access at: `https://adab-tech.github.io/hausa_chatbot.html`
 Create a `.env` file in the `backend` directory:
 
 ```env
+# OpenAI Configuration
 OPENAI_API_KEY=your_openai_api_key
+
+# Google Cloud Configuration
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 GOOGLE_CLOUD_PROJECT=your_project_id
+
+# Azure Speech Services Configuration (NEW)
+AZURE_SPEECH_KEY=your_azure_speech_api_key
+AZURE_SPEECH_REGION=eastus  # or your preferred region
+
+# Flask Configuration
 FLASK_ENV=development
 PORT=5000
+
+# Dataset Configuration (NEW)
+DATASET_CACHE_DIR=./data_cache
+USE_MOZILLA_COMMON_VOICE=true
+USE_JW300_CORPUS=true
+USE_OPUS_CORPUS=true
+
+# Evaluation Settings (NEW)
+ENABLE_PHONEME_VALIDATION=true
+ENABLE_TONAL_VALIDATION=true
+ENABLE_CULTURAL_VALIDATION=true
 ```
 
 ### Google Cloud Setup
@@ -117,11 +172,146 @@ PORT=5000
 5. Download JSON key file
 6. Set path in `GOOGLE_APPLICATION_CREDENTIALS`
 
+### Azure Speech Services Setup (NEW)
+
+1. Go to [Azure Portal](https://portal.azure.com)
+2. Create a new Speech resource
+3. Navigate to "Keys and Endpoint"
+4. Copy one of the keys and the region
+5. Add to `.env` file as `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION`
+
+Benefits of Azure integration:
+- Native Hausa neural voices (ha-NG-AbeoNaural, ha-NG-SamuelNeural)
+- Superior accent and intonation accuracy
+- SSML support for fine-grained control
+- Automatic failover with Google Cloud
+
 ### OpenAI API Setup
 
 1. Sign up at [OpenAI Platform](https://platform.openai.com)
 2. Generate API key
 3. Add to `.env` file
+
+## 📚 Dataset Integration (NEW)
+
+### Automatic Dataset Loading
+
+The system can automatically download and integrate multiple Hausa datasets:
+
+```python
+from dataset_loader import DatasetLoader
+
+loader = DatasetLoader(cache_dir='./data_cache')
+
+# Load Mozilla Common Voice Hausa
+mozilla_data = loader.load_mozilla_common_voice(split='train')
+
+# Load JW300 parallel corpus
+jw300_data = loader.load_jw300_corpus()
+
+# Load OPUS dataset
+opus_data = loader.load_opus_corpus()
+
+# Get statistics
+stats = loader.get_statistics()
+print(f"Total samples: {stats['total_samples']}")
+
+# Export for training
+loader.export_for_training('combined_training.jsonl', format='openai')
+```
+
+### Supported Datasets
+
+1. **Mozilla Common Voice Hausa**
+   - 10,000+ validated speech samples
+   - Audio recordings with transcriptions
+   - Metadata: age, gender, accent
+   - Automatically downloaded from Hugging Face
+
+2. **JW300 Parallel Corpus**
+   - 100,000+ Hausa-English sentence pairs
+   - High-quality translations
+   - Religious and moral content
+   - Good for context understanding
+
+3. **OPUS Multi-Domain**
+   - Technical documentation
+   - Conversational text
+   - Formal language samples
+   - Multiple domains and styles
+
+4. **HausaNLP Corpus**
+   - Specialized linguistic resources
+   - Requires local file (CSV/JSON/TXT)
+   - Custom Hausa NLP datasets
+
+### Using Datasets in Training
+
+```python
+from data_preprocessing import HausaDataPreprocessor
+
+preprocessor = HausaDataPreprocessor()
+
+# Load multiple datasets at once
+data = preprocessor.load_multiple_datasets(
+    use_mozilla=True,
+    use_jw300=True,
+    use_opus=True
+)
+
+# Validate data quality
+if preprocessor.validate_data(data):
+    # Save for fine-tuning
+    preprocessor.save_for_finetuning(data, 'hausa_training.jsonl')
+```
+
+## 📊 Evaluation & Quality Metrics (NEW)
+
+### Using the Evaluation Framework
+
+```python
+from evaluation_metrics import HausaEvaluator
+
+evaluator = HausaEvaluator()
+
+# Comprehensive evaluation
+reference = "Sannu, ina kwana? Na ji daɗi."
+hypothesis = "Sannu, ina kwana? Na ji dadi."
+
+report = evaluator.generate_evaluation_report(
+    reference=reference,
+    hypothesis=hypothesis,
+    include_cultural=True
+)
+
+print(f"Overall Score: {report['overall_score']}")
+print(f"Phoneme Accuracy: {report['phoneme_alignment']['phoneme_accuracy']}")
+print(f"Tonal Accuracy: {report['tonal_accuracy']['tonal_accuracy']}")
+```
+
+### Available Evaluation Metrics
+
+1. **Phoneme Alignment**
+   - Word Error Rate (WER)
+   - Character Error Rate (CER)
+   - Phoneme-level accuracy
+   - Special character correctness
+
+2. **Tonal Accuracy**
+   - Tone mark detection
+   - Tone placement accuracy
+   - Missing/extra tone identification
+
+3. **Cultural Validation**
+   - Greeting detection
+   - Polite expression usage
+   - Common phrase identification
+   - Cultural appropriateness score
+
+4. **Text Validation**
+   - Hausa character validation (ɓ, ɗ, ƙ, ƴ)
+   - Phoneme coverage analysis
+   - Common error detection
 
 ## 🤖 Autonomous Training System
 
@@ -278,27 +468,284 @@ curl -X POST http://localhost:5000/api/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "Sannu, yaya kake?", "history": []}'
 
-# Speech-to-Text (with base64 audio)
+# Google Cloud Speech-to-Text
 curl -X POST http://localhost:5000/api/speech-to-text \
   -H "Content-Type: application/json" \
   -d '{"audio": "base64_audio_data", "language_code": "ha-NG"}'
 
-# Text-to-Speech
+# Google Cloud Text-to-Speech
 curl -X POST http://localhost:5000/api/text-to-speech \
   -H "Content-Type: application/json" \
   -d '{"text": "Sannu, ina kwana?", "language_code": "ha-NG"}'
+
+# Azure Text-to-Speech (NEW)
+curl -X POST http://localhost:5000/api/azure/text-to-speech \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Sannu, ina kwana?", "voice_name": "female", "speaking_rate": 0.9}'
+
+# Azure Speech-to-Text (NEW)
+curl -X POST http://localhost:5000/api/azure/speech-to-text \
+  -H "Content-Type: application/json" \
+  -d '{"audio": "base64_audio_data", "language_code": "ha-NG"}'
+
+# Get available Azure voices (NEW)
+curl http://localhost:5000/api/azure/voices
+
+# Evaluate text (NEW)
+curl -X POST http://localhost:5000/api/evaluate/text \
+  -H "Content-Type: application/json" \
+  -d '{"reference": "Sannu, ina kwana?", "hypothesis": "Sannu, ina kwana?"}'
+
+# Phoneme alignment (NEW)
+curl -X POST http://localhost:5000/api/evaluate/phoneme-alignment \
+  -H "Content-Type: application/json" \
+  -d '{"reference": "Sannu, ina kwana?", "hypothesis": "Sannu, ina kwana?"}'
+
+# Tonal accuracy (NEW)
+curl -X POST http://localhost:5000/api/evaluate/tonal-accuracy \
+  -H "Content-Type: application/json" \
+  -d '{"reference": "Sannu, ina kwana?", "hypothesis": "Sannu, ina kwana?"}'
+
+# Validate Hausa text (NEW)
+curl -X POST http://localhost:5000/api/validate/hausa-text \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Sannu, ina kwana?"}'
+
+# Cultural context evaluation (NEW)
+curl -X POST http://localhost:5000/api/evaluate/cultural-context \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Sannu, ina kwana? Na gode."}'
 ```
 
 ### Testing Checklist
 
 - [ ] Text chat functionality
 - [ ] Voice recording
-- [ ] Speech-to-text accuracy
-- [ ] Text-to-speech quality
+- [ ] Google Cloud speech-to-text accuracy
+- [ ] Azure speech-to-text accuracy
+- [ ] Google Cloud text-to-speech quality
+- [ ] Azure text-to-speech quality (native voices)
 - [ ] Hausa language correctness
+- [ ] Phoneme alignment validation
+- [ ] Tonal accuracy validation
+- [ ] Cultural context validation
 - [ ] Response latency
 - [ ] Error handling
 - [ ] Mobile responsiveness
+- [ ] Dataset loading and integration
+
+## 📚 API Documentation (Enhanced)
+
+### Core Endpoints
+
+#### Chat
+```
+POST /api/chat
+Content-Type: application/json
+
+Request:
+{
+  "message": "User message",
+  "history": [{"role": "user", "content": "..."}],
+  "model": "gpt-3.5-turbo"
+}
+
+Response:
+{
+  "response": "AI response",
+  "model": "gpt-3.5-turbo",
+  "usage": {...}
+}
+```
+
+### Azure Speech Endpoints (NEW)
+
+#### Azure Text-to-Speech
+```
+POST /api/azure/text-to-speech
+Content-Type: application/json
+
+Request:
+{
+  "text": "Text to synthesize",
+  "voice_name": "female" | "male",
+  "language_code": "ha-NG",
+  "speaking_rate": 0.9,
+  "pitch": "default" | "low" | "high"
+}
+
+Response:
+{
+  "audio": "base64_encoded_audio",
+  "format": "mp3",
+  "voice": "female",
+  "service": "azure"
+}
+```
+
+#### Azure Speech-to-Text
+```
+POST /api/azure/speech-to-text
+Content-Type: application/json
+
+Request:
+{
+  "audio": "base64_encoded_audio",
+  "language_code": "ha-NG"
+}
+
+Response:
+{
+  "text": "Transcribed text",
+  "confidence": 1.0,
+  "language": "ha-NG",
+  "service": "azure"
+}
+```
+
+#### Get Available Voices
+```
+GET /api/azure/voices
+
+Response:
+{
+  "voices": [
+    {
+      "id": "female",
+      "name": "ha-NG-AbeoNaural",
+      "language": "ha-NG",
+      "gender": "female",
+      "neural": true
+    },
+    {
+      "id": "male",
+      "name": "ha-NG-SamuelNeural",
+      "language": "ha-NG",
+      "gender": "male",
+      "neural": true
+    }
+  ],
+  "count": 2
+}
+```
+
+### Evaluation Endpoints (NEW)
+
+#### Comprehensive Text Evaluation
+```
+POST /api/evaluate/text
+Content-Type: application/json
+
+Request:
+{
+  "reference": "Reference text",
+  "hypothesis": "Text to evaluate",
+  "include_cultural": true
+}
+
+Response:
+{
+  "phoneme_alignment": {
+    "word_error_rate": 0.0,
+    "character_error_rate": 0.0,
+    "phoneme_accuracy": 100.0,
+    "special_char_accuracy": 100.0,
+    "alignment_score": 100.0
+  },
+  "tonal_accuracy": {
+    "tonal_accuracy": 100.0,
+    "tone_matches": 5,
+    "tone_mismatches": 0
+  },
+  "cultural_context": {
+    "cultural_greetings": ["sannu"],
+    "polite_expressions": [],
+    "cultural_score": 20.0
+  },
+  "overall_score": 95.5
+}
+```
+
+#### Phoneme Alignment
+```
+POST /api/evaluate/phoneme-alignment
+Content-Type: application/json
+
+Request:
+{
+  "reference": "Reference text",
+  "hypothesis": "Text to evaluate"
+}
+
+Response:
+{
+  "word_error_rate": 0.0,
+  "character_error_rate": 0.0,
+  "phoneme_accuracy": 100.0,
+  "special_char_accuracy": 100.0,
+  "alignment_score": 100.0
+}
+```
+
+#### Tonal Accuracy
+```
+POST /api/evaluate/tonal-accuracy
+Content-Type: application/json
+
+Request:
+{
+  "reference": "Reference text with tone marks",
+  "hypothesis": "Text to evaluate"
+}
+
+Response:
+{
+  "tonal_accuracy": 100.0,
+  "tone_matches": 5,
+  "tone_mismatches": 0,
+  "missing_tones": 0,
+  "extra_tones": 0
+}
+```
+
+#### Validate Hausa Text
+```
+POST /api/validate/hausa-text
+Content-Type: application/json
+
+Request:
+{
+  "text": "Hausa text to validate"
+}
+
+Response:
+{
+  "is_valid": true,
+  "errors": [],
+  "warnings": [],
+  "special_chars_used": ["ɓ", "ƙ"],
+  "phoneme_coverage": {"s": 2, "n": 2, ...}
+}
+```
+
+#### Cultural Context Evaluation
+```
+POST /api/evaluate/cultural-context
+Content-Type: application/json
+
+Request:
+{
+  "text": "Hausa text to evaluate"
+}
+
+Response:
+{
+  "cultural_greetings": ["sannu", "ina kwana"],
+  "polite_expressions": ["na gode"],
+  "common_phrases": ["lafiya lau"],
+  "cultural_score": 30.0
+}
+```
 
 ## 🌐 Deployment
 
