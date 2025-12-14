@@ -24,3 +24,16 @@ Thumbs.db
 
 # Environment
 .env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+backend/venv/
+backend/.env
+*.log
+
+# Model files
+*.jsonl
+model_info.json

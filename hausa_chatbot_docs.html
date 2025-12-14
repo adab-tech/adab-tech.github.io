@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hausa Chatbot Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        pre { background: #1e293b; color: #e2e8f0; border-radius: 0.5rem; }
+        code { font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-5xl mx-auto p-6">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-2xl shadow-xl p-8 mb-8">
+            <h1 class="text-4xl font-bold mb-2">Hausa AI Chatbot Documentation</h1>
+            <p class="text-lg text-purple-100">Complete Setup & Deployment Guide</p>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Table of Contents</h2>
+            <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                <li><a href="#overview" class="text-purple-600 hover:underline">Project Overview</a></li>
+                <li><a href="#features" class="text-purple-600 hover:underline">Features</a></li>
+                <li><a href="#architecture" class="text-purple-600 hover:underline">System Architecture</a></li>
+                <li><a href="#setup" class="text-purple-600 hover:underline">Installation & Setup</a></li>
+                <li><a href="#data-prep" class="text-purple-600 hover:underline">Data Preparation</a></li>
+                <li><a href="#fine-tuning" class="text-purple-600 hover:underline">GPT Fine-Tuning</a></li>
+                <li><a href="#speech-apis" class="text-purple-600 hover:underline">Speech API Integration</a></li>
+                <li><a href="#deployment" class="text-purple-600 hover:underline">Deployment</a></li>
+                <li><a href="#testing" class="text-purple-600 hover:underline">Testing</a></li>
+                <li><a href="#troubleshooting" class="text-purple-600 hover:underline">Troubleshooting</a></li>
+            </ol>
+        </div>
+
+        <!-- Overview -->
+        <div id="overview" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">1. Project Overview</h2>
+            <p class="text-gray-700 mb-4">
+                The Hausa AI Chatbot is a comprehensive conversational AI system that enables fluent communication 
+                in the Hausa language using advanced GPT models integrated with Google Cloud's Speech-to-Text and 
+                Text-to-Speech APIs.
+            </p>
+            <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded">
+                <p class="font-semibold text-purple-900">Key Objectives:</p>
+                <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                    <li>Fine-tune GPT models for Hausa language understanding</li>
+                    <li>Enable voice-based interaction in Hausa</li>
+                    <li>Provide natural, culturally-aware responses</li>
+                    <li>Support both text and voice input/output</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div id="features" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">2. Features</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">Text Features</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>Real-time text chat in Hausa</li>
+                        <li>Context-aware conversations</li>
+                        <li>English-Hausa bilingual support</li>
+                        <li>Chat history management</li>
+                    </ul>
+                </div>
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-2">Voice Features</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>Speech-to-Text (Hausa)</li>
+                        <li>Text-to-Speech (Hausa)</li>
+                        <li>Audio visualization</li>
+                        <li>Natural voice synthesis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture -->
+        <div id="architecture" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">3. System Architecture</h2>
+            <div class="bg-gray-100 p-6 rounded-lg mb-4">
+                <pre class="text-sm overflow-x-auto">
+┌─────────────────┐
+│   Frontend UI   │ (hausa_chatbot.html)
+│   - HTML/JS     │
+│   - Tailwind    │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Backend API    │ (Flask Application)
+│  - app.py       │
+│  - Routes       │
+└────────┬────────┘
+         │
+    ┌────┴────┐
+    ▼         ▼
+┌────────┐ ┌──────────┐
+│  GPT   │ │  Google  │
+│  API   │ │  Cloud   │
+└────────┘ └──────────┘
+            </pre>
+            </div>
+            <p class="text-gray-700">
+                <strong>Components:</strong><br>
+                • <strong>Frontend:</strong> Single-page application with voice recording capabilities<br>
+                • <strong>Backend:</strong> Flask API handling GPT and Google Cloud integrations<br>
+                • <strong>GPT Model:</strong> Fine-tuned or prompted for Hausa language<br>
+                • <strong>Google Cloud:</strong> Speech-to-Text and Text-to-Speech services
+            </p>
+        </div>
+
+        <!-- Setup -->
+        <div id="setup" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">4. Installation & Setup</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">4.1 Prerequisites</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                <li>Python 3.8 or higher</li>
+                <li>Node.js (for package management)</li>
+                <li>OpenAI API account and key</li>
+                <li>Google Cloud Platform account</li>
+                <li>Git</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">4.2 Backend Setup</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Clone the repository
+git clone https://github.com/adab-tech/adab-tech.github.io.git
+cd adab-tech.github.io/backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your API keys</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">4.3 Google Cloud Setup</h3>
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-4">
+                <p class="font-semibold text-blue-900 mb-2">Steps:</p>
+                <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                    <li>Go to <a href="https://console.cloud.google.com" class="text-blue-600 underline">Google Cloud Console</a></li>
+                    <li>Create a new project or select existing</li>
+                    <li>Enable Speech-to-Text API</li>
+                    <li>Enable Text-to-Speech API</li>
+                    <li>Create service account and download JSON credentials</li>
+                    <li>Set GOOGLE_APPLICATION_CREDENTIALS in .env</li>
+                </ol>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">4.4 OpenAI API Setup</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Get your API key from https://platform.openai.com
+# Add to .env file:
+OPENAI_API_KEY=sk-your-api-key-here</code></pre>
+            </div>
+        </div>
+
+        <!-- Data Preparation -->
+        <div id="data-prep" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">5. Data Preparation</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">5.1 Hausa Dataset Sources</h3>
+            <ul class="list-disc list-inside text-gray-700 mb-4 space-y-2">
+                <li><strong>HausaNLP:</strong> Open-source Hausa language datasets</li>
+                <li><strong>JW300:</strong> Parallel corpus with Hausa translations</li>
+                <li><strong>OPUS:</strong> Open parallel corpus collections</li>
+                <li><strong>Custom data:</strong> Collect from Hausa news sites, literature, conversations</li>
+            </ul>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">5.2 Data Format</h3>
+            <p class="text-gray-700 mb-3">Prepare data in conversation format:</p>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>{
+  "messages": [
+    {"role": "system", "content": "You are a helpful Hausa assistant."},
+    {"role": "user", "content": "Sannu, ina kwana?"},
+    {"role": "assistant", "content": "Lafiya lau. Na gode. Yaya kake?"}
+  ]
+}</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">5.3 Using the Preprocessor</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>python data_preprocessing.py
+
+# Or use programmatically:
+from data_preprocessing import HausaDataPreprocessor
+
+preprocessor = HausaDataPreprocessor()
+data = preprocessor.load_from_csv('hausa_data.csv')
+preprocessor.validate_data(data)
+preprocessor.save_for_finetuning(data, 'training.jsonl')</code></pre>
+            </div>
+        </div>
+
+        <!-- Fine-Tuning -->
+        <div id="fine-tuning" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">6. GPT Fine-Tuning</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">6.1 Prepare Training Data</h3>
+            <p class="text-gray-700 mb-3">Ensure your data is in JSONL format with at least 10 examples (recommended: 100+)</p>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">6.2 Upload Training Data</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>import openai
+
+# Upload training file
+with open("hausa_training.jsonl", "rb") as f:
+    response = openai.File.create(
+        file=f,
+        purpose='fine-tune'
+    )
+    
+file_id = response.id
+print(f"File uploaded: {file_id}")</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">6.3 Create Fine-Tuning Job</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Create fine-tuning job
+response = openai.FineTuningJob.create(
+    training_file=file_id,
+    model="gpt-3.5-turbo"
+)
+
+job_id = response.id
+print(f"Fine-tuning job created: {job_id}")
+
+# Check status
+status = openai.FineTuningJob.retrieve(job_id)
+print(f"Status: {status.status}")</code></pre>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-600 p-4 rounded">
+                <p class="font-semibold text-yellow-900">Note:</p>
+                <p class="text-gray-700 mt-1">
+                    Fine-tuning can take several hours to complete. Monitor the status regularly.
+                    Once complete, update the model ID in your backend configuration.
+                </p>
+            </div>
+        </div>
+
+        <!-- Speech APIs -->
+        <div id="speech-apis" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">7. Speech API Integration</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">7.1 Speech-to-Text Configuration</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>from google.cloud import speech
+
+client = speech.SpeechClient()
+
+config = speech.RecognitionConfig(
+    encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+    sample_rate_hertz=16000,
+    language_code="ha-NG",  # Hausa (Nigeria)
+    alternative_language_codes=["en-US"],
+    enable_automatic_punctuation=True
+)</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">7.2 Text-to-Speech Configuration</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>from google.cloud import texttospeech
+
+client = texttospeech.TextToSpeechClient()
+
+voice = texttospeech.VoiceSelectionParams(
+    language_code="ha-NG",
+    name="ha-NG-Standard-A"
+)
+
+audio_config = texttospeech.AudioConfig(
+    audio_encoding=texttospeech.AudioEncoding.MP3,
+    speaking_rate=0.9,
+    pitch=0.0
+)</code></pre>
+            </div>
+
+            <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded">
+                <p class="font-semibold text-blue-900">Available Hausa Voices:</p>
+                <ul class="list-disc list-inside text-gray-700 mt-2">
+                    <li>ha-NG-Standard-A (Female)</li>
+                    <li>ha-NG-Wavenet-A (Female, higher quality)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Deployment -->
+        <div id="deployment" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">8. Deployment</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">8.1 Local Deployment</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Start the backend server
+cd backend
+python app.py
+
+# Server will run on http://localhost:5000
+# Open hausa_chatbot.html in browser</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">8.2 Cloud Deployment (AWS)</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Using AWS Elastic Beanstalk
+eb init -p python-3.8 hausa-chatbot
+eb create hausa-chatbot-env
+eb deploy
+
+# Or using Docker
+docker build -t hausa-chatbot .
+docker run -p 5000:5000 hausa-chatbot</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">8.3 Frontend Deployment (GitHub Pages)</h3>
+            <p class="text-gray-700 mb-3">The frontend is already configured for GitHub Pages. Simply push to the main branch.</p>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code>git add hausa_chatbot.html
+git commit -m "Add Hausa chatbot"
+git push origin main
+
+# Access at: https://adab-tech.github.io/hausa_chatbot.html</code></pre>
+            </div>
+        </div>
+
+        <!-- Testing -->
+        <div id="testing" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">9. Testing</h2>
+            
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">9.1 Backend API Testing</h3>
+            <div class="bg-gray-900 text-gray-100 p-4 rounded-lg mb-4 overflow-x-auto">
+                <pre><code># Test health endpoint
+curl http://localhost:5000/api/health
+
+# Test chat endpoint
+curl -X POST http://localhost:5000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Sannu", "history": []}'</code></pre>
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">9.2 Testing Checklist</h3>
+            <ul class="list-disc list-inside text-gray-700 space-y-2">
+                <li>✓ Text input/output functionality</li>
+                <li>✓ Voice recording and transcription</li>
+                <li>✓ Text-to-speech playback</li>
+                <li>✓ Hausa language accuracy</li>
+                <li>✓ Response time and latency</li>
+                <li>✓ Error handling</li>
+                <li>✓ Cross-browser compatibility</li>
+            </ul>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div id="troubleshooting" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">10. Troubleshooting</h2>
+            
+            <div class="space-y-4">
+                <div class="border-l-4 border-red-500 pl-4">
+                    <p class="font-semibold text-gray-800">Issue: API Key Not Working</p>
+                    <p class="text-gray-700">Solution: Verify your API key is correctly set in .env and has proper permissions</p>
+                </div>
+                
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <p class="font-semibold text-gray-800">Issue: Google Cloud Authentication Failed</p>
+                    <p class="text-gray-700">Solution: Ensure GOOGLE_APPLICATION_CREDENTIALS points to valid JSON credentials file</p>
+                </div>
+                
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-semibold text-gray-800">Issue: Microphone Access Denied</p>
+                    <p class="text-gray-700">Solution: Enable microphone permissions in browser settings. Use HTTPS for production.</p>
+                </div>
+                
+                <div class="border-l-4 border-green-500 pl-4">
+                    <p class="font-semibold text-gray-800">Issue: CORS Errors</p>
+                    <p class="text-gray-700">Solution: Ensure flask-cors is installed and properly configured in backend</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-2xl shadow-xl p-6 text-center">
+            <p class="text-lg mb-2">For support and updates:</p>
+            <a href="https://github.com/adab-tech/adab-tech.github.io" class="text-purple-200 hover:text-white underline">
+                GitHub Repository
+            </a>
+        </div>
+    </div>
+</body>
+</html>

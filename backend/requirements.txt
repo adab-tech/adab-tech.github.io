@@ -1,0 +1,7 @@
+flask==2.3.3
+flask-cors==4.0.0
+openai==0.27.8
+google-cloud-speech==2.21.0
+google-cloud-texttospeech==2.14.1
+python-dotenv==1.0.0
+gunicorn==21.2.0
