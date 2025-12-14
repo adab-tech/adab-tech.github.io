@@ -406,6 +406,24 @@
         justify-content: center;
       }
     }
+
+    /* ========================================
+       UTILITY CLASSES
+       Reusable helper classes
+       ======================================== */
+    .note-text {
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--muted-text);
+      font-size: 0.9rem;
+    }
+    .note-text.contact-note {
+      margin-top: 1.5rem;
+    }
+    .note-text a {
+      color: var(--accent-color);
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -509,7 +527,7 @@
         <a href="cv.pdf" class="btn-download" download>
           📄 Download My CV (PDF)
         </a>
-        <p style="text-align: center; margin-top: 1rem; color: var(--muted-text); font-size: 0.9rem;">
+        <p class="note-text">
           <em>Note: Add your CV PDF file as "cv.pdf" in the repository root.</em>
         </p>
       </div>
@@ -529,7 +547,7 @@
 
         <button type="submit">Send Message</button>
       </form>
-      <p style="text-align: center; margin-top: 1.5rem; color: var(--muted-text); font-size: 0.9rem;">
+      <p class="note-text contact-note">
         <em>Note: To enable contact form functionality, sign up at <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a> or similar service and update the form action URL. Alternatively, implement server-side form handling.</em>
       </p>
     </section>
