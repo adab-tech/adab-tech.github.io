@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adamu Danjuma — Portfolio, Blog & Poetry</title>
+  <meta name="description" content="Portfolio, blog, and poetry of Adamu Danjuma, expert in literature, AI, and tech writing. Connect, collaborate, and explore insights." />
+  <style>
+    /* ===========================
+       CSS Variables & Root Styles
+       =========================== */
+    :root {
+      --primary-color: #0B3D91;
+      --secondary-color: #004080;
+      --accent-color: #007ACC;
+      --background-color: #F5F7FA;
+      --text-color: #222;
+      --muted-text: #555;
+      --border-color: #E1E4E8;
+      --hover-shadow: rgba(11, 61, 145, 0.25);
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* ===========================
+       Base Styles
+       =========================== */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s ease, transform 0.2s ease;
+    }
+    
+    a:hover,
+    a:focus {
+      color: var(--primary-color);
+      outline: none;
+    }
+    
+    /* ===========================
+       Header & Navigation
+       =========================== */
+    header {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    
+    nav {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+    }
+    
+    nav a {
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      color: white;
+      border-radius: 4px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    /* CV Download Button */
+    .cv-download {
+      background-color: var(--accent-color);
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 700;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    .cv-download:hover {
+      background-color: #005A9C;
+      transform: translateY(-2px);
+    }
+    
+    /* ===========================
+       Main Content Area
+       =========================== */
+    main {
+      max-width: 1100px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem;
+    }
+    
+    section {
+      margin-bottom: 4rem;
+    }
+    
+    section h2 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      border-bottom: 3px solid var(--accent-color);
+      padding-bottom: 0.5rem;
+    }
+    
+    /* ===========================
+       Hero Section
+       =========================== */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(11, 61, 145, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .hero:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(11, 61, 145, 0.2);
+    }
+    
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary-color);
+      border: none;
+    }
+    
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted-text);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: white;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 122, 204, 0.3);
+    }
+    
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(11, 61, 145, 0.4);
+      outline: none;
+    }
+
+    /* ===========================
+       About Me Section
+       =========================== */
+    .about-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(11, 61, 145, 0.1);
+      line-height: 1.8;
+    }
+    
+    .about-content p {
+      margin-bottom: 1.2rem;
+      color: var(--text-color);
+      font-size: 1.05rem;
+    }
+    
+    .about-content ul {
+      list-style-position: inside;
+      color: var(--muted-text);
+      margin-left: 1rem;
+    }
+    
+    .about-content ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ===========================
+       Portfolio Section
+       =========================== */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    
+    .portfolio-item {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(11, 61, 145, 0.12);
+      padding: 2rem;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      border-left: 4px solid var(--accent-color);
+    }
+    
+    .portfolio-item:hover {
+      box-shadow: 0 8px 25px var(--hover-shadow);
+      transform: translateY(-5px);
+    }
+    
+    .portfolio-item h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    .portfolio-item p {
+      color: var(--muted-text);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    /* ===========================
+       Blog/Op-Ed Section
+       =========================== */
+    .blog-posts {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .blog-post {
+      background: white;
+      padding: 2rem 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(11, 61, 145, 0.12);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .blog-post:hover {
+      box-shadow: 0 8px 25px var(--hover-shadow);
+      transform: translateX(5px);
+    }
+    
+    .blog-post h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .blog-post h3 a {
+      color: var(--primary-color);
+      transition: color 0.3s ease;
+    }
+    
+    .blog-post h3 a:hover {
+      color: var(--accent-color);
+    }
+    
+    .blog-post .meta {
+      color: var(--muted-text);
+      font-size: 0.9rem;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+    
+    .blog-post p {
+      color: var(--text-color);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+    
+    .blog-post a.read-more {
+      font-weight: 700;
+      color: var(--accent-color);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: gap 0.3s ease;
+    }
+    
+    .blog-post a.read-more:hover {
+      gap: 0.6rem;
+      text-decoration: underline;
+    }
+
+    /* ===========================
+       Poetry Section
+       =========================== */
+    .poetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    
+    .poetry-item {
+      background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(11, 61, 145, 0.12);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      border-top: 4px solid var(--accent-color);
+    }
+    
+    .poetry-item:hover {
+      box-shadow: 0 8px 25px var(--hover-shadow);
+      transform: translateY(-5px);
+    }
+    
+    .poetry-item h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+    
+    .poetry-item .poem-text {
+      color: var(--text-color);
+      font-size: 1rem;
+      line-height: 1.8;
+      font-family: Georgia, 'Times New Roman', serif;
+      white-space: pre-line;
+      margin-bottom: 1rem;
+    }
+    
+    .poetry-item .poem-summary {
+      color: var(--muted-text);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* ===========================
+       Contact Section
+       =========================== */
+    .contact-form {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(11, 61, 145, 0.12);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+    
+    .contact-form label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+    
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1.5rem;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      font-size: 1rem;
+      font-family: var(--font-family);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
+      outline: none;
+    }
+    
+    .contact-form button {
+      background-color: var(--accent-color);
+      color: white;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 122, 204, 0.3);
+    }
+    
+    .contact-form button:hover,
+    .contact-form button:focus {
+      background-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(11, 61, 145, 0.4);
+      outline: none;
+    }
+
+    /* ===========================
+       Social Media Icons
+       =========================== */
+    .social-icons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 3px 8px rgba(0, 122, 204, 0.3);
+    }
+    
+    .social-icons a:hover {
+      background-color: var(--primary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(11, 61, 145, 0.4);
+    }
+    
+    .social-icons a svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    /* ===========================
+       Footer
+       =========================== */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      user-select: none;
+    }
+    
+    footer p {
+      margin: 0.5rem 0;
+    }
+
+    /* ===========================
+       Responsive Design
+       =========================== */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .hero h2 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      section h2 {
+        font-size: 1.6rem;
+      }
+      
+      .portfolio-grid,
+      .poetry-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .social-icons {
+        gap: 1rem;
+      }
+      
+      .social-icons a {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ===========================
+       Header with Navigation
+       =========================== -->
+  <header>
+    <h1>Adamu Danjuma</h1>
+    <nav aria-label="Primary Navigation">
+      <a href="#about">About</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#blog">Blog</a>
+      <a href="#poetry">Poetry</a>
+      <a href="#contact">Contact</a>
+      <!-- TODO: Update CV path to actual file location before deployment -->
+      <a href="assets/cv/adamu-danjuma-cv.pdf" class="cv-download" download>Download CV</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===========================
+         Hero Section
+         =========================== -->
+    <section class="hero" aria-label="Introduction">
+      <h2>Welcome! I'm Adamu Danjuma</h2>
+      <p>PhD candidate, multilingual AI trainer, writer, poet, and tech enthusiast. I help clients and collaborators with research, writing, AI data annotation, and digital storytelling.</p>
+      <a href="#contact" class="btn-primary">Get in Touch</a>
+    </section>
+
+    <!-- ===========================
+         About Me Section
+         =========================== -->
+    <section id="about" aria-label="About Me">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <p>
+          I am a passionate researcher and writer with expertise spanning literature, artificial intelligence, and multilingual communication. 
+          Currently pursuing my PhD, I focus on Francophone African literature, postcolonial theory, and cultural memory studies.
+        </p>
+        <p>
+          My work bridges the worlds of academia and technology. As a multilingual AI trainer, I contribute to cutting-edge NLP projects, 
+          helping develop more inclusive and culturally aware language models. I'm also deeply committed to creative writing, particularly poetry, 
+          which allows me to explore themes of identity, culture, and human connection.
+        </p>
+        <p><strong>Key Areas of Expertise:</strong></p>
+        <ul>
+          <li>Francophone African Literature & Postcolonial Theory</li>
+          <li>AI Language Data Annotation & NLP Training</li>
+          <li>Technical Writing, Translation & Editing</li>
+          <li>Creative Writing & Poetry</li>
+          <li>Digital Storytelling & Content Strategy</li>
+        </ul>
+        <p>
+          I'm always open to collaboration on research projects, writing opportunities, and innovative tech initiatives that make a positive impact.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===========================
+         Portfolio Section
+         =========================== -->
+    <section id="portfolio" aria-label="Portfolio">
+      <h2>Portfolio</h2>
+      <div class="portfolio-grid">
+        <article class="portfolio-item">
+          <h3>Francophone African Literature Research</h3>
+          <p>In-depth analysis and academic writing on postcolonial literature, cultural memory, and contemporary African narratives. Published in peer-reviewed journals and presented at international conferences.</p>
+        </article>
+        <article class="portfolio-item">
+          <h3>AI Language Data Annotation</h3>
+          <p>Expert annotation and training data preparation for multilingual NLP projects. Specialized in Hausa, French, and English language processing with cultural context awareness.</p>
+        </article>
+        <article class="portfolio-item">
+          <h3>Technical Writing & Translation</h3>
+          <p>Clear and precise technical documentation, translations, and editing services across multiple languages. Focus on accessibility and user-centered content design.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===========================
+         Blog/Op-Ed Section
+         =========================== -->
+    <section id="blog" aria-label="Blog & Op-Ed">
+      <h2>Blog & Op-Ed</h2>
+      <div class="blog-posts">
+        <article class="blog-post">
+          <h3><a href="#">Exploring AI's Impact on Language Research</a></h3>
+          <p class="meta">Published: December 10, 2024</p>
+          <p>
+            How artificial intelligence is revolutionizing language data analysis and annotation. This piece examines the intersection 
+            of computational linguistics and cultural preservation, exploring both opportunities and challenges in developing inclusive AI systems.
+          </p>
+          <a href="#" class="read-more">Read full article →</a>
+        </article>
+        
+        <article class="blog-post">
+          <h3><a href="#">The Role of Postcolonial Theory Today</a></h3>
+          <p class="meta">Published: November 28, 2024</p>
+          <p>
+            Reflecting on how postcolonial perspectives inform contemporary literature and culture. An analysis of current debates 
+            in literary studies and the continued relevance of postcolonial frameworks in understanding global narratives.
+          </p>
+          <a href="#" class="read-more">Read full article →</a>
+        </article>
+        
+        <article class="blog-post">
+          <h3><a href="#">Digital Storytelling in African Contexts</a></h3>
+          <p class="meta">Published: November 15, 2024</p>
+          <p>
+            Exploring innovative approaches to preserving and sharing African stories through digital media. This essay discusses 
+            the potential of technology to amplify marginalized voices while maintaining cultural authenticity and narrative integrity.
+          </p>
+          <a href="#" class="read-more">Read full article →</a>
+        </article>
+        
+        <article class="blog-post">
+          <h3><a href="#">Multilingualism and Identity in Modern Literature</a></h3>
+          <p class="meta">Published: October 22, 2024</p>
+          <p>
+            An examination of how contemporary African writers navigate multiple languages and cultural identities in their work. 
+            This piece analyzes linguistic choices as acts of resistance, creativity, and cultural negotiation.
+          </p>
+          <a href="#" class="read-more">Read full article →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===========================
+         Poetry Section
+         =========================== -->
+    <section id="poetry" aria-label="Poetry">
+      <h2>Poetry</h2>
+      <div class="poetry-grid">
+        <article class="poetry-item">
+          <h3>Whispers of the Sahel</h3>
+          <div class="poem-text">Wind carries ancient stories
+Through dusty paths and village gates
+Where baobabs stand sentinel
+Guarding memories of our ancestors
+
+The harmattan speaks in riddles
+Of kingdoms risen, fallen, reborn
+Each grain of sand a witness
+To the passage of countless suns</div>
+          <p class="poem-summary">A reflection on cultural heritage and the enduring spirit of the Sahel region.</p>
+        </article>
+        
+        <article class="poetry-item">
+          <h3>Between Languages</h3>
+          <div class="poem-text">I live in the space between words
+Where French meets Hausa meets English
+A linguistic dance, a cultural bridge
+Each tongue a different way of seeing
+
+My thoughts wear many coats
+Switching, blending, becoming new
+Identity is not singular
+But a symphony of voices singing as one</div>
+          <p class="poem-summary">An exploration of multilingual identity and the richness of cultural hybridity.</p>
+        </article>
+        
+        <article class="poetry-item">
+          <h3>Digital Horizons</h3>
+          <div class="poem-text">In the glow of screens we gather
+Across oceans, across time zones
+Stories flow like electric currents
+Connecting hearts in the digital age
+
+Yet beneath the code and pixels
+The human spirit remains unchanged
+Seeking connection, meaning, truth
+In this brave new world we're building</div>
+          <p class="poem-summary">A meditation on technology, human connection, and the future of storytelling.</p>
+        </article>
+        
+        <article class="poetry-item">
+          <h3>The Scholar's Journey</h3>
+          <div class="poem-text">From dusty books to digital screens
+The quest for knowledge never ends
+Each question answered births ten more
+A cycle that both humbles and transcends
+
+Through sleepless nights and endless drafts
+Through doubt and breakthrough, fear and pride
+The scholar walks a winding path
+With curiosity as guide</div>
+          <p class="poem-summary">
+            A meditation on the academic journey from curiosity to discovery, exploring themes of knowledge, 
+            perseverance, and the transformative power of learning.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ===========================
+         Contact Section
+         =========================== -->
+    <section id="contact" aria-label="Contact">
+      <h2>Contact Me</h2>
+      <!-- TODO: Update form action with actual email or implement server-side form handler -->
+      <form class="contact-form" action="mailto:adamu.danjuma@example.com" method="GET" enctype="text/plain">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" placeholder="Your full name" required />
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Your email address" required />
+
+        <label for="message">Message</label>
+        <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
+
+        <button type="submit">Send Message</button>
+      </form>
+      
+      <!-- Social Media Icons -->
+      <!-- TODO: Update social media URLs with actual profile links before deployment -->
+      <div class="social-icons">
+        <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
+        </a>
+        <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        </a>
+        <a href="mailto:adamu.danjuma@example.com" aria-label="Email">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===========================
+       Footer
+       =========================== -->
+  <footer>
+    <p>© 2025 Adamu Danjuma. All rights reserved.</p>
+    <p>Built with passion for literature, technology, and creative expression.</p>
+  </footer>
+</body>
+</html>
