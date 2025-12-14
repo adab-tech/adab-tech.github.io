@@ -1,7 +1,7 @@
 """
 Hausa GPT Chatbot Backend API
 This Flask application provides the backend for the Hausa AI chatbot,
-integrating GPT models and Google Cloud Speech APIs.
+integrating GPT models, Google Cloud Speech APIs, and Azure Speech Services.
 """
 
 from flask import Flask, request, jsonify, send_file
@@ -14,6 +14,8 @@ import io
 import base64
 from dotenv import load_dotenv
 from autonomous_trainer import get_trainer
+from azure_speech import AzureSpeechService
+from evaluation_metrics import HausaEvaluator
 
 # Load environment variables
 load_dotenv()
@@ -29,6 +31,12 @@ GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 speech_client = speech.SpeechClient()
 tts_client = texttospeech.TextToSpeechClient()
+
+# Initialize Azure Speech Service
+azure_speech = AzureSpeechService()
+
+# Initialize evaluator
+evaluator = HausaEvaluator()
 
 # Initialize autonomous trainer
 trainer = get_trainer()
@@ -313,6 +321,244 @@ def trigger_training_now():
                 'message': 'Not enough data or training failed',
                 'current_status': trainer.get_status()
             }), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/azure/text-to-speech', methods=['POST'])
+def azure_text_to_speech():
+    """
+    Azure Text-to-Speech endpoint with native Hausa voices
+    
+    Request body:
+    {
+        "text": "Text to convert to speech",
+        "voice_name": "female" or "male",
+        "language_code": "ha-NG",
+        "speaking_rate": 0.9,
+        "pitch": "default"
+    }
+    """
+    try:
+        data = request.json
+        text = data.get('text')
+        voice_name = data.get('voice_name', 'female')
+        language_code = data.get('language_code', 'ha-NG')
+        speaking_rate = data.get('speaking_rate', 0.9)
+        pitch = data.get('pitch', 'default')
+        
+        if not text:
+            return jsonify({'error': 'Text is required'}), 400
+        
+        # Synthesize speech using Azure
+        audio_base64 = azure_speech.text_to_speech_base64(
+            text=text,
+            voice_name=voice_name,
+            language_code=language_code,
+            speaking_rate=speaking_rate,
+            pitch=pitch
+        )
+        
+        if not audio_base64:
+            return jsonify({'error': 'Failed to generate speech'}), 500
+        
+        return jsonify({
+            'audio': audio_base64,
+            'format': 'mp3',
+            'voice': voice_name,
+            'service': 'azure'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/azure/speech-to-text', methods=['POST'])
+def azure_speech_to_text():
+    """
+    Azure Speech-to-Text endpoint for Hausa
+    
+    Request body:
+    {
+        "audio": "base64 encoded audio data",
+        "language_code": "ha-NG"
+    }
+    """
+    try:
+        data = request.json
+        audio_content = base64.b64decode(data.get('audio'))
+        language_code = data.get('language_code', 'ha-NG')
+        
+        # Recognize speech using Azure
+        result = azure_speech.speech_to_text(audio_content, language_code)
+        
+        if not result:
+            return jsonify({'error': 'Failed to recognize speech'}), 400
+        
+        return jsonify({
+            'text': result['text'],
+            'confidence': result['confidence'],
+            'language': result['language'],
+            'service': 'azure'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/azure/voices', methods=['GET'])
+def get_azure_voices():
+    """
+    Get list of available Azure Hausa voices
+    """
+    try:
+        voices = azure_speech.get_available_voices()
+        return jsonify({
+            'voices': voices,
+            'count': len(voices)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/evaluate/text', methods=['POST'])
+def evaluate_text():
+    """
+    Evaluate Hausa text for phoneme alignment and cultural accuracy
+    
+    Request body:
+    {
+        "reference": "Reference text",
+        "hypothesis": "Text to evaluate",
+        "include_cultural": true
+    }
+    """
+    try:
+        data = request.json
+        reference = data.get('reference')
+        hypothesis = data.get('hypothesis')
+        include_cultural = data.get('include_cultural', True)
+        
+        if not reference or not hypothesis:
+            return jsonify({'error': 'Both reference and hypothesis are required'}), 400
+        
+        # Generate evaluation report
+        report = evaluator.generate_evaluation_report(
+            reference=reference,
+            hypothesis=hypothesis,
+            include_cultural=include_cultural
+        )
+        
+        return jsonify(report)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/evaluate/phoneme-alignment', methods=['POST'])
+def evaluate_phoneme_alignment():
+    """
+    Evaluate phoneme alignment between reference and hypothesis
+    
+    Request body:
+    {
+        "reference": "Reference text",
+        "hypothesis": "Text to evaluate"
+    }
+    """
+    try:
+        data = request.json
+        reference = data.get('reference')
+        hypothesis = data.get('hypothesis')
+        
+        if not reference or not hypothesis:
+            return jsonify({'error': 'Both reference and hypothesis are required'}), 400
+        
+        # Calculate phoneme alignment
+        metrics = evaluator.calculate_phoneme_alignment(reference, hypothesis)
+        
+        return jsonify(metrics)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/evaluate/tonal-accuracy', methods=['POST'])
+def evaluate_tonal_accuracy():
+    """
+    Evaluate tonal accuracy for Hausa text
+    
+    Request body:
+    {
+        "reference": "Reference text with tone marks",
+        "hypothesis": "Text to evaluate"
+    }
+    """
+    try:
+        data = request.json
+        reference = data.get('reference')
+        hypothesis = data.get('hypothesis')
+        
+        if not reference or not hypothesis:
+            return jsonify({'error': 'Both reference and hypothesis are required'}), 400
+        
+        # Calculate tonal accuracy
+        metrics = evaluator.calculate_tonal_accuracy(reference, hypothesis)
+        
+        return jsonify(metrics)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/validate/hausa-text', methods=['POST'])
+def validate_hausa_text():
+    """
+    Validate Hausa text for proper character usage
+    
+    Request body:
+    {
+        "text": "Hausa text to validate"
+    }
+    """
+    try:
+        data = request.json
+        text = data.get('text')
+        
+        if not text:
+            return jsonify({'error': 'Text is required'}), 400
+        
+        # Validate text
+        validation = evaluator.validate_hausa_text(text)
+        
+        return jsonify(validation)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/evaluate/cultural-context', methods=['POST'])
+def evaluate_cultural_context():
+    """
+    Evaluate cultural and contextual appropriateness of Hausa text
+    
+    Request body:
+    {
+        "text": "Hausa text to evaluate"
+    }
+    """
+    try:
+        data = request.json
+        text = data.get('text')
+        
+        if not text:
+            return jsonify({'error': 'Text is required'}), 400
+        
+        # Evaluate cultural context
+        evaluation = evaluator.evaluate_cultural_context(text)
+        
+        return jsonify(evaluation)
+        
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

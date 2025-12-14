@@ -1,11 +1,13 @@
 """
 Data preprocessing utilities for Hausa language fine-tuning
+Supports multiple data sources: Mozilla Common Voice, JW300, OPUS, HausaNLP
 """
 
 import json
 import re
 from typing import List, Dict
 import csv
+from dataset_loader import DatasetLoader
 
 
 class HausaDataPreprocessor:
@@ -116,6 +118,61 @@ class HausaDataPreprocessor:
         
         print(f"Validation passed for {len(data)} items")
         return True
+    
+    def load_multiple_datasets(self, use_mozilla: bool = True,
+                              use_jw300: bool = True,
+                              use_opus: bool = True) -> List[Dict]:
+        """
+        Load and combine multiple datasets
+        
+        Args:
+            use_mozilla: Load Mozilla Common Voice dataset
+            use_jw300: Load JW300 corpus
+            use_opus: Load OPUS corpus
+        
+        Returns:
+            Combined list of training examples
+        """
+        loader = DatasetLoader()
+        all_data = []
+        
+        if use_mozilla:
+            print("Loading Mozilla Common Voice Hausa dataset...")
+            mozilla_data = loader.load_mozilla_common_voice(split='train')
+            # Convert to conversation format
+            for item in mozilla_data:
+                pair = self.prepare_conversation_pair(
+                    prompt=f"Say this in Hausa: {item['text']}",
+                    completion=item['text']
+                )
+                all_data.append(pair)
+        
+        if use_jw300:
+            print("Loading JW300 corpus...")
+            jw300_data = loader.load_jw300_corpus()
+            # Convert to conversation format
+            for item in jw300_data:
+                if item.get('translation'):
+                    pair = self.prepare_conversation_pair(
+                        prompt=item['translation'],
+                        completion=item['text']
+                    )
+                    all_data.append(pair)
+        
+        if use_opus:
+            print("Loading OPUS corpus...")
+            opus_data = loader.load_opus_corpus()
+            # Convert to conversation format
+            for item in opus_data:
+                if item.get('translation'):
+                    pair = self.prepare_conversation_pair(
+                        prompt=item['translation'],
+                        completion=item['text']
+                    )
+                    all_data.append(pair)
+        
+        print(f"\nTotal training examples loaded: {len(all_data)}")
+        return all_data
 
 
 def main():
@@ -127,6 +184,15 @@ def main():
     
     # Example: Load from JSON
     # data = preprocessor.load_from_json('hausa_training_data.json')
+    
+    # Example: Load multiple datasets
+    print("Loading multiple Hausa datasets...")
+    # Uncomment to actually load datasets (requires API access)
+    # data = preprocessor.load_multiple_datasets(
+    #     use_mozilla=True,
+    #     use_jw300=True,
+    #     use_opus=True
+    # )
     
     # Create sample data for demonstration
     sample_data = [
