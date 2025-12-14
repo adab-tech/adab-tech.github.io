@@ -15,7 +15,7 @@ Feel free to reach out via email at [contact@adamu.tech](mailto:contact@adamu.te
 ## Social Media
 
 - **GitHub**: [github.com/adab-tech](https://github.com/adab-tech)
-- **LinkedIn**: [Connect with me on LinkedIn](https://linkedin.com)
+- **LinkedIn**: [Connect with me on LinkedIn](https://linkedin.com/in/adamudanjuma
 - **Twitter**: [@adab_tech](https://twitter.com/adab_tech)
 
 ## Areas of Interest
