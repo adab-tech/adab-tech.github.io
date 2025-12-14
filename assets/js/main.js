@@ -13,6 +13,7 @@
         setupSmoothScrolling();
         setupFilterFeatures();
         highlightCurrentNavLink();
+        addCopyButtonsToCodeBlocks();
     }
 
     /**
