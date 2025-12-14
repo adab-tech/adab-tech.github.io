@@ -6,6 +6,10 @@
   <title>Adamu Danjuma Abubakar — Portfolio & Blog</title>
   <meta name="description" content="Portfolio and blog of Adamu Danjuma Abubakar, expert in literature, AI, and tech writing. Connect, collaborate, and explore insights." />
   <style>
+    /* ========================================
+       CSS CUSTOM PROPERTIES (VARIABLES)
+       Define color scheme and typography
+       ======================================== */
     :root {
       --primary-color: #0B3D91;
       --secondary-color: #004080;
@@ -16,6 +20,10 @@
       --border-color: #E1E4E8;
       --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    /* ========================================
+       GLOBAL RESET & BASE STYLES
+       Ensure consistent box-sizing, smooth scrolling
+       ======================================== */
     * {
       box-sizing: border-box;
     }
@@ -31,6 +39,9 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+    /* ========================================
+       TYPOGRAPHY & LINKS
+       ======================================== */
     a {
       color: var(--accent-color);
       text-decoration: none;
@@ -41,6 +52,10 @@
       color: var(--primary-color);
       outline: none;
     }
+    /* ========================================
+       HEADER & NAVIGATION
+       Sticky header with smooth navigation
+       ======================================== */
     header {
       background-color: var(--primary-color);
       color: white;
@@ -90,6 +105,9 @@
     nav a:hover::after {
       width: 80%;
     }
+    /* ========================================
+       MAIN CONTENT CONTAINER
+       ======================================== */
     main {
       max-width: 1000px;
       margin: 2.5rem auto;
@@ -106,6 +124,10 @@
       border-bottom: 3px solid var(--accent-color);
       display: inline-block;
     }
+    /* ========================================
+       HERO SECTION
+       Eye-catching introduction with gradient
+       ======================================== */
     /* Hero Section */
     .hero {
       text-align: center;
@@ -144,6 +166,10 @@
       outline: none;
     }
 
+    /* ========================================
+       PORTFOLIO SECTION
+       Grid layout with hover effects
+       ======================================== */
     /* Portfolio */
     .portfolio-grid {
       display: grid;
@@ -199,6 +225,10 @@
       margin-bottom: 0.5rem;
     }
 
+    /* ========================================
+       CV SECTION
+       Download section with gradient button
+       ======================================== */
     /* CV Section */
     .cv-section {
       background: white;
@@ -231,6 +261,10 @@
       box-shadow: 0 6px 20px rgba(11, 61, 145, 0.4);
     }
 
+    /* ========================================
+       BLOG SECTION
+       Article listing with smooth hover effects
+       ======================================== */
     /* Blog */
     .blog-posts {
       display: flex;
@@ -268,6 +302,10 @@
       text-decoration: underline;
     }
 
+    /* ========================================
+       CONTACT FORM
+       User-friendly form with focus states
+       ======================================== */
     /* Contact */
     .contact-form {
       background: white;
@@ -319,6 +357,10 @@
       transform: translateY(-2px);
     }
 
+    /* ========================================
+       FOOTER & SOCIAL MEDIA LINKS
+       Professional footer with social icons
+       ======================================== */
     /* Footer */
     footer {
       text-align: center;
@@ -349,6 +391,10 @@
       font-size: 0.95rem;
     }
 
+    /* ========================================
+       RESPONSIVE DESIGN
+       Mobile-friendly navigation adjustments
+       ======================================== */
     /* Responsive nav for small screens */
     @media (max-width: 700px) {
       header {
