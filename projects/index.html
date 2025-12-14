@@ -1,0 +1,30 @@
+---
+layout: default
+title: Projects
+permalink: /projects/
+---
+
+# Projects
+
+A collection of work at the intersection of languages, literature, and AI.
+
+<div class="projects-grid">
+  {% for project in site.projects %}
+  <article class="project-card">
+    <h3><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h3>
+    <p>{{ project.problem | truncate: 200 }}</p>
+    {% if project.tools %}
+    <div class="project-tools">
+      {% for tool in project.tools %}
+      <span class="tag">{{ tool }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <a href="{{ project.url | relative_url }}" class="read-more">Learn more →</a>
+  </article>
+  {% endfor %}
+</div>
+
+{% if site.projects.size == 0 %}
+<p>No projects yet. Check back soon for new work!</p>
+{% endif %}

@@ -1,0 +1,32 @@
+---
+layout: default
+title: Writing
+permalink: /blog/
+---
+
+# Writing
+
+Essays, research notes, and reflections on languages, literature, and artificial intelligence.
+
+<div class="posts-list">
+  {% for post in site.posts %}
+  <article class="post-item">
+    <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+    <div class="post-meta">
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+      {% if post.language and post.language != "en" %}
+      <span class="language-tag">Language: {{ post.language }}</span>
+      {% endif %}
+      {% if post.author %}
+      <span class="author">By {{ post.author }}</span>
+      {% endif %}
+    </div>
+    <p>{{ post.excerpt | strip_html | truncate: 300 }}</p>
+    <a href="{{ post.url | relative_url }}" class="read-more">Read more →</a>
+  </article>
+  {% endfor %}
+</div>
+
+{% if site.posts.size == 0 %}
+<p>No posts yet. Check back soon for new content!</p>
+{% endif %}
