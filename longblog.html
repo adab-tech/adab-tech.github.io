@@ -67,7 +67,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
     header h1 {
       margin: 0;
@@ -506,15 +506,18 @@
           Download my comprehensive curriculum vitae to learn more about my educational background, professional experience, 
           publications, and skills.
         </p>
-        <a href="#" class="btn-download" onclick="alert('CV download functionality will be implemented with a real PDF file. Please add your CV PDF to the repository and update the href attribute.'); return false;">
+        <a href="cv.pdf" class="btn-download" download>
           📄 Download My CV (PDF)
         </a>
+        <p style="text-align: center; margin-top: 1rem; color: var(--muted-text); font-size: 0.9rem;">
+          <em>Note: Add your CV PDF file as "cv.pdf" in the repository root.</em>
+        </p>
       </div>
     </section>
 
     <section id="contact" aria-label="Contact">
       <h2>Contact Me</h2>
-      <form class="contact-form" action="mailto:adamu.abubakar@example.com" method="POST" enctype="text/plain">
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" placeholder="Your full name" required />
 
@@ -527,7 +530,7 @@
         <button type="submit">Send Message</button>
       </form>
       <p style="text-align: center; margin-top: 1.5rem; color: var(--muted-text); font-size: 0.9rem;">
-        <em>Note: Please update the email address in the form action to your personal email address.</em>
+        <em>Note: To enable contact form functionality, sign up at <a href="https://formspree.io" target="_blank" rel="noopener noreferrer">Formspree</a> or similar service and update the form action URL. Alternatively, implement server-side form handling.</em>
       </p>
     </section>
   </main>
