@@ -6,7 +6,7 @@ integrating GPT models and Google Cloud Speech APIs.
 
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
-import openai
+from openai import OpenAI
 import os
 from google.cloud import speech_v1 as speech
 from google.cloud import texttospeech
@@ -22,10 +22,10 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
 
 # Configuration
-openai.api_key = os.getenv('OPENAI_API_KEY')
 GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 
-# Initialize Google Cloud clients
+# Initialize clients
+openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 speech_client = speech.SpeechClient()
 tts_client = texttospeech.TextToSpeechClient()
 
@@ -90,7 +90,7 @@ def chat():
         messages.append({'role': 'user', 'content': user_message})
         
         # Call OpenAI API
-        response = openai.ChatCompletion.create(
+        response = openai_client.chat.completions.create(
             model=model,
             messages=messages,
             temperature=0.7,
@@ -102,7 +102,11 @@ def chat():
         return jsonify({
             'response': assistant_message,
             'model': model,
-            'usage': response.usage._asdict()
+            'usage': {
+                'prompt_tokens': response.usage.prompt_tokens,
+                'completion_tokens': response.usage.completion_tokens,
+                'total_tokens': response.usage.total_tokens
+            }
         })
         
     except Exception as e:

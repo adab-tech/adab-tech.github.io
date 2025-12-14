@@ -3,7 +3,7 @@ Fine-tuning script for Hausa GPT model
 This script handles the complete fine-tuning workflow
 """
 
-import openai
+from openai import OpenAI
 import os
 import json
 import time
@@ -11,7 +11,9 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
 class HausaFineTuner:
@@ -28,7 +30,7 @@ class HausaFineTuner:
         print(f"Uploading training file: {self.training_file_path}")
         
         with open(self.training_file_path, 'rb') as f:
-            response = openai.File.create(
+            response = client.files.create(
                 file=f,
                 purpose='fine-tune'
             )
@@ -41,7 +43,7 @@ class HausaFineTuner:
         """Validate the uploaded file"""
         print(f"Validating file: {self.file_id}")
         
-        file_info = openai.File.retrieve(self.file_id)
+        file_info = client.files.retrieve(self.file_id)
         print(f"File status: {file_info.status}")
         print(f"File size: {file_info.bytes} bytes")
         
@@ -49,7 +51,7 @@ class HausaFineTuner:
         while file_info.status == 'processing':
             print("Waiting for file processing...")
             time.sleep(5)
-            file_info = openai.File.retrieve(self.file_id)
+            file_info = client.files.retrieve(self.file_id)
         
         if file_info.status == 'processed':
             print("✓ File validated and ready for fine-tuning")
@@ -63,7 +65,7 @@ class HausaFineTuner:
         print(f"\nCreating fine-tuning job for model: {model}")
         
         try:
-            response = openai.FineTuningJob.create(
+            response = client.fine_tuning.jobs.create(
                 training_file=self.file_id,
                 model=model,
                 suffix=suffix,
@@ -91,7 +93,7 @@ class HausaFineTuner:
         print("This may take several minutes to hours depending on dataset size...")
         
         while True:
-            job = openai.FineTuningJob.retrieve(self.job_id)
+            job = client.fine_tuning.jobs.retrieve(self.job_id)
             status = job.status
             
             print(f"\nStatus: {status}")
@@ -122,8 +124,8 @@ class HausaFineTuner:
             print("No job ID available")
             return
         
-        events = openai.FineTuningJob.list_events(
-            id=self.job_id,
+        events = client.fine_tuning.jobs.list_events(
+            fine_tuning_job_id=self.job_id,
             limit=limit
         )
         
@@ -141,7 +143,7 @@ class HausaFineTuner:
         print(f"Test message: {test_message}")
         
         try:
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=self.model_id,
                 messages=[
                     {"role": "system", "content": "You are a helpful Hausa language assistant."},
@@ -181,7 +183,7 @@ def main():
     print("=" * 60)
     
     # Check for API key
-    if not openai.api_key:
+    if not os.getenv('OPENAI_API_KEY'):
         print("\n✗ Error: OPENAI_API_KEY not found in environment")
         print("Please set your API key in .env file")
         return
