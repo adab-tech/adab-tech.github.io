@@ -6,6 +6,7 @@ Includes phoneme alignment validation and tonal accuracy metrics
 import re
 from typing import List, Dict, Tuple, Optional
 import logging
+from datetime import datetime
 from jiwer import wer, cer
 import json
 
@@ -36,19 +37,55 @@ class HausaEvaluator:
     # Special Hausa characters
     HAUSA_SPECIAL_CHARS = ['ɓ', 'ɗ', 'ƙ', 'ƴ']
     
+    # Pre-compiled regex patterns for performance optimization
+    # These patterns are compiled once at class level to avoid recompilation on each call
+    # This significantly improves performance when processing large texts or multiple calls
+    # 
+    # Pattern explanation:
+    # - \b      : Word boundary (ensures we only match at word start)
+    # - [bdk]   : The consonant to check (b, d, or k)
+    # - [aeiou] : Must be followed by a vowel (reduces false positives)
+    # - re.IGNORECASE : Case-insensitive matching
+    #
+    # Why these patterns:
+    # - Word-initial position is where Hausa implosives/ejectives typically occur
+    # - Following vowel ensures it's a syllable start, not just a consonant cluster
+    # - This reduces false positives from:
+    #   * Mid-word consonants (e.g., "saboda" doesn't trigger for 'b')
+    #   * Consonant clusters without vowels (e.g., "bq" doesn't match)
+    #
+    # Known limitations (acceptable as hints):
+    # - Borrowings like "buku" (book) or "keke" (bicycle) will trigger warnings
+    #   even though they correctly use regular b/k. This is acceptable since
+    #   the warnings explicitly state they are hints, not errors.
+    # - Some native Hausa words correctly use regular b/d/k (e.g., "da" = with/and)
+    #   and will trigger hints. Users should understand these are suggestions.
+    PATTERN_B_START = re.compile(r'\bb[aeiou]', re.IGNORECASE)
+    PATTERN_D_START = re.compile(r'\bd[aeiou]', re.IGNORECASE)
+    PATTERN_K_ANY = re.compile(r'\bk[aeiou]', re.IGNORECASE)
+    
     def __init__(self):
         self.phoneme_errors = []
         self.tone_errors = []
     
     def validate_hausa_text(self, text: str) -> Dict:
         """
-        Validate Hausa text for proper character usage
+        Validate Hausa text for proper character usage.
+        
+        This method provides hints about potential character substitution issues
+        in Hausa text. The warnings are context-aware suggestions, not strict errors,
+        as proper usage depends on linguistic context and word etymology.
         
         Args:
             text: Hausa text to validate
         
         Returns:
-            Dictionary with validation results
+            Dictionary with validation results including:
+                - is_valid: Boolean indicating overall validity
+                - errors: List of critical errors (currently unused, reserved for future)
+                - warnings: List of hints about potential character issues
+                - special_chars_used: List of special Hausa characters found
+                - phoneme_coverage: Dictionary of phoneme usage counts
         """
         results = {
             'is_valid': True,
@@ -58,33 +95,41 @@ class HausaEvaluator:
             'phoneme_coverage': {}
         }
         
-        # Check for proper Hausa special characters
+        # Check for proper Hausa special characters (case-insensitive)
+        text_lower = text.lower()
         for char in self.HAUSA_SPECIAL_CHARS:
-            if char in text:
+            if char in text_lower:
                 results['special_chars_used'].append(char)
         
-        # Check for common substitution errors using word boundaries
-        # Look for regular 'b', 'd', 'k' where special characters might be needed
-        import re
+        # Check for common substitution errors using optimized pre-compiled patterns
+        # NOTE: These are linguistic hints, not strict rules. Context matters in Hausa.
+        # Word etymology and specific linguistic contexts determine correct usage.
         
-        # These are hints, not strict rules, since context matters
-        if re.search(r'\bb\w', text, re.IGNORECASE) and 'ɓ' not in text:
+        # Check for 'b' at word start followed by vowel (potential implosive ɓ)
+        if self.PATTERN_B_START.search(text) and 'ɓ' not in text_lower:
             results['warnings'].append(
-                "Found 'b' at word start - check if implosive ɓ is needed"
+                "Hint: Found 'b' at word-initial position before a vowel. "
+                "Verify if implosive ɓ is needed. This is a suggestion based on common "
+                "Hausa patterns; not all word-initial 'b' should be ɓ (e.g., borrowings)."
             )
         
-        if re.search(r'\bd\w', text, re.IGNORECASE) and 'ɗ' not in text:
+        # Check for 'd' at word start followed by vowel (potential implosive ɗ)
+        if self.PATTERN_D_START.search(text) and 'ɗ' not in text_lower:
             results['warnings'].append(
-                "Found 'd' at word start - check if implosive ɗ is needed"
+                "Hint: Found 'd' at word-initial position before a vowel. "
+                "Verify if implosive ɗ is needed. This is a suggestion based on common "
+                "Hausa patterns; not all word-initial 'd' should be ɗ (e.g., borrowings)."
             )
         
-        if re.search(r'\bk\w', text, re.IGNORECASE) and 'ƙ' not in text:
+        # Check for 'k' at word start followed by vowel (potential ejective ƙ)
+        if self.PATTERN_K_ANY.search(text) and 'ƙ' not in text_lower:
             results['warnings'].append(
-                "Found 'k' in text - check if ejective ƙ is needed"
+                "Hint: Found 'k' at word-initial position before a vowel. "
+                "Verify if ejective ƙ is needed. This is a suggestion based on common "
+                "Hausa patterns; not all 'k' should be ƙ (e.g., borrowings)."
             )
         
         # Analyze phoneme usage
-        text_lower = text.lower()
         for consonant in self.HAUSA_CONSONANTS:
             if consonant in text_lower:
                 results['phoneme_coverage'][consonant] = text_lower.count(consonant)
@@ -343,10 +388,8 @@ class HausaEvaluator:
             include_cultural: Whether to include cultural evaluation
         
         Returns:
-            Complete evaluation report
+            Complete evaluation report with timestamp in ISO 8601 format
         """
-        from datetime import datetime
-        
         report = {
             'timestamp': datetime.now().isoformat(),
             'phoneme_alignment': self.calculate_phoneme_alignment(reference, hypothesis),
