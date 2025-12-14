@@ -1,0 +1,53 @@
+---
+layout: default
+---
+
+<div class="home-hero">
+  <h1 class="hero-title">{{ site.title }}</h1>
+  <p class="hero-tagline">Languages, Literature, and AI — thinking and building at their intersection.</p>
+  <div class="hero-cta">
+    <a href="{{ '/cv/' | relative_url }}" class="btn btn-primary">View CV</a>
+    <a href="{{ '/projects/' | relative_url }}" class="btn btn-secondary">Projects</a>
+    <a href="{{ '/blog/' | relative_url }}" class="btn btn-secondary">Writing</a>
+  </div>
+</div>
+
+<section class="home-section">
+  <h2>Featured Projects</h2>
+  <div class="projects-grid">
+    {% for project in site.projects limit:3 %}
+    <article class="project-card">
+      <h3><a href="{{ project.url | relative_url }}">{{ project.title }}</a></h3>
+      <p>{{ project.problem | truncate: 150 }}</p>
+      {% if project.tools %}
+      <div class="project-tools">
+        {% for tool in project.tools %}
+        <span class="tag">{{ tool }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <a href="{{ project.url | relative_url }}" class="read-more">Learn more →</a>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="section-footer"><a href="{{ '/projects/' | relative_url }}">View all projects →</a></p>
+</section>
+
+<section class="home-section">
+  <h2>Recent Writing</h2>
+  <div class="posts-list">
+    {% for post in site.posts limit:5 %}
+    <article class="post-item">
+      <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+      <div class="post-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
+        {% if post.language and post.language != "en" %}
+        <span class="language-tag">{{ post.language }}</span>
+        {% endif %}
+      </div>
+      <p>{{ post.excerpt | strip_html | truncate: 200 }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="section-footer"><a href="{{ '/blog/' | relative_url }}">View all posts →</a></p>
+</section>

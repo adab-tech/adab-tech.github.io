@@ -1,0 +1,51 @@
+# Site settings
+title: Languages, Literature, and AI
+author: Adamu
+email: contact@adamu.tech
+description: >-
+  Thinking and building at the intersection of languages, literature, and AI.
+  A professional portfolio showcasing projects, writing, and expertise.
+baseurl: ""
+url: "https://adamu.tech"
+
+# Build settings
+markdown: kramdown
+permalink: /blog/:year/:month/:day/:title/
+
+# Collections
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+
+# Default front matter
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      language: "en"
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "project"
+  - scope:
+      path: ""
+    values:
+      layout: "default"
+
+# Exclude files from processing
+exclude:
+  - attendance_fr102.py
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+
+# Plugins (GitHub Pages will auto-include these)
+# plugins:
+#   - jekyll-feed
+#   - jekyll-seo-tag
