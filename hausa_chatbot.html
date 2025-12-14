@@ -82,6 +82,18 @@
                         <option value="custom">Custom Model</option>
                     </select>
                 </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleAutonomousTraining()" id="auto-train-btn" 
+                            class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span id="auto-train-text">Auto-Train</span>
+                    </button>
+                    <button onclick="showTrainingStatus()" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                        Status
+                    </button>
+                </div>
                 <button onclick="clearChat()" class="px-3 py-1 bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600">
                     Clear Chat
                 </button>
@@ -515,11 +527,112 @@
             }
         }
 
+        // Autonomous Training Functions
+        async function toggleAutonomousTraining() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                
+                const endpoint = status.is_running ? '/autonomous-training/stop' : '/autonomous-training/start';
+                const toggleResponse = await fetch(config.backendUrl.replace('/chat', endpoint), {
+                    method: 'POST'
+                });
+                
+                const result = await toggleResponse.json();
+                
+                updateAutoTrainButton(!status.is_running);
+                showStatus(result.message, 'success');
+                
+            } catch (error) {
+                showStatus('Error toggling autonomous training: ' + error.message, 'error');
+            }
+        }
+
+        function updateAutoTrainButton(isRunning) {
+            const btn = document.getElementById('auto-train-btn');
+            const text = document.getElementById('auto-train-text');
+            
+            if (isRunning) {
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                text.textContent = 'Stop Auto-Train';
+            } else {
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                text.textContent = 'Start Auto-Train';
+            }
+        }
+
+        async function showTrainingStatus() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                
+                let statusHtml = `
+                    <div class="p-4 bg-white rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">Autonomous Training Status</h3>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Status:</strong> ${status.is_running ? '🟢 Running' : '🔴 Stopped'}</p>
+                            <p><strong>Conversations Logged:</strong> ${status.conversation_count} / ${status.min_conversations}</p>
+                            <p><strong>Training Interval:</strong> ${status.training_interval_hours} hours</p>
+                            <p><strong>Last Training:</strong> ${status.last_training_time || 'Never'}</p>
+                `;
+                
+                if (status.current_job && status.current_job.status !== 'no_job') {
+                    statusHtml += `
+                            <p><strong>Current Job:</strong> ${status.current_job.job_id}</p>
+                            <p><strong>Job Status:</strong> ${status.current_job.status}</p>
+                            ${status.current_job.fine_tuned_model ? `<p><strong>Model:</strong> ${status.current_job.fine_tuned_model}</p>` : ''}
+                    `;
+                }
+                
+                statusHtml += `
+                        </div>
+                        <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                            Close
+                        </button>
+                    </div>
+                `;
+                
+                showModal(statusHtml);
+                
+            } catch (error) {
+                showStatus('Error fetching status: ' + error.message, 'error');
+            }
+        }
+
+        function showModal(html) {
+            const modal = document.createElement('div');
+            modal.id = 'status-modal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = html;
+            document.body.appendChild(modal);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('status-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Initialize autonomous training button state
+        async function initAutoTrainButton() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                updateAutoTrainButton(status.is_running);
+            } catch (error) {
+                console.log('Could not fetch auto-train status:', error);
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             if (config.apiKey) {
                 document.getElementById('api-key-input').value = '••••••••';
             }
+            initAutoTrainButton();
         });
     </script>
 </body>

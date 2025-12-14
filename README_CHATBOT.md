@@ -7,6 +7,7 @@ A comprehensive AI-powered chatbot system for fluent Hausa language conversation
 - **Google Cloud Speech-to-Text** for voice input
 - **Google Cloud Text-to-Speech** for voice output
 - **Interactive Web Interface** for seamless user experience
+- **Autonomous Training System** for continuous self-improvement
 
 ## ✨ Features
 
@@ -17,6 +18,16 @@ A comprehensive AI-powered chatbot system for fluent Hausa language conversation
 - ✅ **Bilingual Support**: Handle both Hausa and English inputs
 - ✅ **Real-time Chat**: Instant responses with conversation history
 - ✅ **Voice Visualization**: Audio waveform animation during recording
+- ✅ **Autonomous Training**: Continuous self-improvement through automatic fine-tuning
+
+### Autonomous Training System 🔥 NEW
+The chatbot now includes a revolutionary autonomous training system that allows it to train itself continuously:
+- **Automatic Data Collection**: Every conversation is logged for future training
+- **Scheduled Training**: Automatically triggers fine-tuning when enough data is collected
+- **Non-Stop Learning**: Runs in the background even when not actively chatting
+- **Configurable Thresholds**: Set minimum conversations and training intervals
+- **Real-time Monitoring**: Track training status, conversation count, and job progress
+- **Manual Control**: Start/stop autonomous training or trigger immediate training
 
 ### Technical Features
 - Modern, responsive UI built with Tailwind CSS
@@ -111,6 +122,81 @@ PORT=5000
 1. Sign up at [OpenAI Platform](https://platform.openai.com)
 2. Generate API key
 3. Add to `.env` file
+
+## 🤖 Autonomous Training System
+
+### How It Works
+
+The autonomous training system enables the chatbot to continuously improve itself:
+
+1. **Conversation Logging**: Every chat interaction is automatically logged
+2. **Data Accumulation**: Conversations are stored in JSONL format
+3. **Threshold Monitoring**: System checks if minimum conversation count is reached
+4. **Automatic Training**: When threshold is met, a fine-tuning job is triggered
+5. **Scheduled Checks**: Runs periodically (default: every 24 hours)
+6. **Background Operation**: Runs independently of active chat sessions
+
+### Configuration
+
+Add these settings to your `.env` file:
+
+```env
+# Enable/disable autonomous training
+AUTO_TRAIN_ENABLED=true
+
+# Minimum conversations before triggering training (default: 50)
+AUTO_TRAIN_MIN_CONVERSATIONS=50
+
+# Hours between training checks (default: 24)
+AUTO_TRAIN_INTERVAL_HOURS=24
+```
+
+### API Endpoints
+
+Control autonomous training via REST API:
+
+```bash
+# Get training status
+curl http://localhost:5000/api/autonomous-training/status
+
+# Start autonomous training
+curl -X POST http://localhost:5000/api/autonomous-training/start
+
+# Stop autonomous training
+curl -X POST http://localhost:5000/api/autonomous-training/stop
+
+# Manually trigger training now
+curl -X POST http://localhost:5000/api/autonomous-training/trigger
+```
+
+### Using the UI
+
+The chatbot interface includes controls for autonomous training:
+
+1. **Auto-Train Button**: Click to start/stop autonomous training
+2. **Status Button**: View current training status and conversation count
+3. **Real-time Updates**: Monitor logged conversations and training progress
+
+### Data Storage
+
+Conversations are stored in `backend/training_data/` directory:
+- `conversations_YYYYMM.jsonl`: Monthly conversation logs
+- `training_state.json`: System state and metadata
+- `training_YYYYMMDD_HHMMSS.jsonl`: Generated training files
+
+### Monitoring
+
+Check the status of training jobs:
+
+```python
+import requests
+response = requests.get('http://localhost:5000/api/autonomous-training/status')
+status = response.json()
+
+print(f"Running: {status['is_running']}")
+print(f"Conversations: {status['conversation_count']}/{status['min_conversations']}")
+print(f"Last training: {status['last_training_time']}")
+```
 
 ## 📊 Data Preparation & Fine-Tuning
 

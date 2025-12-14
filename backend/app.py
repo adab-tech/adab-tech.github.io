@@ -13,6 +13,7 @@ from google.cloud import texttospeech
 import io
 import base64
 from dotenv import load_dotenv
+from autonomous_trainer import get_trainer
 
 # Load environment variables
 load_dotenv()
@@ -28,6 +29,9 @@ GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
 openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 speech_client = speech.SpeechClient()
 tts_client = texttospeech.TextToSpeechClient()
+
+# Initialize autonomous trainer
+trainer = get_trainer()
 
 # System prompt for Hausa language model
 HAUSA_SYSTEM_PROMPT = """You are a helpful AI assistant that is fluent in Hausa language.
@@ -98,6 +102,16 @@ def chat():
         )
         
         assistant_message = response.choices[0].message.content
+        
+        # Log conversation for autonomous training
+        try:
+            trainer.log_conversation(
+                user_message=user_message,
+                assistant_response=assistant_message,
+                metadata={'model': model, 'tokens': response.usage.total_tokens}
+            )
+        except Exception as log_error:
+            print(f"Error logging conversation: {log_error}")
         
         return jsonify({
             'response': assistant_message,
@@ -226,20 +240,84 @@ def text_to_speech():
 @app.route('/api/fine-tune/status', methods=['GET'])
 def fine_tune_status():
     """
-    Get status of fine-tuning jobs
-    This is a placeholder for monitoring fine-tuning progress
+    Get status of autonomous training system and current fine-tuning job
     """
     try:
-        # In production, this would check OpenAI fine-tuning status
+        return jsonify(trainer.get_status())
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autonomous-training/start', methods=['POST'])
+def start_autonomous_training():
+    """
+    Start the autonomous training system
+    """
+    try:
+        trainer.start()
         return jsonify({
-            'status': 'not_implemented',
-            'message': 'Fine-tuning status endpoint - to be implemented'
+            'status': 'started',
+            'message': 'Autonomous training system started',
+            'config': trainer.get_status()
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/autonomous-training/stop', methods=['POST'])
+def stop_autonomous_training():
+    """
+    Stop the autonomous training system
+    """
+    try:
+        trainer.stop()
+        return jsonify({
+            'status': 'stopped',
+            'message': 'Autonomous training system stopped'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autonomous-training/status', methods=['GET'])
+def autonomous_training_status():
+    """
+    Get current status of autonomous training system
+    """
+    try:
+        return jsonify(trainer.get_status())
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/autonomous-training/trigger', methods=['POST'])
+def trigger_training_now():
+    """
+    Manually trigger a training job with current data
+    """
+    try:
+        success = trainer.trigger_training()
+        if success:
+            return jsonify({
+                'status': 'triggered',
+                'message': 'Training job initiated',
+                'job_status': trainer.get_job_status()
+            })
+        else:
+            return jsonify({
+                'status': 'skipped',
+                'message': 'Not enough data or training failed',
+                'current_status': trainer.get_status()
+            }), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
+    # Start autonomous training on app startup if enabled
+    if os.getenv('AUTO_TRAIN_ENABLED', 'true').lower() == 'true':
+        trainer.start()
+    
     # Debug mode should only be enabled in development
     # In production, use a proper WSGI server like gunicorn
     debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
