@@ -49,7 +49,7 @@ The contact form uses Formspree (https://formspree.io/), a free service for hand
 2. Sign up for a free account
 3. Create a new form
 4. Copy your unique form endpoint (e.g., `https://formspree.io/f/YOUR_ID`)
-5. Update line 426 in `longblog.html`:
+5. Update line 435 in `longblog.html`:
    ```html
    <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_ID" method="POST">
    ```
@@ -68,7 +68,7 @@ Alternatively, you can host your CV elsewhere and update the link on line 418:
 
 ### Updating Social Media Links
 
-Edit lines 446-463 in `longblog.html` to update your social media profiles:
+Edit lines 460-477 in `longblog.html` to update your social media profiles:
 
 ```html
 <a href="https://github.com/YOUR_USERNAME" ...>
