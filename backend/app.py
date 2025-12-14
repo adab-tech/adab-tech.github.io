@@ -105,10 +105,14 @@ def chat():
         
         # Log conversation for autonomous training
         try:
+            metadata = {
+                'model': model,
+                'tokens': response.usage.total_tokens if response.usage else 0
+            }
             trainer.log_conversation(
                 user_message=user_message,
                 assistant_response=assistant_message,
-                metadata={'model': model, 'tokens': response.usage.total_tokens}
+                metadata=metadata
             )
         except Exception as log_error:
             print(f"Error logging conversation: {log_error}")
@@ -117,9 +121,9 @@ def chat():
             'response': assistant_message,
             'model': model,
             'usage': {
-                'prompt_tokens': response.usage.prompt_tokens,
-                'completion_tokens': response.usage.completion_tokens,
-                'total_tokens': response.usage.total_tokens
+                'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
+                'completion_tokens': response.usage.completion_tokens if response.usage else 0,
+                'total_tokens': response.usage.total_tokens if response.usage else 0
             }
         })
         

@@ -16,6 +16,23 @@ load_dotenv()
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
+# System prompt for consistency with main app
+HAUSA_SYSTEM_PROMPT = """You are a helpful AI assistant that is fluent in Hausa language.
+You should:
+1. Respond primarily in Hausa language
+2. Be culturally aware of Hausa traditions and customs
+3. Provide helpful and accurate information
+4. Be respectful and polite
+5. If the user speaks in English, you can respond in both English and Hausa
+
+Key Hausa phrases to use:
+- Sannu (Hello)
+- Na gode (Thank you)
+- Don Allah (Please)
+- Ina bukatar taimako (I need help)
+- Lafiya lau (I am well)
+"""
+
 
 class AutonomousTrainer:
     """Manages autonomous training of the Hausa chatbot"""
@@ -23,7 +40,8 @@ class AutonomousTrainer:
     def __init__(self, 
                  data_dir='training_data',
                  min_conversations=50,
-                 training_interval_hours=24):
+                 training_interval_hours=24,
+                 training_model='gpt-3.5-turbo'):
         """
         Initialize autonomous trainer
         
@@ -31,10 +49,12 @@ class AutonomousTrainer:
             data_dir: Directory to store conversation logs
             min_conversations: Minimum conversations before triggering training
             training_interval_hours: Hours between training checks
+            training_model: Model to use for fine-tuning
         """
         self.data_dir = data_dir
         self.min_conversations = min_conversations
         self.training_interval_hours = training_interval_hours
+        self.training_model = training_model
         self.lock = Lock()
         self.is_running = False
         self.current_job_id = None
@@ -85,7 +105,7 @@ class AutonomousTrainer:
             timestamp = datetime.now().isoformat()
             conversation = {
                 'messages': [
-                    {'role': 'system', 'content': 'You are a helpful Hausa language assistant.'},
+                    {'role': 'system', 'content': HAUSA_SYSTEM_PROMPT},
                     {'role': 'user', 'content': user_message},
                     {'role': 'assistant', 'content': assistant_response}
                 ],
@@ -166,7 +186,7 @@ class AutonomousTrainer:
                 print("Creating fine-tuning job...")
                 job_response = client.fine_tuning.jobs.create(
                     training_file=file_response.id,
-                    model='gpt-3.5-turbo',
+                    model=self.training_model,
                     suffix=f'hausa-auto-{datetime.now().strftime("%Y%m%d")}'
                 )
                 
@@ -274,6 +294,7 @@ def get_trainer():
     if autonomous_trainer is None:
         autonomous_trainer = AutonomousTrainer(
             min_conversations=int(os.getenv('AUTO_TRAIN_MIN_CONVERSATIONS', 50)),
-            training_interval_hours=int(os.getenv('AUTO_TRAIN_INTERVAL_HOURS', 24))
+            training_interval_hours=int(os.getenv('AUTO_TRAIN_INTERVAL_HOURS', 24)),
+            training_model=os.getenv('AUTO_TRAIN_MODEL', 'gpt-3.5-turbo')
         )
     return autonomous_trainer
