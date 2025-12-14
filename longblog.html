@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adamu Danjuma — Portfolio & Blog</title>
-  <meta name="description" content="Portfolio and blog of Adamu Danjuma, expert in literature, AI, and tech writing. Connect, collaborate, and explore insights." />
+  <title>Adamu Danjuma Abubakar — Portfolio & Blog</title>
+  <meta name="description" content="Portfolio and blog of Adamu Danjuma Abubakar, expert in literature, AI, and tech writing. Connect, collaborate, and explore insights." />
   <style>
     :root {
       --primary-color: #0B3D91;
@@ -18,6 +18,9 @@
     }
     * {
       box-sizing: border-box;
+    }
+    html {
+      scroll-behavior: smooth;
     }
     body {
       margin: 0;
@@ -65,10 +68,27 @@
       font-weight: 600;
       font-size: 1rem;
       padding: 0.3rem 0.5rem;
+      color: white;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
     }
     nav a:hover {
-      background-color: rgba(255 255 255 / 0.2);
+      background-color: rgba(255, 255, 255, 0.2);
       border-radius: 4px;
+    }
+    nav a:hover::after {
+      width: 80%;
     }
     main {
       max-width: 1000px;
@@ -78,13 +98,22 @@
     section {
       margin-bottom: 3rem;
     }
+    section > h2 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 3px solid var(--accent-color);
+      display: inline-block;
+    }
     /* Hero Section */
     .hero {
       text-align: center;
       padding: 3rem 1rem;
-      background: white;
+      background: linear-gradient(135deg, rgba(11, 61, 145, 0.05) 0%, rgba(0, 122, 204, 0.05) 100%);
       border-radius: 10px;
       box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      border: 1px solid rgba(11, 61, 145, 0.1);
     }
     .hero h2 {
       font-size: 2.2rem;
@@ -126,10 +155,12 @@
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(11, 61, 145, 0.1);
       padding: 1.5rem;
-      transition: box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border-color);
     }
     .portfolio-item:hover {
       box-shadow: 0 6px 20px rgba(11, 61, 145, 0.18);
+      transform: translateY(-5px);
     }
     .portfolio-item h3 {
       margin-top: 0;
@@ -138,6 +169,66 @@
     .portfolio-item p {
       color: var(--muted-text);
       font-size: 0.95rem;
+    }
+
+    /* About Me Section */
+    .about-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      border: 1px solid var(--border-color);
+    }
+    .about-content h3 {
+      color: var(--primary-color);
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+    .about-content p {
+      color: var(--muted-text);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .about-content ul {
+      color: var(--muted-text);
+      line-height: 1.8;
+      margin-left: 1.5rem;
+    }
+    .about-content ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* CV Section */
+    .cv-section {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      text-align: center;
+      border: 1px solid var(--border-color);
+    }
+    .cv-section p {
+      color: var(--muted-text);
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    .btn-download {
+      background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+      color: white;
+      font-weight: 700;
+      padding: 1rem 2.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 12px rgba(11, 61, 145, 0.3);
+    }
+    .btn-download:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(11, 61, 145, 0.4);
     }
 
     /* Blog */
@@ -151,10 +242,12 @@
       padding: 1.5rem 2rem;
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(11, 61, 145, 0.1);
-      transition: box-shadow 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border-color);
     }
     .blog-post:hover {
       box-shadow: 0 6px 20px rgba(11, 61, 145, 0.18);
+      transform: translateX(5px);
     }
     .blog-post h4 {
       margin-top: 0;
@@ -168,8 +261,10 @@
       font-weight: 700;
       color: var(--accent-color);
       text-decoration: none;
+      transition: color 0.3s ease;
     }
     .blog-post a.read-more:hover {
+      color: var(--primary-color);
       text-decoration: underline;
     }
 
@@ -181,21 +276,30 @@
       box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
       max-width: 600px;
       margin: 0 auto;
+      border: 1px solid var(--border-color);
     }
     .contact-form label {
       display: block;
       font-weight: 600;
       margin-bottom: 0.5rem;
+      color: var(--text-color);
     }
     .contact-form input,
     .contact-form textarea {
       width: 100%;
-      padding: 0.6rem;
+      padding: 0.8rem;
       margin-bottom: 1.25rem;
       border-radius: 6px;
-      border: 1px solid #ccc;
+      border: 2px solid #ddd;
       font-size: 1rem;
       font-family: var(--font-family);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--accent-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 122, 204, 0.1);
     }
     .contact-form button {
       background-color: var(--accent-color);
@@ -205,20 +309,44 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      width: 100%;
     }
     .contact-form button:hover,
     .contact-form button:focus {
       background-color: var(--primary-color);
       outline: none;
+      transform: translateY(-2px);
     }
 
+    /* Footer */
     footer {
       text-align: center;
-      padding: 2rem 1rem;
-      background-color: var(--primary-color);
+      padding: 2.5rem 1rem;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
       color: white;
       user-select: none;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      color: white;
+      font-size: 1.8rem;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0.9;
+    }
+    .social-links a:hover {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+    footer p {
+      margin: 0;
+      font-size: 0.95rem;
     }
 
     /* Responsive nav for small screens */
@@ -236,19 +364,58 @@
 </head>
 <body>
   <header>
-    <h1>Adamu Danjuma</h1>
+    <h1>Adamu Danjuma Abubakar</h1>
     <nav aria-label="Primary Navigation">
+      <a href="#about">About</a>
       <a href="#portfolio">Portfolio</a>
       <a href="#blog">Blog</a>
+      <a href="#cv">My CV</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
   <main>
     <section class="hero" aria-label="Introduction">
-      <h2>Welcome! I'm Adamu Danjuma</h2>
+      <h2>Welcome! I'm Adamu Danjuma Abubakar</h2>
       <p>PhD candidate, multilingual AI trainer, writer, and tech enthusiast. I help clients and collaborators with research, writing, AI data annotation, and digital storytelling.</p>
       <a href="#contact" class="btn-primary">Get in Touch</a>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" aria-label="About Me">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <p>
+          Hello! I'm <strong>Adamu Danjuma Abubakar</strong>, a dedicated PhD candidate, multilingual AI trainer, writer, and technology enthusiast. 
+          My passion lies at the intersection of literature, artificial intelligence, and digital innovation, where I continuously explore how technology 
+          can enhance human understanding and communication.
+        </p>
+        
+        <h3>Professional Background</h3>
+        <p>
+          With extensive experience in academic research and practical AI applications, I specialize in:
+        </p>
+        <ul>
+          <li><strong>Academic Research:</strong> Focus on Francophone African Literature, postcolonial theory, and cultural memory studies</li>
+          <li><strong>AI & Machine Learning:</strong> Multilingual data annotation, NLP training data preparation, and language model evaluation</li>
+          <li><strong>Technical Writing:</strong> Creating clear, precise documentation, translations, and editorial services across multiple languages</li>
+          <li><strong>Digital Storytelling:</strong> Blending traditional narratives with modern technology to create engaging content</li>
+        </ul>
+
+        <h3>Education & Expertise</h3>
+        <p>
+          Currently pursuing a PhD with a focus on postcolonial literature and cultural analysis, I bring both theoretical depth and practical skills 
+          to every project. My multilingual capabilities enable me to work across diverse linguistic and cultural contexts, making me uniquely 
+          positioned to bridge gaps between technology and humanities.
+        </p>
+
+        <h3>What I Offer</h3>
+        <p>
+          Whether you need assistance with research projects, AI data annotation, technical documentation, or creative writing, I am committed to 
+          delivering high-quality results. I collaborate with clients and partners worldwide, bringing expertise, reliability, and a passion for 
+          excellence to every engagement.
+        </p>
+      </div>
     </section>
 
     <section id="portfolio" aria-label="Portfolio">
@@ -285,9 +452,23 @@
       </div>
     </section>
 
+    <!-- My CV Section -->
+    <section id="cv" aria-label="My CV">
+      <h2>My CV</h2>
+      <div class="cv-section">
+        <p>
+          Download my comprehensive curriculum vitae to learn more about my educational background, professional experience, 
+          publications, and skills.
+        </p>
+        <a href="#" class="btn-download" onclick="alert('CV download functionality will be implemented with a real PDF file. Please add your CV PDF to the repository and update the href attribute.'); return false;">
+          📄 Download My CV (PDF)
+        </a>
+      </div>
+    </section>
+
     <section id="contact" aria-label="Contact">
       <h2>Contact Me</h2>
-      <form class="contact-form" action="mailto:your-email@example.com" method="POST" enctype="text/plain">
+      <form class="contact-form" action="mailto:adamu.abubakar@example.com" method="POST" enctype="text/plain">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" placeholder="Your full name" required />
 
@@ -299,11 +480,31 @@
 
         <button type="submit">Send Message</button>
       </form>
+      <p style="text-align: center; margin-top: 1.5rem; color: var(--muted-text); font-size: 0.9rem;">
+        <em>Note: Please update the email address in the form action to your personal email address.</em>
+      </p>
     </section>
   </main>
 
   <footer>
-    <p>© 2025 Adamu Danjuma. All rights reserved.</p>
+    <div class="social-links">
+      <a href="https://github.com/adab-tech" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="Visit my GitHub profile">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+      <a href="https://linkedin.com/in/adamu-danjuma-abubakar" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="Connect on LinkedIn">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </a>
+      <a href="https://twitter.com/adamuabubakar" target="_blank" rel="noopener noreferrer" aria-label="Twitter" title="Follow on Twitter">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+        </svg>
+      </a>
+    </div>
+    <p>© 2025 Adamu Danjuma Abubakar. All rights reserved.</p>
   </footer>
 </body>
 </html>
