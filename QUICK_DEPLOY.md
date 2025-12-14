@@ -1,37 +1,51 @@
 # Quick Deployment Guide
 
-## 🚀 Fast Track: Deploy in 3 Steps
+## 🚀 Fast Track: Deploy to adamu.tech
 
-### Step 1: Merge to Main Branch
+Your site is pre-configured with custom domain `adamu.tech` (CNAME file included).
+
+### Step 1: Configure DNS
+At your domain registrar for `adamu.tech`, add these **A records**:
+- `185.199.108.153`
+- `185.199.109.153`
+- `185.199.110.153`
+- `185.199.111.153`
+
+### Step 2: Merge to Main Branch
 ```bash
 git checkout main
 git merge copilot/create-static-personal-website
 git push origin main
 ```
 
-### Step 2: Enable GitHub Pages
+### Step 3: Enable GitHub Pages
 1. Go to: `https://github.com/adab-tech/adab-tech.github.io/settings/pages`
 2. Under **Source**, select: `Deploy from a branch`
 3. Under **Branch**, select: `main` and `/ (root)`
-4. Click **Save**
+4. Custom domain: `adamu.tech` (should auto-populate from CNAME)
+5. Click **Save**
+6. Enable **Enforce HTTPS** after DNS propagates
 
-### Step 3: Access Your Site
-Wait 1-2 minutes, then visit: **`https://adab-tech.github.io/`**
+### Step 4: Access Your Site
+Wait 5-30 minutes for DNS propagation, then visit: **`https://adamu.tech/`**
 
 ---
 
 ## 📋 Deployment Checklist
 
+- [ ] Configure DNS A records at domain registrar
 - [ ] Merge PR to main branch
 - [ ] Enable GitHub Pages in repository settings
 - [ ] Select `main` branch and `/ (root)` folder
-- [ ] Wait for deployment (check Actions tab)
+- [ ] Verify custom domain is set to `adamu.tech`
+- [ ] Wait for DNS propagation (5-30 minutes)
+- [ ] Enable HTTPS enforcement
 - [ ] Test all pages:
-  - [ ] Homepage: `/`
-  - [ ] Writing: `/writing/`
-  - [ ] Projects: `/projects/`
-  - [ ] CV: `/cv/`
-  - [ ] Contact: `/contact/`
+  - [ ] Homepage: `https://adamu.tech/`
+  - [ ] Writing: `https://adamu.tech/writing/`
+  - [ ] Projects: `https://adamu.tech/projects/`
+  - [ ] CV: `https://adamu.tech/cv/`
+  - [ ] Contact: `https://adamu.tech/contact/`
 
 ---
 
@@ -58,7 +72,7 @@ Your Local Repository
          │
          ▼
    🌐 Live Website
-   https://adab-tech.github.io/
+   https://adamu.tech/
 ```
 
 ---
@@ -87,12 +101,12 @@ adab-tech.github.io/
 
 ## ⚡ Alternative: Deploy Current Branch Directly
 
-If you want to deploy without merging to main:
+If you want to deploy without merging to main (for preview/testing):
 
 1. Go to: `https://github.com/adab-tech/adab-tech.github.io/settings/pages`
 2. Under **Branch**, select: `copilot/create-static-personal-website` and `/ (root)`
 3. Click **Save**
-4. Site will be live at: `https://adab-tech.github.io/`
+4. Site will be live at: `https://adamu.tech/` (after DNS is configured)
 
 **Note:** This is useful for preview/testing before merging to main.
 
@@ -102,23 +116,25 @@ If you want to deploy without merging to main:
 
 | Section | URL |
 |---------|-----|
-| Homepage | `https://adab-tech.github.io/` |
-| Writing | `https://adab-tech.github.io/writing/` |
-| Sample Post | `https://adab-tech.github.io/writing/sample-post.html` |
-| Projects | `https://adab-tech.github.io/projects/` |
-| Hausa Explorer | `https://adab-tech.github.io/projects/sample-project.html` |
-| CV | `https://adab-tech.github.io/cv/` |
-| Contact | `https://adab-tech.github.io/contact/` |
+| Homepage | `https://adamu.tech/` |
+| Writing | `https://adamu.tech/writing/` |
+| Sample Post | `https://adamu.tech/writing/sample-post.html` |
+| Projects | `https://adamu.tech/projects/` |
+| Hausa Explorer | `https://adamu.tech/projects/sample-project.html` |
+| CV | `https://adamu.tech/cv/` |
+| Contact | `https://adamu.tech/contact/` |
 
 ---
 
 ## 💡 Pro Tips
 
-1. **First deployment takes longer** (3-5 minutes) as GitHub Pages sets up the environment
-2. **Subsequent updates** deploy in 1-2 minutes
-3. **Check deployment status** in the repository's "Actions" tab
-4. **Clear browser cache** if you don't see changes immediately
-5. **Mobile testing**: Use Chrome DevTools to test responsive design
+1. **DNS propagation** takes 5-30 minutes (sometimes up to 24 hours globally)
+2. **First deployment takes longer** (3-5 minutes) as GitHub Pages sets up the environment
+3. **Subsequent updates** deploy in 1-2 minutes
+4. **Check deployment status** in the repository's "Actions" tab
+5. **Clear browser cache** if you don't see changes immediately
+6. **Mobile testing**: Use Chrome DevTools to test responsive design
+7. **HTTPS**: Enable "Enforce HTTPS" only after DNS fully propagates
 
 ---
 

@@ -1,11 +1,39 @@
 # Deployment Guide for GitHub Pages
 
-This guide explains how to deploy your personal website to GitHub Pages.
+This guide explains how to deploy your personal website to GitHub Pages with the custom domain `adamu.tech`.
 
 ## Prerequisites
 
 - Your website files are in the repository `adab-tech/adab-tech.github.io`
 - You have admin access to the repository
+- You own the domain `adamu.tech` and can configure DNS records
+
+## Quick Start: Deploy to adamu.tech
+
+Your site is pre-configured to deploy to `adamu.tech` (CNAME file already included).
+
+1. **Configure DNS** at your domain registrar for `adamu.tech`:
+   - Add **A records**:
+     - `185.199.108.153`
+     - `185.199.109.153`
+     - `185.199.110.153`
+     - `185.199.111.153`
+
+2. **Merge and Deploy**:
+   ```bash
+   git checkout main
+   git merge copilot/create-static-personal-website
+   git push origin main
+   ```
+
+3. **Enable GitHub Pages**:
+   - Go to: `https://github.com/adab-tech/adab-tech.github.io/settings/pages`
+   - Source: `main` branch, `/ (root)` folder
+   - Custom domain: `adamu.tech` (should auto-populate)
+   - Click **Save**
+   - Enable **Enforce HTTPS** after DNS propagates
+
+4. **Access your site** at `https://adamu.tech/` (DNS propagation: 5-30 minutes)
 
 ## Deployment Steps
 
