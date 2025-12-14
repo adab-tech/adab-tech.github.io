@@ -426,6 +426,12 @@
     <section id="contact" aria-label="Contact">
       <h2>Contact Me</h2>
       <div id="form-status" class="form-status"></div>
+      <!-- 
+        NOTE: The Formspree endpoint below is a placeholder.
+        Please create your own Formspree account at https://formspree.io/
+        and replace 'xovqqwdz' with your unique form ID.
+        See PORTFOLIO_SETUP.md for detailed instructions.
+      -->
       <form class="contact-form" id="contact-form" action="https://formspree.io/f/xovqqwdz" method="POST">
         <label for="name">Name</label>
         <input id="name" name="name" type="text" placeholder="Your full name" required />
@@ -445,6 +451,11 @@
   </main>
 
   <footer>
+    <!-- 
+      Social Media Links: Update these URLs to match your actual profiles.
+      Current links are configured for adab-tech.
+      See PORTFOLIO_SETUP.md for customization instructions.
+    -->
     <div class="social-links">
       <a href="https://github.com/adab-tech" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -500,6 +511,7 @@
         }
       })
       .catch(error => {
+        console.error('Form submission error:', error);
         formStatus.className = 'form-status error';
         formStatus.textContent = 'Oops! There was a problem sending your message. Please try again.';
       })
