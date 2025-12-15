@@ -3,7 +3,6 @@ title: "University of Ilorin Billing System"
 problem: "University billing systems often require manual processes for tracking student charges, payments, and account balances. Students and administrators need an efficient digital system to manage tuition fees, departmental charges, and payment records with real-time balance calculations."
 tools:
   - HTML5
-  - JavaScript
   - CSS3
   - Vanilla JS
 role: "Full-stack developer. Designed the billing logic, implemented student registration with faculty/department hierarchy, developed payment tracking system, and created an intuitive user interface for managing student accounts."

@@ -5,7 +5,6 @@ tools:
   - HTML5
   - CSS3
   - CSS Animations
-  - JavaScript
   - Responsive Design
 role: "Frontend developer and designer. Created all animations, designed the gradient color scheme, implemented confetti effects, optimized for mobile responsiveness, and crafted the personalized birthday message."
 outcome: "Delivered an engaging, animated birthday celebration page featuring dynamic gradient backgrounds, CSS keyframe animations, falling confetti effects, and responsive design. The page combines 10+ unique animations for a festive, memorable user experience."
