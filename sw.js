@@ -28,9 +28,34 @@ self.addEventListener('fetch', event => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
-      }
-    )
+        
+        // Clone the request
+        const fetchRequest = event.request.clone();
+        
+        return fetch(fetchRequest)
+          .then(response => {
+            // Check if valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+            
+            // Clone the response
+            const responseToCache = response.clone();
+            
+            // Cache the fetched response for future use
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+            
+            return response;
+          })
+          .catch(error => {
+            console.log('Fetch failed, serving offline fallback:', error);
+            // Return a basic offline page or cached response if available
+            return caches.match('/hausa_explorer.html');
+          });
+      })
   );
 });
 
