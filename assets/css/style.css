@@ -207,12 +207,23 @@ a:hover {
   font-size: 3.5rem;
   font-weight: 900;
   margin-bottom: 1.25rem;
+  /* Gradient text with fallback for accessibility */
+  color: var(--color-text);
   background: linear-gradient(135deg, var(--color-text) 0%, var(--color-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.03em;
   line-height: 1.1;
+}
+
+/* Fallback for high contrast mode and browsers that don't support background-clip */
+@media (prefers-contrast: high) {
+  .hero-title {
+    background: none;
+    -webkit-text-fill-color: unset;
+    color: var(--color-text);
+  }
 }
 
 .hero-tagline {
@@ -305,10 +316,11 @@ a:hover {
   gap: 0.5rem;
   color: var(--color-accent);
   font-size: 1.0625rem;
+  transition: transform 0.2s ease;
 }
 
 .section-footer a:hover {
-  gap: 0.75rem;
+  transform: translateX(4px);
 }
 
 /* Projects - modern card design */
@@ -414,6 +426,7 @@ a:hover {
   padding-bottom: 2.5rem;
   border-bottom: 1px solid var(--color-border-light);
   transition: all 0.2s ease;
+  border-left: 3px solid transparent;
 }
 
 .post-item:last-child {
@@ -421,8 +434,8 @@ a:hover {
 }
 
 .post-item:hover {
-  padding-left: 1rem;
-  border-left: 3px solid var(--color-accent);
+  transform: translateX(4px);
+  border-left-color: var(--color-accent);
 }
 
 .post-item h3 {
@@ -766,7 +779,7 @@ button:focus,
 
 .back-link a:hover {
   color: var(--color-accent);
-  gap: 0.75rem;
+  transform: translateX(-4px);
   text-decoration: none;
 }
 
