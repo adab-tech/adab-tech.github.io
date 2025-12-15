@@ -558,6 +558,12 @@
 
         // --- AUDIO PRONUNCIATION FEATURE ---
         
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         function speakWord(text, lang = 'ha') {
             if ('speechSynthesis' in window) {
                 // Cancel any ongoing speech
@@ -748,11 +754,12 @@
             return list.map(item => `
                 <div class="p-4 bg-white rounded-xl shadow-md border-l-4 accent-border hover:shadow-xl transition-all">
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-2xl font-extrabold primary-text">${item.word}</h3>
+                        <h3 class="text-2xl font-extrabold primary-text">${escapeHtml(item.word)}</h3>
                         <button 
-                            onclick="speakWord('${item.word.replace(/'/g, "\\'")}', 'ha')" 
+                            onclick="speakWord('${escapeHtml(item.word)}', 'ha')" 
                             class="ml-2 p-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full transition-colors"
                             title="Pronounce word"
+                            aria-label="Pronounce ${escapeHtml(item.word)}"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
@@ -761,8 +768,8 @@
                             </svg>
                         </button>
                     </div>
-                    <p class="text-gray-600 font-medium my-1 text-lg">${item.translation}</p>
-                    <p class="text-sm italic mt-2 border-t pt-2 text-gray-500">Example: "${item.example}"</p>
+                    <p class="text-gray-600 font-medium my-1 text-lg">${escapeHtml(item.translation)}</p>
+                    <p class="text-sm italic mt-2 border-t pt-2 text-gray-500">Example: "${escapeHtml(item.example)}"</p>
                 </div>
             `).join('');
         }
@@ -1300,8 +1307,9 @@
             const question = exerciseState.data[exerciseState.currentQuestion];
             const progressPercent = ((exerciseState.currentQuestion) / exerciseState.numQuestions) * 100;
 
-            // Replace the word in the sentence with a blank
-            const sentenceWithBlank = question.sentence.replace(new RegExp(question.word, 'gi'), '______');
+            // Replace the word in the sentence with a blank (escape special regex characters)
+            const escapedWord = question.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const sentenceWithBlank = question.sentence.replace(new RegExp(escapedWord, 'gi'), '______');
 
             return `
                 <div class="p-6 bg-white rounded-xl shadow-xl max-w-3xl mx-auto">
@@ -1410,6 +1418,11 @@
             `;
         }
 
+        function resetExerciseState() {
+            exerciseState.started = false;
+            changeView('exercises');
+        }
+
         function renderExerciseResult() {
             const maxScore = exerciseState.type === 'fillblank' ? exerciseState.numQuestions : 5;
             const percentage = Math.round((exerciseState.score / maxScore) * 100);
@@ -1429,7 +1442,7 @@
                             Try Again
                         </button>
                         <button 
-                            onclick="exerciseState.started = false; changeView('exercises')"
+                            onclick="resetExerciseState()"
                             class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-colors text-lg"
                         >
                             Choose Different Exercise

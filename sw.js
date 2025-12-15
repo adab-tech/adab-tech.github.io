@@ -2,7 +2,6 @@
 const CACHE_NAME = 'hausa-explorer-v1';
 const urlsToCache = [
   '/hausa_explorer.html',
-  '/hausa_data.js',
   '/manifest.json'
 ];
 
