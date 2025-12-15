@@ -39,17 +39,17 @@
 <body>
 
     <!-- Header (Fixed at Top) -->
-    <header class="fixed top-0 left-0 right-0 primary-bg shadow-xl z-20">
+    <header class="fixed top-0 left-0 right-0 primary-bg shadow-xl z-20" role="banner">
         <div class="container mx-auto p-4 flex justify-between items-center max-w-7xl">
-            <h1 class="text-lg sm:text-2xl font-black text-white cursor-pointer flex items-center" onclick="changeView('home')">
+            <h1 class="text-lg sm:text-2xl font-black text-white cursor-pointer flex items-center" onclick="changeView('home')" role="button" tabindex="0" aria-label="Go to home page">
                 <span class="mr-1 sm:mr-2 text-orange-400">&#x1F30D;</span> Hausa <span class="accent-text ml-1">Explorer</span>
             </h1>
-            <nav class="flex flex-wrap space-x-1 sm:space-x-4">
+            <nav class="flex flex-wrap space-x-1 sm:space-x-4" role="navigation" aria-label="Main navigation">
                 <!-- ORDER: Lessons & Culture, Dictionary, Quiz, Exercises -->
-                <button id="nav-culture" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('culture')">Lessons</button>
-                <button id="nav-dictionary" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('dictionary')">Dictionary</button>
-                <button id="nav-quiz" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('quiz')">Quiz</button>
-                <button id="nav-exercises" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('exercises')">Exercises</button>
+                <button id="nav-culture" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('culture')" aria-label="Go to Lessons and Culture section">Lessons</button>
+                <button id="nav-dictionary" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('dictionary')" aria-label="Go to Dictionary section">Dictionary</button>
+                <button id="nav-quiz" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('quiz')" aria-label="Go to Quiz section">Quiz</button>
+                <button id="nav-exercises" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('exercises')" aria-label="Go to Interactive Exercises section">Exercises</button>
             </nav>
         </div>
     </header>
@@ -638,6 +638,19 @@
             renderApp();
             window.scrollTo(0, 0); 
         }
+
+        // Add keyboard support for home button
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeBtn = document.querySelector('h1[role="button"]');
+            if (homeBtn) {
+                homeBtn.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        changeView('home');
+                    }
+                });
+            }
+        });
 
         function changeCultureTab(tab) {
             cultureTab = tab;
@@ -1477,6 +1490,38 @@
                         console.log('ServiceWorker registration failed:', err);
                     });
             }
+
+            // PWA Install Prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install button/banner (optional UI enhancement)
+                const installDiv = document.createElement('div');
+                installDiv.className = 'fixed bottom-4 right-4 bg-orange-500 text-white p-4 rounded-lg shadow-xl z-30';
+                installDiv.innerHTML = `
+                    <p class="font-semibold mb-2">Install Hausa Explorer</p>
+                    <p class="text-sm mb-3">Add to your home screen for quick access!</p>
+                    <div class="flex gap-2">
+                        <button id="install-btn" class="px-4 py-2 bg-white text-orange-500 rounded font-semibold">Install</button>
+                        <button id="dismiss-btn" class="px-4 py-2 bg-orange-600 text-white rounded">Later</button>
+                    </div>
+                `;
+                document.body.appendChild(installDiv);
+
+                document.getElementById('install-btn').addEventListener('click', () => {
+                    installDiv.style.display = 'none';
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        deferredPrompt = null;
+                    });
+                });
+
+                document.getElementById('dismiss-btn').addEventListener('click', () => {
+                    installDiv.style.display = 'none';
+                });
+            });
         });
 
     </script>
