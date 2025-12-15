@@ -12,7 +12,7 @@ adab-tech.github.io/hausa_explorer.html
 
 ✨ Features
 
-The application is structured into three main views, prioritizing easy navigation and efficient learning:
+The application is structured into four main views, prioritizing easy navigation and efficient learning:
 
 1. Lessons & Culture (Al'adun Hausa)
    
@@ -24,7 +24,7 @@ Numbers 1-100: Full set of Hausa number words (dynamically generated).
 
 Proverbs: Traditional wise sayings with literal translations and cultural meanings.
 
-Themed Vocabulary: Specialized lists covering Food, Science & Tech, and Literature.
+Themed Vocabulary: Specialized lists covering Food, Science & Tech, Literature, Education, and Nature & Environment.
 
 Cultural Facts: Key information about Hausa traditions, history, and major cities.
 
@@ -34,11 +34,19 @@ Extensive Vocabulary: Contains over 500 core Hausa vocabulary entries, including
 
 Interactive Search: Allows users to quickly find words by Hausa term, English translation, or example sentence.
 
+**Audio Pronunciation**: Click the speaker icon next to any word to hear it pronounced using Web Speech API.
+
 3. Quiz (Jarrabawa)
    
 Multiple-Choice Tests: Engage with a short, randomized vocabulary quiz to test knowledge recall.
 
 Visual Progress: Tracks score and displays results for immediate feedback.
+
+4. Interactive Exercises
+   
+**Fill in the Blank**: Complete sentences with the correct Hausa word for contextual learning.
+
+**Matching Game**: Match Hausa words with their English translations in an interactive format.
 
 🛠️ Technology Stack
 
@@ -46,9 +54,13 @@ This application is designed for maximum performance and deployability using a p
 
 HTML5: The core structure of the application.
 
-JavaScript (Vanilla JS): Handles all logic, state management, search functionality, and quiz generation.
+JavaScript (Vanilla JS): Handles all logic, state management, search functionality, quiz generation, and interactive exercises.
 
 Tailwind CSS: Used for a fully responsive, modern, and visually appealing UI/UX, ensuring accessibility across mobile and desktop devices.
+
+**Web Speech API**: Provides audio pronunciation for all vocabulary words.
+
+**Progressive Web App (PWA)**: Includes service worker for offline support and installable mobile app experience.
 
 Zero Dependencies: No frameworks (like React or Vue) or external API keys are required.
 

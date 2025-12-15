@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn Hausa language and culture with interactive lessons, dictionary, quizzes, and exercises">
+    <meta name="theme-color" content="#312e81">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hausa Explorer">
     <title>Hausa Explorer - Optimized Learning</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -30,16 +39,17 @@
 <body>
 
     <!-- Header (Fixed at Top) -->
-    <header class="fixed top-0 left-0 right-0 primary-bg shadow-xl z-20">
+    <header class="fixed top-0 left-0 right-0 primary-bg shadow-xl z-20" role="banner">
         <div class="container mx-auto p-4 flex justify-between items-center max-w-7xl">
-            <h1 class="text-2xl font-black text-white cursor-pointer flex items-center" onclick="changeView('home')">
-                <span class="mr-2 text-orange-400">&#x1F30D;</span> Hausa <span class="accent-text">Explorer</span>
+            <h1 class="text-lg sm:text-2xl font-black text-white cursor-pointer flex items-center" onclick="changeView('home')" role="button" tabindex="0" aria-label="Go to home page">
+                <span class="mr-1 sm:mr-2 text-orange-400">&#x1F30D;</span> Hausa <span class="accent-text ml-1">Explorer</span>
             </h1>
-            <nav class="flex space-x-2 sm:space-x-6">
-                <!-- ORDER: Lessons & Culture, Dictionary, Quiz -->
-                <button id="nav-culture" class="text-white hover:text-orange-400 transition-colors p-2 rounded-lg text-sm sm:text-base" onclick="changeView('culture')">Lessons & Culture</button>
-                <button id="nav-dictionary" class="text-white hover:text-orange-400 transition-colors p-2 rounded-lg text-sm sm:text-base" onclick="changeView('dictionary')">Dictionary</button>
-                <button id="nav-quiz" class="text-white hover:text-orange-400 transition-colors p-2 rounded-lg text-sm sm:text-base" onclick="changeView('quiz')">Quiz</button>
+            <nav class="flex flex-wrap space-x-1 sm:space-x-4" role="navigation" aria-label="Main navigation">
+                <!-- ORDER: Lessons & Culture, Dictionary, Quiz, Exercises -->
+                <button id="nav-culture" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('culture')" aria-label="Go to Lessons and Culture section">Lessons</button>
+                <button id="nav-dictionary" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('dictionary')" aria-label="Go to Dictionary section">Dictionary</button>
+                <button id="nav-quiz" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('quiz')" aria-label="Go to Quiz section">Quiz</button>
+                <button id="nav-exercises" class="text-white hover:text-orange-400 transition-colors px-2 py-2 rounded-lg text-xs sm:text-base whitespace-nowrap" onclick="changeView('exercises')" aria-label="Go to Interactive Exercises section">Exercises</button>
             </nav>
         </div>
     </header>
@@ -509,21 +519,66 @@
                 'Miyan Kuka': 'Baobab leaf soup, pairs well with Tuwo.',
                 'Tuwo Shinkafa': 'Rice-based swallow (staple food).',
                 'Suya': 'Spicy grilled meat skewer (popular street food).',
+                'Fura da Nono': 'Millet balls with fermented milk (refreshing drink/meal).',
+                'Kilishi': 'Dried spiced meat, similar to beef jerky.',
             },
             'Science & Tech': {
                 'Kimiyya': 'Science, haifar da fahimta ta halittu.',
                 'Fasaha': 'Technology, tana taimaka wa rayuwa.',
                 'Injiniya': 'Engineer, suna gina hanyoyi da gine-gine.',
                 'Na\'ura mai kwakwalwa': 'Computer, tana gudu da shirye-shirye.',
+                'Wayar hannu': 'Mobile phone, don sadarwa.',
+                'Intanet': 'Internet, hanyar sadarwa ta duniya.',
             },
             'Literature': {
                 'Labari': 'Story / tale, an rubuta labari mai ban sha\'awa.',
                 'Waka': 'Poem / song, tana da matsayi a al\'adar Hausa.',
                 'Marubuci': 'Author / writer, ya wallafa sabon littafi.',
                 'Adabi': 'Literature, yana tattaunawa da al\'adu.',
+                'Jarida': 'Newspaper, yana dauke da labarai na yau da kullun.',
+            },
+            'Education': {
+                'Makaranta': 'School, wurin karatu.',
+                'Jami\'a': 'University, babbar makaranta.',
+                'Fensir': 'Pencil, kayan rubuce-rubuce.',
+                'Takarda': 'Paper, ana rubuta a kanta.',
+                'Darasin': 'Lesson/Class, lokacin koyarwa.',
+                'Jarrabawa': 'Test/Exam, gwajin ilimi.',
+            },
+            'Nature & Environment': {
+                'Daji': 'Forest/Bush, wurin da itatuwa suke da yawa.',
+                'Teku': 'Ocean/Sea, babban rafi mai gishiri.',
+                'Dutse': 'Rock/Mountain, babban dutse.',
+                'Fure': 'Flower, ganye mai kyau da kamshi.',
+                'Rana': 'Sun, tana ba da haske da zafi.',
+                'Wata': 'Moon, yana fitowa da daddare.',
             }
         };
 
+
+        // --- AUDIO PRONUNCIATION FEATURE ---
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function speakWord(text, lang = 'ha') {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = lang === 'ha' ? 'ha-NG' : 'en-US'; // Hausa (Nigeria) or English
+                utterance.rate = 0.8; // Slightly slower for clarity
+                utterance.pitch = 1.0;
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Sorry, your browser does not support text-to-speech.');
+            }
+        }
 
         // --- UTILITY DATA GENERATION ---
         
@@ -570,6 +625,16 @@
             showResult: false,
             numQuestions: 5
         };
+        let exerciseState = {
+            started: false,
+            type: 'fillblank', // 'fillblank' or 'matching'
+            data: [],
+            currentQuestion: 0,
+            score: 0,
+            showResult: false,
+            numQuestions: 5,
+            userAnswers: {}
+        };
         let cultureTab = 'greetings'; // Default tab for culture page
 
         const appContainer = document.getElementById('app-container');
@@ -579,6 +644,19 @@
             renderApp();
             window.scrollTo(0, 0); 
         }
+
+        // Add keyboard support for home button
+        document.addEventListener('DOMContentLoaded', () => {
+            const homeBtn = document.querySelector('h1[role="button"]');
+            if (homeBtn) {
+                homeBtn.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        changeView('home');
+                    }
+                });
+            }
+        });
 
         function changeCultureTab(tab) {
             cultureTab = tab;
@@ -608,9 +686,9 @@
             const randomFact = HAUSA_CULTURAL_FACTS[Math.floor(Math.random() * HAUSA_CULTURAL_FACTS.length)];
             
             return `
-                <div class="p-8 primary-bg rounded-xl shadow-2xl text-center border-b-4 accent-border">
-                    <h2 class="text-4xl font-extrabold text-white mb-2">Barka da zuwa!</h2>
-                    <p class="text-xl text-indigo-200">Hausa Language and Culture Explorer</p>
+                <div class="p-6 sm:p-8 primary-bg rounded-xl shadow-2xl text-center border-b-4 accent-border">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Barka da zuwa!</h2>
+                    <p class="text-base sm:text-lg text-indigo-200">Hausa Language and Culture Explorer</p>
                 </div>
 
                 <div class="p-6 bg-white border-l-4 accent-border rounded-xl shadow-md">
@@ -618,10 +696,11 @@
                     <p class="text-gray-700 italic">"${randomFact}"</p>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-6">
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     ${renderFeatureCard('Dictionary (Kamus)', 'Search essential vocabulary, phrases, and examples.', 'dictionary', 'bg-blue-600')}
                     ${renderFeatureCard('Quiz (Jarrabawa)', 'Test your knowledge with a five-question multiple-choice quiz.', 'quiz', 'bg-red-600')}
                     ${renderFeatureCard('Lessons & Culture', 'Explore structured lessons on greetings, numbers, proverbs, and facts.', 'culture', 'bg-orange-500')}
+                    ${renderFeatureCard('Interactive Exercises', 'Practice with fill-in-the-blank and matching games.', 'exercises', 'bg-green-600')}
                 </div>
             `;
         }
@@ -674,9 +753,23 @@
 
             return list.map(item => `
                 <div class="p-4 bg-white rounded-xl shadow-md border-l-4 accent-border hover:shadow-xl transition-all">
-                    <h3 class="text-2xl font-extrabold primary-text">${item.word}</h3>
-                    <p class="text-gray-600 font-medium my-1 text-lg">${item.translation}</p>
-                    <p class="text-sm italic mt-2 border-t pt-2 text-gray-500">Example: "${item.example}"</p>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-2xl font-extrabold primary-text">${escapeHtml(item.word)}</h3>
+                        <button 
+                            onclick="speakWord('${escapeHtml(item.word)}', 'ha')" 
+                            class="ml-2 p-2 bg-orange-500 hover:bg-orange-600 text-white rounded-full transition-colors"
+                            title="Pronounce word"
+                            aria-label="Pronounce ${escapeHtml(item.word)}"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="text-gray-600 font-medium my-1 text-lg">${escapeHtml(item.translation)}</p>
+                    <p class="text-sm italic mt-2 border-t pt-2 text-gray-500">Example: "${escapeHtml(item.example)}"</p>
                 </div>
             `).join('');
         }
@@ -1031,6 +1124,341 @@
         }
 
 
+        // --- EXERCISES LOGIC (Fill-in-the-Blank and Matching) ---
+
+        function startExercise(type) {
+            exerciseState = {
+                started: true,
+                type: type,
+                data: [],
+                currentQuestion: 0,
+                score: 0,
+                showResult: false,
+                numQuestions: 5,
+                userAnswers: {}
+            };
+
+            if (type === 'fillblank') {
+                generateFillBlankExercise();
+            } else if (type === 'matching') {
+                generateMatchingExercise();
+            }
+            renderApp();
+        }
+
+        function generateFillBlankExercise() {
+            const availableWords = [...VOCABULARY_LIST];
+            const numQuestions = exerciseState.numQuestions;
+            
+            if (availableWords.length < numQuestions) {
+                appContainer.innerHTML = `<div class="p-10 bg-red-100 rounded-xl shadow-xl text-center"><h2 class="text-3xl font-bold text-red-700 mb-4">Error!</h2><p class="text-gray-600 mb-6 text-lg">Not enough vocabulary to run exercises.</p><button onclick="changeView('home')" class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md">Back to Home</button></div>`;
+                return;
+            }
+
+            const shuffledWords = shuffle(availableWords).slice(0, numQuestions);
+            
+            const questions = shuffledWords.map(q => ({
+                sentence: q.example,
+                word: q.word,
+                correctAnswer: q.word.toLowerCase(),
+                userAnswer: ''
+            }));
+
+            exerciseState.data = questions;
+        }
+
+        function generateMatchingExercise() {
+            const availableWords = [...VOCABULARY_LIST];
+            const numPairs = 5;
+            
+            if (availableWords.length < numPairs) {
+                appContainer.innerHTML = `<div class="p-10 bg-red-100 rounded-xl shadow-xl text-center"><h2 class="text-3xl font-bold text-red-700 mb-4">Error!</h2><p class="text-gray-600 mb-6 text-lg">Not enough vocabulary to run exercises.</p><button onclick="changeView('home')" class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md">Back to Home</button></div>`;
+                return;
+            }
+
+            const selectedWords = shuffle(availableWords).slice(0, numPairs);
+            
+            const hausaWords = selectedWords.map((w, i) => ({ id: i, text: w.word, matched: false }));
+            const englishWords = shuffle(selectedWords.map((w, i) => ({ id: i, text: w.translation, matched: false })));
+
+            exerciseState.data = {
+                hausaWords,
+                englishWords,
+                pairs: selectedWords.map((w, i) => ({ hausa: w.word, english: w.translation, id: i })),
+                selected: { hausa: null, english: null },
+                matches: []
+            };
+        }
+
+        function checkFillBlankAnswer(questionIndex) {
+            const userInput = document.getElementById(`fill-blank-input-${questionIndex}`);
+            if (!userInput) return;
+
+            const question = exerciseState.data[questionIndex];
+            question.userAnswer = userInput.value.trim().toLowerCase();
+            
+            if (question.userAnswer === question.correctAnswer) {
+                exerciseState.score += 1;
+                userInput.classList.add('ring-4', 'ring-green-500', 'bg-green-50');
+                userInput.classList.remove('ring-red-500', 'bg-red-50');
+            } else {
+                userInput.classList.add('ring-4', 'ring-red-500', 'bg-red-50');
+                userInput.classList.remove('ring-green-500', 'bg-green-50');
+            }
+
+            userInput.disabled = true;
+
+            setTimeout(() => {
+                if (exerciseState.currentQuestion < exerciseState.numQuestions - 1) {
+                    exerciseState.currentQuestion += 1;
+                    renderApp();
+                } else {
+                    exerciseState.showResult = true;
+                    renderApp();
+                }
+            }, 1200);
+        }
+
+        function selectMatchingWord(type, id) {
+            const data = exerciseState.data;
+            
+            if (type === 'hausa') {
+                if (data.hausaWords[id].matched) return;
+                data.selected.hausa = id;
+            } else {
+                if (data.englishWords[id].matched) return;
+                data.selected.english = id;
+            }
+
+            if (data.selected.hausa !== null && data.selected.english !== null) {
+                const hausaId = data.hausaWords[data.selected.hausa].id;
+                const englishId = data.englishWords[data.selected.english].id;
+
+                if (hausaId === englishId) {
+                    // Correct match
+                    data.hausaWords[data.selected.hausa].matched = true;
+                    data.englishWords[data.selected.english].matched = true;
+                    data.matches.push({ hausa: data.selected.hausa, english: data.selected.english, correct: true });
+                    exerciseState.score += 1;
+                } else {
+                    // Wrong match
+                    data.matches.push({ hausa: data.selected.hausa, english: data.selected.english, correct: false });
+                }
+
+                data.selected = { hausa: null, english: null };
+
+                if (data.matches.length === 5) {
+                    setTimeout(() => {
+                        exerciseState.showResult = true;
+                        renderApp();
+                    }, 800);
+                }
+            }
+
+            renderApp();
+        }
+
+        function renderExercises() {
+            if (!exerciseState.started) {
+                return `
+                    <div class="p-10 bg-white rounded-xl shadow-xl text-center max-w-3xl mx-auto">
+                        <h2 class="text-3xl font-bold primary-text mb-4">Interactive Exercises</h2>
+                        <p class="text-gray-600 mb-8 text-lg">Choose an exercise type to practice your Hausa skills!</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="p-6 bg-green-50 border-2 border-green-300 rounded-xl hover:shadow-xl transition-shadow">
+                                <h3 class="text-xl font-bold text-green-700 mb-3">Fill in the Blank</h3>
+                                <p class="text-gray-700 mb-4">Complete sentences with the correct Hausa word.</p>
+                                <button 
+                                    onclick="startExercise('fillblank')"
+                                    class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                                >
+                                    Start Exercise
+                                </button>
+                            </div>
+                            
+                            <div class="p-6 bg-purple-50 border-2 border-purple-300 rounded-xl hover:shadow-xl transition-shadow">
+                                <h3 class="text-xl font-bold text-purple-700 mb-3">Matching Game</h3>
+                                <p class="text-gray-700 mb-4">Match Hausa words with their English translations.</p>
+                                <button 
+                                    onclick="startExercise('matching')"
+                                    class="px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition-colors"
+                                >
+                                    Start Exercise
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (exerciseState.showResult) {
+                return renderExerciseResult();
+            }
+
+            if (exerciseState.type === 'fillblank') {
+                return renderFillBlankExercise();
+            } else if (exerciseState.type === 'matching') {
+                return renderMatchingExercise();
+            }
+        }
+
+        function renderFillBlankExercise() {
+            const question = exerciseState.data[exerciseState.currentQuestion];
+            const progressPercent = ((exerciseState.currentQuestion) / exerciseState.numQuestions) * 100;
+
+            // Replace the word in the sentence with a blank (escape special regex characters)
+            const escapedWord = question.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const sentenceWithBlank = question.sentence.replace(new RegExp(escapedWord, 'gi'), '______');
+
+            return `
+                <div class="p-6 bg-white rounded-xl shadow-xl max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold primary-text mb-6">Fill in the Blank</h2>
+                    
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center text-sm font-medium text-gray-700 mb-1">
+                            <span>Question ${exerciseState.currentQuestion + 1} of ${exerciseState.numQuestions}</span>
+                            <span>Score: ${exerciseState.score}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-green-500 h-3 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 border-2 border-gray-200 mb-6 bg-green-50 rounded-lg">
+                        <p class="text-xl font-medium text-gray-800">${escapeHtml(sentenceWithBlank)}</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 items-center">
+                        <input 
+                            type="text" 
+                            id="fill-blank-input-${exerciseState.currentQuestion}"
+                            placeholder="Type your answer..."
+                            class="flex-grow p-3 border-2 border-gray-300 rounded-lg text-lg focus:ring-2 focus:ring-green-500"
+                            ${question.userAnswer ? 'disabled' : ''}
+                        />
+                        <button 
+                            onclick="checkFillBlankAnswer(${exerciseState.currentQuestion})"
+                            class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                            ${question.userAnswer ? 'disabled' : ''}
+                        >
+                            Check Answer
+                        </button>
+                    </div>
+
+                    ${question.userAnswer ? `
+                        <div class="mt-4 p-4 ${question.userAnswer === question.correctAnswer ? 'bg-green-100 border-green-500' : 'bg-red-100 border-red-500'} border-l-4 rounded">
+                            <p class="font-semibold ${question.userAnswer === question.correctAnswer ? 'text-green-700' : 'text-red-700'}">
+                                ${question.userAnswer === question.correctAnswer ? '✓ Correct!' : `✗ Incorrect. The correct answer is: ${escapeHtml(question.correctAnswer)}`}
+                            </p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderMatchingExercise() {
+            const data = exerciseState.data;
+
+            return `
+                <div class="p-6 bg-white rounded-xl shadow-xl max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold primary-text mb-4">Matching Game</h2>
+                    <p class="text-gray-600 mb-6">Match Hausa words with their English translations. Score: ${exerciseState.score}/5</p>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Hausa Words Column -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-gray-700">Hausa</h3>
+                            <div class="space-y-2">
+                                ${data.hausaWords.map((word, index) => {
+                                    const isSelected = data.selected.hausa === index;
+                                    const isMatched = word.matched;
+                                    let btnClass = 'bg-blue-100 hover:bg-blue-200 text-gray-800';
+                                    if (isMatched) btnClass = 'bg-green-500 text-white cursor-not-allowed';
+                                    else if (isSelected) btnClass = 'bg-blue-500 text-white ring-4 ring-blue-300';
+                                    
+                                    return `
+                                        <button
+                                            onclick="selectMatchingWord('hausa', ${index})"
+                                            class="w-full p-4 text-left rounded-lg transition-all shadow-md text-lg font-medium ${btnClass}"
+                                            ${isMatched ? 'disabled' : ''}
+                                        >
+                                            ${escapeHtml(word.text)}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+
+                        <!-- English Translations Column -->
+                        <div>
+                            <h3 class="text-xl font-bold mb-3 text-gray-700">English</h3>
+                            <div class="space-y-2">
+                                ${data.englishWords.map((word, index) => {
+                                    const isSelected = data.selected.english === index;
+                                    const isMatched = word.matched;
+                                    let btnClass = 'bg-purple-100 hover:bg-purple-200 text-gray-800';
+                                    if (isMatched) btnClass = 'bg-green-500 text-white cursor-not-allowed';
+                                    else if (isSelected) btnClass = 'bg-purple-500 text-white ring-4 ring-purple-300';
+                                    
+                                    return `
+                                        <button
+                                            onclick="selectMatchingWord('english', ${index})"
+                                            class="w-full p-4 text-left rounded-lg transition-all shadow-md text-lg font-medium ${btnClass}"
+                                            ${isMatched ? 'disabled' : ''}
+                                        >
+                                            ${escapeHtml(word.text)}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function resetExerciseState() {
+            exerciseState.started = false;
+            changeView('exercises');
+        }
+
+        function renderExerciseResult() {
+            const maxScore = exerciseState.type === 'fillblank' ? exerciseState.numQuestions : 5;
+            const percentage = Math.round((exerciseState.score / maxScore) * 100);
+
+            return `
+                <div class="p-10 bg-blue-50 border-4 border-blue-200 rounded-xl shadow-xl text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl font-extrabold primary-text mb-4">Exercise Complete!</h2>
+                    <p class="text-2xl font-semibold text-gray-700 mb-6">
+                        Your Final Score: <span class="text-emerald-600">${exerciseState.score}</span> / ${maxScore} (${percentage}%)
+                    </p>
+
+                    <div class="space-x-4">
+                        <button 
+                            onclick="startExercise('${exerciseState.type}')"
+                            class="px-6 py-2 primary-bg text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition-colors text-lg"
+                        >
+                            Try Again
+                        </button>
+                        <button 
+                            onclick="resetExerciseState()"
+                            class="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-colors text-lg"
+                        >
+                            Choose Different Exercise
+                        </button>
+                        <button 
+                            onclick="changeView('home')"
+                            class="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition-colors text-lg"
+                        >
+                            Back to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+
         // --- MAIN RENDER FUNCTION ---
 
         function renderApp() {
@@ -1044,6 +1472,9 @@
                     break;
                 case 'culture':
                     htmlContent = renderCulture();
+                    break;
+                case 'exercises':
+                    htmlContent = renderExercises();
                     break;
                 case 'home':
                 default:
@@ -1061,6 +1492,49 @@
         // Initialize the application when the script runs
         document.addEventListener('DOMContentLoaded', () => {
             renderApp();
+            
+            // Register Service Worker for PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed:', err);
+                    });
+            }
+
+            // PWA Install Prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install button/banner (optional UI enhancement)
+                const installDiv = document.createElement('div');
+                installDiv.className = 'fixed bottom-4 right-4 bg-orange-500 text-white p-4 rounded-lg shadow-xl z-30';
+                installDiv.innerHTML = `
+                    <p class="font-semibold mb-2">Install Hausa Explorer</p>
+                    <p class="text-sm mb-3">Add to your home screen for quick access!</p>
+                    <div class="flex gap-2">
+                        <button id="install-btn" class="px-4 py-2 bg-white text-orange-500 rounded font-semibold">Install</button>
+                        <button id="dismiss-btn" class="px-4 py-2 bg-orange-600 text-white rounded">Later</button>
+                    </div>
+                `;
+                document.body.appendChild(installDiv);
+
+                document.getElementById('install-btn').addEventListener('click', () => {
+                    installDiv.style.display = 'none';
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        deferredPrompt = null;
+                    });
+                });
+
+                document.getElementById('dismiss-btn').addEventListener('click', () => {
+                    installDiv.style.display = 'none';
+                });
+            });
         });
 
     </script>
