@@ -221,6 +221,76 @@
       user-select: none;
     }
 
+    /* Services Section */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+    }
+    .service-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(11, 61, 145, 0.1);
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-left: 4px solid var(--accent-color);
+    }
+    .service-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(11, 61, 145, 0.2);
+    }
+    .service-card h3 {
+      margin-top: 0;
+      color: var(--primary-color);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .service-card p {
+      color: var(--muted-text);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+    .service-card .service-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* Smooth Scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: var(--accent-color);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 122, 204, 0.3);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      z-index: 99;
+    }
+    .back-to-top:hover,
+    .back-to-top:focus {
+      background-color: var(--primary-color);
+      transform: translateY(-3px);
+      outline: none;
+    }
+    .back-to-top.visible {
+      display: flex;
+    }
+
     /* Responsive nav for small screens */
     @media (max-width: 700px) {
       header {
@@ -238,21 +308,51 @@
   <header>
     <h1>Adamu Danjuma</h1>
     <nav aria-label="Primary Navigation">
-      <a href="#portfolio">Portfolio</a>
+      <a href="#about">About Me</a>
+      <a href="#services">Services</a>
+      <a href="#cv">CV</a>
       <a href="#blog">Blog</a>
-      <a href="#contact">Contact</a>
+      <a href="#contact">Contact Me</a>
     </nav>
   </header>
 
   <main>
-    <section class="hero" aria-label="Introduction">
+    <!-- About Me Section -->
+    <section id="about" class="hero" aria-label="Introduction">
       <h2>Welcome! I'm Adamu Danjuma</h2>
       <p>PhD candidate, multilingual AI trainer, writer, and tech enthusiast. I help clients and collaborators with research, writing, AI data annotation, and digital storytelling.</p>
       <a href="#contact" class="btn-primary">Get in Touch</a>
     </section>
 
-    <section id="portfolio" aria-label="Portfolio">
-      <h2>Portfolio</h2>
+    <!-- Services Section -->
+    <section id="services" aria-label="Services Offered">
+      <h2>Services</h2>
+      <div class="services-grid">
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">📊</span>
+          <h3>Data Annotation</h3>
+          <p>Expert data labeling and annotation services for machine learning and AI projects. I provide high-quality, accurate annotations for text, audio, and multilingual datasets to train robust AI models.</p>
+        </article>
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">🤖</span>
+          <h3>Multilingual AI Training</h3>
+          <p>Specialized training data preparation for multilingual NLP systems. With expertise in multiple languages including Hausa, French, and English, I help develop inclusive AI systems that work across linguistic boundaries.</p>
+        </article>
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">🌍</span>
+          <h3>Translation and Localization</h3>
+          <p>Professional translation and cultural localization services. I ensure your content resonates with diverse audiences while maintaining cultural authenticity and linguistic precision across multiple languages.</p>
+        </article>
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">💡</span>
+          <h3>Consultancy</h3>
+          <p>Expert guidance on low-resource languages for LLM development, cultural nuances in AI systems, and AI bias mitigation. I help organizations build more inclusive, culturally aware, and ethically sound AI solutions.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="cv" aria-label="Portfolio">
+      <h2>CV</h2>
       <div class="portfolio-grid">
         <article class="portfolio-item">
           <h3>Francophone African Literature Research</h3>
@@ -270,7 +370,7 @@
     </section>
 
     <section id="blog" aria-label="Latest Blog Posts">
-      <h2>Opinion & Insights</h2>
+      <h2>Blog</h2>
       <div class="blog-posts">
         <article class="blog-post">
           <h4><a href="#">Exploring AI's Impact on Language Research</a></h4>
@@ -305,5 +405,30 @@
   <footer>
     <p>© 2025 Adamu Danjuma. All rights reserved.</p>
   </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+  <script>
+    // Back to Top Button Functionality
+    const backToTopButton = document.getElementById('backToTop');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopButton.classList.add('visible');
+      } else {
+        backToTopButton.classList.remove('visible');
+      }
+    });
+    
+    // Scroll to top when button is clicked
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
 </body>
 </html>
