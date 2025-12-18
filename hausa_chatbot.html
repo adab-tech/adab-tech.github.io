@@ -325,6 +325,8 @@
                 const data = await response.json();
                 return data.valid;
             } catch (error) {
+                console.error('Session validation error:', error);
+                // Return false on error to trigger re-authentication
                 return false;
             }
         }
