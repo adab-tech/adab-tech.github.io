@@ -4,7 +4,7 @@ This Flask application provides the backend for the Hausa AI chatbot,
 integrating GPT models, Google Cloud Speech APIs, Azure Speech Services, and Gemini Pro.
 """
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, session
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -17,6 +17,7 @@ from autonomous_trainer import get_trainer
 from azure_speech import AzureSpeechService
 from evaluation_metrics import HausaEvaluator
 from config_manager import get_config
+from secure_api_key import get_api_key_manager
 
 # Import Gemini service if available
 try:
@@ -30,7 +31,11 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend communication
+
+# Set secret key for sessions (should be set in environment variables in production)
+app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
+
+CORS(app, supports_credentials=True)  # Enable CORS with credentials for session support
 
 # Get unified configuration
 config = get_config()
@@ -69,6 +74,9 @@ evaluator = HausaEvaluator()
 # Initialize autonomous trainer
 trainer = get_trainer()
 
+# Initialize API key manager
+api_key_manager = get_api_key_manager()
+
 # System prompt for Hausa language model
 HAUSA_SYSTEM_PROMPT = """You are a helpful AI assistant that is fluent in Hausa language.
 You should:
@@ -97,6 +105,126 @@ def health_check():
         'available_services': config.get_available_services(),
         'tts_config': config.get_tts_config()
     })
+
+
+@app.route('/api/auth/validate-key', methods=['POST'])
+def validate_api_key():
+    """
+    Validate an API key and create a session token
+    
+    Request body:
+    {
+        "api_key": "API key to validate",
+        "provider": "openai" or "gemini"
+    }
+    
+    Returns:
+    {
+        "valid": true/false,
+        "session_token": "token",
+        "message": "..."
+    }
+    """
+    try:
+        data = request.json
+        api_key = data.get('api_key')
+        provider = data.get('provider', 'openai')
+        
+        if not api_key:
+            return jsonify({'error': 'API key is required'}), 400
+        
+        # Validate the API key
+        validation_result = api_key_manager.validate_api_key(api_key, provider)
+        
+        if validation_result['valid']:
+            # Create session token
+            session_token = api_key_manager.create_session_token()
+            
+            # Store session info
+            session['authenticated'] = True
+            session['provider'] = provider
+            session['token'] = session_token
+            
+            return jsonify({
+                'valid': True,
+                'session_token': session_token,
+                'provider': provider,
+                'message': 'API key validated successfully'
+            })
+        else:
+            return jsonify({
+                'valid': False,
+                'error': validation_result.get('error', 'Invalid API key')
+            }), 401
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/auth/validate-session', methods=['POST'])
+def validate_session_endpoint():
+    """
+    Validate a session token
+    
+    Request body:
+    {
+        "session_token": "token"
+    }
+    
+    Returns session information if valid
+    """
+    try:
+        data = request.json
+        token = data.get('session_token')
+        
+        if not token:
+            return jsonify({'error': 'Session token is required'}), 400
+        
+        # Validate token
+        session_info = api_key_manager.get_session_info(token)
+        
+        if session_info:
+            return jsonify({
+                'valid': True,
+                'session_info': session_info
+            })
+        else:
+            return jsonify({
+                'valid': False,
+                'error': 'Invalid or expired session token'
+            }), 401
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout():
+    """
+    Logout and invalidate session
+    
+    Request body:
+    {
+        "session_token": "token"
+    }
+    """
+    try:
+        data = request.json
+        token = data.get('session_token')
+        
+        if token:
+            api_key_manager.invalidate_session(token)
+        
+        # Clear Flask session
+        session.clear()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Logged out successfully'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/chat', methods=['POST'])
