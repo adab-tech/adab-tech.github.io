@@ -470,8 +470,8 @@ a:hover {
 }
 
 .btn:hover::before {
-  width: 300px;
-  height: 300px;
+  width: 200%;
+  height: 200%;
 }
 
 .btn-primary {
@@ -618,23 +618,14 @@ a:hover {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Staggered animation for project cards - scalable approach */
-@supports (animation-delay: calc(1s)) {
-  .project-card {
-    animation-delay: calc(var(--card-index, 0) * 0.1s);
-  }
-}
-
-/* Fallback for browsers without calc() in animation-delay */
-@supports not (animation-delay: calc(1s)) {
-  .project-card:nth-child(1) { animation-delay: 0.1s; }
-  .project-card:nth-child(2) { animation-delay: 0.2s; }
-  .project-card:nth-child(3) { animation-delay: 0.3s; }
-  .project-card:nth-child(4) { animation-delay: 0.4s; }
-  .project-card:nth-child(5) { animation-delay: 0.5s; }
-  .project-card:nth-child(6) { animation-delay: 0.6s; }
-  .project-card:nth-child(n+7) { animation-delay: 0.7s; }
-}
+/* Staggered animation for project cards */
+.project-card:nth-child(1) { animation-delay: 0.1s; }
+.project-card:nth-child(2) { animation-delay: 0.2s; }
+.project-card:nth-child(3) { animation-delay: 0.3s; }
+.project-card:nth-child(4) { animation-delay: 0.4s; }
+.project-card:nth-child(5) { animation-delay: 0.5s; }
+.project-card:nth-child(6) { animation-delay: 0.6s; }
+.project-card:nth-child(n+7) { animation-delay: 0.7s; }
 
 .project-card::before {
   content: '';
@@ -741,22 +732,13 @@ a:hover {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Staggered animation for post items - scalable approach */
-@supports (animation-delay: calc(1s)) {
-  .post-item {
-    animation-delay: calc(var(--item-index, 0) * 0.1s);
-  }
-}
-
-/* Fallback for browsers without calc() in animation-delay */
-@supports not (animation-delay: calc(1s)) {
-  .post-item:nth-child(1) { animation-delay: 0.1s; }
-  .post-item:nth-child(2) { animation-delay: 0.2s; }
-  .post-item:nth-child(3) { animation-delay: 0.3s; }
-  .post-item:nth-child(4) { animation-delay: 0.4s; }
-  .post-item:nth-child(5) { animation-delay: 0.5s; }
-  .post-item:nth-child(n+6) { animation-delay: 0.6s; }
-}
+/* Staggered animation for post items */
+.post-item:nth-child(1) { animation-delay: 0.1s; }
+.post-item:nth-child(2) { animation-delay: 0.2s; }
+.post-item:nth-child(3) { animation-delay: 0.3s; }
+.post-item:nth-child(4) { animation-delay: 0.4s; }
+.post-item:nth-child(5) { animation-delay: 0.5s; }
+.post-item:nth-child(n+6) { animation-delay: 0.6s; }
 
 .post-item:last-child {
   border-bottom: none;
@@ -1123,6 +1105,18 @@ button:focus,
 
 .text-muted {
   color: var(--color-text-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* Back link styling */

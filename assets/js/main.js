@@ -157,14 +157,6 @@
 
   // Keyboard accessibility improvements
   document.addEventListener('keydown', (e) => {
-    // Reserved for future modal implementation
-    if (e.key === 'Escape') {
-      // Modal close functionality can be added here when needed
-    }
-  });
-
-  // Add visual feedback for focus (accessibility)
-  document.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       document.body.classList.add('user-is-tabbing');
     }
