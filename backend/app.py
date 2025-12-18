@@ -633,6 +633,25 @@ def evaluate_cultural_context():
         return jsonify({'error': str(e)}), 500
 
 
+@app.route('/api/rate-limit/status', methods=['GET'])
+def rate_limit_status():
+    """
+    Get current rate limit status for Google Cloud API usage
+    """
+    try:
+        status = azure_speech.get_rate_limit_status()
+        
+        if status:
+            return jsonify(status)
+        else:
+            return jsonify({
+                'enabled': False,
+                'message': 'Rate limiting is not enabled'
+            })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     # Start autonomous training on app startup if enabled
     if os.getenv('AUTO_TRAIN_ENABLED', 'true').lower() == 'true':

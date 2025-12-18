@@ -11,6 +11,14 @@ import logging
 import azure.cognitiveservices.speech as speechsdk
 from google.cloud import texttospeech
 
+# Import rate limiter
+try:
+    from rate_limiter import get_rate_limiter
+    RATE_LIMITER_AVAILABLE = True
+except ImportError:
+    RATE_LIMITER_AVAILABLE = False
+    logging.warning("Rate limiter not available")
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -33,7 +41,8 @@ class AzureSpeechService:
     def __init__(self, 
                  subscription_key: Optional[str] = None,
                  region: Optional[str] = None,
-                 enable_google_fallback: bool = True):
+                 enable_google_fallback: bool = True,
+                 enable_rate_limiting: bool = True):
         """
         Initialize Azure Speech Service with optional Google Cloud fallback
         
@@ -41,10 +50,19 @@ class AzureSpeechService:
             subscription_key: Azure Speech API key
             region: Azure region (e.g., 'eastus', 'westeurope')
             enable_google_fallback: Enable Google Cloud TTS as fallback
+            enable_rate_limiting: Enable rate limiting for Google Cloud API
         """
         self.subscription_key = subscription_key or os.getenv('AZURE_SPEECH_KEY')
         self.region = region or os.getenv('AZURE_SPEECH_REGION', 'eastus')
         self.enable_google_fallback = enable_google_fallback
+        
+        # Initialize rate limiter
+        self.rate_limiter = None
+        if enable_rate_limiting and RATE_LIMITER_AVAILABLE:
+            try:
+                self.rate_limiter = get_rate_limiter()
+            except Exception as e:
+                logger.warning(f"Could not initialize rate limiter: {e}")
         
         # Initialize Azure Speech
         if not self.subscription_key:
@@ -178,10 +196,17 @@ class AzureSpeechService:
                               speaking_rate: float,
                               pitch: str) -> Optional[bytes]:
         """
-        Google Cloud-specific text-to-speech implementation
+        Google Cloud-specific text-to-speech implementation with rate limiting
         """
         if not self.google_tts_client:
             raise Exception("Google Cloud TTS not initialized")
+        
+        # Check rate limit
+        if self.rate_limiter:
+            allowed, message = self.rate_limiter.check_tts_allowed(len(text))
+            if not allowed:
+                logger.warning(f"Rate limit exceeded: {message}")
+                raise Exception(f"Rate limit exceeded: {message}")
         
         # Get Google voice name
         if voice_name in self.GOOGLE_HAUSA_VOICES:
@@ -226,6 +251,10 @@ class AzureSpeechService:
             voice=voice,
             audio_config=audio_config
         )
+        
+        # Log usage
+        if self.rate_limiter:
+            self.rate_limiter.log_tts_usage(len(text))
         
         logger.info(f"Google Cloud TTS: Speech synthesized: {len(response.audio_content)} bytes")
         return response.audio_content
@@ -385,6 +414,17 @@ class AzureSpeechService:
                 })
         
         return voices
+    
+    def get_rate_limit_status(self) -> Optional[Dict]:
+        """
+        Get current rate limit status
+        
+        Returns:
+            Rate limit usage summary or None if rate limiting disabled
+        """
+        if self.rate_limiter:
+            return self.rate_limiter.get_usage_summary()
+        return None
     
     def test_connection(self) -> Dict[str, bool]:
         """

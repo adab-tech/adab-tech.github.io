@@ -97,35 +97,61 @@ The enhanced data pipeline now supports multiple authoritative Hausa datasets:
 
 ### Native Voice Synthesis
 
-#### Azure Speech Integration
+#### Azure Speech Integration with Google Cloud Fallback
 
 ```python
 from azure_speech import AzureSpeechService
 
-# Initialize Azure Speech Service
-azure_speech = AzureSpeechService()
+# Initialize with Google Cloud fallback and rate limiting
+azure_speech = AzureSpeechService(
+    enable_google_fallback=True,
+    enable_rate_limiting=True
+)
 
-# Synthesize with native Hausa voice
+# Synthesize with native Hausa voice (tries Azure first, then Google)
 audio = azure_speech.text_to_speech(
     text="Sannu, ina kwana?",
-    voice_name="female",  # ha-NG-AbeoNaural
+    voice_name="female",  # ha-NG-AbeoNaural (Azure) or ha-NG-Standard-A (Google)
     speaking_rate=0.9,
-    pitch="default"
+    pitch="default",
+    use_fallback=True  # Enable automatic fallback to Google Cloud
 )
 ```
 
-Key features of Azure integration:
-- **Native Neural Voices**: ha-NG-AbeoNaural (female), ha-NG-SamuelNeural (male)
-- **SSML Support**: Fine-grained control over prosody, rate, and pitch
+Key features of the integrated speech system:
+- **Primary Provider: Azure**: Native Neural Voices (ha-NG-AbeoNaural, ha-NG-SamuelNeural)
+- **Fallback Provider: Google Cloud**: Standard voices for reliability and cost optimization
+- **SSML Support**: Fine-grained control over prosody, rate, and pitch (Azure)
 - **Cultural Authenticity**: Voices trained on native Hausa speech patterns
 - **Tonal Accuracy**: Proper tone recognition and synthesis
+- **Rate Limiting**: Smart budget management for Google Cloud's $300 free trial
+- **Automatic Failover**: Seamless switching between providers on error
+
+#### Rate Limiting and Cost Management
+
+The system includes intelligent rate limiting to optimize usage of Google Cloud's $300 free trial:
+
+```python
+# Check rate limit status
+status = azure_speech.get_rate_limit_status()
+print(f"Budget used: ${status['total_cost']:.2f} / ${status['monthly_budget']}")
+print(f"Remaining: ${status['remaining_budget']:.2f}")
+print(f"Daily budget remaining: ${status['suggested_daily_budget']:.2f}")
+```
+
+Features:
+- **Monthly Budget Tracking**: Monitors total spending against $300 limit
+- **Daily Limits**: Prevents exceeding 10% of monthly budget per day
+- **Automatic Reset**: Resets usage tracking at start of each month
+- **Usage Breakdown**: Separate tracking for TTS and STT API calls
 
 #### Dual Provider Strategy
 
-The system intelligently uses both Google Cloud and Azure:
-- Google Cloud for broad language support and fallback
-- Azure for native Hausa neural voices with superior accent accuracy
-- Automatic failover between providers for reliability
+The system intelligently uses both Azure and Google Cloud providers:
+- **Azure**: Primary provider for native Hausa neural voices with superior accent accuracy
+- **Google Cloud**: Fallback provider for reliability and cost optimization during high usage
+- **Automatic Failover**: Seamlessly switches between providers on error or rate limit
+- **Rate Limiting**: Protects Google Cloud's $300 free trial with smart budget management
 
 ### Evaluation Framework
 
@@ -168,9 +194,13 @@ Hausa is a tonal language with three tones:
 
 The evaluation framework tracks tone marker placement and accuracy.
 
-### GPT Fine-Tuning
+### GPT and Gemini Pro Fine-Tuning
 
-The fine-tuning process now leverages multiple datasets:
+The system supports both OpenAI GPT and Google Gemini Pro models:
+
+#### OpenAI GPT Fine-Tuning
+
+The fine-tuning process leverages multiple datasets:
 
 ```python
 # Upload training data
@@ -184,9 +214,45 @@ openai.FineTuningJob.create(
 )
 ```
 
-Created a monitoring script (`fine_tune.py`) that:
-- Uploads training data
-- Initiates fine-tuning jobs
+#### Gemini Pro Integration
+
+Google's Gemini Pro provides an alternative AI backend with few-shot learning:
+
+```python
+from gemini_service import GeminiProService
+
+# Initialize Gemini Pro
+gemini = GeminiProService()
+
+# Generate chat response
+response = gemini.generate_chat_response(
+    message="Sannu, ina kwana?",
+    chat_history=previous_messages,
+    system_prompt=hausa_system_prompt
+)
+```
+
+Key features:
+- **Few-Shot Learning**: Uses training examples in prompts instead of traditional fine-tuning
+- **Cost Effective**: No fine-tuning costs, just API usage
+- **Quick Deployment**: No waiting for training jobs to complete
+- **Flexible**: Easy to update examples and system prompts
+
+#### Unified Fine-Tuning Script
+
+Created a monitoring script (`fine_tune.py`) that supports both providers:
+
+```bash
+# Fine-tune with OpenAI
+FINE_TUNE_PROVIDER=openai python fine_tune.py
+
+# Prepare Gemini Pro with few-shot learning
+FINE_TUNE_PROVIDER=gemini python fine_tune.py
+```
+
+Features:
+- Uploads training data (OpenAI) or prepares few-shot examples (Gemini)
+- Initiates fine-tuning jobs or creates enhanced prompts
 - Monitors progress with detailed status updates
 - Tests the resulting model
 - Saves model configuration for deployment
@@ -239,6 +305,38 @@ Features:
 ### Backend Architecture
 
 The Flask API provides comprehensive endpoints for all features:
+
+#### Configuration Management
+
+Unified configuration manager (`config_manager.py`) centralizes all API keys and settings:
+
+```python
+from config_manager import get_config
+
+# Get configuration
+config = get_config()
+
+# Check available services
+services = config.get_available_services()
+# ['openai', 'google_cloud', 'azure_speech', 'gemini']
+
+# Get service-specific configuration
+openai_config = config.get_openai_config()
+gemini_config = config.get_gemini_config()
+azure_config = config.get_azure_speech_config()
+
+# Check if service is available
+if config.is_service_available('gemini'):
+    # Use Gemini Pro
+    pass
+```
+
+Features:
+- **Singleton Pattern**: Single instance for consistency
+- **Environment Variables**: Loads from `.env` file
+- **Service Discovery**: Automatically detects available services
+- **Provider Priority**: Configurable TTS provider priority (Azure/Google)
+- **Rate Limiting**: Built-in budget management settings
 
 #### Core Endpoints
 - **`/api/health`**: System health monitoring
