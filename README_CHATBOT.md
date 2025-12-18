@@ -3,10 +3,13 @@
 ## 🌍 Overview
 
 A comprehensive AI-powered chatbot system for fluent Hausa language conversation, integrating:
-- **GPT Models** for natural language understanding
+- **GPT Models & Gemini Pro** for natural language understanding (multi-provider support)
 - **Google Cloud Speech-to-Text** for voice input
-- **Google Cloud Text-to-Speech** for voice output
+- **Google Cloud & Azure Text-to-Speech** with intelligent fallback for voice output
 - **Microsoft Azure Speech Services** for native Hausa voice synthesis
+- **Unified Configuration Management** for centralized API key handling
+- **Secure Session-Based Authentication** replacing localStorage
+- **Rate Limiting** to optimize Google Cloud's $300 free trial
 - **Mozilla Common Voice Hausa Dataset** for enhanced training
 - **Multiple Dataset Sources** (JW300, OPUS, HausaNLP)
 - **Evaluation Metrics** for phoneme alignment and tonal accuracy
@@ -16,8 +19,13 @@ A comprehensive AI-powered chatbot system for fluent Hausa language conversation
 ## ✨ Features
 
 ### Core Capabilities
-- ✅ **Hausa Language Processing**: Fine-tuned GPT model for Hausa understanding and generation
+- ✅ **Multi-Provider AI**: Support for both OpenAI GPT and Google Gemini Pro
+- ✅ **Hausa Language Processing**: Fine-tuned models for Hausa understanding and generation
 - ✅ **Dual Speech-to-Text**: Google Cloud + Azure STT for improved accuracy
+- ✅ **Intelligent TTS Fallback**: Azure primary with Google Cloud fallback
+- ✅ **Rate Limiting**: Smart budget management for Google Cloud's $300 free trial
+- ✅ **Secure Authentication**: Session-based API key management
+- ✅ **Unified Configuration**: Centralized management of all API keys and settings
 - ✅ **Native Voice Synthesis**: Azure neural voices (ha-NG-AbeoNaural, ha-NG-SamuelNeural)
 - ✅ **Multiple Dataset Support**: Mozilla Common Voice, JW300, OPUS, HausaNLP
 - ✅ **Quality Evaluation**: Phoneme alignment and tonal accuracy validation
@@ -58,11 +66,28 @@ The chatbot now includes a revolutionary autonomous training system that allows 
 - **Real-time Monitoring**: Track training status, conversation count, and job progress
 - **Manual Control**: Start/stop autonomous training or trigger immediate training
 
+### Security & Configuration Management 🔒 NEW
+- **Session-Based Authentication**: Secure token-based authentication replacing localStorage
+- **Server-Side API Key Validation**: Keys are validated server-side and never stored in browser
+- **Session Tokens**: Short-lived tokens for enhanced security
+- **Unified Configuration**: Single configuration manager for all API keys and settings
+- **Auto-Session Recovery**: Validates and restores sessions on page reload
+- **Secure Logout**: Properly invalidates sessions on logout
+
+### Rate Limiting & Cost Management 💰 NEW
+- **Budget Tracking**: Monitors Google Cloud API usage against $300 free trial
+- **Daily Limits**: Prevents exceeding 10% of monthly budget per day
+- **Usage Analytics**: Detailed tracking of TTS and STT API calls
+- **Cost Estimation**: Real-time cost calculations for each request
+- **Automatic Alerts**: Warns when approaching budget limits
+- **Monthly Reset**: Automatically resets usage data each month
+
 ### Technical Features
 - Modern, responsive UI built with Tailwind CSS
-- Flask-based REST API backend
-- Secure API key management
+- Flask-based REST API backend with session support
+- Secure API key management with validation endpoints
 - Multi-cloud integration (Google Cloud + Azure)
+- Intelligent provider fallback system
 - Cross-platform compatibility
 - Easy deployment to cloud platforms
 
@@ -70,16 +95,25 @@ The chatbot now includes a revolutionary autonomous training system that allows 
 
 ```
 adab-tech.github.io/
-├── hausa_chatbot.html          # Frontend application
+├── hausa_chatbot.html          # Frontend application with secure auth
 ├── hausa_chatbot_docs.html     # Complete documentation
 ├── backend/
-│   ├── app.py                  # Flask API server
+│   ├── app.py                  # Flask API server with session support
+│   ├── config_manager.py       # Unified configuration management (NEW)
+│   ├── secure_api_key.py       # Secure API key validation (NEW)
+│   ├── rate_limiter.py         # Rate limiting for Google Cloud (NEW)
+│   ├── gemini_service.py       # Gemini Pro integration (NEW)
 │   ├── data_preprocessing.py   # Data preparation utilities
 │   ├── dataset_loader.py       # Multi-dataset loader
-│   ├── azure_speech.py         # Azure Speech Services integration
+│   ├── azure_speech.py         # Azure + Google TTS with fallback
 │   ├── evaluation_metrics.py   # Evaluation framework
-│   ├── fine_tune.py            # Fine-tuning utilities
+│   ├── fine_tune.py            # OpenAI + Gemini fine-tuning
 │   ├── autonomous_trainer.py   # Autonomous training system
+│   ├── test_config_manager.py  # Configuration tests (NEW)
+│   ├── test_evaluation_metrics.py # Evaluation tests
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env.example            # Environment variables template
+│   └── Procfile                # Heroku deployment
 │   ├── requirements.txt        # Python dependencies
 │   └── .env.example           # Environment variables template
 └── README_CHATBOT.md          # This file
