@@ -125,6 +125,19 @@ a:hover {
   color: var(--color-text);
   text-decoration: none;
   letter-spacing: -0.02em;
+  display: inline-flex;
+  align-items: center;
+}
+
+.site-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+  transition: opacity 0.2s ease;
+}
+
+.site-title:hover .site-logo {
+  opacity: 0.8;
 }
 
 .site-title:hover {
