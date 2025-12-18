@@ -1,7 +1,7 @@
 """
 Hausa GPT Chatbot Backend API
 This Flask application provides the backend for the Hausa AI chatbot,
-integrating GPT models, Google Cloud Speech APIs, and Azure Speech Services.
+integrating GPT models, Google Cloud Speech APIs, Azure Speech Services, and Gemini Pro.
 """
 
 from flask import Flask, request, jsonify, send_file
@@ -16,6 +16,14 @@ from dotenv import load_dotenv
 from autonomous_trainer import get_trainer
 from azure_speech import AzureSpeechService
 from evaluation_metrics import HausaEvaluator
+from config_manager import get_config
+
+# Import Gemini service if available
+try:
+    from gemini_service import GeminiProService
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
@@ -24,16 +32,36 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
 
+# Get unified configuration
+config = get_config()
+
 # Configuration
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+GOOGLE_APPLICATION_CREDENTIALS = config.google_cloud_credentials
 
 # Initialize clients
-openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-speech_client = speech.SpeechClient()
-tts_client = texttospeech.TextToSpeechClient()
+openai_client = None
+if config.is_service_available('openai'):
+    openai_client = OpenAI(api_key=config.openai_api_key)
+
+speech_client = None
+tts_client = None
+if config.is_service_available('google_cloud'):
+    try:
+        speech_client = speech.SpeechClient()
+        tts_client = texttospeech.TextToSpeechClient()
+    except Exception as e:
+        print(f"Warning: Could not initialize Google Cloud clients: {e}")
+
+# Initialize Gemini Pro if available
+gemini_client = None
+if config.is_service_available('gemini') and GEMINI_AVAILABLE:
+    try:
+        gemini_client = GeminiProService()
+    except Exception as e:
+        print(f"Warning: Could not initialize Gemini Pro: {e}")
 
 # Initialize Azure Speech Service
-azure_speech = AzureSpeechService()
+azure_speech = AzureSpeechService(enable_google_fallback=True)
 
 # Initialize evaluator
 evaluator = HausaEvaluator()
@@ -61,24 +89,27 @@ Key Hausa phrases to use:
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
+    """Health check endpoint with service availability info"""
     return jsonify({
         'status': 'healthy',
         'service': 'Hausa Chatbot API',
-        'version': '1.0.0'
+        'version': '2.0.0',
+        'available_services': config.get_available_services(),
+        'tts_config': config.get_tts_config()
     })
 
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """
-    Chat endpoint that processes user messages and returns GPT responses
+    Chat endpoint that processes user messages and returns GPT/Gemini responses
     
     Request body:
     {
         "message": "User message text",
         "history": [{"role": "user/assistant", "content": "..."}],
-        "model": "gpt-3.5-turbo" (optional)
+        "model": "gpt-3.5-turbo" or "gemini-pro" (optional),
+        "provider": "openai" or "gemini" (optional)
     }
     """
     try:
@@ -86,54 +117,93 @@ def chat():
         user_message = data.get('message')
         chat_history = data.get('history', [])
         model = data.get('model', 'gpt-3.5-turbo')
+        provider = data.get('provider', 'openai').lower()
         
         if not user_message:
             return jsonify({'error': 'Message is required'}), 400
         
-        # Build messages for GPT API
-        messages = [
-            {'role': 'system', 'content': HAUSA_SYSTEM_PROMPT}
-        ]
-        
-        # Add chat history (limit to last 10 messages for context window)
-        messages.extend(chat_history[-10:])
-        
-        # Add current user message
-        messages.append({'role': 'user', 'content': user_message})
-        
-        # Call OpenAI API
-        response = openai_client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0.7,
-            max_tokens=500
-        )
-        
-        assistant_message = response.choices[0].message.content
-        
-        # Log conversation for autonomous training
-        try:
-            metadata = {
-                'model': model,
-                'tokens': response.usage.total_tokens if response.usage else 0
-            }
-            trainer.log_conversation(
-                user_message=user_message,
-                assistant_response=assistant_message,
-                metadata=metadata
+        # Determine which provider to use
+        if provider == 'gemini' or model.startswith('gemini'):
+            if not gemini_client:
+                return jsonify({'error': 'Gemini Pro service not available'}), 503
+            
+            # Use Gemini Pro
+            assistant_message = gemini_client.generate_chat_response(
+                user_message,
+                chat_history=chat_history,
+                system_prompt=HAUSA_SYSTEM_PROMPT
             )
-        except Exception as log_error:
-            print(f"Error logging conversation: {log_error}")
+            
+            # Log conversation for autonomous training
+            try:
+                trainer.log_conversation(
+                    user_message=user_message,
+                    assistant_response=assistant_message,
+                    metadata={'model': model, 'provider': 'gemini'}
+                )
+            except Exception as log_error:
+                print(f"Error logging conversation: {log_error}")
+            
+            return jsonify({
+                'response': assistant_message,
+                'model': model,
+                'provider': 'gemini',
+                'usage': {
+                    'note': 'Gemini Pro does not provide token usage details'
+                }
+            })
         
-        return jsonify({
-            'response': assistant_message,
-            'model': model,
-            'usage': {
-                'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
-                'completion_tokens': response.usage.completion_tokens if response.usage else 0,
-                'total_tokens': response.usage.total_tokens if response.usage else 0
-            }
-        })
+        else:
+            # Use OpenAI
+            if not openai_client:
+                return jsonify({'error': 'OpenAI service not available'}), 503
+            
+            # Build messages for GPT API
+            messages = [
+                {'role': 'system', 'content': HAUSA_SYSTEM_PROMPT}
+            ]
+            
+            # Add chat history (limit to last 10 messages for context window)
+            messages.extend(chat_history[-10:])
+            
+            # Add current user message
+            messages.append({'role': 'user', 'content': user_message})
+            
+            # Call OpenAI API
+            response = openai_client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=500
+            )
+            
+            assistant_message = response.choices[0].message.content
+            
+            # Log conversation for autonomous training
+            try:
+                metadata = {
+                    'model': model,
+                    'provider': 'openai',
+                    'tokens': response.usage.total_tokens if response.usage else 0
+                }
+                trainer.log_conversation(
+                    user_message=user_message,
+                    assistant_response=assistant_message,
+                    metadata=metadata
+                )
+            except Exception as log_error:
+                print(f"Error logging conversation: {log_error}")
+            
+            return jsonify({
+                'response': assistant_message,
+                'model': model,
+                'provider': 'openai',
+                'usage': {
+                    'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
+                    'completion_tokens': response.usage.completion_tokens if response.usage else 0,
+                    'total_tokens': response.usage.total_tokens if response.usage else 0
+                }
+            })
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
