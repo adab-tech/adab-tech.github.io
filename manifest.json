@@ -1,22 +1,16 @@
 {
-  "name": "Hausa Language Explorer",
-  "short_name": "Hausa Explorer",
-  "description": "Interactive Hausa language learning app with dictionary, quizzes, and cultural lessons",
-  "start_url": "/hausa_explorer.html",
+  "name": "Adamu Abubakar - Computational Linguistics & AI",
+  "short_name": "Adamu Abubakar",
+  "description": "The official portfolio of Adamu Abubakar, specializing in African language technology, NLP, and creative AI",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#312e81",
-  "theme_color": "#312e81",
+  "background_color": "#ffffff",
+  "theme_color": "#1e293b",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23312e81'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%23f97316' font-family='sans-serif' font-weight='bold'>H</text></svg>",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23312e81'/><text x='50' y='65' font-size='50' text-anchor='middle' fill='%23f97316' font-family='sans-serif' font-weight='bold'>H</text></svg>",
-      "sizes": "512x512",
+      "src": "/assets/images/favicon.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
