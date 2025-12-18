@@ -42,7 +42,7 @@
                     <span class="text-xl font-bold text-gray-800">Khad App</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="index.html" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
+                    <a href="../index.html" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
                     <a href="provider.html" class="text-sm text-gray-600 hover:text-blue-600">Provider View</a>
                     <button onclick="openSettings()" class="text-gray-600 hover:text-blue-600" title="Settings">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,8 +287,18 @@
                 recognition.stop();
                 isRecording = false;
             } else {
-                const lang = document.getElementById('input-language').value;
-                recognition.lang = lang;
+                // Map language codes to proper BCP 47 format for Web Speech API
+                const langCode = document.getElementById('input-language').value;
+                const langMap = {
+                    'en': 'en-US',
+                    'ha': 'ha-NG',
+                    'yo': 'yo-NG',
+                    'ig': 'ig-NG',
+                    'fr': 'fr-FR',
+                    'ar': 'ar-SA',
+                    'es': 'es-ES'
+                };
+                recognition.lang = langMap[langCode] || langCode;
                 recognition.start();
                 isRecording = true;
             }
@@ -345,7 +355,15 @@
 
                 // Summarize symptoms
                 const summary = await aiRouter.summarizeSymptoms(normalized);
-                document.getElementById('symptom-summary').innerHTML = summary.replace(/\n/g, '<br>');
+                const summaryElement = document.getElementById('symptom-summary');
+                summaryElement.textContent = '';
+                summary.split('\n').forEach(line => {
+                    if (line.trim()) {
+                        const p = document.createElement('p');
+                        p.textContent = line;
+                        summaryElement.appendChild(p);
+                    }
+                });
 
                 // Store data for provider view
                 storePatientData({
@@ -424,8 +442,24 @@
                 return;
             }
             
+            // Validate API key format
+            if (!aiRouter.validateApiKey(apiKey, provider)) {
+                const warningMsg = provider === 'openai' 
+                    ? 'OpenAI API keys should start with "sk-". Please verify your key.'
+                    : 'Please verify your API key format.';
+                
+                if (!confirm(warningMsg + '\n\nDo you want to save it anyway?')) {
+                    return;
+                }
+            }
+            
             aiRouter.setProvider(provider);
-            aiRouter.setApiKey(apiKey);
+            try {
+                aiRouter.setApiKey(apiKey);
+            } catch (error) {
+                alert('Error saving API key: ' + error.message);
+                return;
+            }
             
             closeSettings();
             alert('Settings saved successfully!');

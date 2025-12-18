@@ -15,9 +15,14 @@ class AIRouter {
      * Set the API key for the selected provider
      */
     setApiKey(key) {
-        this.apiKey = key;
+        // Basic validation
+        if (!key || typeof key !== 'string' || key.trim().length === 0) {
+            throw new Error('Invalid API key');
+        }
+        
+        this.apiKey = key.trim();
         if (typeof localStorage !== 'undefined') {
-            localStorage.setItem('khad_api_key', key);
+            localStorage.setItem('khad_api_key', this.apiKey);
         }
     }
 
@@ -29,6 +34,29 @@ class AIRouter {
             this.apiKey = localStorage.getItem('khad_api_key');
         }
         return this.apiKey;
+    }
+
+    /**
+     * Validate API key format for selected provider
+     */
+    validateApiKey(key, provider = null) {
+        const prov = provider || this.provider;
+        
+        if (!key || typeof key !== 'string') {
+            return false;
+        }
+        
+        // Basic pattern validation
+        if (prov === 'openai') {
+            // OpenAI keys typically start with 'sk-'
+            return key.startsWith('sk-') && key.length > 20;
+        } else if (prov === 'gemini') {
+            // Gemini keys are typically alphanumeric, 39+ chars
+            return /^[A-Za-z0-9_-]{20,}$/.test(key);
+        }
+        
+        // Unknown provider, allow any non-empty string
+        return key.trim().length > 0;
     }
 
     /**
