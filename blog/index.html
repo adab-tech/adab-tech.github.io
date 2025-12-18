@@ -4,9 +4,10 @@ title: Writing
 permalink: /blog/
 ---
 
-# Writing
-
-Essays, research notes, and reflections on languages, literature, and artificial intelligence.
+<div class="page-header">
+  <h1>Writing</h1>
+  <p class="page-subtitle">Essays, research notes, and reflections on languages, literature, and artificial intelligence.</p>
+</div>
 
 <div class="posts-list">
   {% for post in site.posts %}
@@ -15,18 +16,18 @@ Essays, research notes, and reflections on languages, literature, and artificial
     <div class="post-meta">
       <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %d, %Y" }}</time>
       {% if post.language and post.language != "en" %}
-      <span class="language-tag">Language: {{ post.language }}</span>
+      <span class="language-tag">{{ post.language }}</span>
       {% endif %}
       {% if post.author %}
       <span class="author">By {{ post.author }}</span>
       {% endif %}
     </div>
-    <p>{{ post.excerpt | strip_html | truncate: 300 }}</p>
-    <a href="{{ post.url | relative_url }}" class="read-more">Read more →</a>
+    <p>{{ post.excerpt | strip_html | truncate: 200 }}</p>
+    <a href="{{ post.url | relative_url }}" class="read-more">Read article →</a>
   </article>
   {% endfor %}
 </div>
 
 {% if site.posts.size == 0 %}
-<p>No posts yet. Check back soon for new content!</p>
+<p class="empty-state">No posts yet. Check back soon for new content!</p>
 {% endif %}

@@ -4,9 +4,10 @@ title: Projects
 permalink: /projects/
 ---
 
-# Projects
-
-A collection of work at the intersection of languages, literature, and AI.
+<div class="page-header">
+  <h1>Projects</h1>
+  <p class="page-subtitle">A collection of work at the intersection of languages, literature, and AI.</p>
+</div>
 
 <div class="projects-grid">
   {% for project in site.projects %}
@@ -15,9 +16,12 @@ A collection of work at the intersection of languages, literature, and AI.
     <p>{{ project.problem | truncate: 200 }}</p>
     {% if project.tools %}
     <div class="project-tools">
-      {% for tool in project.tools %}
+      {% for tool in project.tools limit:4 %}
       <span class="tag">{{ tool }}</span>
       {% endfor %}
+      {% if project.tools.size > 4 %}
+      <span class="tag">+{{ project.tools.size | minus: 4 }} more</span>
+      {% endif %}
     </div>
     {% endif %}
     <a href="{{ project.url | relative_url }}" class="read-more">Learn more →</a>
@@ -26,5 +30,5 @@ A collection of work at the intersection of languages, literature, and AI.
 </div>
 
 {% if site.projects.size == 0 %}
-<p>No projects yet. Check back soon for new work!</p>
+<p class="empty-state">No projects yet. Check back soon for new work!</p>
 {% endif %}

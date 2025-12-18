@@ -8,6 +8,11 @@ description: >-
 baseurl: ""
 url: "https://adamu.tech"
 
+# Social media links
+github_username: adab-tech
+linkedin_username: adamudanjuma
+twitter_username: adamuwrites
+
 # Build settings
 markdown: kramdown
 permalink: /blog/:year/:month/:day/:title/
