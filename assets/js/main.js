@@ -157,12 +157,9 @@
 
   // Keyboard accessibility improvements
   document.addEventListener('keydown', (e) => {
-    // Allow Escape key to close modals (if implemented in the future)
+    // Reserved for future modal implementation
     if (e.key === 'Escape') {
-      const modal = document.querySelector('.modal.is-active');
-      if (modal) {
-        modal.classList.remove('is-active');
-      }
+      // Modal close functionality can be added here when needed
     }
   });
 

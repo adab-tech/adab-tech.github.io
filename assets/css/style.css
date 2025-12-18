@@ -62,19 +62,30 @@ body.dark-mode {
   --color-background: #0f172a;
   --color-background-subtle: #1e293b;
   --color-primary: #e2e8f0;
+  --color-secondary: #34d399;      /* Brighter emerald for dark mode */
+  --color-accent: #fbbf24;         /* Brighter yellow for dark mode */
+  --color-accent-hover: #f59e0b;
+  --color-accent-light: #422006;
+  --color-secondary-light: #064e3b;
   --color-border: #334155;
   --color-border-light: #1e293b;
 }
 
 body.dark-mode .site-header {
-  background-color: rgba(15, 23, 42, 0.8);
+  background-color: rgba(15, 23, 42, 0.9);
   border-bottom-color: var(--color-border);
 }
 
 body.dark-mode .project-card,
+body.dark-mode .service-card,
 body.dark-mode .btn-secondary {
   background-color: var(--color-background-subtle);
   border-color: var(--color-border);
+}
+
+body.dark-mode .cta-box {
+  background: linear-gradient(135deg, #064e3b 0%, #422006 100%);
+  border-color: var(--color-secondary);
 }
 
 /* Typography - Astro-inspired hierarchy */
@@ -607,12 +618,23 @@ a:hover {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.project-card:nth-child(1) { animation-delay: 0.1s; }
-.project-card:nth-child(2) { animation-delay: 0.2s; }
-.project-card:nth-child(3) { animation-delay: 0.3s; }
-.project-card:nth-child(4) { animation-delay: 0.4s; }
-.project-card:nth-child(5) { animation-delay: 0.5s; }
-.project-card:nth-child(6) { animation-delay: 0.6s; }
+/* Staggered animation for project cards - scalable approach */
+@supports (animation-delay: calc(1s)) {
+  .project-card {
+    animation-delay: calc(var(--card-index, 0) * 0.1s);
+  }
+}
+
+/* Fallback for browsers without calc() in animation-delay */
+@supports not (animation-delay: calc(1s)) {
+  .project-card:nth-child(1) { animation-delay: 0.1s; }
+  .project-card:nth-child(2) { animation-delay: 0.2s; }
+  .project-card:nth-child(3) { animation-delay: 0.3s; }
+  .project-card:nth-child(4) { animation-delay: 0.4s; }
+  .project-card:nth-child(5) { animation-delay: 0.5s; }
+  .project-card:nth-child(6) { animation-delay: 0.6s; }
+  .project-card:nth-child(n+7) { animation-delay: 0.7s; }
+}
 
 .project-card::before {
   content: '';
@@ -719,11 +741,22 @@ a:hover {
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-.post-item:nth-child(1) { animation-delay: 0.1s; }
-.post-item:nth-child(2) { animation-delay: 0.2s; }
-.post-item:nth-child(3) { animation-delay: 0.3s; }
-.post-item:nth-child(4) { animation-delay: 0.4s; }
-.post-item:nth-child(5) { animation-delay: 0.5s; }
+/* Staggered animation for post items - scalable approach */
+@supports (animation-delay: calc(1s)) {
+  .post-item {
+    animation-delay: calc(var(--item-index, 0) * 0.1s);
+  }
+}
+
+/* Fallback for browsers without calc() in animation-delay */
+@supports not (animation-delay: calc(1s)) {
+  .post-item:nth-child(1) { animation-delay: 0.1s; }
+  .post-item:nth-child(2) { animation-delay: 0.2s; }
+  .post-item:nth-child(3) { animation-delay: 0.3s; }
+  .post-item:nth-child(4) { animation-delay: 0.4s; }
+  .post-item:nth-child(5) { animation-delay: 0.5s; }
+  .post-item:nth-child(n+6) { animation-delay: 0.6s; }
+}
 
 .post-item:last-child {
   border-bottom: none;
