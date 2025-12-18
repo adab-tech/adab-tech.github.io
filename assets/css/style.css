@@ -292,6 +292,37 @@ a:hover {
   padding-bottom: 2rem;
 }
 
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--color-border-light);
+}
+
+.page-header h1 {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.page-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-text-light);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 1.125rem;
+  padding: 3rem 0;
+  font-style: italic;
+}
+
 /* Home Page - Astro-inspired hero */
 .home-hero {
   text-align: center;
@@ -985,10 +1016,42 @@ a:hover {
     flex-direction: column;
     width: 100%;
   }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .benefits-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-info {
+    text-align: center;
+  }
+  
+  .footer-links {
+    justify-content: center;
+  }
+  
+  .cta-box {
+    padding: 2rem 1.5rem;
+  }
+  
+  .theme-toggle {
+    margin-top: 0.5rem;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .services-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -1239,4 +1302,20 @@ button:focus,
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
 }
