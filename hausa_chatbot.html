@@ -66,12 +66,22 @@
         <!-- Configuration Panel -->
         <div class="bg-white shadow-lg p-4 border-b border-gray-200">
             <div class="flex flex-wrap items-center gap-4">
-                <div class="flex items-center space-x-2">
+                <div id="api-key-section" class="flex items-center space-x-2">
                     <label class="text-sm font-medium text-gray-700">API Key:</label>
                     <input type="password" id="api-key-input" placeholder="Enter API key" 
                            class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                    <button onclick="saveApiKey()" class="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700">
-                        Save
+                    <select id="provider-select" class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
+                        <option value="openai">OpenAI</option>
+                        <option value="gemini">Gemini Pro</option>
+                    </select>
+                    <button onclick="authenticateWithKey()" class="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700">
+                        Authenticate
+                    </button>
+                </div>
+                <div id="session-status" class="hidden items-center space-x-2">
+                    <span class="text-sm text-green-600 font-medium">✓ Authenticated</span>
+                    <button onclick="logout()" class="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700">
+                        Logout
                     </button>
                 </div>
                 <div class="flex items-center space-x-2">
@@ -79,6 +89,7 @@
                     <select id="model-select" class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
                         <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                         <option value="gpt-4">GPT-4</option>
+                        <option value="gemini-pro">Gemini Pro</option>
                         <option value="custom">Custom Model</option>
                     </select>
                 </div>
@@ -212,10 +223,10 @@
     <script>
         // Configuration
         let config = {
-            apiKey: localStorage.getItem('hausa_chatbot_api_key') || '',
+            sessionToken: sessionStorage.getItem('hausa_chatbot_session_token') || '',
+            provider: sessionStorage.getItem('hausa_chatbot_provider') || 'openai',
             model: 'gpt-3.5-turbo',
             backendUrl: '/api/chat', // This would be your backend endpoint
-            googleCloudApiKey: localStorage.getItem('google_cloud_api_key') || ''
         };
 
         let chatHistory = [];
@@ -223,13 +234,100 @@
         let mediaRecorder = null;
         let audioChunks = [];
 
-        // Save API key
-        function saveApiKey() {
+        // Authentication functions
+        async function authenticateWithKey() {
             const apiKey = document.getElementById('api-key-input').value;
-            if (apiKey) {
-                config.apiKey = apiKey;
-                localStorage.setItem('hausa_chatbot_api_key', apiKey);
-                showStatus('API key saved successfully!', 'success');
+            const provider = document.getElementById('provider-select').value;
+            
+            if (!apiKey) {
+                showStatus('Please enter an API key', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/validate-key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        api_key: apiKey,
+                        provider: provider
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    config.sessionToken = data.session_token;
+                    config.provider = provider;
+                    
+                    // Store in sessionStorage (not localStorage for better security)
+                    sessionStorage.setItem('hausa_chatbot_session_token', data.session_token);
+                    sessionStorage.setItem('hausa_chatbot_provider', provider);
+                    
+                    // Update UI
+                    document.getElementById('api-key-section').classList.add('hidden');
+                    document.getElementById('session-status').classList.remove('hidden');
+                    document.getElementById('session-status').classList.add('flex');
+                    
+                    showStatus('Authentication successful!', 'success');
+                    document.getElementById('api-key-input').value = '';
+                } else {
+                    showStatus('Authentication failed: ' + (data.error || 'Invalid API key'), 'error');
+                }
+            } catch (error) {
+                showStatus('Authentication error: ' + error.message, 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                if (config.sessionToken) {
+                    await fetch('/api/auth/logout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            session_token: config.sessionToken
+                        })
+                    });
+                }
+
+                // Clear session
+                config.sessionToken = '';
+                config.provider = 'openai';
+                sessionStorage.removeItem('hausa_chatbot_session_token');
+                sessionStorage.removeItem('hausa_chatbot_provider');
+
+                // Update UI
+                document.getElementById('api-key-section').classList.remove('hidden');
+                document.getElementById('session-status').classList.add('hidden');
+
+                showStatus('Logged out successfully', 'success');
+            } catch (error) {
+                showStatus('Logout error: ' + error.message, 'error');
+            }
+        }
+
+        async function validateSession() {
+            if (!config.sessionToken) return false;
+
+            try {
+                const response = await fetch('/api/auth/validate-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        session_token: config.sessionToken
+                    })
+                });
+
+                const data = await response.json();
+                return data.valid;
+            } catch (error) {
+                console.error('Session validation error:', error);
+                // Return false on error to trigger re-authentication
+                return false;
             }
         }
 
@@ -311,46 +409,52 @@
             chatHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
         }
 
-        // Get chat response (mock implementation - replace with real API call)
+        // Get chat response (updated to use session token and backend)
         async function getChatResponse(message) {
-            // This is a mock implementation. In production, you would call your backend API
-            // which would handle the GPT API call with proper authentication
-            
-            if (!config.apiKey) {
-                return "Na ji haushi, amma ba ni da API key. Don Allah, sanya API key a sama. (Sorry, I don't have an API key. Please set the API key above.)";
+            // Check if authenticated
+            if (!config.sessionToken) {
+                return "Please authenticate with your API key first by clicking the 'Authenticate' button above.";
             }
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Validate session
+            const isValid = await validateSession();
+            if (!isValid) {
+                showStatus('Session expired. Please authenticate again.', 'error');
+                await logout();
+                return "Session expired. Please authenticate again.";
+            }
 
-            // Mock responses for demonstration
-            const responses = [
-                "Na gode! Ina iya taimaka maka da wani abu? (Thank you! How can I help you with anything?)",
-                "Sannu! Ina jin ka. Zan yi ƙoƙari in taimaka. (Hello! I hear you. I will try to help.)",
-                "Wannan tambaya mai kyau ce. Bari in yi maka bayani. (That's a good question. Let me explain to you.)",
-                "Na fahimci abin da kake nufi. Zan ba ka amsa. (I understand what you mean. I will give you an answer.)",
-            ];
+            try {
+                // Determine model based on selection
+                const selectedModel = document.getElementById('model-select').value;
+                const provider = selectedModel.startsWith('gemini') ? 'gemini' : config.provider;
 
-            // In production, replace this with actual API call:
-            /*
-            const response = await fetch(config.backendUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${config.apiKey}`
-                },
-                body: JSON.stringify({
-                    message: message,
-                    history: chatHistory,
-                    model: config.model
-                })
-            });
-            
-            const data = await response.json();
-            return data.response;
-            */
+                const response = await fetch(config.backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatHistory,
+                        model: selectedModel,
+                        provider: provider,
+                        session_token: config.sessionToken
+                    })
+                });
 
-            return responses[Math.floor(Math.random() * responses.length)];
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                return data.response;
+
+            } catch (error) {
+                console.error('Chat error:', error);
+                throw new Error('Failed to get response from AI. Please try again.');
+            }
         }
 
         // Voice input toggle
@@ -627,10 +731,23 @@
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            if (config.apiKey) {
-                document.getElementById('api-key-input').value = '••••••••';
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if we have an existing session
+            if (config.sessionToken) {
+                const isValid = await validateSession();
+                if (isValid) {
+                    // Session is valid, update UI
+                    document.getElementById('api-key-section').classList.add('hidden');
+                    document.getElementById('session-status').classList.remove('hidden');
+                    document.getElementById('session-status').classList.add('flex');
+                } else {
+                    // Session is invalid, clear it
+                    sessionStorage.removeItem('hausa_chatbot_session_token');
+                    sessionStorage.removeItem('hausa_chatbot_provider');
+                    config.sessionToken = '';
+                }
             }
+            
             initAutoTrainButton();
         });
     </script>

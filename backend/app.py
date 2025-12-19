@@ -1,10 +1,10 @@
 """
 Hausa GPT Chatbot Backend API
 This Flask application provides the backend for the Hausa AI chatbot,
-integrating GPT models, Google Cloud Speech APIs, and Azure Speech Services.
+integrating GPT models, Google Cloud Speech APIs, Azure Speech Services, and Gemini Pro.
 """
 
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, session
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -16,30 +16,66 @@ from dotenv import load_dotenv
 from autonomous_trainer import get_trainer
 from azure_speech import AzureSpeechService
 from evaluation_metrics import HausaEvaluator
+from config_manager import get_config
+from secure_api_key import get_api_key_manager
+
+# Import Gemini service if available
+try:
+    from gemini_service import GeminiProService
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend communication
+
+# Set secret key for sessions (should be set in environment variables in production)
+app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
+
+CORS(app, supports_credentials=True)  # Enable CORS with credentials for session support
+
+# Get unified configuration
+config = get_config()
 
 # Configuration
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+GOOGLE_APPLICATION_CREDENTIALS = config.google_cloud_credentials
 
 # Initialize clients
-openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-speech_client = speech.SpeechClient()
-tts_client = texttospeech.TextToSpeechClient()
+openai_client = None
+if config.is_service_available('openai'):
+    openai_client = OpenAI(api_key=config.openai_api_key)
+
+speech_client = None
+tts_client = None
+if config.is_service_available('google_cloud'):
+    try:
+        speech_client = speech.SpeechClient()
+        tts_client = texttospeech.TextToSpeechClient()
+    except Exception as e:
+        print(f"Warning: Could not initialize Google Cloud clients: {e}")
+
+# Initialize Gemini Pro if available
+gemini_client = None
+if config.is_service_available('gemini') and GEMINI_AVAILABLE:
+    try:
+        gemini_client = GeminiProService()
+    except Exception as e:
+        print(f"Warning: Could not initialize Gemini Pro: {e}")
 
 # Initialize Azure Speech Service
-azure_speech = AzureSpeechService()
+azure_speech = AzureSpeechService(enable_google_fallback=True)
 
 # Initialize evaluator
 evaluator = HausaEvaluator()
 
 # Initialize autonomous trainer
 trainer = get_trainer()
+
+# Initialize API key manager
+api_key_manager = get_api_key_manager()
 
 # System prompt for Hausa language model
 HAUSA_SYSTEM_PROMPT = """You are a helpful AI assistant that is fluent in Hausa language.
@@ -61,24 +97,147 @@ Key Hausa phrases to use:
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
-    """Health check endpoint"""
+    """Health check endpoint with service availability info"""
     return jsonify({
         'status': 'healthy',
         'service': 'Hausa Chatbot API',
-        'version': '1.0.0'
+        'version': '2.0.0',
+        'available_services': config.get_available_services(),
+        'tts_config': config.get_tts_config()
     })
+
+
+@app.route('/api/auth/validate-key', methods=['POST'])
+def validate_api_key():
+    """
+    Validate an API key and create a session token
+    
+    Request body:
+    {
+        "api_key": "API key to validate",
+        "provider": "openai" or "gemini"
+    }
+    
+    Returns:
+    {
+        "valid": true/false,
+        "session_token": "token",
+        "message": "..."
+    }
+    """
+    try:
+        data = request.json
+        api_key = data.get('api_key')
+        provider = data.get('provider', 'openai')
+        
+        if not api_key:
+            return jsonify({'error': 'API key is required'}), 400
+        
+        # Validate the API key
+        validation_result = api_key_manager.validate_api_key(api_key, provider)
+        
+        if validation_result['valid']:
+            # Create session token
+            session_token = api_key_manager.create_session_token()
+            
+            # Store session info
+            session['authenticated'] = True
+            session['provider'] = provider
+            session['token'] = session_token
+            
+            return jsonify({
+                'valid': True,
+                'session_token': session_token,
+                'provider': provider,
+                'message': 'API key validated successfully'
+            })
+        else:
+            return jsonify({
+                'valid': False,
+                'error': validation_result.get('error', 'Invalid API key')
+            }), 401
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/auth/validate-session', methods=['POST'])
+def validate_session_endpoint():
+    """
+    Validate a session token
+    
+    Request body:
+    {
+        "session_token": "token"
+    }
+    
+    Returns session information if valid
+    """
+    try:
+        data = request.json
+        token = data.get('session_token')
+        
+        if not token:
+            return jsonify({'error': 'Session token is required'}), 400
+        
+        # Validate token
+        session_info = api_key_manager.get_session_info(token)
+        
+        if session_info:
+            return jsonify({
+                'valid': True,
+                'session_info': session_info
+            })
+        else:
+            return jsonify({
+                'valid': False,
+                'error': 'Invalid or expired session token'
+            }), 401
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout():
+    """
+    Logout and invalidate session
+    
+    Request body:
+    {
+        "session_token": "token"
+    }
+    """
+    try:
+        data = request.json
+        token = data.get('session_token')
+        
+        if token:
+            api_key_manager.invalidate_session(token)
+        
+        # Clear Flask session
+        session.clear()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Logged out successfully'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """
-    Chat endpoint that processes user messages and returns GPT responses
+    Chat endpoint that processes user messages and returns GPT/Gemini responses
     
     Request body:
     {
         "message": "User message text",
         "history": [{"role": "user/assistant", "content": "..."}],
-        "model": "gpt-3.5-turbo" (optional)
+        "model": "gpt-3.5-turbo" or "gemini-pro" (optional),
+        "provider": "openai" or "gemini" (optional)
     }
     """
     try:
@@ -86,54 +245,93 @@ def chat():
         user_message = data.get('message')
         chat_history = data.get('history', [])
         model = data.get('model', 'gpt-3.5-turbo')
+        provider = data.get('provider', 'openai').lower()
         
         if not user_message:
             return jsonify({'error': 'Message is required'}), 400
         
-        # Build messages for GPT API
-        messages = [
-            {'role': 'system', 'content': HAUSA_SYSTEM_PROMPT}
-        ]
-        
-        # Add chat history (limit to last 10 messages for context window)
-        messages.extend(chat_history[-10:])
-        
-        # Add current user message
-        messages.append({'role': 'user', 'content': user_message})
-        
-        # Call OpenAI API
-        response = openai_client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=0.7,
-            max_tokens=500
-        )
-        
-        assistant_message = response.choices[0].message.content
-        
-        # Log conversation for autonomous training
-        try:
-            metadata = {
-                'model': model,
-                'tokens': response.usage.total_tokens if response.usage else 0
-            }
-            trainer.log_conversation(
-                user_message=user_message,
-                assistant_response=assistant_message,
-                metadata=metadata
+        # Determine which provider to use
+        if provider == 'gemini' or model.startswith('gemini'):
+            if not gemini_client:
+                return jsonify({'error': 'Gemini Pro service not available'}), 503
+            
+            # Use Gemini Pro
+            assistant_message = gemini_client.generate_chat_response(
+                user_message,
+                chat_history=chat_history,
+                system_prompt=HAUSA_SYSTEM_PROMPT
             )
-        except Exception as log_error:
-            print(f"Error logging conversation: {log_error}")
+            
+            # Log conversation for autonomous training
+            try:
+                trainer.log_conversation(
+                    user_message=user_message,
+                    assistant_response=assistant_message,
+                    metadata={'model': model, 'provider': 'gemini'}
+                )
+            except Exception as log_error:
+                print(f"Error logging conversation: {log_error}")
+            
+            return jsonify({
+                'response': assistant_message,
+                'model': model,
+                'provider': 'gemini',
+                'usage': {
+                    'note': 'Gemini Pro does not provide token usage details'
+                }
+            })
         
-        return jsonify({
-            'response': assistant_message,
-            'model': model,
-            'usage': {
-                'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
-                'completion_tokens': response.usage.completion_tokens if response.usage else 0,
-                'total_tokens': response.usage.total_tokens if response.usage else 0
-            }
-        })
+        else:
+            # Use OpenAI
+            if not openai_client:
+                return jsonify({'error': 'OpenAI service not available'}), 503
+            
+            # Build messages for GPT API
+            messages = [
+                {'role': 'system', 'content': HAUSA_SYSTEM_PROMPT}
+            ]
+            
+            # Add chat history (limit to last 10 messages for context window)
+            messages.extend(chat_history[-10:])
+            
+            # Add current user message
+            messages.append({'role': 'user', 'content': user_message})
+            
+            # Call OpenAI API
+            response = openai_client.chat.completions.create(
+                model=model,
+                messages=messages,
+                temperature=0.7,
+                max_tokens=500
+            )
+            
+            assistant_message = response.choices[0].message.content
+            
+            # Log conversation for autonomous training
+            try:
+                metadata = {
+                    'model': model,
+                    'provider': 'openai',
+                    'tokens': response.usage.total_tokens if response.usage else 0
+                }
+                trainer.log_conversation(
+                    user_message=user_message,
+                    assistant_response=assistant_message,
+                    metadata=metadata
+                )
+            except Exception as log_error:
+                print(f"Error logging conversation: {log_error}")
+            
+            return jsonify({
+                'response': assistant_message,
+                'model': model,
+                'provider': 'openai',
+                'usage': {
+                    'prompt_tokens': response.usage.prompt_tokens if response.usage else 0,
+                    'completion_tokens': response.usage.completion_tokens if response.usage else 0,
+                    'total_tokens': response.usage.total_tokens if response.usage else 0
+                }
+            })
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -559,6 +757,25 @@ def evaluate_cultural_context():
         
         return jsonify(evaluation)
         
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/rate-limit/status', methods=['GET'])
+def rate_limit_status():
+    """
+    Get current rate limit status for Google Cloud API usage
+    """
+    try:
+        status = azure_speech.get_rate_limit_status()
+        
+        if status:
+            return jsonify(status)
+        else:
+            return jsonify({
+                'enabled': False,
+                'message': 'Rate limiting is not enabled'
+            })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

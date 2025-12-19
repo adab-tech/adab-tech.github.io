@@ -1,6 +1,6 @@
 """
 Fine-tuning script for Hausa GPT model
-This script handles the complete fine-tuning workflow
+This script handles the complete fine-tuning workflow for both OpenAI and Gemini Pro
 """
 
 from openai import OpenAI
@@ -8,25 +8,63 @@ import os
 import json
 import time
 from dotenv import load_dotenv
+from typing import Optional
+import logging
+
+# Import Gemini service
+try:
+    from gemini_service import GeminiProService, GeminiFineTuner
+    GEMINI_AVAILABLE = True
+except ImportError:
+    GEMINI_AVAILABLE = False
+    logging.warning("Gemini service not available")
 
 # Load environment variables
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
 class HausaFineTuner:
-    """Handles fine-tuning of GPT models for Hausa language"""
+    """Handles fine-tuning of GPT models for Hausa language with Gemini Pro support"""
     
-    def __init__(self, training_file_path):
+    def __init__(self, training_file_path, provider='openai'):
+        """
+        Initialize fine-tuner
+        
+        Args:
+            training_file_path: Path to training data file
+            provider: 'openai' or 'gemini' (default: 'openai')
+        """
         self.training_file_path = training_file_path
+        self.provider = provider.lower()
         self.file_id = None
         self.job_id = None
         self.model_id = None
+        
+        # Initialize provider-specific components
+        if self.provider == 'gemini':
+            if not GEMINI_AVAILABLE:
+                raise ImportError("Gemini service not available. Install google-generativeai package.")
+            self.gemini_tuner = GeminiFineTuner(training_file_path)
+            logger.info("Initialized Gemini Pro fine-tuner")
+        else:
+            self.gemini_tuner = None
+            logger.info("Initialized OpenAI fine-tuner")
     
     def upload_training_file(self):
-        """Upload training data to OpenAI"""
+        """Upload training data to OpenAI or prepare for Gemini"""
+        if self.provider == 'gemini':
+            logger.info("Loading training data for Gemini few-shot learning...")
+            num_examples = self.gemini_tuner.load_training_data()
+            logger.info(f"✓ Loaded {num_examples} training examples")
+            return num_examples
+        
+        # OpenAI upload
         print(f"Uploading training file: {self.training_file_path}")
         
         with open(self.training_file_path, 'rb') as f:
@@ -40,7 +78,14 @@ class HausaFineTuner:
         return self.file_id
     
     def validate_file(self):
-        """Validate the uploaded file"""
+        """Validate the uploaded file or training data"""
+        if self.provider == 'gemini':
+            logger.info("Preparing few-shot examples for Gemini...")
+            self.gemini_tuner.prepare_few_shot_examples()
+            logger.info("✓ Training data validated and prepared")
+            return True
+        
+        # OpenAI validation
         print(f"Validating file: {self.file_id}")
         
         file_info = client.files.retrieve(self.file_id)
@@ -61,7 +106,18 @@ class HausaFineTuner:
             return False
     
     def create_fine_tuning_job(self, model='gpt-3.5-turbo', suffix='hausa-v1'):
-        """Create a fine-tuning job"""
+        """Create a fine-tuning job for OpenAI or prepare Gemini prompt"""
+        if self.provider == 'gemini':
+            logger.info("Creating enhanced prompt template for Gemini...")
+            template_file = self.gemini_tuner.save_prompt_template(
+                f'gemini_prompt_{suffix}.txt'
+            )
+            self.model_id = f'gemini-{suffix}'
+            logger.info(f"✓ Prompt template created: {template_file}")
+            logger.info(f"Model ID: {self.model_id}")
+            return self.model_id
+        
+        # OpenAI fine-tuning
         print(f"\nCreating fine-tuning job for model: {model}")
         
         try:
@@ -85,6 +141,11 @@ class HausaFineTuner:
     
     def monitor_job(self, check_interval=60):
         """Monitor fine-tuning job progress"""
+        if self.provider == 'gemini':
+            logger.info("Gemini uses few-shot learning - no job monitoring needed")
+            logger.info("✓ Training preparation complete!")
+            return
+        
         if not self.job_id:
             print("No job ID available")
             return
@@ -139,20 +200,37 @@ class HausaFineTuner:
             print("No model ID available. Fine-tuning may not be complete.")
             return
         
-        print(f"\nTesting fine-tuned model: {self.model_id}")
+        print(f"\nTesting model: {self.model_id}")
         print(f"Test message: {test_message}")
         
         try:
-            response = client.chat.completions.create(
-                model=self.model_id,
-                messages=[
-                    {"role": "system", "content": "You are a helpful Hausa language assistant."},
-                    {"role": "user", "content": test_message}
-                ]
-            )
-            
-            print(f"\nModel response:")
-            print(response.choices[0].message.content)
+            if self.provider == 'gemini':
+                # Test Gemini model with few-shot learning
+                gemini_service = GeminiProService()
+                
+                # Build system prompt with few-shot examples
+                base_prompt = """You are a helpful Hausa language assistant."""
+                enhanced_prompt = self.gemini_tuner.build_enhanced_system_prompt(base_prompt)
+                
+                response_text = gemini_service.generate_chat_response(
+                    test_message,
+                    system_prompt=enhanced_prompt
+                )
+                
+                print(f"\nGemini response:")
+                print(response_text)
+            else:
+                # Test OpenAI model
+                response = client.chat.completions.create(
+                    model=self.model_id,
+                    messages=[
+                        {"role": "system", "content": "You are a helpful Hausa language assistant."},
+                        {"role": "user", "content": test_message}
+                    ]
+                )
+                
+                print(f"\nModel response:")
+                print(response.choices[0].message.content)
             
         except Exception as e:
             print(f"Error testing model: {str(e)}")
@@ -165,8 +243,9 @@ class HausaFineTuner:
         
         info = {
             'model_id': self.model_id,
-            'job_id': self.job_id,
-            'file_id': self.file_id,
+            'provider': self.provider,
+            'job_id': self.job_id if self.provider == 'openai' else None,
+            'file_id': self.file_id if self.provider == 'openai' else None,
             'timestamp': time.time()
         }
         
@@ -179,14 +258,29 @@ class HausaFineTuner:
 def main():
     """Main fine-tuning workflow"""
     print("=" * 60)
-    print("Hausa GPT Fine-Tuning Script")
+    print("Hausa Model Fine-Tuning Script")
+    print("Supports: OpenAI GPT and Google Gemini Pro")
     print("=" * 60)
     
-    # Check for API key
-    if not os.getenv('OPENAI_API_KEY'):
-        print("\n✗ Error: OPENAI_API_KEY not found in environment")
-        print("Please set your API key in .env file")
-        return
+    # Determine provider
+    provider = os.getenv('FINE_TUNE_PROVIDER', 'openai').lower()
+    print(f"\nProvider: {provider}")
+    
+    # Check for API keys
+    if provider == 'openai':
+        if not os.getenv('OPENAI_API_KEY'):
+            print("\n✗ Error: OPENAI_API_KEY not found in environment")
+            print("Please set your API key in .env file")
+            return
+    elif provider == 'gemini':
+        if not (os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_API_KEY')):
+            print("\n✗ Error: GEMINI_API_KEY or GOOGLE_API_KEY not found in environment")
+            print("Please set your API key in .env file")
+            return
+        if not GEMINI_AVAILABLE:
+            print("\n✗ Error: Gemini service not available")
+            print("Install with: pip install google-generativeai")
+            return
     
     # Training file path
     training_file = 'hausa_training.jsonl'
@@ -197,9 +291,9 @@ def main():
         return
     
     # Initialize fine-tuner
-    tuner = HausaFineTuner(training_file)
+    tuner = HausaFineTuner(training_file, provider=provider)
     
-    # Step 1: Upload training file
+    # Step 1: Upload/load training file
     file_id = tuner.upload_training_file()
     if not file_id:
         return
@@ -208,19 +302,27 @@ def main():
     if not tuner.validate_file():
         return
     
-    # Step 3: Create fine-tuning job
-    job_id = tuner.create_fine_tuning_job(
-        model='gpt-3.5-turbo',
-        suffix='hausa-chatbot'
-    )
-    if not job_id:
-        return
+    # Step 3: Create fine-tuning job or prepare prompt
+    if provider == 'openai':
+        job_id = tuner.create_fine_tuning_job(
+            model='gpt-3.5-turbo',
+            suffix='hausa-chatbot'
+        )
+        if not job_id:
+            return
+    else:
+        model_id = tuner.create_fine_tuning_job(
+            suffix='hausa-chatbot'
+        )
+        if not model_id:
+            return
     
-    # Step 4: Monitor progress
+    # Step 4: Monitor progress (OpenAI only)
     tuner.monitor_job(check_interval=60)
     
-    # Step 5: List events
-    tuner.list_events(limit=20)
+    # Step 5: List events (OpenAI only)
+    if provider == 'openai' and tuner.job_id:
+        tuner.list_events(limit=20)
     
     # Step 6: Test the model
     if tuner.model_id:
