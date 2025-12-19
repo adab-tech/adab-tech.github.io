@@ -804,7 +804,7 @@ a:not(.btn):hover::after {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 /* Post Detail - optimized for reading */
