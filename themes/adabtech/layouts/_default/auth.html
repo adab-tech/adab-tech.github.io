@@ -1,5 +1,23 @@
 {{ define "main" }}
-{{ .Content }}
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>{{ .Title }}</h1>
+    <p class="auth-description">{{ if eq .Title "Sign In" }}Sign in to access exclusive content and features{{ else if eq .Title "Sign Up" }}Create an account to access exclusive content and features{{ else }}Manage your account settings and preferences{{ end }}</p>
+    
+    <!-- Clerk Component Container -->
+    <div id="clerk-{{ if eq .Title "Sign In" }}signin{{ else if eq .Title "Sign Up" }}signup{{ else }}user-profile{{ end }}"></div>
+    
+    {{ if eq .Title "Sign In" }}
+    <p class="auth-footer">
+      Don't have an account? <a href="{{ "/signup/" | relURL }}">Sign up</a>
+    </p>
+    {{ else if eq .Title "Sign Up" }}
+    <p class="auth-footer">
+      Already have an account? <a href="{{ "/signin/" | relURL }}">Sign in</a>
+    </p>
+    {{ end }}
+  </div>
+</div>
 
 <style>
 .auth-container {
