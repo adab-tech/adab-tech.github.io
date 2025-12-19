@@ -1,18 +1,18 @@
 {{ define "main" }}
 <div class="home-hero">
-  <h1 class="hero-title">{{ .Site.Title }}</h1>
-  <p class="hero-tagline">Languages, Literature, and AI — thinking and building at their intersection.</p>
-  <p class="hero-subtitle">Bridging cultures through technology and creating AI tools for underserved languages</p>
+  <h1 class="hero-title">Adamu Abubakar</h1>
+  <p class="hero-tagline">Computational Linguistics & AI</p>
+  <p class="hero-subtitle">Building language technology and creating AI tools at the intersection of languages, literature, and artificial intelligence</p>
   <div class="hero-cta">
-    <a href="{{ "/projects/" | relURL }}" class="btn btn-primary">Explore Projects</a>
-    <a href="{{ "/posts/" | relURL }}" class="btn btn-secondary">Read Articles</a>
-    <a href="{{ "/services/" | relURL }}" class="btn btn-secondary">View Services</a>
+    <a href="#projects" class="btn btn-primary">View Projects</a>
+    <a href="#writing" class="btn btn-secondary">Read Writing</a>
+    <a href="{{ "/contact/" | relURL }}" class="btn btn-secondary">Get in Touch</a>
   </div>
 </div>
 
-<section class="home-section">
+<section id="projects" class="home-section">
   <h2>Featured Projects</h2>
-  <p class="section-intro">A selection of work at the intersection of languages, literature, and artificial intelligence.</p>
+  <p class="section-intro">A selection of work at the intersection of languages, literature, and artificial intelligence</p>
   <div class="projects-grid">
     {{ range first 3 (where .Site.RegularPages "Section" "projects") }}
     <article class="project-card">
@@ -37,9 +37,6 @@
         {{ range first 3 . }}
         <span class="tag">{{ . }}</span>
         {{ end }}
-        {{ if gt (len .) 3 }}
-        <span class="tag">+{{ sub (len .) 3 }} more</span>
-        {{ end }}
       </div>
       {{ end }}
       <a href="{{ .RelPermalink }}" class="read-more">Learn more →</a>
@@ -49,9 +46,9 @@
   <p class="section-footer"><a href="{{ "/projects/" | relURL }}">View all projects →</a></p>
 </section>
 
-<section class="home-section">
+<section id="writing" class="home-section">
   <h2>Recent Writing</h2>
-  <p class="section-intro">Essays, research notes, and reflections on languages, literature, and artificial intelligence.</p>
+  <p class="section-intro">Essays, research notes, and reflections on languages, literature, and artificial intelligence</p>
   <div class="posts-list">
     {{ range first 5 (where .Site.RegularPages "Section" "posts") }}
     <article class="post-item">
@@ -74,8 +71,8 @@
 
 <section class="home-section cta-section">
   <div class="cta-box">
-    <h2>Let's Work Together</h2>
-    <p>Interested in collaborating on language technology, translation, or digital humanities projects?</p>
+    <h2>Let's Collaborate</h2>
+    <p>Interested in working together on language technology, translation, or digital humanities projects?</p>
     <a href="{{ "/contact/" | relURL }}" class="btn btn-primary">Get in Touch</a>
   </div>
 </section>
