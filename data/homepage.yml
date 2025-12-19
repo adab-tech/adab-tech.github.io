@@ -1,0 +1,72 @@
+---
+banner:
+  title: Hi! I'm Adamu Abubakar
+
+social:
+  twitter: "adamuwrites"
+  linkedin: "adamudanjuma"
+  github: "adab-tech"
+  gitlab: ""
+  facebook: ""
+  instagram: ""
+  gmail: "contact@adamu.tech"
+
+about:
+  enable: true
+  content: Computational Linguistics & AI Specialist | Building African Language Technology
+  button:
+    btnText: Learn More About Me
+    URL: "/about"
+
+skill:
+  enable: true
+  item:
+    - title: Natural Language Processing
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg
+      description: Expertise in NLP, machine translation, and language modeling for African languages. Specialized in low-resource language processing and computational linguistics.
+    - title: Machine Learning
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/tensorflow/tensorflow-original.svg
+      description: Deep learning, neural networks, and AI model development. Experience with transformer models and fine-tuning for specialized tasks.
+    - title: Python Development
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg
+      description: Advanced Python programming for data science, ML pipelines, and web applications. Proficient in Flask, Django, and FastAPI frameworks.
+    - title: JavaScript/TypeScript
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg
+      description: Full-stack development with React, Node.js, and modern web technologies. Building interactive language learning applications.
+    - title: Data Science
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/pandas/pandas-original.svg
+      description: Data analysis, visualization, and statistical modeling. Experience with large-scale dataset processing and linguistic data analysis.
+    - title: Cloud & DevOps
+      logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/googlecloud/googlecloud-original.svg
+      description: Google Cloud Platform, Azure, deployment automation, and CI/CD pipelines for ML applications.
+
+experience:
+  enable: true
+  item:
+    - logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg
+      title: NLP Researcher & Developer
+      company: African Language Technology
+      duration: 2020 - Present
+    - logo: https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg
+      title: Computational Linguist
+      company: Language Research
+      duration: 2018 - 2020
+
+education:
+  enable: true
+  item:
+    - title: Computer Science & Linguistics
+      year: 2015 - 2019
+      academy: University Education
+      image: https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg
+
+portfolio:
+  filter:
+    - label: NLP & AI
+      value: nlp
+    - label: Web Development
+      value: web-dev
+    - label: Language Tech
+      value: language-tech
+    - label: Tools & Apps
+      value: tools
