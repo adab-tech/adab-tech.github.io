@@ -60,3 +60,7 @@ theme = 'adabtech'
 
 [minify]
   minifyOutput = true
+
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^CLERK_']
