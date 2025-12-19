@@ -2,13 +2,13 @@
 
 **Hugo-Powered Portfolio** | Computational Linguistics & AI
 
-This portfolio has been migrated to Hugo static site generator with integrated Clerk authentication.
+This portfolio is built with Hugo static site generator using the **Developer Portfolio** theme - a modern, developer-focused theme designed for showcasing projects, skills, blogs, and contact information.
 
 ---
 
 ## 🚀 Quick Start
 
-This site is now powered by [Hugo](https://gohugo.io/), a fast and flexible static site generator.
+This site is powered by [Hugo](https://gohugo.io/) with the [Developer Portfolio theme](https://github.com/samrobbins85/hugo-developer-portfolio).
 
 ### Prerequisites
 - Hugo Extended v0.121.0 or later
@@ -38,11 +38,25 @@ hugo --gc --minify
 
 ---
 
+## 🎨 Theme
+
+This site uses the **Developer Portfolio** theme, which provides:
+- Clean, modern design with UIKit framework
+- Responsive layout for all devices
+- Portfolio/project showcase section
+- Blog functionality
+- Skills and experience display
+- Education timeline
+- Contact form integration
+- Social media links
+
+---
+
 ## 📖 Documentation
 
 - **[Hugo Migration Guide](./HUGO_README.md)** - Complete documentation for the Hugo setup
-- **[Clerk Authentication Setup](./CLERK_SETUP.md)** - How to configure user authentication
 - **[Deployment Guide](./DEPLOYMENT_GUIDE.md)** - Deploy to GitHub Pages, Netlify, or Vercel
+- **[Developer Portfolio Theme](https://github.com/samrobbins85/hugo-developer-portfolio)** - Theme documentation
 
 ---
 
