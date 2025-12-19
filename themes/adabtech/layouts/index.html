@@ -1,0 +1,82 @@
+{{ define "main" }}
+<div class="home-hero">
+  <h1 class="hero-title">{{ .Site.Title }}</h1>
+  <p class="hero-tagline">Languages, Literature, and AI — thinking and building at their intersection.</p>
+  <p class="hero-subtitle">Bridging cultures through technology and creating AI tools for underserved languages</p>
+  <div class="hero-cta">
+    <a href="{{ "/projects/" | relURL }}" class="btn btn-primary">Explore Projects</a>
+    <a href="{{ "/posts/" | relURL }}" class="btn btn-secondary">Read Articles</a>
+    <a href="{{ "/services/" | relURL }}" class="btn btn-secondary">View Services</a>
+  </div>
+</div>
+
+<section class="home-section">
+  <h2>Featured Projects</h2>
+  <p class="section-intro">A selection of work at the intersection of languages, literature, and artificial intelligence.</p>
+  <div class="projects-grid">
+    {{ range first 3 (where .Site.RegularPages "Section" "projects") }}
+    <article class="project-card">
+      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      
+      {{ with .Params.problem }}
+      <div class="project-section-mini">
+        <h4>Problem</h4>
+        <p>{{ . | truncate 120 }}</p>
+      </div>
+      {{ end }}
+      
+      {{ with .Params.outcome }}
+      <div class="project-section-mini">
+        <h4>Impact</h4>
+        <p>{{ . | truncate 100 }}</p>
+      </div>
+      {{ end }}
+      
+      {{ with .Params.tools }}
+      <div class="project-tools">
+        {{ range first 3 . }}
+        <span class="tag">{{ . }}</span>
+        {{ end }}
+        {{ if gt (len .) 3 }}
+        <span class="tag">+{{ sub (len .) 3 }} more</span>
+        {{ end }}
+      </div>
+      {{ end }}
+      <a href="{{ .RelPermalink }}" class="read-more">Learn more →</a>
+    </article>
+    {{ end }}
+  </div>
+  <p class="section-footer"><a href="{{ "/projects/" | relURL }}">View all projects →</a></p>
+</section>
+
+<section class="home-section">
+  <h2>Recent Writing</h2>
+  <p class="section-intro">Essays, research notes, and reflections on languages, literature, and artificial intelligence.</p>
+  <div class="posts-list">
+    {{ range first 5 (where .Site.RegularPages "Section" "posts") }}
+    <article class="post-item">
+      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      <div class="post-meta">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 02, 2006" }}</time>
+        {{ with .Params.language }}
+        {{ if ne . "en" }}
+        <span class="language-tag">{{ . }}</span>
+        {{ end }}
+        {{ end }}
+      </div>
+      <p>{{ .Summary | truncate 150 }}</p>
+      <a href="{{ .RelPermalink }}" class="read-more">Read article →</a>
+    </article>
+    {{ end }}
+  </div>
+  <p class="section-footer"><a href="{{ "/posts/" | relURL }}">View all posts →</a></p>
+</section>
+
+<section class="home-section cta-section">
+  <div class="cta-box">
+    <h2>Let's Work Together</h2>
+    <p>Interested in collaborating on language technology, translation, or digital humanities projects?</p>
+    <a href="{{ "/contact/" | relURL }}" class="btn btn-primary">Get in Touch</a>
+  </div>
+</section>
+{{ end }}

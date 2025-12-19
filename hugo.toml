@@ -1,32 +1,15 @@
 baseURL = 'https://adamu.tech/'
 languageCode = 'en-us'
 title = 'Adamu Abubakar | Computational Linguistics & AI'
-theme = 'hugo-developer-portfolio'
+theme = 'adabtech'
 
 [params]
   author = 'Adamu Abubakar'
   email = 'contact@adamu.tech'
   description = 'The official portfolio of Adamu Abubakar, specializing in African language technology, NLP, and creative AI. Thinking and building at the intersection of languages, literature, and AI.'
-  home = 'Home'
-  
-  # UIKit plugins for the Developer Portfolio theme
-  [[params.plugins.css]]
-  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css"
-  
-  [[params.plugins.js]]
-  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js"
-  
-  [[params.plugins.js]]
-  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js"
-  
-  [params.contact]
-  enable = true
-  formAction = ""
-  
-  [params.footer]
-  email = "contact@adamu.tech"
-  address = "Remote / Based in Nigeria"
-  googlemaps = ""
+  github_username = 'adab-tech'
+  linkedin_username = 'adamudanjuma'
+  twitter_username = 'adamuwrites'
 
 [markup]
   [markup.goldmark]
@@ -43,21 +26,33 @@ theme = 'hugo-developer-portfolio'
 
 [menu]
   [[menu.main]]
-    name = 'About'
-    url = 'about'
+    name = 'Home'
+    url = '/'
     weight = 1
   [[menu.main]]
-    name = 'Blog'
-    url = 'blog'
+    name = 'Writing'
+    url = '/posts/'
     weight = 2
   [[menu.main]]
-    name = 'Portfolio'
-    url = 'portfolio'
+    name = 'Projects'
+    url = '/projects/'
     weight = 3
   [[menu.main]]
-    name = 'Contact'
-    url = 'contact'
+    name = 'Services'
+    url = '/services/'
     weight = 4
+  [[menu.main]]
+    name = 'Opportunities'
+    url = '/opportunities/'
+    weight = 5
+  [[menu.main]]
+    name = 'CV'
+    url = '/cv/'
+    weight = 6
+  [[menu.main]]
+    name = 'Contact'
+    url = '/contact/'
+    weight = 7
 
 [outputs]
   home = ['HTML', 'RSS', 'JSON']
