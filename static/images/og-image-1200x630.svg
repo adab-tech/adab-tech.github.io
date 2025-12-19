@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" aria-labelledby="ogImageTitle" role="img">
+  <title id="ogImageTitle">Adamu Abubakar - Computational Linguistics &amp; AI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&amp;display=swap');
+    .og-bg { fill: #1e293b; }
+    .og-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 96px;
+      font-weight: 400;
+      fill: #10b981;
+      text-anchor: middle;
+    }
+    .og-subtitle {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 32px;
+      font-weight: 400;
+      fill: #94a3b8;
+      text-anchor: middle;
+    }
+    .og-accent { fill: #fbbf24; }
+  </style>
+  <rect width="1200" height="630" class="og-bg"/>
+  <text x="600" y="280" class="og-title">
+    <tspan class="og-accent">A</tspan>damu <tspan class="og-accent">A</tspan>bubakar
+  </text>
+  <text x="600" y="360" class="og-subtitle">Computational Linguistics &amp; AI</text>
+</svg>
