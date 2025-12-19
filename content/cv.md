@@ -14,6 +14,13 @@ permalink: /cv/
   </p>
 </div>
 
+<div class="cv-notice" style="background: linear-gradient(135deg, #f0f9ff 0%, #f9fafb 100%); border-left: 4px solid #2c5f7d; padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 3rem;">
+  <p style="margin: 0; font-size: 1.0625rem; color: #1f2937;">
+    📄 <strong>View my complete and up-to-date CV:</strong> 
+    <a href="https://adab-tech.my.canva.site/cv" target="_blank" rel="noopener" style="color: #2c5f7d; font-weight: 600; text-decoration: underline;">Visit my Canva CV</a>
+  </p>
+</div>
+
 ## Professional Summary
 
 Interdisciplinary professional with expertise at the intersection of languages, literature, and artificial intelligence. Specializing in leveraging computational methods to enhance linguistic research, develop educational tools, and build innovative language technology solutions.
