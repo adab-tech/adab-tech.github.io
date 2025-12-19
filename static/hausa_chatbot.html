@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hausa AI Chatbot - Voice & Text</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .chat-message {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .recording {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .wave {
+            animation: wave 1s ease-in-out infinite;
+        }
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4">
+    
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <div class="bg-white rounded-t-2xl shadow-xl p-6 border-b-4 border-purple-600">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Hausa AI Chatbot</h1>
+                        <p class="text-sm text-gray-600">Powered by GPT & Google Cloud Speech</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-gray-600" id="status-text">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Panel -->
+        <div class="bg-white shadow-lg p-4 border-b border-gray-200">
+            <div class="flex flex-wrap items-center gap-4">
+                <div id="api-key-section" class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">API Key:</label>
+                    <input type="password" id="api-key-input" placeholder="Enter API key" 
+                           class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <select id="provider-select" class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
+                        <option value="openai">OpenAI</option>
+                        <option value="gemini">Gemini Pro</option>
+                    </select>
+                    <button onclick="authenticateWithKey()" class="px-3 py-1 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700">
+                        Authenticate
+                    </button>
+                </div>
+                <div id="session-status" class="hidden items-center space-x-2">
+                    <span class="text-sm text-green-600 font-medium">✓ Authenticated</span>
+                    <button onclick="logout()" class="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700">
+                        Logout
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Model:</label>
+                    <select id="model-select" class="px-3 py-1 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500">
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="gemini-pro">Gemini Pro</option>
+                        <option value="custom">Custom Model</option>
+                    </select>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="toggleAutonomousTraining()" id="auto-train-btn" class="px-3 py-1 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span id="auto-train-text">Auto-Train</span>
+                    </button>
+                    <button onclick="showTrainingStatus()" class="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700">
+                        Status
+                    </button>
+                </div>
+                <button onclick="clearChat()" class="px-3 py-1 bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600">
+                    Clear Chat
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="bg-gray-50 shadow-xl" style="height: 500px; overflow-y: auto;" id="chat-container">
+            <div class="p-6 space-y-4" id="chat-messages">
+                <!-- Welcome Message -->
+                <div class="chat-message flex justify-start">
+                    <div class="bg-white rounded-lg shadow-md p-4 max-w-md">
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-purple-100 rounded-full p-2">
+                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">AI Assistant</p>
+                                <p class="text-gray-700">Sannu! Barka da zuwa. I am your Hausa AI assistant. You can type or use voice to communicate with me in Hausa. How can I help you today?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-white rounded-b-2xl shadow-xl p-4">
+            <div class="flex items-end space-x-3">
+                <!-- Voice Input Button -->
+                <button id="voice-btn" onclick="toggleVoiceInput()" 
+                        class="flex-shrink-0 bg-gradient-to-br from-red-500 to-pink-600 text-white p-3 rounded-full hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                    </svg>
+                </button>
+
+                <!-- Text Input -->
+                <div class="flex-grow">
+                    <textarea id="message-input" rows="2" placeholder="Type your message in Hausa or English..." 
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                              onkeypress="handleKeyPress(event)"></textarea>
+                </div>
+
+                <!-- Send Button -->
+                <button onclick="sendMessage()" 
+                        class="flex-shrink-0 bg-gradient-to-br from-purple-600 to-indigo-700 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all transform hover:scale-105 shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Audio Visualization (hidden by default) -->
+            <div id="audio-viz" class="hidden mt-4 flex justify-center items-center space-x-1">
+                <div class="wave bg-purple-500 w-1 h-8 rounded-full"></div>
+                <div class="wave bg-purple-500 w-1 h-12 rounded-full" style="animation-delay: 0.1s"></div>
+                <div class="wave bg-purple-500 w-1 h-6 rounded-full" style="animation-delay: 0.2s"></div>
+                <div class="wave bg-purple-500 w-1 h-10 rounded-full" style="animation-delay: 0.3s"></div>
+                <div class="wave bg-purple-500 w-1 h-8 rounded-full" style="animation-delay: 0.4s"></div>
+            </div>
+
+            <!-- Status Messages -->
+            <div id="status-message" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="mt-6 bg-white rounded-2xl shadow-xl p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-3">Features & Capabilities</h3>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-100 rounded-lg p-2">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Hausa GPT Model</p>
+                        <p class="text-sm text-gray-600">Fine-tuned for Hausa language</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-green-100 rounded-lg p-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Speech-to-Text</p>
+                        <p class="text-sm text-gray-600">Google Cloud API</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-purple-100 rounded-lg p-2">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 0M2.343 12.343a9 9 0 012.829-2.829"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">Text-to-Speech</p>
+                        <p class="text-sm text-gray-600">Natural Hausa voices</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Link -->
+        <div class="mt-4 text-center">
+            <a href="hausa_chatbot_docs.html" class="text-purple-600 hover:text-purple-800 font-medium">
+                View Documentation & Setup Guide →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        let config = {
+            sessionToken: sessionStorage.getItem('hausa_chatbot_session_token') || '',
+            provider: sessionStorage.getItem('hausa_chatbot_provider') || 'openai',
+            model: 'gpt-3.5-turbo',
+            backendUrl: '/api/chat', // This would be your backend endpoint
+        };
+
+        let chatHistory = [];
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // Authentication functions
+        async function authenticateWithKey() {
+            const apiKey = document.getElementById('api-key-input').value;
+            const provider = document.getElementById('provider-select').value;
+            
+            if (!apiKey) {
+                showStatus('Please enter an API key', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/auth/validate-key', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        api_key: apiKey,
+                        provider: provider
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    config.sessionToken = data.session_token;
+                    config.provider = provider;
+                    
+                    // Store in sessionStorage (not localStorage for better security)
+                    sessionStorage.setItem('hausa_chatbot_session_token', data.session_token);
+                    sessionStorage.setItem('hausa_chatbot_provider', provider);
+                    
+                    // Update UI
+                    document.getElementById('api-key-section').classList.add('hidden');
+                    document.getElementById('session-status').classList.remove('hidden');
+                    document.getElementById('session-status').classList.add('flex');
+                    
+                    showStatus('Authentication successful!', 'success');
+                    document.getElementById('api-key-input').value = '';
+                } else {
+                    showStatus('Authentication failed: ' + (data.error || 'Invalid API key'), 'error');
+                }
+            } catch (error) {
+                showStatus('Authentication error: ' + error.message, 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                if (config.sessionToken) {
+                    await fetch('/api/auth/logout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
+                        body: JSON.stringify({
+                            session_token: config.sessionToken
+                        })
+                    });
+                }
+
+                // Clear session
+                config.sessionToken = '';
+                config.provider = 'openai';
+                sessionStorage.removeItem('hausa_chatbot_session_token');
+                sessionStorage.removeItem('hausa_chatbot_provider');
+
+                // Update UI
+                document.getElementById('api-key-section').classList.remove('hidden');
+                document.getElementById('session-status').classList.add('hidden');
+
+                showStatus('Logged out successfully', 'success');
+            } catch (error) {
+                showStatus('Logout error: ' + error.message, 'error');
+            }
+        }
+
+        async function validateSession() {
+            if (!config.sessionToken) return false;
+
+            try {
+                const response = await fetch('/api/auth/validate-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        session_token: config.sessionToken
+                    })
+                });
+
+                const data = await response.json();
+                return data.valid;
+            } catch (error) {
+                console.error('Session validation error:', error);
+                // Return false on error to trigger re-authentication
+                return false;
+            }
+        }
+
+        // Handle key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // Call GPT API (this is a simplified version - you'd need proper backend)
+                const response = await getChatResponse(message);
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add AI response to chat
+                addMessage(response, 'ai');
+                
+                // Optionally speak the response
+                speakText(response);
+            } catch (error) {
+                removeTypingIndicator();
+                showStatus('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Add message to chat
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message flex ${sender === 'user' ? 'justify-end' : 'justify-start'}`;
+            
+            const bgColor = sender === 'user' ? 'bg-gradient-to-br from-purple-600 to-indigo-700 text-white' : 'bg-white text-gray-700';
+            const icon = sender === 'user' ? 
+                '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>' :
+                '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>';
+            
+            messageDiv.innerHTML = `
+                <div class="${bgColor} rounded-lg shadow-md p-4 max-w-md">
+                    <div class="flex items-start space-x-3">
+                        <div class="${sender === 'user' ? 'bg-white/20' : 'bg-purple-100'} rounded-full p-2">
+                            ${icon}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium mb-1">${sender === 'user' ? 'You' : 'AI Assistant'}</p>
+                            <p class="${sender === 'user' ? 'text-white' : 'text-gray-700'}">${text}</p>
+                            ${sender === 'ai' ? `<button onclick="speakText('${text.replace(/'/g, "\\'")}')" class="mt-2 text-xs text-purple-600 hover:text-purple-800 flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728"></path>
+                                </svg>
+                                <span>Play Audio</span>
+                            </button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+            
+            // Store in history
+            chatHistory.push({ role: sender === 'user' ? 'user' : 'assistant', content: text });
+        }
+
+        // Get chat response (updated to use session token and backend)
+        async function getChatResponse(message) {
+            // Check if authenticated
+            if (!config.sessionToken) {
+                return "Please authenticate with your API key first by clicking the 'Authenticate' button above.";
+            }
+
+            // Validate session
+            const isValid = await validateSession();
+            if (!isValid) {
+                showStatus('Session expired. Please authenticate again.', 'error');
+                await logout();
+                return "Session expired. Please authenticate again.";
+            }
+
+            try {
+                // Determine model based on selection
+                const selectedModel = document.getElementById('model-select').value;
+                const provider = selectedModel.startsWith('gemini') ? 'gemini' : config.provider;
+
+                const response = await fetch(config.backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatHistory,
+                        model: selectedModel,
+                        provider: provider,
+                        session_token: config.sessionToken
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                return data.response;
+
+            } catch (error) {
+                console.error('Chat error:', error);
+                throw new Error('Failed to get response from AI. Please try again.');
+            }
+        }
+
+        // Voice input toggle
+        async function toggleVoiceInput() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    startRecording(stream);
+                } catch (error) {
+                    showStatus('Error accessing microphone: ' + error.message, 'error');
+                }
+            } else {
+                stopRecording();
+            }
+        }
+
+        // Start recording
+        function startRecording(stream) {
+            isRecording = true;
+            audioChunks = [];
+            
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                await processAudio(audioBlob);
+            };
+            
+            mediaRecorder.start();
+            
+            // Update UI
+            document.getElementById('voice-btn').classList.add('recording');
+            document.getElementById('audio-viz').classList.remove('hidden');
+            showStatus('Recording... Click again to stop', 'info');
+        }
+
+        // Stop recording
+        function stopRecording() {
+            isRecording = false;
+            
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Update UI
+            document.getElementById('voice-btn').classList.remove('recording');
+            document.getElementById('audio-viz').classList.add('hidden');
+            showStatus('Processing audio...', 'info');
+        }
+
+        // Process audio (Speech-to-Text)
+        async function processAudio(audioBlob) {
+            try {
+                // This would call Google Cloud Speech-to-Text API
+                // For now, we'll show a mock implementation
+                
+                // In production, you would:
+                // 1. Send audioBlob to your backend
+                // 2. Backend calls Google Cloud Speech-to-Text API
+                // 3. Returns transcribed text
+                
+                // Mock implementation:
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                const mockTranscription = "Sannu, ina bukatar taimako";
+                
+                document.getElementById('message-input').value = mockTranscription;
+                showStatus('Audio transcribed successfully!', 'success');
+                
+                // Auto-send the transcribed message
+                setTimeout(() => sendMessage(), 500);
+                
+            } catch (error) {
+                showStatus('Error processing audio: ' + error.message, 'error');
+            }
+        }
+
+        // Text-to-Speech
+        async function speakText(text) {
+            try {
+                // This would call Google Cloud Text-to-Speech API
+                // For now, we'll use Web Speech API as fallback
+                
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'ha-NG'; // Hausa language code
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.0;
+                    
+                    window.speechSynthesis.speak(utterance);
+                    showStatus('Playing audio...', 'info');
+                } else {
+                    showStatus('Text-to-speech not supported in this browser', 'error');
+                }
+                
+                // In production, you would call your backend which uses Google Cloud TTS:
+                /*
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text, language: 'ha-NG' })
+                });
+                
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+                */
+                
+            } catch (error) {
+                showStatus('Error playing audio: ' + error.message, 'error');
+            }
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'chat-message flex justify-start';
+            typingDiv.innerHTML = `
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <div class="flex space-x-2">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        // Remove typing indicator
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = message;
+            statusDiv.className = `mt-3 p-3 rounded-lg text-sm ${
+                type === 'success' ? 'bg-green-100 text-green-800' :
+                type === 'error' ? 'bg-red-100 text-red-800' :
+                'bg-blue-100 text-blue-800'
+            }`;
+            statusDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            const container = document.getElementById('chat-container');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Clear chat
+        function clearChat() {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                document.getElementById('chat-messages').innerHTML = '';
+                chatHistory = [];
+                showStatus('Chat cleared', 'success');
+            }
+        }
+
+        // Autonomous Training Functions
+        async function toggleAutonomousTraining() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                
+                const endpoint = status.is_running ? '/autonomous-training/stop' : '/autonomous-training/start';
+                const toggleResponse = await fetch(config.backendUrl.replace('/chat', endpoint), {
+                    method: 'POST'
+                });
+                
+                const result = await toggleResponse.json();
+                
+                updateAutoTrainButton(!status.is_running);
+                showStatus(result.message, 'success');
+                
+            } catch (error) {
+                showStatus('Error toggling autonomous training: ' + error.message, 'error');
+            }
+        }
+
+        function updateAutoTrainButton(isRunning) {
+            const btn = document.getElementById('auto-train-btn');
+            const text = document.getElementById('auto-train-text');
+            
+            if (isRunning) {
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                text.textContent = 'Stop Auto-Train';
+            } else {
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                text.textContent = 'Start Auto-Train';
+            }
+        }
+
+        async function showTrainingStatus() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                
+                let statusHtml = `
+                    <div class="p-4 bg-white rounded-lg">
+                        <h3 class="text-lg font-bold mb-3">Autonomous Training Status</h3>
+                        <div class="space-y-2 text-sm">
+                            <p><strong>Status:</strong> ${status.is_running ? '🟢 Running' : '🔴 Stopped'}</p>
+                            <p><strong>Conversations Logged:</strong> ${status.conversation_count} / ${status.min_conversations}</p>
+                            <p><strong>Training Interval:</strong> ${status.training_interval_hours} hours</p>
+                            <p><strong>Last Training:</strong> ${status.last_training_time || 'Never'}</p>
+                `;
+                
+                if (status.current_job && status.current_job.status !== 'no_job') {
+                    statusHtml += `
+                            <p><strong>Current Job:</strong> ${status.current_job.job_id}</p>
+                            <p><strong>Job Status:</strong> ${status.current_job.status}</p>
+                            ${status.current_job.fine_tuned_model ? `<p><strong>Model:</strong> ${status.current_job.fine_tuned_model}</p>` : ''}
+                    `;
+                }
+                
+                statusHtml += `
+                        </div>
+                        <button onclick="closeModal()" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                            Close
+                        </button>
+                    </div>
+                `;
+                
+                showModal(statusHtml);
+                
+            } catch (error) {
+                showStatus('Error fetching status: ' + error.message, 'error');
+            }
+        }
+
+        function showModal(html) {
+            const modal = document.createElement('div');
+            modal.id = 'status-modal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = html;
+            document.body.appendChild(modal);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('status-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Initialize autonomous training button state
+        async function initAutoTrainButton() {
+            try {
+                const response = await fetch(config.backendUrl.replace('/chat', '/autonomous-training/status'));
+                const status = await response.json();
+                updateAutoTrainButton(status.is_running);
+            } catch (error) {
+                console.log('Could not fetch auto-train status:', error);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if we have an existing session
+            if (config.sessionToken) {
+                const isValid = await validateSession();
+                if (isValid) {
+                    // Session is valid, update UI
+                    document.getElementById('api-key-section').classList.add('hidden');
+                    document.getElementById('session-status').classList.remove('hidden');
+                    document.getElementById('session-status').classList.add('flex');
+                } else {
+                    // Session is invalid, clear it
+                    sessionStorage.removeItem('hausa_chatbot_session_token');
+                    sessionStorage.removeItem('hausa_chatbot_provider');
+                    config.sessionToken = '';
+                }
+            }
+            
+            initAutoTrainButton();
+        });
+    </script>
+</body>
+</html>
