@@ -1,0 +1,68 @@
+/* Multilingual Welcome Greeting Styles */
+
+/* Container for the dynamic greeting */
+.greeting-container {
+  position: relative;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Greeting text styling */
+.greeting {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #2c5f7d 0%, #4a8fb5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0;
+  position: absolute;
+  transition: opacity 0.8s ease-in-out;
+  text-align: center;
+  width: 100%;
+}
+
+/* Visible state for active greeting */
+.greeting.visible {
+  opacity: 1;
+}
+
+/* Fallback for no-JS */
+.no-js .greeting-fallback {
+  display: block;
+}
+
+.greeting-fallback {
+  display: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .greeting {
+    font-size: 2rem;
+  }
+  
+  .greeting-container {
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .greeting {
+    font-size: 1.75rem;
+  }
+  
+  .greeting-container {
+    min-height: 45px;
+  }
+}
+
+/* Accessibility - respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .greeting {
+    transition: none;
+  }
+}
