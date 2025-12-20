@@ -96,13 +96,22 @@
   function initThemeToggle() {
     if (!elements.themeToggle) return;
 
+    // Ensure role/aria for assistive tech
+    elements.themeToggle.setAttribute('role', 'button');
+    // Reflect the current theme as aria-pressed (true for dark)
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    elements.themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
+
     elements.themeToggle.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      
+      const cur = document.documentElement.getAttribute('data-theme');
+      const newTheme = cur === 'dark' ? 'light' : 'dark';
+
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
-      
+
+      // Update accessible state
+      elements.themeToggle.setAttribute('aria-pressed', newTheme === 'dark');
+
       // Add animation feedback
       elements.themeToggle.style.transform = 'scale(0.9)';
       setTimeout(() => {
@@ -118,26 +127,48 @@
   function initMobileMenu() {
     if (!elements.mobileMenuToggle || !elements.navMenu) return;
 
-    // Toggle menu
+    // Ensure initial aria attributes
+    elements.mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    elements.mobileMenuToggle.setAttribute('aria-controls', elements.navMenu.id || 'navMenu');
+    elements.navMenu.setAttribute('aria-hidden', 'true');
+
+    // Helper: open menu
+    function openMenu() {
+      state.isMenuOpen = true;
+      elements.mobileMenuToggle.classList.add('active');
+      elements.navMenu.classList.add('active');
+      elements.mobileMenuToggle.setAttribute('aria-expanded', 'true');
+      elements.navMenu.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      // Move focus to first link for keyboard users
+      const firstLink = elements.navMenu.querySelector('.nav-link');
+      if (firstLink) firstLink.focus();
+      enableFocusTrap();
+    }
+
+    // Helper: close menu
+    function closeMenu() {
+      state.isMenuOpen = false;
+      elements.mobileMenuToggle.classList.remove('active');
+      elements.navMenu.classList.remove('active');
+      elements.mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      elements.navMenu.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      disableFocusTrap();
+      // Return focus to toggle for accessibility
+      elements.mobileMenuToggle.focus();
+    }
+
+    // Toggle menu on click
     elements.mobileMenuToggle.addEventListener('click', () => {
-      state.isMenuOpen = !state.isMenuOpen;
-      elements.mobileMenuToggle.classList.toggle('active');
-      elements.navMenu.classList.toggle('active');
-      elements.mobileMenuToggle.setAttribute('aria-expanded', state.isMenuOpen);
-      
-      // Prevent body scroll when menu is open
-      if (state.isMenuOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
+      if (state.isMenuOpen) closeMenu(); else openMenu();
     });
 
     // Close menu when clicking nav links
     elements.navLinks.forEach(link => {
       link.addEventListener('click', () => {
         if (state.isMenuOpen) {
-          elements.mobileMenuToggle.click();
+          closeMenu();
         }
       });
     });
@@ -147,9 +178,54 @@
       if (state.isMenuOpen && 
           !elements.navMenu.contains(e.target) && 
           !elements.mobileMenuToggle.contains(e.target)) {
-        elements.mobileMenuToggle.click();
+        closeMenu();
       }
     });
+
+    // Close on Escape key and support keyboard handling
+    document.addEventListener('keydown', (e) => {
+      if (!state.isMenuOpen) return;
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closeMenu();
+      }
+    });
+
+    // Focus trap implementation (simple)
+    let focusableElements = [];
+    let firstFocusable = null;
+    let lastFocusable = null;
+
+    function enableFocusTrap() {
+      focusableElements = Array.from(elements.navMenu.querySelectorAll('a, button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'))
+        .filter(el => !el.hasAttribute('disabled'));
+      firstFocusable = focusableElements[0] || null;
+      lastFocusable = focusableElements[focusableElements.length - 1] || null;
+
+      document.addEventListener('keydown', trapHandler);
+    }
+
+    function disableFocusTrap() {
+      document.removeEventListener('keydown', trapHandler);
+    }
+
+    function trapHandler(e) {
+      if (e.key !== 'Tab') return;
+      if (!firstFocusable) return;
+
+      if (e.shiftKey) { // shift + tab
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else { // tab
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    }
+
+  // (Duplicate handlers removed — menu open/close handled above)
   }
 
   // ===================================
