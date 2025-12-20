@@ -1,0 +1,11 @@
+{{ define "main" }}
+<article>
+  <header>
+    <h1>{{ .Title }}</h1>
+  </header>
+  <div class="content">
+    {{ .Content }}
+  </div>
+</article>
+<p class="back-link"><a href="{{ "/" | relURL }}">← Back to home</a></p>
+{{ end }}

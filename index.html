@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adab Tech</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        // Remove no-js class if JavaScript is enabled
+        document.documentElement.classList.remove('no-js');
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/projects/">Projects</a></li>
+                <li><a href="/khad-app/">Khad App</a></li>
+                <li><a href="/blog/">Blog</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Dynamic multilingual greeting container -->
+        <div class="greeting-container">
+            <!-- Greeting element with ARIA live region for accessibility -->
+            <h1 id="dynamic-greeting" class="greeting" aria-live="polite" lang="en">Welcome</h1>
+            <!-- Fallback for browsers without JavaScript -->
+            <noscript>
+                <h1 class="greeting-fallback">Welcome to Adab Tech</h1>
+            </noscript>
+        </div>
+        <p>Your hub for technology and innovation.</p>
+    </main>
+    <footer>
+        <p>© 2025 Adab Tech. All rights reserved.</p>
+    </footer>
+    <!-- Multilingual greeting script -->
+    <script src="script.js"></script>
+</body>
+</html>
