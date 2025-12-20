@@ -1,7 +1,7 @@
 // Service Worker for Hausa Explorer PWA
 const CACHE_NAME = 'hausa-explorer-v1';
 const urlsToCache = [
-  '/hausa_explorer.html',
+  '/static/hausa_explorer.html',
   '/manifest.json'
 ];
 
