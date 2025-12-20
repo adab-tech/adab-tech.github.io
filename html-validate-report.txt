@@ -1,0 +1,63 @@
+/workspaces/adab-tech.github.io/index.html:9:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:15:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:16:55: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:32:43: error [no-redundant-role] Redundant role "navigation" on <nav>
+/workspaces/adab-tech.github.io/index.html:38:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:39:14: error [no-implicit-button-type] <button> is missing recommended "type" attribute
+/workspaces/adab-tech.github.io/index.html:44:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:51:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:52:18: error [no-implicit-button-type] <button> is missing recommended "type" attribute
+/workspaces/adab-tech.github.io/index.html:72:35: error [no-redundant-role] Redundant role "main" on <main>
+/workspaces/adab-tech.github.io/index.html:80:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:89:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:93:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:95:44: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:97:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:99:109: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:102:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:115:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:141:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:153:63: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:155:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:159:106: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:162:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:164:114: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:165:122: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:166:113: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:169:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:171:117: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:172:118: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:175:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:191:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:234:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:246:109: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:265:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:276:104: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:295:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:307:95: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:326:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:338:108: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:356:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:368:60: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:370:99: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:388:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:403:90: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:430:50: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:432:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:443:62: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:454:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:465:55: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:476:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:497:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:510:58: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:532:94: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:536:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:551:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:563:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:578:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:583:103: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:591:43: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:633:50: error [no-raw-characters] Raw "&" must be encoded as "&amp;"
+/workspaces/adab-tech.github.io/index.html:635:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:643:1: error [no-trailing-whitespace] Trailing whitespace
+/workspaces/adab-tech.github.io/index.html:657:1: error [no-trailing-whitespace] Trailing whitespace
