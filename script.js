@@ -6,10 +6,14 @@
 (function() {
   'use strict';
 
+  // Configuration constants
+  const TRANSITION_DURATION = 800; // Must match CSS transition duration (in ms)
+  const ROTATION_INTERVAL = 2500;  // Time between greeting changes (in ms)
+  
   // Array of greetings in different languages
   const greetings = [
     { text: 'Welcome', lang: 'en' },           // English
-    { text: 'Bienvenu', lang: 'fr' },          // French
+    { text: 'Bienvenue', lang: 'fr' },         // French
     { text: 'Ẹ káàbọ', lang: 'yo' },          // Yoruba
     { text: 'Barka da zuwa', lang: 'ha' },    // Hausa
     { text: 'مرحبا', lang: 'ar' },            // Arabic (Marhaba)
@@ -43,8 +47,8 @@
     // Set initial greeting
     updateGreeting();
 
-    // Start rotation with 2.5 seconds interval
-    rotationInterval = setInterval(rotateGreeting, 2500);
+    // Start rotation
+    rotationInterval = setInterval(rotateGreeting, ROTATION_INTERVAL);
   }
 
   /**
@@ -68,7 +72,7 @@
       requestAnimationFrame(() => {
         greetingElement.classList.add('visible');
       });
-    }, 400); // Half of the transition duration
+    }, TRANSITION_DURATION / 2);
   }
 
   /**
