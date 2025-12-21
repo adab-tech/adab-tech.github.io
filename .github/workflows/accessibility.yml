@@ -26,4 +26,5 @@ jobs:
           LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.head_ref }}
         run: |
           # Run LHCI autorun; results uploaded to temporary public storage
-          lhci autorun --upload.target=temporary-public-storage
+          # Tell LHCI where the static site files live (repo root)
+          lhci autorun --upload.target=temporary-public-storage --collect.staticDistDir=.
