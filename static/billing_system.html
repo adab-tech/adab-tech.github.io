@@ -579,6 +579,40 @@
 
     const $ = (id) => document.getElementById(id);
 
+    const STORAGE_KEY = 'unilu.billing.demo.v1';
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function saveState() {
+      try {
+        const payload = {
+          savedAt: new Date().toISOString(),
+          student,
+          charges,
+          payments
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      } catch (_) {
+        // ignore storage errors (private mode/quota)
+      }
+    }
+
+    function clearState() {
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (_) {
+        // ignore
+      }
+    }
+
     function formatMoney(amount) {
       const n = Number.isFinite(amount) ? amount : 0;
       return n.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
@@ -625,26 +659,28 @@
 
       $('studentStatus').textContent = `Loaded: ${student.name}`;
       showToast('ok', 'Student saved. You can now add charges and payments.');
+  saveState();
       showStatement();
     });
 
     // Add charge
     $('chargeForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!student) return alert('Add student first!');
+  if (!student) return showToast('warn', 'Add a student first.');
       charges.push({
         description: $('chargeDesc').value.trim(),
         amount: parseFloat($('chargeAmount').value)
       });
       this.reset();
       showToast('ok', 'Charge added.');
+  saveState();
       showStatement();
     });
 
     // Record payment
     $('paymentForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      if (!student) return alert('Add student first!');
+  if (!student) return showToast('warn', 'Add a student first.');
       payments.push({
         amount: parseFloat($('paymentAmount').value),
         method: $('paymentMethod').value.trim(),
@@ -652,6 +688,7 @@
       });
       this.reset();
       showToast('ok', 'Payment recorded.');
+  saveState();
       showStatement();
     });
 
@@ -745,6 +782,7 @@
         if (Number.isFinite(idx) && idx >= 0) {
           charges.splice(idx, 1);
           showToast('warn', 'Charge removed.');
+          saveState();
           showStatement();
         }
       }
@@ -755,6 +793,7 @@
         if (Number.isFinite(idx) && idx >= 0) {
           payments.splice(idx, 1);
           showToast('warn', 'Payment removed.');
+          saveState();
           showStatement();
         }
       }
@@ -790,6 +829,7 @@
       student = null;
       charges = [];
       payments = [];
+  clearState();
       $('studentForm').reset();
       $('chargeForm').reset();
       $('paymentForm').reset();
@@ -811,6 +851,23 @@
       const p = (prompt || '').toLowerCase();
       if (!student) return 'Save a student first, then add charges and payments.';
       const { totalCharges, totalPayments, balance } = computeTotals();
+
+      if (p.includes('plan') || p.includes('payment plan') || p.includes('installment') || p.includes('instalment')) {
+        if (balance <= 0) return `No outstanding balance. Current balance is ${formatMoney(balance)}.`;
+        const months = 3;
+        const monthly = balance / months;
+        const today = new Date();
+        const dates = Array.from({ length: months }, (_, i) => {
+          const d = new Date(today);
+          d.setMonth(d.getMonth() + i + 1);
+          return d.toISOString().split('T')[0];
+        });
+        return `Suggested 3‑month payment plan for ${formatMoney(balance)}:\n` +
+          `1) ${dates[0]} — ${formatMoney(monthly)}\n` +
+          `2) ${dates[1]} — ${formatMoney(monthly)}\n` +
+          `3) ${dates[2]} — ${formatMoney(monthly)}\n` +
+          `Tip: Record each installment as a payment, then print/export the statement.`;
+      }
 
       if (p.includes('next') || p.includes('recommend') || p.includes('what')) {
         if (!charges.length) return 'Next step: add at least one charge (e.g., tuition) to generate the bill.';
@@ -865,6 +922,38 @@
       replyBox.textContent = local;
       replyBox.dataset.kind = 'ok';
     });
+
+    // Restore state on load (local mode)
+    (function restoreOnLoad() {
+      const saved = loadState();
+      if (!saved || !saved.student) return;
+
+      student = saved.student;
+      charges = Array.isArray(saved.charges) ? saved.charges : [];
+      payments = Array.isArray(saved.payments) ? saved.payments : [];
+
+      $('studentId').value = student.id || '';
+      $('studentName').value = student.name || '';
+      $('faculty').value = student.faculty || '';
+
+      // Populate departments list before selecting
+      const deptSelect = $('department');
+      deptSelect.innerHTML = '<option value="">Select department</option>';
+      if (FACULTIES[student.faculty]) {
+        FACULTIES[student.faculty].forEach(dept => {
+          const opt = document.createElement('option');
+          opt.value = dept;
+          opt.textContent = dept;
+          deptSelect.appendChild(opt);
+        });
+      }
+      deptSelect.value = student.department || '';
+
+      $('studentStatus').textContent = `Loaded: ${student.name}`;
+      $('emptyState').hidden = true;
+      showStatement();
+      showToast('ok', 'Restored saved demo data.');
+    })();
   </script>
 </body>
 </html>
