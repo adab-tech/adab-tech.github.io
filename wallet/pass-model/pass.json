@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.com.example.yourcompany",
+  "teamIdentifier": "ABCDE12345",
+  "organizationName": "Your Company",
+  "description": "Business Card",
+  "serialNumber": "business-card-001",
+  "generic": {
+    "primaryFields": [],
+    "secondaryFields": [],
+    "auxiliaryFields": []
+  }
+}

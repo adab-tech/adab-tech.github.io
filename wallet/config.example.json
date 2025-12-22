@@ -1,0 +1,24 @@
+{
+  "passTypeIdentifier": "pass.com.example.yourcompany",
+  "teamIdentifier": "ABCDE12345",
+  "organizationName": "Your Company",
+  "description": "Business Card",
+  "serialNumber": "business-card-001",
+  "foregroundColor": "rgb(255,255,255)",
+  "backgroundColor": "rgb(124,58,237)",
+  "labelColor": "rgb(255,255,255)",
+
+  "webServiceURL": "",
+  "authenticationToken": "",
+
+  "contact": {
+    "name": "Your Name",
+    "title": "Your Title",
+    "company": "Your Company",
+    "phone": "+1 555 555 5555",
+    "email": "you@example.com",
+    "website": "https://example.com"
+  },
+
+  "barcodeMessage": "https://example.com/static/business-card.html"
+}
