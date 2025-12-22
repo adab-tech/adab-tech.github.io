@@ -2,295 +2,869 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ABC University — Student Billing</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>University of Ilorin • Billing System (Demo)</title>
   <style>
-    /* Minimal page styles to keep standalone */
-    body { font-family: Inter, Arial, sans-serif; margin: 24px; color: #0f172a; }
-    header { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-    h1 { font-size:1.5rem; margin:0; }
-    .grid { display:grid; grid-template-columns: 1fr 360px; gap:1rem; margin-top:1rem; }
-    .card { background:var(--color-surface, #fff); border:1px solid var(--color-border, #e6eef8); padding:1rem; border-radius:8px; }
-    label{display:block;margin-top:8px}
-    input, select, button, textarea{width:100%;padding:8px;margin-top:6px;border:1px solid #cbd5e1;border-radius:6px}
-    button{cursor:pointer}
-    table{width:100%;border-collapse:collapse;margin-top:8px}
-    th,td{padding:8px;border-bottom:1px solid #e6eef8;text-align:left}
-    .muted{color:#64748b;font-size:0.9rem}
-    .actions{display:flex;gap:8px}
-    .ai-box{height:220px;overflow:auto;background:#f8fafc;padding:8px;border-radius:6px}
-    .small{font-size:0.9rem}
-  /* helper classes to avoid inline styles flagged by html-validate */
-  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  .flex-gap{display:flex;gap:8px}
-  .mt12{margin-top:12px}
-  .mt8{margin-top:8px}
-  .grid-full{grid-column:1/3}
-  .col-amount{width:120px}
-  .table-mt8{margin-top:8px}
+    :root {
+      color-scheme: light;
+      --bg: #0b1220;
+      --surface: rgba(255, 255, 255, 0.07);
+      --surface-2: rgba(255, 255, 255, 0.10);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #e5e7eb;
+      --muted: rgba(229, 231, 235, 0.74);
+      --accent: #60a5fa;
+      --accent-2: #a78bfa;
+      --warn: #f59e0b;
+      --ok: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 24px 60px rgba(0,0,0,0.45);
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --ring: 0 0 0 4px rgba(96, 165, 250, 0.30);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      line-height: 1.5;
+      color: var(--text);
+      background:
+        radial-gradient(900px circle at 16% 18%, rgba(96, 165, 250, 0.22), transparent 56%),
+        radial-gradient(1100px circle at 82% 74%, rgba(167, 139, 250, 0.18), transparent 60%),
+        radial-gradient(700px circle at 58% 14%, rgba(245, 158, 11, 0.14), transparent 56%),
+        linear-gradient(180deg, #070b13 0%, var(--bg) 100%);
+      padding: clamp(18px, 2.4vw, 34px);
+    }
+
+    a { color: inherit; }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .skip-link:focus {
+      left: 12px;
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.4vw + 0.8rem, 1.35rem);
+      letter-spacing: -0.02em;
+    }
+
+    .brand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 0.9rem;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.05));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow: clip;
+    }
+
+    .card-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 560px) {
+      .row { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(3, 6, 12, 0.35);
+      color: var(--text);
+      outline: none;
+      transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(96, 165, 250, 0.55);
+      box-shadow: var(--ring);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: rgba(229, 231, 235, 0.48);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    button {
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96, 165, 250, 0.35);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+    }
+
+    button:active { transform: translateY(0); }
+
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    .btn-primary {
+      border-color: rgba(96, 165, 250, 0.35);
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.95), rgba(167, 139, 250, 0.92));
+      color: #08101f;
+    }
+
+    .btn-danger {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.14);
+    }
+
+    .btn-ghost {
+      background: transparent;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .toast {
+      display: none;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      color: var(--muted);
+    }
+
+    .toast[data-kind="ok"] { border-color: rgba(34, 197, 94, 0.35); color: rgba(167, 243, 208, 0.95); }
+    .toast[data-kind="warn"] { border-color: rgba(245, 158, 11, 0.35); color: rgba(253, 230, 138, 0.95); }
+    .toast[data-kind="danger"] { border-color: rgba(239, 68, 68, 0.35); color: rgba(254, 202, 202, 0.95); }
+
+    .statement-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius-lg);
+      background: rgba(0,0,0,0.22);
+    }
+
+    .kv strong { color: rgba(229, 231, 235, 0.90); }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .table th, .table td {
+      padding: 10px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.95rem;
+    }
+
+    .table th {
+      color: rgba(229, 231, 235, 0.88);
+      background: rgba(255,255,255,0.05);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .table tr:last-child td { border-bottom: none; }
+    .money { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .right { text-align: right; }
+
+    .balance {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .balance h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .balance .value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .value.ok { color: rgba(134, 239, 172, 0.95); }
+    .value.warn { color: rgba(253, 230, 138, 0.95); }
+    .value.danger { color: rgba(254, 202, 202, 0.95); }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      header, .no-print { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #ddd; background: #fff; }
+      .kv, .balance { background: #fff; border-color: #ddd; }
+      .table { border-color: #ddd; }
+      .table th { background: #f3f4f6; color: #111827; }
+      .table th, .table td { border-bottom-color: #e5e7eb; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div>
-      <h1>ABC University — Student Billing</h1>
-  <div class="muted small">Simple demo of an invoicing &amp; payments workflow with built-in AI assistant</div>
-    </div>
-    <div class="actions">
-      <button id="exportBtn" type="button">Export CSV</button>
-      <button id="printBtn" type="button">Print Statement</button>
-    </div>
-  </header>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-  <main class="grid" id="main">
-    <section class="card" aria-labelledby="studentTitle">
-      <h2 id="studentTitle">Student</h2>
-
-      <form id="studentForm" aria-describedby="studentHelp">
-        <div id="studentHelp" class="muted small">Add or look up a student to begin.</div>
-  <label for="studentId">Student ID</label>
-  <input id="studentId" name="studentId" placeholder="e.g. ABC12345" type="text">
-
-  <label for="studentName">Full name</label>
-  <input id="studentName" name="studentName" type="text">
-
-        <label for="faculty">Faculty</label>
-        <select id="faculty" name="faculty">
-          <option value="">— Select faculty —</option>
-          <option>Agriculture</option>
-          <option>Arts</option>
-          <option>Engineering</option>
-          <option>Science</option>
-          <option>Social Sciences</option>
-        </select>
-
-        <label for="department">Department</label>
-        <select id="department" name="department">
-          <option value="">— Select department —</option>
-        </select>
-
-        <div class="mt12 flex-gap">
-          <button id="addStudentBtn" type="button">Save Student</button>
-          <button id="clearBtn" type="button">Clear</button>
-        </div>
-    <button type="submit" class="sr-only" hidden>Submit</button>
-      </form>
-
-  <hr>
-
-      <h3 class="small">Charges</h3>
-      <form id="chargeForm">
-        <label for="chargeDesc">Description</label>
-        <input id="chargeDesc" name="chargeDesc" placeholder="Tuition - Semester 1" type="text">
-        <label for="chargeAmount">Amount</label>
-        <input id="chargeAmount" name="chargeAmount" type="number" step="0.01">
-        <div class="mt8"><button id="addChargeBtn" type="button">Add Charge</button></div>
-  <!-- hidden submit to satisfy form submit requirement for assistive tech / validators -->
-  <button type="submit" class="sr-only" hidden>Submit</button>
-      </form>
-
-      <h3 class="small mt12">Payments</h3>
-      <form id="paymentForm">
-        <label for="paymentAmount">Amount</label>
-        <input id="paymentAmount" name="paymentAmount" type="number" step="0.01">
-        <label for="paymentMethod">Method</label>
-        <select id="paymentMethod">
-          <option>Cash</option>
-          <option>Bank Transfer</option>
-          <option>Card</option>
-          <option>Scholarship</option>
-        </select>
-  <div class="mt8"><button id="addPaymentBtn" type="button">Record Payment</button></div>
-  <button type="submit" class="sr-only" hidden>Submit</button>
-      </form>
-
-    </section>
-
-    <aside class="card" aria-labelledby="assistantTitle">
-      <h2 id="assistantTitle">AI Assistant</h2>
-      <div class="muted small">Ask the assistant for billing help, fee breakdowns, or to generate a polite payment reminder.</div>
-
-      <div class="ai-box" id="aiBox" tabindex="0" aria-live="polite"></div>
-
-      <label for="aiPrompt" class="mt8">Prompt</label>
-      <textarea id="aiPrompt" rows="3" placeholder="E.g. generate a payment reminder for student ABC12345"></textarea>
-      <div class="flex-gap mt8">
-        <button id="aiAskBtn" type="button">Ask</button>
-        <button id="aiClearBtn" type="button">Clear</button>
+  <div class="shell">
+    <header>
+      <div class="brand">
+        <h1>University of Ilorin • Billing System</h1>
+        <p>Demo: student profile, charges, payments, statement, export.</p>
       </div>
+      <div class="pill" aria-label="Demo status">Offline-first • No backend required</div>
+    </header>
 
-  <hr>
-      <div class="small muted">AI configuration (optional)</div>
-      <label for="apiEndpoint">API Endpoint (OpenAI / internal LLM)</label>
-      <input id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions or leave empty for local demo" type="url">
-      <label for="apiKey">API Key (optional)</label>
-      <input id="apiKey" placeholder="Set if using an external LLM" type="text">
-    </aside>
+    <main id="main" tabindex="-1">
+      <section class="card" aria-labelledby="studentTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="studentTitle">Student profile</h2>
+          <div class="pill" id="studentStatus" aria-live="polite">No student loaded</div>
+        </div>
+        <div class="card-body">
+          <form id="studentForm" class="grid" autocomplete="off">
+            <div class="row">
+              <label>
+                Student ID
+                <input type="text" id="studentId" required inputmode="text" placeholder="e.g., UIN/24/001" />
+              </label>
+              <label>
+                Full name
+                <input type="text" id="studentName" required inputmode="text" placeholder="e.g., Amina Ibrahim" />
+              </label>
+            </div>
 
-    <section class="card grid-full" aria-labelledby="statementTitle">
-      <h2 id="statementTitle">Statement</h2>
-      <div id="meta" class="muted small">No student selected</div>
+            <div class="row">
+              <label>
+                Faculty
+                <select id="faculty" required>
+                  <option value="">Select faculty</option>
+                  <option value="Agriculture">Agriculture</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Science">Science</option>
+                  <option value="Social Sciences">Social Sciences</option>
+                </select>
+              </label>
+              <label>
+                Department
+                <select id="department" required>
+                  <option value="">Select department</option>
+                </select>
+              </label>
+            </div>
 
-      <table aria-describedby="balances">
-        <thead>
-          <tr><th>Description</th><th class="col-amount">Amount</th></tr>
-        </thead>
-        <tbody id="chargesTable"></tbody>
-      </table>
+            <div class="btn-row no-print">
+              <button class="btn-primary" type="submit">Save student</button>
+              <button class="btn-ghost" id="resetAll" type="button">Reset demo data</button>
+              <span class="hint">Tip: add charges and payments to generate the statement.</span>
+            </div>
 
-      <table class="table-mt8">
-        <thead>
-          <tr><th>Payments</th><th class="col-amount">Amount</th></tr>
-        </thead>
-        <tbody id="paymentsTable"></tbody>
-      </table>
+            <div class="toast" id="toast" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
 
-      <div id="balances" class="muted small mt8"></div>
+      <section class="card" aria-labelledby="statementTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="statementTitle">Billing statement</h2>
+          <div class="btn-row no-print" aria-label="Statement actions">
+            <button type="button" id="exportJson">Export JSON</button>
+            <button type="button" id="printStatement">Print</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="statement-grid" id="statementSection" hidden>
+            <div class="kv" aria-label="Student details">
+              <strong>Name</strong><span id="sName">—</span>
+              <strong>ID</strong><span id="sId">—</span>
+              <strong>Faculty</strong><span id="sFaculty">—</span>
+              <strong>Department</strong><span id="sDepartment">—</span>
+            </div>
 
-    </section>
-  </main>
+            <div>
+              <h3 class="sr-only" id="chargesHeading">Charges</h3>
+              <table class="table" aria-describedby="chargesHeading">
+                <thead>
+                  <tr>
+                    <th scope="col">Description</th>
+                    <th scope="col" class="right">Amount</th>
+                    <th scope="col" class="right no-print">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="chargesTbody">
+                  <tr><td colspan="3" class="hint">No charges yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div>
+              <h3 class="sr-only" id="paymentsHeading">Payments</h3>
+              <table class="table" aria-describedby="paymentsHeading">
+                <thead>
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Method</th>
+                    <th scope="col" class="right">Amount</th>
+                    <th scope="col" class="right no-print">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="paymentsTbody">
+                  <tr><td colspan="4" class="hint">No payments yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="balance" aria-label="Totals">
+              <div>
+                <h3>Current balance</h3>
+                <p class="hint" id="totalsHint">Charges − payments</p>
+              </div>
+              <div class="value" id="balanceValue">₦0.00</div>
+            </div>
+          </div>
+
+          <div id="emptyState" class="hint">
+            Add a student to view the statement.
+          </div>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="actionsTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="actionsTitle">Billing actions</h2>
+          <div class="pill">Quick entry</div>
+        </div>
+        <div class="card-body">
+          <div class="grid" style="gap: 18px;">
+            <form id="chargeForm" class="grid" autocomplete="off" aria-label="Add charge">
+              <p class="hint" style="margin-top:0;">Add a new charge (tuition, hostel, lab, etc.).</p>
+              <div class="row">
+                <label>
+                  Description
+                  <input type="text" id="chargeDesc" required placeholder="e.g., Tuition" />
+                </label>
+                <label>
+                  Amount (NGN)
+                  <input type="number" id="chargeAmount" required min="0" step="0.01" inputmode="decimal" placeholder="50000" />
+                </label>
+              </div>
+              <div class="btn-row no-print">
+                <button class="btn-primary" type="submit">Add charge</button>
+                <button class="btn-ghost" type="reset">Clear</button>
+              </div>
+            </form>
+
+            <form id="paymentForm" class="grid" autocomplete="off" aria-label="Record payment">
+              <p class="hint" style="margin-top:0;">Record a payment against the student’s balance.</p>
+              <div class="row">
+                <label>
+                  Amount (NGN)
+                  <input type="number" id="paymentAmount" required min="0" step="0.01" inputmode="decimal" placeholder="20000" />
+                </label>
+                <label>
+                  Method
+                  <input type="text" id="paymentMethod" required placeholder="Bank transfer / Cash / Card" />
+                </label>
+              </div>
+              <div class="btn-row no-print">
+                <button class="btn-primary" type="submit">Record payment</button>
+                <button class="btn-ghost" type="reset">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card" aria-labelledby="assistantTitle">
+        <div class="card-header">
+          <h2 class="card-title" id="assistantTitle">Assistant (optional)</h2>
+          <div class="pill">Local fallback</div>
+        </div>
+        <div class="card-body">
+          <p class="hint" style="margin-top:0;">Ask for fee summaries or what to do next. This demo works offline; you can also plug in an API endpoint.</p>
+
+          <label>
+            API endpoint (optional)
+            <input type="url" id="assistantEndpoint" placeholder="https://example.com/api/billing-assistant" />
+          </label>
+
+          <label>
+            Your question
+            <textarea id="assistantPrompt" placeholder="Summarize this student's status and recommend next steps."></textarea>
+          </label>
+
+          <div class="btn-row no-print">
+            <button type="button" class="btn-primary" id="askAssistant">Ask assistant</button>
+            <button type="button" class="btn-ghost" id="useLocalAssistant">Use local mode</button>
+          </div>
+
+          <div class="toast" id="assistantReply" data-kind="ok" role="status" aria-live="polite" style="display:block; margin-top: 10px;">
+            Tip: Save a student first, then add charges and payments.
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
 
   <script>
-    // Lightweight client-side billing demo with AI assistant integration point
+    // Faculties and departments
     const FACULTIES = {
-      "Agriculture": ["Agricultural Economics","Animal Science","Crop Protection"],
-      "Arts": ["English","History","Linguistics"],
-      "Engineering": ["Civil Engineering","Mechanical Engineering","Electrical Engineering"],
-      "Science": ["Biochemistry","Chemistry","Physics"],
-      "Social Sciences": ["Economics","Political Science","Psychology"]
+      "Agriculture": ["Agricultural Economics", "Animal Science", "Crop Protection"],
+      "Arts": ["English", "History", "Linguistics"],
+      "Engineering": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering"],
+      "Science": ["Biochemistry", "Chemistry", "Physics"],
+      "Social Sciences": ["Economics", "Political Science", "Psychology"]
     };
 
-    let state = { student: null, charges: [], payments: [] };
+    // Student data
+    let student = null;
+    let charges = [];
+    let payments = [];
 
-    const $ = id => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-    // Populate departments
-    $('faculty').addEventListener('change', (e)=>{
-      const d = $('department'); d.innerHTML=''; d.append(new Option('— Select department —',''));
-      const list = FACULTIES[e.target.value] || [];
-      list.forEach(x => d.append(new Option(x,x)));
-    });
-
-    function updateUI(){
-      const s = state.student;
-      $('meta').textContent = s ? `${s.name} — ${s.id} — ${s.faculty} / ${s.department}` : 'No student selected';
-
-      // charges
-      const ct = $('chargesTable'); ct.innerHTML=''; let totalC=0;
-      state.charges.forEach(c=>{ totalC+=c.amount; const tr=document.createElement('tr'); tr.innerHTML=`<td>${c.description}</td><td>₦${c.amount.toFixed(2)}</td>`; ct.appendChild(tr); });
-
-      // payments
-      const pt = $('paymentsTable'); pt.innerHTML=''; let totalP=0;
-      state.payments.forEach(p=>{ totalP+=p.amount; const tr=document.createElement('tr'); tr.innerHTML=`<td>${p.method} — ${p.date}</td><td>₦${p.amount.toFixed(2)}</td>`; pt.appendChild(tr); });
-
-      $('balances').innerHTML = `<b>Total charges:</b> ₦${totalC.toFixed(2)} &nbsp;&nbsp; <b>Total payments:</b> ₦${totalP.toFixed(2)} &nbsp;&nbsp; <b>Balance:</b> ₦${(totalC-totalP).toFixed(2)}`;
+    function formatMoney(amount) {
+      const n = Number.isFinite(amount) ? amount : 0;
+      return n.toLocaleString('en-NG', { style: 'currency', currency: 'NGN' });
     }
 
-    // Student save
-    $('addStudentBtn').addEventListener('click', ()=>{
-      const id = $('studentId').value.trim(); if(!id) return alert('Student ID required');
-      state.student = { id, name: $('studentName').value || 'Unnamed', faculty: $('faculty').value || '—', department: $('department').value || '—' };
-      state.charges = []; state.payments = [];
-      updateUI();
-      $('aiBox').textContent = `Loaded student ${state.student.name} (${state.student.id})`;
+    function showToast(kind, message) {
+      const toast = $('toast');
+      if (!toast) return;
+      toast.dataset.kind = kind;
+      toast.textContent = message;
+      toast.style.display = 'block';
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(() => {
+        toast.style.display = 'none';
+      }, 3200);
+    }
+
+    // Populate departments based on faculty
+    $('faculty').addEventListener('change', function() {
+      const faculty = this.value;
+      const deptSelect = $('department');
+      deptSelect.innerHTML = '<option value="">Select Department</option>';
+      if (FACULTIES[faculty]) {
+        FACULTIES[faculty].forEach(dept => {
+          const opt = document.createElement('option');
+          opt.value = dept;
+          opt.textContent = dept;
+          deptSelect.appendChild(opt);
+        });
+      }
     });
 
-    $('clearBtn').addEventListener('click', ()=>{ state={student:null,charges:[],payments:[]}; updateUI(); $('aiBox').textContent=''; });
+    // Add student
+    $('studentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      student = {
+        id: $('studentId').value.trim(),
+        name: $('studentName').value.trim(),
+        faculty: $('faculty').value,
+        department: $('department').value
+      };
+      charges = [];
+      payments = [];
+
+      $('studentStatus').textContent = `Loaded: ${student.name}`;
+      showToast('ok', 'Student saved. You can now add charges and payments.');
+      showStatement();
+    });
 
     // Add charge
-    $('addChargeBtn').addEventListener('click', ()=>{
-      if(!state.student) return alert('Create or load student first');
-      const desc = $('chargeDesc').value || 'Charge'; const amt = parseFloat($('chargeAmount').value)||0; state.charges.push({description:desc,amount:amt}); updateUI();
+    $('chargeForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!student) return alert('Add student first!');
+      charges.push({
+        description: $('chargeDesc').value.trim(),
+        amount: parseFloat($('chargeAmount').value)
+      });
+      this.reset();
+      showToast('ok', 'Charge added.');
+      showStatement();
     });
 
-    // Add payment
-    $('addPaymentBtn').addEventListener('click', ()=>{
-      if(!state.student) return alert('Create or load student first');
-      const amt = parseFloat($('paymentAmount').value)||0; const method = $('paymentMethod').value||'Unknown'; const date = new Date().toISOString().split('T')[0]; state.payments.push({amount:amt,method,date}); updateUI();
+    // Record payment
+    $('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!student) return alert('Add student first!');
+      payments.push({
+        amount: parseFloat($('paymentAmount').value),
+        method: $('paymentMethod').value.trim(),
+        date: new Date().toISOString().split('T')[0]
+      });
+      this.reset();
+      showToast('ok', 'Payment recorded.');
+      showStatement();
     });
 
-    // Export CSV
-    $('exportBtn').addEventListener('click', ()=>{
-      if(!state.student) return alert('No student to export');
-      const rows = [['Type','Description/Method','Amount','Date']];
-      state.charges.forEach(c=>rows.push(['Charge',c.description,c.amount,'']));
-      state.payments.forEach(p=>rows.push(['Payment',p.method,p.amount,p.date]));
-      const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-      const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`statement-${state.student.id}.csv`; a.click(); URL.revokeObjectURL(url);
-    });
+    function computeTotals() {
+      const totalCharges = charges.reduce((sum, c) => sum + (Number.isFinite(c.amount) ? c.amount : 0), 0);
+      const totalPayments = payments.reduce((sum, p) => sum + (Number.isFinite(p.amount) ? p.amount : 0), 0);
+      return { totalCharges, totalPayments, balance: totalCharges - totalPayments };
+    }
 
-    // Print
-    $('printBtn').addEventListener('click', ()=>{ window.print(); });
+    function renderCharges() {
+      const tbody = $('chargesTbody');
+      if (!tbody) return;
 
-    // =============================
-    // AI Assistant (simple)
-    // - If apiEndpoint is set, call it (expecting OpenAI-style chat completion)
-    // - If not, use a small local fallback responder
-    // =============================
+      if (!charges.length) {
+        tbody.innerHTML = '<tr><td colspan="3" class="hint">No charges yet.</td></tr>';
+        return;
+      }
 
-    async function callAI(prompt){
-      const endpoint = $('apiEndpoint').value.trim(); const key = $('apiKey').value.trim();
-      const context = buildContext();
-      const fullPrompt = `${prompt}\n\nContext:\n${context}`;
+      tbody.innerHTML = charges.map((c, idx) => {
+        const desc = (c.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const amount = formatMoney(c.amount || 0);
+        return `
+          <tr>
+            <td>${desc}</td>
+            <td class="right money">${amount}</td>
+            <td class="right no-print"><button type="button" class="btn-danger" data-remove-charge="${idx}">Remove</button></td>
+          </tr>`;
+      }).join('');
+    }
 
-      if(endpoint){
-        // Call external LLM (OpenAI compatible)
-        try{
-          const body = { model: 'gpt-4o-mini', messages:[{role:'user',content:fullPrompt}], max_tokens:800 };
-          const res = await fetch(endpoint, { method:'POST', headers: Object.assign({'Content-Type':'application/json'}, key?{'Authorization':'Bearer '+key}:{ }), body: JSON.stringify(body) });
-          const json = await res.json();
-          // Attempt to extract text from common completions shape
-          return json.choices?.[0]?.message?.content || json.choices?.[0]?.text || JSON.stringify(json);
-        }catch(err){
-          return `AI request failed: ${err.message}`;
+    function renderPayments() {
+      const tbody = $('paymentsTbody');
+      if (!tbody) return;
+
+      if (!payments.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="hint">No payments yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = payments.map((p, idx) => {
+        const method = (p.method || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const date = (p.date || '—');
+        const amount = formatMoney(p.amount || 0);
+        return `
+          <tr>
+            <td>${date}</td>
+            <td>${method}</td>
+            <td class="right money">${amount}</td>
+            <td class="right no-print"><button type="button" class="btn-danger" data-remove-payment="${idx}">Remove</button></td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderBalance() {
+      const { balance } = computeTotals();
+      const el = $('balanceValue');
+      if (!el) return;
+      el.textContent = formatMoney(balance);
+      el.classList.remove('ok', 'warn', 'danger');
+
+      if (balance <= 0) el.classList.add('ok');
+      else if (balance < 25000) el.classList.add('warn');
+      else el.classList.add('danger');
+    }
+
+    // Show statement
+    function showStatement() {
+      if (!student) return;
+
+      $('emptyState').hidden = true;
+      const section = $('statementSection');
+      section.hidden = false;
+
+      $('sName').textContent = student.name || '—';
+      $('sId').textContent = student.id || '—';
+      $('sFaculty').textContent = student.faculty || '—';
+      $('sDepartment').textContent = student.department || '—';
+
+      renderCharges();
+      renderPayments();
+      renderBalance();
+    }
+
+    document.addEventListener('click', (e) => {
+      const t = e.target;
+      if (!(t instanceof HTMLElement)) return;
+
+      const chargeIdx = t.getAttribute('data-remove-charge');
+      if (chargeIdx !== null) {
+        const idx = Number(chargeIdx);
+        if (Number.isFinite(idx) && idx >= 0) {
+          charges.splice(idx, 1);
+          showToast('warn', 'Charge removed.');
+          showStatement();
         }
-      } else {
-        // Local fallback: deterministic responses for demo
-        return localLLMSim(prompt, context);
       }
-    }
 
-    function buildContext(){
-      if(!state.student) return 'No student loaded.';
-      const totalC = state.charges.reduce((s,c)=>s+c.amount,0);
-      const totalP = state.payments.reduce((s,p)=>s+p.amount,0);
-      const bal = (totalC-totalP).toFixed(2);
-      return `Student: ${state.student.name} (${state.student.id})\nFaculty: ${state.student.faculty} / ${state.student.department}\nTotal charges: ${totalC}\nTotal payments: ${totalP}\nBalance: ${bal}`;
-    }
-
-    function localLLMSim(prompt, context){
-      // Very small rule-based responder for demo purposes
-      const p = (prompt||'').toLowerCase();
-      if(p.includes('remind') || p.includes('reminder')){
-        if(!state.student) return 'No student loaded to create a reminder.';
-        return `Dear ${state.student.name},\n\nThis is a polite reminder that your current balance at ABC University is ₦${(state.charges.reduce((s,c)=>s+c.amount,0)-state.payments.reduce((s,p)=>s+p.amount,0)).toFixed(2)}. Please arrange payment by the end of the month.\n\nRegards,\nABC University Billing Office`;
+      const paymentIdx = t.getAttribute('data-remove-payment');
+      if (paymentIdx !== null) {
+        const idx = Number(paymentIdx);
+        if (Number.isFinite(idx) && idx >= 0) {
+          payments.splice(idx, 1);
+          showToast('warn', 'Payment removed.');
+          showStatement();
+        }
       }
-      if(p.includes('breakdown')){
-        return `Breakdown for ${state.student?state.student.name:'(no student)'}:\n${state.charges.map(c=>`- ${c.description}: ₦${c.amount.toFixed(2)}`).join('\n')}\nPayments:\n${state.payments.map(p=>`- ${p.date} ${p.method}: ₦${p.amount.toFixed(2)}`).join('\n')}`;
-      }
-      if(p.includes('balance')){
-        const bal = (state.charges.reduce((s,c)=>s+c.amount,0)-state.payments.reduce((s,p)=>s+p.amount,0)).toFixed(2);
-        return `Current balance: ₦${bal}`;
-      }
-      return `Sorry, I didn't understand. Try asking for a 'reminder', 'breakdown', or 'balance'.`;
-    }
-
-    async function appendAI(text){
-      const box = $('aiBox'); const p = document.createElement('div'); p.textContent = text; box.appendChild(p); box.scrollTop = box.scrollHeight; box.focus();
-    }
-
-    $('aiAskBtn').addEventListener('click', async ()=>{
-      const prompt = $('aiPrompt').value.trim(); if(!prompt) return;
-      appendAI('⏳ Thinking...');
-      const result = await callAI(prompt);
-      appendAI(result);
     });
 
-    $('aiClearBtn').addEventListener('click', ()=>{ $('aiBox').innerHTML=''; });
+    $('printStatement').addEventListener('click', () => {
+      if (!student) return showToast('warn', 'Add a student first.');
+      window.print();
+    });
 
-    // Initialize
-    updateUI();
-    </script>
-  </body>
+    $('exportJson').addEventListener('click', () => {
+      if (!student) return showToast('warn', 'Add a student first.');
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        student,
+        charges,
+        payments,
+        totals: computeTotals()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `billing-statement-${(student.id || 'student').replace(/[^a-z0-9_-]+/gi, '-')}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast('ok', 'Exported JSON.');
+    });
+
+    $('resetAll').addEventListener('click', () => {
+      student = null;
+      charges = [];
+      payments = [];
+      $('studentForm').reset();
+      $('chargeForm').reset();
+      $('paymentForm').reset();
+      $('department').innerHTML = '<option value="">Select department</option>';
+      $('studentStatus').textContent = 'No student loaded';
+      $('statementSection').hidden = true;
+      $('emptyState').hidden = false;
+      showToast('warn', 'Demo reset.');
+    });
+
+    // Assistant
+    let assistantMode = 'local';
+    $('useLocalAssistant').addEventListener('click', () => {
+      assistantMode = 'local';
+      showToast('ok', 'Assistant set to local mode.');
+    });
+
+    function localAssistantReply(prompt) {
+      const p = (prompt || '').toLowerCase();
+      if (!student) return 'Save a student first, then add charges and payments.';
+      const { totalCharges, totalPayments, balance } = computeTotals();
+
+      if (p.includes('next') || p.includes('recommend') || p.includes('what')) {
+        if (!charges.length) return 'Next step: add at least one charge (e.g., tuition) to generate the bill.';
+        if (balance > 0) return `Balance is ${formatMoney(balance)}. Next step: record a payment and print/export the statement.`;
+        return `Balance is ${formatMoney(balance)}. You can print or export the statement.`;
+      }
+
+      if (p.includes('summary') || p.includes('summarize') || p.includes('status')) {
+        return `${student.name} (${student.id}) has charges of ${formatMoney(totalCharges)} and payments of ${formatMoney(totalPayments)}. Current balance: ${formatMoney(balance)}.`;
+      }
+
+      return `Try asking: “Summarize this student's status” or “Recommend next steps”. Balance is ${formatMoney(balance)}.`;
+    }
+
+    $('askAssistant').addEventListener('click', async () => {
+      const endpoint = $('assistantEndpoint').value.trim();
+      const prompt = $('assistantPrompt').value.trim();
+      const replyBox = $('assistantReply');
+
+      if (!prompt) {
+        replyBox.textContent = 'Type a question first.';
+        replyBox.dataset.kind = 'warn';
+        return;
+      }
+
+      // If an endpoint is present, try it; otherwise local fallback.
+      if (endpoint) assistantMode = 'remote';
+
+      if (assistantMode === 'remote' && endpoint) {
+        replyBox.textContent = 'Thinking…';
+        replyBox.dataset.kind = 'ok';
+        try {
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, context: { student, charges, payments, totals: computeTotals() } })
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const text = (data && (data.reply || data.text || data.message)) || '';
+          replyBox.textContent = text || 'No reply returned by endpoint.';
+          replyBox.dataset.kind = text ? 'ok' : 'warn';
+          return;
+        } catch (err) {
+          replyBox.textContent = `Endpoint failed (${String(err)}). Using local fallback.`;
+          replyBox.dataset.kind = 'warn';
+          assistantMode = 'local';
+        }
+      }
+
+      const local = localAssistantReply(prompt);
+      replyBox.textContent = local;
+      replyBox.dataset.kind = 'ok';
+    });
+  </script>
+</body>
 </html>
