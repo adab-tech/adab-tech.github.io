@@ -2,155 +2,283 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>University of Ilorin Billing System</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ABC University — Student Billing</title>
+  <link rel="stylesheet" href="/static/css/style.css">
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    h2 { color: #2c3e50; }
-    form, .statement { margin-bottom: 30px; }
-    label { display: block; margin-top: 10px; }
-    input, select { margin-top: 5px; }
-    .section { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+    /* Minimal page styles to keep standalone */
+    body { font-family: Inter, Arial, sans-serif; margin: 24px; color: #0f172a; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    h1 { font-size:1.5rem; margin:0; }
+    .grid { display:grid; grid-template-columns: 1fr 360px; gap:1rem; margin-top:1rem; }
+    .card { background:var(--color-surface, #fff); border:1px solid var(--color-border, #e6eef8); padding:1rem; border-radius:8px; }
+    label{display:block;margin-top:8px}
+    input, select, button, textarea{width:100%;padding:8px;margin-top:6px;border:1px solid #cbd5e1;border-radius:6px}
+    button{cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th,td{padding:8px;border-bottom:1px solid #e6eef8;text-align:left}
+    .muted{color:#64748b;font-size:0.9rem}
+    .actions{display:flex;gap:8px}
+    .ai-box{height:220px;overflow:auto;background:#f8fafc;padding:8px;border-radius:6px}
+    .small{font-size:0.9rem}
   </style>
 </head>
 <body>
-  <h1>University of Ilorin Billing System</h1>
-  <div class="section">
-    <h2>Add Student</h2>
-    <form id="studentForm">
-      <label>Student ID: <input type="text" id="studentId" required></label>
-      <label>Name: <input type="text" id="studentName" required></label>
-      <label>Faculty:
-        <select id="faculty" required>
-          <option value="">Select Faculty</option>
-          <option value="Agriculture">Agriculture</option>
-          <option value="Arts">Arts</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Science">Science</option>
-          <option value="Social Sciences">Social Sciences</option>
+  <header>
+    <div>
+      <h1>ABC University — Student Billing</h1>
+      <div class="muted small">Simple demo of an invoicing & payments workflow with built-in AI assistant</div>
+    </div>
+    <div class="actions">
+      <button id="exportBtn" type="button">Export CSV</button>
+      <button id="printBtn" type="button">Print Statement</button>
+    </div>
+  </header>
+
+  <main class="grid" id="main">
+    <section class="card" aria-labelledby="studentTitle">
+      <h2 id="studentTitle">Student</h2>
+
+      <form id="studentForm" aria-describedby="studentHelp">
+        <div id="studentHelp" class="muted small">Add or look up a student to begin.</div>
+        <label for="studentId">Student ID</label>
+        <input id="studentId" name="studentId" placeholder="e.g. ABC12345" />
+
+        <label for="studentName">Full name</label>
+        <input id="studentName" name="studentName" />
+
+        <label for="faculty">Faculty</label>
+        <select id="faculty" name="faculty">
+          <option value="">— Select faculty —</option>
+          <option>Agriculture</option>
+          <option>Arts</option>
+          <option>Engineering</option>
+          <option>Science</option>
+          <option>Social Sciences</option>
         </select>
-      </label>
-      <label>Department:
-        <select id="department" required>
-          <option value="">Select Department</option>
+
+        <label for="department">Department</label>
+        <select id="department" name="department">
+          <option value="">— Select department —</option>
         </select>
-      </label>
-      <button type="submit">Add Student</button>
-    </form>
-  </div>
 
-  <div class="section">
-    <h2>Add Charge</h2>
-    <form id="chargeForm">
-      <label>Description: <input type="text" id="chargeDesc" required></label>
-      <label>Amount: <input type="number" id="chargeAmount" required></label>
-      <button type="submit">Add Charge</button>
-    </form>
-  </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button id="addStudentBtn" type="button">Save Student</button>
+          <button id="clearBtn" type="button">Clear</button>
+        </div>
+      </form>
 
-  <div class="section">
-    <h2>Record Payment</h2>
-    <form id="paymentForm">
-      <label>Amount: <input type="number" id="paymentAmount" required></label>
-      <label>Method: <input type="text" id="paymentMethod" required></label>
-      <button type="submit">Record Payment</button>
-    </form>
-  </div>
+      <hr style="margin:12px 0" />
 
-  <div class="section statement" id="statementSection" style="display:none;">
-    <h2>Billing Statement</h2>
-    <div id="statementContent"></div>
-  </div>
+      <h3 class="small">Charges</h3>
+      <form id="chargeForm">
+        <label for="chargeDesc">Description</label>
+        <input id="chargeDesc" name="chargeDesc" placeholder="Tuition - Semester 1" />
+        <label for="chargeAmount">Amount</label>
+        <input id="chargeAmount" name="chargeAmount" type="number" step="0.01" />
+        <div style="margin-top:8px"><button id="addChargeBtn" type="button">Add Charge</button></div>
+      </form>
+
+      <h3 class="small" style="margin-top:12px">Payments</h3>
+      <form id="paymentForm">
+        <label for="paymentAmount">Amount</label>
+        <input id="paymentAmount" name="paymentAmount" type="number" step="0.01" />
+        <label for="paymentMethod">Method</label>
+        <select id="paymentMethod">
+          <option>Cash</option>
+          <option>Bank Transfer</option>
+          <option>Card</option>
+          <option>Scholarship</option>
+        </select>
+        <div style="margin-top:8px"><button id="addPaymentBtn" type="button">Record Payment</button></div>
+      </form>
+
+    </section>
+
+    <aside class="card" aria-labelledby="assistantTitle">
+      <h2 id="assistantTitle">AI Assistant</h2>
+      <div class="muted small">Ask the assistant for billing help, fee breakdowns, or to generate a polite payment reminder.</div>
+
+      <div class="ai-box" id="aiBox" tabindex="0" aria-live="polite"></div>
+
+      <label for="aiPrompt" style="margin-top:8px">Prompt</label>
+      <textarea id="aiPrompt" rows="3" placeholder="E.g. generate a payment reminder for student ABC12345"></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button id="aiAskBtn" type="button">Ask</button>
+        <button id="aiClearBtn" type="button">Clear</button>
+      </div>
+
+      <hr style="margin:12px 0" />
+      <div class="small muted">AI configuration (optional)</div>
+      <label for="apiEndpoint">API Endpoint (OpenAI / internal LLM)</label>
+      <input id="apiEndpoint" placeholder="https://api.openai.com/v1/chat/completions or leave empty for local demo" />
+      <label for="apiKey">API Key (optional)</label>
+      <input id="apiKey" placeholder="Set if using an external LLM" />
+    </aside>
+
+    <section class="card" style="grid-column:1/3" aria-labelledby="statementTitle">
+      <h2 id="statementTitle">Statement</h2>
+      <div id="meta" class="muted small">No student selected</div>
+
+      <table aria-describedby="balances">
+        <thead>
+          <tr><th>Description</th><th style="width:120px">Amount</th></tr>
+        </thead>
+        <tbody id="chargesTable"></tbody>
+      </table>
+
+      <table style="margin-top:8px">
+        <thead>
+          <tr><th>Payments</th><th style="width:120px">Amount</th></tr>
+        </thead>
+        <tbody id="paymentsTable"></tbody>
+      </table>
+
+      <div id="balances" class="muted small" style="margin-top:8px"></div>
+
+    </section>
+  </main>
 
   <script>
-    // Faculties and departments
+    // Lightweight client-side billing demo with AI assistant integration point
     const FACULTIES = {
-      "Agriculture": ["Agricultural Economics", "Animal Science", "Crop Protection"],
-      "Arts": ["English", "History", "Linguistics"],
-      "Engineering": ["Civil Engineering", "Mechanical Engineering", "Electrical Engineering"],
-      "Science": ["Biochemistry", "Chemistry", "Physics"],
-      "Social Sciences": ["Economics", "Political Science", "Psychology"]
+      "Agriculture": ["Agricultural Economics","Animal Science","Crop Protection"],
+      "Arts": ["English","History","Linguistics"],
+      "Engineering": ["Civil Engineering","Mechanical Engineering","Electrical Engineering"],
+      "Science": ["Biochemistry","Chemistry","Physics"],
+      "Social Sciences": ["Economics","Political Science","Psychology"]
     };
 
-    // Student data
-    let student = null;
-    let charges = [];
-    let payments = [];
+    let state = { student: null, charges: [], payments: [] };
 
-    // Populate departments based on faculty
-    document.getElementById('faculty').addEventListener('change', function() {
-      const faculty = this.value;
-      const deptSelect = document.getElementById('department');
-      deptSelect.innerHTML = '<option value="">Select Department</option>';
-      if (FACULTIES[faculty]) {
-        FACULTIES[faculty].forEach(dept => {
-          const opt = document.createElement('option');
-          opt.value = dept;
-          opt.textContent = dept;
-          deptSelect.appendChild(opt);
-        });
-      }
+    const $ = id => document.getElementById(id);
+
+    // Populate departments
+    $('faculty').addEventListener('change', (e)=>{
+      const d = $('department'); d.innerHTML=''; d.append(new Option('— Select department —',''));
+      const list = FACULTIES[e.target.value] || [];
+      list.forEach(x => d.append(new Option(x,x)));
     });
 
-    // Add student
-    document.getElementById('studentForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      student = {
-        id: document.getElementById('studentId').value,
-        name: document.getElementById('studentName').value,
-        faculty: document.getElementById('faculty').value,
-        department: document.getElementById('department').value
-      };
-      charges = [];
-      payments = [];
-      showStatement();
+    function updateUI(){
+      const s = state.student;
+      $('meta').textContent = s ? `${s.name} — ${s.id} — ${s.faculty} / ${s.department}` : 'No student selected';
+
+      // charges
+      const ct = $('chargesTable'); ct.innerHTML=''; let totalC=0;
+      state.charges.forEach(c=>{ totalC+=c.amount; const tr=document.createElement('tr'); tr.innerHTML=`<td>${c.description}</td><td>₦${c.amount.toFixed(2)}</td>`; ct.appendChild(tr); });
+
+      // payments
+      const pt = $('paymentsTable'); pt.innerHTML=''; let totalP=0;
+      state.payments.forEach(p=>{ totalP+=p.amount; const tr=document.createElement('tr'); tr.innerHTML=`<td>${p.method} — ${p.date}</td><td>₦${p.amount.toFixed(2)}</td>`; pt.appendChild(tr); });
+
+      $('balances').innerHTML = `<b>Total charges:</b> ₦${totalC.toFixed(2)} &nbsp;&nbsp; <b>Total payments:</b> ₦${totalP.toFixed(2)} &nbsp;&nbsp; <b>Balance:</b> ₦${(totalC-totalP).toFixed(2)}`;
+    }
+
+    // Student save
+    $('addStudentBtn').addEventListener('click', ()=>{
+      const id = $('studentId').value.trim(); if(!id) return alert('Student ID required');
+      state.student = { id, name: $('studentName').value || 'Unnamed', faculty: $('faculty').value || '—', department: $('department').value || '—' };
+      state.charges = []; state.payments = [];
+      updateUI();
+      $('aiBox').textContent = `Loaded student ${state.student.name} (${state.student.id})`;
     });
+
+    $('clearBtn').addEventListener('click', ()=>{ state={student:null,charges:[],payments:[]}; updateUI(); $('aiBox').textContent=''; });
 
     // Add charge
-    document.getElementById('chargeForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (!student) return alert('Add student first!');
-      charges.push({
-        description: document.getElementById('chargeDesc').value,
-        amount: parseFloat(document.getElementById('chargeAmount').value)
-      });
-      showStatement();
+    $('addChargeBtn').addEventListener('click', ()=>{
+      if(!state.student) return alert('Create or load student first');
+      const desc = $('chargeDesc').value || 'Charge'; const amt = parseFloat($('chargeAmount').value)||0; state.charges.push({description:desc,amount:amt}); updateUI();
     });
 
-    // Record payment
-    document.getElementById('paymentForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (!student) return alert('Add student first!');
-      payments.push({
-        amount: parseFloat(document.getElementById('paymentAmount').value),
-        method: document.getElementById('paymentMethod').value,
-        date: new Date().toISOString().split('T')[0]
-      });
-      showStatement();
+    // Add payment
+    $('addPaymentBtn').addEventListener('click', ()=>{
+      if(!state.student) return alert('Create or load student first');
+      const amt = parseFloat($('paymentAmount').value)||0; const method = $('paymentMethod').value||'Unknown'; const date = new Date().toISOString().split('T')[0]; state.payments.push({amount:amt,method,date}); updateUI();
     });
 
-    // Show statement
-    function showStatement() {
-      if (!student) return;
-      document.getElementById('statementSection').style.display = 'block';
-      let html = `<b>Name:</b> ${student.name} <br>
-                  <b>ID:</b> ${student.id} <br>
-                  <b>Faculty:</b> ${student.faculty} <br>
-                  <b>Department:</b> ${student.department} <br>
-                  <b>Charges:</b><ul>`;
-      let totalCharges = 0;
-      charges.forEach(c => {
-        html += `<li>${c.description}: ₦${c.amount.toFixed(2)}</li>`;
-        totalCharges += c.amount;
-      });
-      html += `</ul><b>Payments:</b><ul>`;
-      let totalPayments = 0;
-      payments.forEach(p => {
-        html += `<li>${p.date} [${p.method}]: ₦${p.amount.toFixed(2)}</li>`;
-        totalPayments += p.amount;
-      });
-      html += `</ul><b>Current Balance:</b> ₦${(totalCharges - totalPayments).toFixed(2)}`;
-      document.getElementById('statementContent').innerHTML = html;
+    // Export CSV
+    $('exportBtn').addEventListener('click', ()=>{
+      if(!state.student) return alert('No student to export');
+      const rows = [['Type','Description/Method','Amount','Date']];
+      state.charges.forEach(c=>rows.push(['Charge',c.description,c.amount,'']));
+      state.payments.forEach(p=>rows.push(['Payment',p.method,p.amount,p.date]));
+      const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`statement-${state.student.id}.csv`; a.click(); URL.revokeObjectURL(url);
+    });
+
+    // Print
+    $('printBtn').addEventListener('click', ()=>{ window.print(); });
+
+    // =============================
+    // AI Assistant (simple)
+    // - If apiEndpoint is set, call it (expecting OpenAI-style chat completion)
+    // - If not, use a small local fallback responder
+    // =============================
+
+    async function callAI(prompt){
+      const endpoint = $('apiEndpoint').value.trim(); const key = $('apiKey').value.trim();
+      const context = buildContext();
+      const fullPrompt = `${prompt}\n\nContext:\n${context}`;
+
+      if(endpoint){
+        // Call external LLM (OpenAI compatible)
+        try{
+          const body = { model: 'gpt-4o-mini', messages:[{role:'user',content:fullPrompt}], max_tokens:800 };
+          const res = await fetch(endpoint, { method:'POST', headers: Object.assign({'Content-Type':'application/json'}, key?{'Authorization':'Bearer '+key}:{ }), body: JSON.stringify(body) });
+          const json = await res.json();
+          // Attempt to extract text from common completions shape
+          return json.choices?.[0]?.message?.content || json.choices?.[0]?.text || JSON.stringify(json);
+        }catch(err){
+          return `AI request failed: ${err.message}`;
+        }
+      } else {
+        // Local fallback: deterministic responses for demo
+        return localLLMSim(prompt, context);
+      }
     }
-  </script>
-</body>
+
+    function buildContext(){
+      if(!state.student) return 'No student loaded.';
+      const totalC = state.charges.reduce((s,c)=>s+c.amount,0);
+      const totalP = state.payments.reduce((s,p)=>s+p.amount,0);
+      const bal = (totalC-totalP).toFixed(2);
+      return `Student: ${state.student.name} (${state.student.id})\nFaculty: ${state.student.faculty} / ${state.student.department}\nTotal charges: ${totalC}\nTotal payments: ${totalP}\nBalance: ${bal}`;
+    }
+
+    function localLLMSim(prompt, context){
+      // Very small rule-based responder for demo purposes
+      const p = (prompt||'').toLowerCase();
+      if(p.includes('remind') || p.includes('reminder')){
+        if(!state.student) return 'No student loaded to create a reminder.';
+        return `Dear ${state.student.name},\n\nThis is a polite reminder that your current balance at ABC University is ₦${(state.charges.reduce((s,c)=>s+c.amount,0)-state.payments.reduce((s,p)=>s+p.amount,0)).toFixed(2)}. Please arrange payment by the end of the month.\n\nRegards,\nABC University Billing Office`;
+      }
+      if(p.includes('breakdown')){
+        return `Breakdown for ${state.student?state.student.name:'(no student)'}:\n${state.charges.map(c=>`- ${c.description}: ₦${c.amount.toFixed(2)}`).join('\n')}\nPayments:\n${state.payments.map(p=>`- ${p.date} ${p.method}: ₦${p.amount.toFixed(2)}`).join('\n')}`;
+      }
+      if(p.includes('balance')){
+        const bal = (state.charges.reduce((s,c)=>s+c.amount,0)-state.payments.reduce((s,p)=>s+p.amount,0)).toFixed(2);
+        return `Current balance: ₦${bal}`;
+      }
+      return `Sorry, I didn't understand. Try asking for a 'reminder', 'breakdown', or 'balance'.`;
+    }
+
+    async function appendAI(text){
+      const box = $('aiBox'); const p = document.createElement('div'); p.textContent = text; box.appendChild(p); box.scrollTop = box.scrollHeight; box.focus();
+    }
+
+    $('aiAskBtn').addEventListener('click', async ()=>{
+      const prompt = $('aiPrompt').value.trim(); if(!prompt) return;
+      appendAI('⏳ Thinking...');
+      const result = await callAI(prompt);
+      appendAI(result);
+    });
+
+    $('aiClearBtn').addEventListener('click', ()=>{ $('aiBox').innerHTML=''; });
+
+    // Initialize
+    updateUI();
+    </script>
+  </body>
 </html>
