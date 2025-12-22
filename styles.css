@@ -286,11 +286,31 @@ button {
   padding: 0.5rem 1rem;
   border-radius: var(--radius-md);
   transition: all var(--transition-fast);
+  position: relative;
 }
 
 .nav-link:hover {
   color: var(--color-primary);
   background-color: var(--color-background-alt);
+}
+
+/* Current section/page hint (works with aria-current="page") */
+.nav-link[aria-current="page"] {
+  color: var(--color-primary);
+  background-color: rgba(37, 99, 235, 0.10);
+  border: 1px solid rgba(37, 99, 235, 0.20);
+}
+
+.nav-link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--gradient-primary);
+  opacity: 0.9;
 }
 
 .mobile-menu-toggle {
@@ -434,20 +454,22 @@ button {
 }
 
 .hero-title {
-  font-size: var(--font-size-5xl);
+  /* Fluid headline: stays punchy on mobile, premium on desktop */
+  font-size: clamp(2.25rem, 4.5vw + 1rem, 3.75rem);
   margin-bottom: var(--spacing-md);
   line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 .hero-subtitle {
-  font-size: var(--font-size-xl);
+  font-size: clamp(1.05rem, 1.2vw + 0.85rem, 1.35rem);
   color: var(--color-text);
   font-weight: 600;
   margin-bottom: var(--spacing-md);
 }
 
 .hero-description {
-  font-size: var(--font-size-lg);
+  font-size: clamp(1rem, 0.6vw + 0.95rem, 1.125rem);
   color: var(--color-text-light);
   line-height: 1.7;
   margin-bottom: var(--spacing-xl);
@@ -875,17 +897,23 @@ section {
 .project-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--spacing-xs);
+  gap: 0.4rem;
 }
 
 .tag {
   font-size: var(--font-size-xs);
   font-weight: 600;
   padding: 0.25rem 0.75rem;
-  background: var(--color-background-alt);
+  background: rgba(37, 99, 235, 0.08);
   color: var(--color-text);
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] .tag {
+  background: rgba(37, 99, 235, 0.14);
+  border-color: rgba(37, 99, 235, 0.28);
 }
 
 .project-footer {
