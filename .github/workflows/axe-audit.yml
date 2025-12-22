@@ -1,0 +1,43 @@
+name: Axe audit
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  axe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Start static server
+        run: |
+          npm run start &
+          echo $! > server.pid
+
+      - name: Run axe audit
+        run: |
+          node axe-audit.js > axe-results.json || true
+
+      - name: Upload axe results
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-results
+          path: axe-results.json
+
+      - name: Stop server
+        if: always()
+        run: |
+          kill $(cat server.pid) || true

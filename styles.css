@@ -71,6 +71,28 @@
   --container-padding: 1.5rem;
 }
 
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-sm);
+  z-index: 2000;
+}
+
 /* Dark Mode Variables */
 [data-theme="dark"] {
   --color-text: #f1f5f9;

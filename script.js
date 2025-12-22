@@ -71,12 +71,30 @@
     // Initialize features
     initThemeToggle();
     initMobileMenu();
+  initSkipLink();
     initSmoothScroll();
     initScrollAnimations();
     initNavbarScroll();
     initGreetingRotation();
     
     console.log('✨ Portfolio website initialized successfully');
+  }
+
+  // ===================================
+  // Skip link handling
+  // ===================================
+  function initSkipLink() {
+    const skipLink = document.querySelector('.skip-link');
+    if (!skipLink) return;
+    const main = document.getElementById('main-content');
+    if (!main) return;
+
+    skipLink.addEventListener('click', (e) => {
+      // Allow default anchor navigation then focus programmatically
+      setTimeout(() => {
+        main.focus({ preventScroll: false });
+      }, 0);
+    });
   }
 
   function cacheElements() {
