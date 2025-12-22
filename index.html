@@ -27,28 +27,29 @@
     </script>
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <!-- Navigation -->
-    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <nav class="navbar" id="navbar" aria-label="Main navigation">
         <div class="nav-container">
             <a href="#home" class="nav-brand">
                 <span class="brand-name">Adamu Abubakar</span>
                 <span class="brand-tagline">Computational Linguist</span>
             </a>
             
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
+            <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
             
             <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link">Home</a>
+                <a href="#home" class="nav-link" aria-current="page">Home</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#projects" class="nav-link">Projects</a>
                 <a href="#skills" class="nav-link">Skills</a>
                 <a href="#contact" class="nav-link">Contact</a>
                 
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
                     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="5"/>
                         <line x1="12" y1="1" x2="12" y2="3"/>
@@ -67,6 +68,8 @@
             </div>
         </div>
     </nav>
+
+    <main id="main-content" tabindex="-1">
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -141,6 +144,8 @@
             <div class="scroll-arrow"></div>
         </div>
     </section>
+
+    </main>
 
     <!-- About Section -->
     <section class="about" id="about">

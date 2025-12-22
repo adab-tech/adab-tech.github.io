@@ -74,6 +74,7 @@
     initSmoothScroll();
     initScrollAnimations();
     initNavbarScroll();
+  initActiveSectionHighlight();
     initGreetingRotation();
     
     console.log('✨ Portfolio website initialized successfully');
@@ -96,12 +97,22 @@
   function initThemeToggle() {
     if (!elements.themeToggle) return;
 
+    // sync pressed state on load
+    try {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      elements.themeToggle.setAttribute('aria-pressed', currentTheme === 'dark' ? 'true' : 'false');
+    } catch (_) {
+      // ignore
+    }
+
     elements.themeToggle.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
+
+  elements.themeToggle.setAttribute('aria-pressed', newTheme === 'dark' ? 'true' : 'false');
       
       // Add animation feedback
       elements.themeToggle.style.transform = 'scale(0.9)';
@@ -117,6 +128,16 @@
   
   function initMobileMenu() {
     if (!elements.mobileMenuToggle || !elements.navMenu) return;
+
+    function closeMenu() {
+      if (!state.isMenuOpen) return;
+      state.isMenuOpen = false;
+      elements.mobileMenuToggle.classList.remove('active');
+      elements.navMenu.classList.remove('active');
+      elements.mobileMenuToggle.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      elements.mobileMenuToggle.focus();
+    }
 
     // Toggle menu
     elements.mobileMenuToggle.addEventListener('click', () => {
@@ -149,6 +170,11 @@
           !elements.mobileMenuToggle.contains(e.target)) {
         elements.mobileMenuToggle.click();
       }
+    });
+
+    // Escape closes menu
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
     });
   }
 
@@ -257,6 +283,77 @@
       state.currentGreetingIndex = (state.currentGreetingIndex + 1) % GREETINGS.length;
       updateGreeting();
     }, CONFIG.greetingInterval);
+  }
+
+  // ===================================
+  // Active Section Highlight (aria-current)
+  // ===================================
+
+  function initActiveSectionHighlight() {
+    if (!elements.navLinks || !elements.navLinks.length) return;
+
+    const links = Array.from(elements.navLinks)
+      .filter(a => {
+        const href = a.getAttribute('href');
+        return href && href.startsWith('#') && href.length > 1;
+      });
+
+    if (!links.length) return;
+
+    const idToLink = new Map();
+    links.forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      idToLink.set(id, link);
+    });
+
+    const sections = Array.from(idToLink.keys())
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    function setCurrent(id) {
+      links.forEach(link => link.removeAttribute('aria-current'));
+      const active = idToLink.get(id);
+      if (active) active.setAttribute('aria-current', 'page');
+    }
+
+    // Prefer IntersectionObserver to avoid scroll thrash
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        // Pick the most visible intersecting entry
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio - a.intersectionRatio));
+
+        if (!visible.length) return;
+        const top = visible[0];
+        if (top.target && top.target.id) setCurrent(top.target.id);
+      }, {
+        root: null,
+        // Favor the section near the top of the viewport (account for fixed nav)
+        rootMargin: '-35% 0px -55% 0px',
+        threshold: [0.05, 0.15, 0.3, 0.5, 0.75]
+      });
+
+      sections.forEach(section => observer.observe(section));
+      return;
+    }
+
+    // Fallback: cheap scroll handler
+    const onScroll = throttle(() => {
+      const navOffset = 110;
+      const y = window.scrollY + navOffset;
+      let currentId = sections[0]?.id;
+
+      for (const section of sections) {
+        const top = section.offsetTop;
+        if (top <= y) currentId = section.id;
+      }
+
+      if (currentId) setCurrent(currentId);
+    }, 120);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   }
 
   function updateGreeting() {
