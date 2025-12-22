@@ -19,14 +19,14 @@
   --color-background-alt: #f8fafc;
   --color-surface: #ffffff;
   --color-border: #e2e8f0;
-  
+    --color-text-light: #566574; /* improved contrast */
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
   --gradient-hero: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
   
   /* Spacing */
   --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
+    --color-border: #cbd5e1; /* slightly darker border for separation */
   --spacing-md: 1.5rem;
   --spacing-lg: 2rem;
   --spacing-xl: 3rem;
@@ -96,8 +96,8 @@
 /* Dark Mode Variables */
 [data-theme="dark"] {
   --color-text: #f1f5f9;
-  --color-text-light: #94a3b8;
-  --color-background: #0f172a;
+    --color-primary: #1e40af; /* stronger primary for better contrast */
+    --color-primary-dark: #17307f;
   --color-background-alt: #1e293b;
   --color-surface: #1e293b;
   --color-border: #334155;
