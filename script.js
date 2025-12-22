@@ -74,6 +74,7 @@
     initSmoothScroll();
     initScrollAnimations();
     initNavbarScroll();
+  initActiveSectionHighlight();
     initGreetingRotation();
     
     console.log('✨ Portfolio website initialized successfully');
@@ -282,6 +283,77 @@
       state.currentGreetingIndex = (state.currentGreetingIndex + 1) % GREETINGS.length;
       updateGreeting();
     }, CONFIG.greetingInterval);
+  }
+
+  // ===================================
+  // Active Section Highlight (aria-current)
+  // ===================================
+
+  function initActiveSectionHighlight() {
+    if (!elements.navLinks || !elements.navLinks.length) return;
+
+    const links = Array.from(elements.navLinks)
+      .filter(a => {
+        const href = a.getAttribute('href');
+        return href && href.startsWith('#') && href.length > 1;
+      });
+
+    if (!links.length) return;
+
+    const idToLink = new Map();
+    links.forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      idToLink.set(id, link);
+    });
+
+    const sections = Array.from(idToLink.keys())
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    function setCurrent(id) {
+      links.forEach(link => link.removeAttribute('aria-current'));
+      const active = idToLink.get(id);
+      if (active) active.setAttribute('aria-current', 'page');
+    }
+
+    // Prefer IntersectionObserver to avoid scroll thrash
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        // Pick the most visible intersecting entry
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio - a.intersectionRatio));
+
+        if (!visible.length) return;
+        const top = visible[0];
+        if (top.target && top.target.id) setCurrent(top.target.id);
+      }, {
+        root: null,
+        // Favor the section near the top of the viewport (account for fixed nav)
+        rootMargin: '-35% 0px -55% 0px',
+        threshold: [0.05, 0.15, 0.3, 0.5, 0.75]
+      });
+
+      sections.forEach(section => observer.observe(section));
+      return;
+    }
+
+    // Fallback: cheap scroll handler
+    const onScroll = throttle(() => {
+      const navOffset = 110;
+      const y = window.scrollY + navOffset;
+      let currentId = sections[0]?.id;
+
+      for (const section of sections) {
+        const top = section.offsetTop;
+        if (top <= y) currentId = section.id;
+      }
+
+      if (currentId) setCurrent(currentId);
+    }, 120);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   }
 
   function updateGreeting() {
