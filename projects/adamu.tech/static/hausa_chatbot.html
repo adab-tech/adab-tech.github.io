@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hausa AI Chatbot - Interactive Voice & Text</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .chat-message {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .recording {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .wave {
+            animation: wave 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.5); }
+            50% { transform: scaleY(1.5); }
+        }
+        
+        .typing-dot {
+            animation: bounce 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4">
+    
+    <!-- Main Container -->
+    <div class="max-w-5xl mx-auto">
+        
+        <!-- Header -->
+        <div class="bg-white rounded-t-2xl shadow-xl p-6 border-b-4 border-purple-600">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Hausa AI Chatbot</h1>
+                        <p class="text-sm text-gray-600">Client-Side • OpenAI & Gemini Powered</p>
+                    </div>
+                    <span id="demo-badge" class="hidden text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700 border border-blue-200">Demo Mode</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button type="button" onclick="toggleSettings()" class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center space-x-2" id="status-indicator">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                        </span>
+                        <span class="text-sm font-medium text-gray-600">Not Configured</span>
+                    </div>
+                    <div id="activity-indicator" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
+                        Idle
+                    </div>
+                    <div id="auto-listen-countdown" class="text-xs text-gray-500"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel (Hidden by default) -->
+        <div id="settings-panel" class="hidden bg-white shadow-lg p-6 border-b border-gray-200">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">⚙️ Configuration</h3>
+            
+            <div class="space-y-6">
+                <!-- AI Text Provider -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-semibold text-gray-800">Text Model</h4>
+                    <!-- Demo Mode -->
+                    <div class="flex items-center justify-between p-3 rounded-lg border border-gray-200 bg-gray-50">
+                        <div>
+                            <p class="text-sm font-medium text-gray-800">Demo Mode (no API keys)</p>
+                            <p class="text-xs text-gray-600">Runs locally with Hausa templates. Keys optional.</p>
+                        </div>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="demo-mode-toggle" class="sr-only" onchange="toggleDemoMode()">
+                            <span class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-purple-600 transition relative">
+                                <span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full peer-checked:translate-x-5 transition"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <!-- Provider Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
+                        <select id="provider-select" onchange="updateProviderSettings()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="openai">OpenAI (GPT-3.5/GPT-4)</option>
+                            <option value="gemini">Google Gemini Pro</option>
+                        </select>
+                    </div>
+
+                    <!-- API Key Input -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            API Key <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" id="api-key-input" placeholder="Enter your API key" 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">
+                            🔒 Stored locally in your browser only. Never sent to any server except the AI provider.
+                        </p>
+                    </div>
+
+                    <!-- Model Selection -->
+                    <div id="model-section">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                        <select id="model-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Affordable)</option>
+                            <option value="gpt-4">GPT-4 (More Capable)</option>
+                            <option value="gpt-4-turbo-preview">GPT-4 Turbo (Latest)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Speech Provider -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-semibold text-gray-800">Speech (Text-to-Speech)</h4>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">TTS Provider</label>
+                            <select id="tts-provider-select" onchange="updateTTSSettings()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="webspeech">Browser (Web Speech API)</option>
+                                <option value="google-tts">Google Cloud TTS</option>
+                                <option value="azure-tts">Azure Cognitive TTS</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Voice</label>
+                            <select id="tts-voice-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"></select>
+                            <p class="text-xs text-gray-500 mt-1">Hausa voices listed when supported.</p>
+                        </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Auto Listen Timeout (min)</label>
+                            <input type="number" min="1" max="60" step="1" id="auto-listen-timeout-input" placeholder="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <p class="text-xs text-gray-500 mt-1">Auto disables continuous conversation after this duration.</p>
+                        </div>
+                    </div>
+                    <div id="tts-google-keys" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Google TTS API Key</label>
+                        <input type="password" id="tts-api-key-input" placeholder="Enter Google Cloud API key" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    </div>
+                    <div id="tts-azure-keys" class="hidden grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Azure Speech Key</label>
+                            <input type="password" id="tts-azure-key-input" placeholder="Enter Azure Speech key" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Azure Region</label>
+                            <input type="text" id="tts-azure-region-input" placeholder="e.g. eastus, westeurope" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speech Recognition (STT) -->
+                <div class="space-y-4">
+                    <h4 class="text-sm font-semibold text-gray-800">Speech Recognition (STT)</h4>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">STT Provider</label>
+                            <select id="stt-provider-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="webspeech">Browser (Web Speech API)</option>
+                                <option value="openai-whisper">OpenAI Whisper (uses OpenAI key)</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Whisper provides higher Hausa accuracy using your OpenAI key.</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Language</label>
+                            <select id="stt-language-select" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="ha">Hausa (ha)</option>
+                                <option value="ha-NG">Hausa (Nigeria)</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex flex-wrap gap-3 items-center">
+                    <button type="button" onclick="saveConfiguration()" class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition">
+                        Save Configuration
+                    </button>
+                    <button type="button" onclick="clearConfiguration()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition">
+                        Clear
+                    </button>
+                    <button type="button" onclick="testTTS()" class="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 font-medium transition">
+                        🔊 Test Voice
+                    </button>
+                </div>
+            </div>
+
+            <!-- Help Text -->
+            <div class="mt-4 p-4 bg-blue-50 rounded-lg space-y-2">
+                <p class="text-sm text-blue-800">
+                    <strong>Need an API key for text models?</strong><br>
+                    • OpenAI: <a href="https://platform.openai.com/api-keys" target="_blank" class="underline">Get one here</a><br>
+                    • Gemini: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="underline">Get one here</a>
+                </p>
+                <p class="text-sm text-blue-800">
+                    <strong>Hausa Text-to-Speech (TTS) keys:</strong><br>
+                    • Google Cloud TTS (ha-GH): <a href="https://console.cloud.google.com/marketplace/product/google/texttospeech.googleapis.com" target="_blank" class="underline">Enable API</a><br>
+                    • Azure TTS (ha-NG): <a href="https://portal.azure.com/#view/Microsoft_Azure_ProjectOxford/SpeechServicesVoice" target="_blank" class="underline">Create resource</a><br>
+                    Preset voices: Google — ha-GH-Standard-A; Azure — ha-NG-AishaNeural, ha-NG-AbdullahiNeural
+                </p>
+                <p class="text-sm text-blue-800">
+                    <strong>Demo Mode:</strong> No keys required. Uses local Hausa templates and browser speech where available.
+                </p>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="bg-gray-50 shadow-xl" style="height: 500px; overflow-y: auto;" id="chat-container">
+            <div class="p-6 space-y-4" id="chat-messages">
+                <!-- Welcome Message -->
+                <div class="chat-message flex justify-start">
+                    <div class="bg-white rounded-lg shadow-md p-4 max-w-md">
+                        <div class="flex items-start space-x-3">
+                            <div class="bg-purple-100 rounded-full p-2">
+                                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-900 mb-1">Hausa AI Assistant</p>
+                                <p class="text-gray-700" id="welcome-text">
+                                    <strong>Sannu! Barka da zuwa.</strong><br>
+                                    Welcome! I'm your Hausa AI assistant. I can help you practice Hausa, translate, or have conversations.<br><br>
+                                    <em id="welcome-hint">⚙️ Please configure your API key using the settings button above to get started.</em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-white rounded-b-2xl shadow-xl p-4">
+            <div class="flex items-end space-x-3">
+                <!-- Voice Input Button -->
+                <button id="voice-btn" onclick="toggleVoiceInput()" 
+                        class="flex-shrink-0 bg-gradient-to-br from-red-500 to-pink-600 text-white p-3 rounded-full hover:from-red-600 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
+                        title="Voice input (Experimental)">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                    </svg>
+                </button>
+
+                <!-- Text Input -->
+                <div class="flex-grow">
+                    <textarea id="message-input" rows="2" placeholder="Type in Hausa or English..." 
+                              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                              onkeydown="handleKeyPress(event)"></textarea>
+                </div>
+
+                <!-- Send Button -->
+                <button onclick="sendMessage()" id="send-btn"
+                        class="flex-shrink-0 bg-gradient-to-br from-purple-600 to-indigo-700 text-white px-6 py-3 rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all transform hover:scale-105 shadow-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Audio Visualization (hidden by default) -->
+            <div id="audio-viz" class="hidden mt-4 flex justify-center items-center space-x-1">
+                <div class="wave bg-purple-500 w-1 h-8 rounded-full"></div>
+                <div class="wave bg-purple-500 w-1 h-12 rounded-full" style="animation-delay: 0.1s"></div>
+                <div class="wave bg-purple-500 w-1 h-6 rounded-full" style="animation-delay: 0.2s"></div>
+                <div class="wave bg-purple-500 w-1 h-10 rounded-full" style="animation-delay: 0.3s"></div>
+                <div class="wave bg-purple-500 w-1 h-8 rounded-full" style="animation-delay: 0.4s"></div>
+            </div>
+
+            <!-- Status/Error Messages -->
+            <div id="status-message" class="hidden mt-3 p-3 rounded-lg text-sm"></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-4 flex flex-wrap gap-2 justify-center">
+            <button onclick="clearChat()" class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:shadow-md transition text-sm font-medium">
+                🗑️ Clear Chat
+            </button>
+            <button onclick="exportChat()" class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:shadow-md transition text-sm font-medium">
+                💾 Export Chat
+            </button>
+            <button onclick="toggleVoiceResponses()" id="voice-toggle-btn" class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:shadow-md transition text-sm font-medium">
+                🔊 Speak Replies: Off
+            </button>
+            <button onclick="toggleAutoListen()" id="auto-listen-btn" class="px-4 py-2 bg-white text-gray-700 rounded-lg shadow hover:shadow-md transition text-sm font-medium">
+                🎧 Auto Listen: Off
+            </button>
+            <button onclick="stopAutoNow()" id="stop-auto-btn" class="px-4 py-2 bg-white text-red-600 rounded-lg border border-red-200 hover:bg-red-50 transition text-sm font-medium">
+                ⏹ Stop Auto
+            </button>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="mt-6 bg-white rounded-2xl shadow-xl p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-3">✨ Features</h3>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+                <div class="flex items-start space-x-2">
+                    <span class="text-2xl">💬</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Hausa Conversation</p>
+                        <p class="text-gray-600">Natural language processing for Hausa</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-2">
+                    <span class="text-2xl">🎤</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Voice Input</p>
+                        <p class="text-gray-600">Speak in Hausa or English</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-2">
+                    <span class="text-2xl">🔒</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Privacy First</p>
+                        <p class="text-gray-600">Client-side processing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional Hausa dataset for demo responses -->
+    <script src="hausa_data.js" defer></script>
+
+    <script>
+        // Optional Hausa dataset
+        // If static/hausa_data.js exists and defines window.HAUSA_DATA, we can enrich demo responses.
+        // ================================
+        // Configuration & State Management
+        // ================================
+        
+        const CONFIG_KEY = 'hausa_chatbot_config';
+        const CHAT_HISTORY_KEY = 'hausa_chatbot_history';
+        
+        let config = {
+            provider: 'openai',
+            apiKey: '',
+            model: 'gpt-3.5-turbo',
+            voiceEnabled: false,
+            ttsProvider: 'webspeech',
+            ttsApiKey: '',
+            ttsRegion: '',
+            ttsVoice: '',
+            autoListen: false,
+            autoListenTimeoutMinutes: 5,
+            sttProvider: 'webspeech',
+            sttLanguage: 'ha-NG',
+            demoMode: true
+        };
+        
+        let chatHistory = [];
+        let isRecording = false;
+        let recognition = null;
+        // Audio + STT/TTS runtime state
+        let micStream = null;
+        let audioCtx = null;
+        let analyser = null;
+        let micVizRAF = null;
+        let currentAudio = null;
+        let autoListenTimeoutId = null;
+        let autoListenCountdownInterval = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        
+        // ================================
+        // Initialization
+        // ================================
+        
+        function init() {
+            loadConfiguration();
+            loadChatHistory();
+            updateStatusIndicator();
+            updateProviderSettings();
+            updateTTSSettings();
+            initSpeechRecognition();
+            // Sync toggle buttons
+            const speakBtn = document.getElementById('voice-toggle-btn');
+            const listenBtn = document.getElementById('auto-listen-btn');
+            if (speakBtn) speakBtn.textContent = config.voiceEnabled ? '🔊 Speak Replies: On' : '🔊 Speak Replies: Off';
+            if (listenBtn) listenBtn.textContent = config.autoListen ? '🎧 Auto Listen: On' : '🎧 Auto Listen: Off';
+            const demoToggle = document.getElementById('demo-mode-toggle');
+            if (demoToggle) demoToggle.checked = !!config.demoMode;
+            updateDemoBadge();
+            setWelcomeText();
+        }
+        
+        function loadConfiguration() {
+            const saved = localStorage.getItem(CONFIG_KEY);
+            if (saved) {
+                try {
+                    const savedConfig = JSON.parse(saved);
+                    config = { ...config, ...savedConfig };
+                    
+                    // Populate UI
+                    document.getElementById('provider-select').value = config.provider;
+                    document.getElementById('api-key-input').value = config.apiKey;
+                    document.getElementById('model-select').value = config.model;
+                    // TTS
+                    document.getElementById('tts-provider-select').value = config.ttsProvider || 'webspeech';
+                    document.getElementById('tts-api-key-input').value = config.ttsApiKey || '';
+                    document.getElementById('tts-azure-key-input').value = config.ttsApiKey || '';
+                    document.getElementById('tts-azure-region-input').value = config.ttsRegion || '';
+                    document.getElementById('auto-listen-timeout-input').value = config.autoListenTimeoutMinutes || 5;
+                    // STT
+                    document.getElementById('stt-provider-select').value = config.sttProvider || 'webspeech';
+                    document.getElementById('stt-language-select').value = config.sttLanguage || 'ha-NG';
+                    const demoToggle = document.getElementById('demo-mode-toggle');
+                    if (demoToggle) demoToggle.checked = !!savedConfig.demoMode;
+                    updateTTSSettings();
+                    if (config.ttsVoice) {
+                        const ttsVoiceSelect = document.getElementById('tts-voice-select');
+                        ttsVoiceSelect.value = config.ttsVoice;
+                    }
+                    
+                    updateProviderSettings();
+                } catch (e) {
+                    console.error('Error loading config:', e);
+                }
+            }
+        }
+        
+        function loadChatHistory() {
+            const saved = localStorage.getItem(CHAT_HISTORY_KEY);
+            if (saved) {
+                try {
+                    chatHistory = JSON.parse(saved);
+                    // Restore messages to UI
+                    chatHistory.forEach(msg => {
+                        addMessageToUI(msg.content, msg.role);
+                    });
+                } catch (e) {
+                    console.error('Error loading chat history:', e);
+                }
+            }
+        }
+        
+        function saveConfiguration() {
+            config.provider = document.getElementById('provider-select').value;
+            config.apiKey = document.getElementById('api-key-input').value.trim();
+            config.model = document.getElementById('model-select').value;
+            // TTS settings
+            config.ttsProvider = document.getElementById('tts-provider-select').value;
+            config.ttsVoice = document.getElementById('tts-voice-select').value || '';
+            if (config.ttsProvider === 'google-tts') {
+                config.ttsApiKey = document.getElementById('tts-api-key-input').value.trim();
+            } else if (config.ttsProvider === 'azure-tts') {
+                config.ttsApiKey = document.getElementById('tts-azure-key-input').value.trim();
+                config.ttsRegion = document.getElementById('tts-azure-region-input').value.trim();
+            } else {
+                config.ttsApiKey = '';
+                config.ttsRegion = '';
+            }
+            // Auto-listen timeout
+            const timeoutVal = parseInt(document.getElementById('auto-listen-timeout-input').value || '5', 10);
+            if (!isNaN(timeoutVal) && timeoutVal > 0 && timeoutVal <= 60) {
+                config.autoListenTimeoutMinutes = timeoutVal;
+            }
+            // STT settings
+            config.sttProvider = document.getElementById('stt-provider-select').value;
+            config.sttLanguage = document.getElementById('stt-language-select').value;
+            // Demo mode
+            config.demoMode = !!document.getElementById('demo-mode-toggle').checked;
+            
+            if (!config.demoMode && !config.apiKey) {
+                showStatus('Please enter an API key for your selected text model (or enable Demo Mode)', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+            
+            updateStatusIndicator();
+            showStatus('Configuration saved successfully! ✓', 'success');
+            
+            // Hide settings panel
+            setTimeout(() => {
+                toggleSettings();
+            }, 1000);
+            if (config.autoListen) scheduleAutoListenTimeout();
+        }
+        
+        function clearConfiguration() {
+            if (confirm('Clear all configuration and chat history?')) {
+                localStorage.removeItem(CONFIG_KEY);
+                localStorage.removeItem(CHAT_HISTORY_KEY);
+                config = {
+                    provider: 'openai',
+                    apiKey: '',
+                    model: 'gpt-3.5-turbo',
+                    voiceEnabled: false
+                };
+                chatHistory = [];
+                
+                document.getElementById('api-key-input').value = '';
+                clearChat();
+                updateStatusIndicator();
+                showStatus('Configuration cleared', 'success');
+            }
+        }
+        
+        function updateProviderSettings() {
+            const provider = document.getElementById('provider-select').value;
+            const modelSelect = document.getElementById('model-select');
+            
+            // Update model options based on provider
+            if (provider === 'openai') {
+                modelSelect.innerHTML = `
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fast & Affordable)</option>
+                    <option value="gpt-4">GPT-4 (Most Capable)</option>
+                    <option value="gpt-4-turbo-preview">GPT-4 Turbo (Latest)</option>
+                `;
+            } else if (provider === 'gemini') {
+                modelSelect.innerHTML = `
+                    <option value="gemini-pro">Gemini Pro</option>
+                `;
+            }
+        }
+
+        function updateTTSSettings() {
+            const provider = document.getElementById('tts-provider-select').value;
+            const googleKeys = document.getElementById('tts-google-keys');
+            const azureKeys = document.getElementById('tts-azure-keys');
+            const voiceSelect = document.getElementById('tts-voice-select');
+            
+            googleKeys.classList.add('hidden');
+            azureKeys.classList.add('hidden');
+            voiceSelect.innerHTML = '';
+            
+            if (provider === 'webspeech') {
+                voiceSelect.innerHTML = `<option value="">Browser default (tries Hausa if available)</option>`;
+            } else if (provider === 'google-tts') {
+                googleKeys.classList.remove('hidden');
+                // Hausa voices available in Google Cloud TTS
+                voiceSelect.innerHTML = `
+                    <option value="ha-GH-Standard-A">ha-GH-Standard-A (Female)</option>
+                    <option value="ha-GH-Standard-B">ha-GH-Standard-B (Male)</option>
+                `;
+            } else if (provider === 'azure-tts') {
+                azureKeys.classList.remove('hidden');
+                // Hausa neural voices in Azure
+                voiceSelect.innerHTML = `
+                    <option value="ha-NG-AishaNeural">ha-NG-AishaNeural (Female)</option>
+                    <option value="ha-NG-AbdullahiNeural">ha-NG-AbdullahiNeural (Male)</option>
+                `;
+            }
+        }
+        
+        function updateStatusIndicator() {
+            const indicator = document.getElementById('status-indicator');
+            const hasApiKey = config.apiKey && config.apiKey.length > 0;
+            if (config.demoMode) {
+                indicator.innerHTML = `
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-gray-600">Demo Ready</span>
+                `;
+                return;
+            }
+            if (hasApiKey) {
+                indicator.innerHTML = `
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-gray-600">Ready</span>
+                `;
+            } else {
+                indicator.innerHTML = `
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                    </span>
+                    <span class="text-sm font-medium text-gray-600">Not Configured</span>
+                `;
+            }
+        }
+        
+        // ================================
+        // UI Controls
+        // ================================
+        
+        function toggleSettings() {
+            const panel = document.getElementById('settings-panel');
+            panel.classList.toggle('hidden');
+        }
+        
+        function toggleDemoMode() {
+            const enabled = !!document.getElementById('demo-mode-toggle').checked;
+            config.demoMode = enabled;
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+            updateStatusIndicator();
+            showStatus(enabled ? 'Demo Mode enabled — no keys required' : 'Demo Mode disabled', 'success');
+            updateDemoBadge();
+            setWelcomeText();
+        }
+        
+        function toggleVoiceResponses() {
+            config.voiceEnabled = !config.voiceEnabled;
+            const btn = document.getElementById('voice-toggle-btn');
+            btn.textContent = config.voiceEnabled ? '🔊 Speak Replies: On' : '🔊 Speak Replies: Off';
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        }
+
+        function toggleAutoListen() {
+            config.autoListen = !config.autoListen;
+            const btn = document.getElementById('auto-listen-btn');
+            btn.textContent = config.autoListen ? '🎧 Auto Listen: On' : '🎧 Auto Listen: Off';
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+            if (config.autoListen) {
+                scheduleAutoListenTimeout();
+            } else {
+                clearAutoListenTimeout();
+            }
+        }
+
+        function scheduleAutoListenTimeout() {
+            clearAutoListenTimeout();
+            const ms = (config.autoListenTimeoutMinutes || 5) * 60 * 1000;
+            const endAt = Date.now() + ms;
+            autoListenTimeoutId = setTimeout(() => {
+                config.autoListen = false;
+                localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+                const btn = document.getElementById('auto-listen-btn');
+                if (btn) btn.textContent = '🎧 Auto Listen: Off';
+                showStatus('Auto Listen disabled (timeout reached)', 'info');
+            }, ms);
+            if (autoListenCountdownInterval) clearInterval(autoListenCountdownInterval);
+            const countdownEl = document.getElementById('auto-listen-countdown');
+            autoListenCountdownInterval = setInterval(() => {
+                const remaining = Math.max(0, endAt - Date.now());
+                const m = Math.floor(remaining / 60000);
+                const s = Math.floor((remaining % 60000) / 1000);
+                if (countdownEl) countdownEl.textContent = remaining > 0 ? `Auto ends in ${m}:${String(s).padStart(2,'0')}` : '';
+                if (remaining <= 0) {
+                    clearInterval(autoListenCountdownInterval);
+                    autoListenCountdownInterval = null;
+                }
+            }, 500);
+        }
+
+        function clearAutoListenTimeout() {
+            if (autoListenTimeoutId) {
+                clearTimeout(autoListenTimeoutId);
+                autoListenTimeoutId = null;
+            }
+            if (autoListenCountdownInterval) {
+                clearInterval(autoListenCountdownInterval);
+                autoListenCountdownInterval = null;
+                const countdownEl = document.getElementById('auto-listen-countdown');
+                if (countdownEl) countdownEl.textContent = '';
+            }
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+        
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = message;
+            statusDiv.className = `mt-3 p-3 rounded-lg text-sm ${
+                type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' :
+                type === 'error' ? 'bg-red-100 text-red-800 border border-red-200' :
+                'bg-blue-100 text-blue-800 border border-blue-200'
+            }`;
+            statusDiv.classList.remove('hidden');
+            
+            setTimeout(() => {
+                statusDiv.classList.add('hidden');
+            }, 4000);
+        }
+
+        function setActivity(label) {
+            const el = document.getElementById('activity-indicator');
+            if (el) el.textContent = label || 'Idle';
+        }
+
+        function updateDemoBadge() {
+            const badge = document.getElementById('demo-badge');
+            if (!badge) return;
+            if (config.demoMode) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function setWelcomeText() {
+            const welcome = document.getElementById('welcome-text');
+            const hint = document.getElementById('welcome-hint');
+            if (!welcome || !hint) return;
+            if (config.demoMode) {
+                hint.textContent = '🟦 Demo Mode: running locally with Hausa templates. No keys required.';
+            } else {
+                hint.textContent = '⚙️ Please configure your API key using the settings button above to get started.';
+            }
+        }
+        
+        function scrollToBottom() {
+            const container = document.getElementById('chat-container');
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // ================================
+        // Chat Functionality
+        // ================================
+        
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // In demo mode, allow sending without API keys
+            if (!config.demoMode && !config.apiKey) {
+                showStatus('⚠️ Please configure your API key in settings or enable Demo Mode', 'error');
+                toggleSettings();
+                return;
+            }
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // Get AI response
+                const response = await getAIResponse(message);
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Add AI response
+                addMessage(response, 'assistant');
+                
+                // Speak response if enabled, then optionally auto-listen
+                if (config.voiceEnabled) {
+                    try { await speakText(response); } catch {}
+                }
+                if (config.autoListen && !isRecording) {
+                    startVoiceInput();
+                }
+                
+            } catch (error) {
+                removeTypingIndicator();
+                showStatus('Error: ' + error.message, 'error');
+                console.error('Chat error:', error);
+            }
+        }
+        
+        function addMessage(text, role) {
+            chatHistory.push({ role, content: text });
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(chatHistory));
+            addMessageToUI(text, role);
+        }
+        
+        function addMessageToUI(text, role) {
+            const chatMessages = document.getElementById('chat-messages');
+            const isUser = role === 'user';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message flex ${isUser ? 'justify-end' : 'justify-start'}`;
+            
+            const bgColor = isUser ? 'bg-gradient-to-br from-purple-600 to-indigo-700 text-white' : 'bg-white text-gray-700';
+            const icon = isUser ? 
+                '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>' :
+                '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>';
+            
+            messageDiv.innerHTML = `
+                <div class="${bgColor} rounded-lg shadow-md p-4 max-w-md">
+                    <div class="flex items-start space-x-3">
+                        <div class="${isUser ? 'bg-white/20' : 'bg-purple-100'} rounded-full p-2">
+                            ${icon}
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium mb-1">${isUser ? 'You' : 'AI Assistant'}</p>
+                            <p class="${isUser ? 'text-white' : 'text-gray-700'} whitespace-pre-wrap">${escapeHtml(text)}</p>
+                            ${!isUser ? `<button onclick="speakText(\`${text.replace(/`/g, '\\`')}\`)" class="mt-2 text-xs text-purple-600 hover:text-purple-800 flex items-center space-x-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728"></path>
+                                </svg>
+                                <span>Play Audio</span>
+                            </button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chat-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'chat-message flex justify-start';
+            typingDiv.innerHTML = `
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <div class="flex space-x-2 items-center">
+                        <div class="w-2 h-2 bg-purple-500 rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-purple-500 rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-purple-500 rounded-full typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+        
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+        
+        function clearChat() {
+            if (confirm('Clear all chat messages?')) {
+                chatHistory = [];
+                localStorage.removeItem(CHAT_HISTORY_KEY);
+                document.getElementById('chat-messages').innerHTML = '';
+                
+                // Add welcome message back
+                init();
+                showStatus('Chat cleared', 'success');
+            }
+        }
+        
+        function exportChat() {
+            const text = chatHistory.map(msg => 
+                `${msg.role.toUpperCase()}: ${msg.content}`
+            ).join('\n\n');
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `hausa-chat-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showStatus('Chat exported!', 'success');
+        }
+        
+        // ================================
+        // AI Integration
+        // ================================
+        
+        async function getAIResponse(message) {
+            setActivity('Thinking');
+            if (config.demoMode) {
+                const r = await getDemoResponse(message);
+                setActivity('Idle');
+                return r;
+            }
+            if (config.provider === 'openai') {
+                const r = await getOpenAIResponse(message);
+                setActivity('Idle');
+                return r;
+            } else if (config.provider === 'gemini') {
+                const r = await getGeminiResponse(message);
+                setActivity('Idle');
+                return r;
+            }
+        }
+        
+        async function getOpenAIResponse(message) {
+            const systemPrompt = `You are a helpful Hausa language assistant. You can communicate fluently in Hausa and help users learn the language, translate, and have conversations. Always be respectful and culturally appropriate.`;
+            
+            const messages = [
+                { role: 'system', content: systemPrompt },
+                ...chatHistory.slice(-10), // Last 10 messages for context
+                { role: 'user', content: message }
+            ];
+            
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${config.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: config.model,
+                    messages: messages,
+                    temperature: 0.7,
+                    max_tokens: 500
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'API request failed');
+            }
+            
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+        
+        async function getGeminiResponse(message) {
+            const systemPrompt = `You are a helpful Hausa language assistant. You can communicate fluently in Hausa and help users learn the language, translate, and have conversations. Always be respectful and culturally appropriate.`;
+            
+            // Build conversation context
+            const context = chatHistory.slice(-10).map(msg => 
+                `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`
+            ).join('\n');
+            
+            const prompt = `${systemPrompt}\n\nConversation so far:\n${context}\n\nUser: ${message}\n\nAssistant:`;
+            
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${config.apiKey}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 500
+                    }
+                })
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error?.message || 'API request failed');
+            }
+            
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text;
+        }
+        
+        async function getDemoResponse(message) {
+            // Simple local Hausa assistant with templates and optional dictionary support
+            const text = message.trim();
+            const lower = text.toLowerCase();
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+            
+            // Greeting intents
+            if (/\b(sannu|salama|barka|ina kwana|ina wuni|hello|hi|assalamu)/i.test(lower)) {
+                return 'Sannu! Ina kwana? Ina iya taimaka maka a yau.';
+            }
+            // Time/date intents
+            if (/\b(time|lokaci|agogo|date|kwanan wata)/i.test(lower)) {
+                return `Lokaci yanzu: ${timeStr}.`;
+            }
+            // Help intent
+            if (/\b(help|taimako|yadda|instructions)/i.test(lower)) {
+                return 'Zaka iya tambayar fassara, karin magana, ko tattaunawa a Hausa. Misali: “Fassara: How are you?”';
+            }
+            // Translation intent
+            if (/\b(translate|fassara|translation)\b/i.test(lower) || /^fassara[:\-]/i.test(lower)) {
+                const m = text.replace(/^fassara[:\-]?/i, '').replace(/\b(translate|fassara|translation)\b[:\-]?/i, '').trim();
+                if (!m) return 'Ka rubuta kalma ko jumla da kake son fassara.';
+                const demo = demoTranslate(m);
+                return `Fassara (demo): ${demo}`;
+            }
+            // Dictionary lookup if dataset exists
+            if (typeof window !== 'undefined' && window.HAUSA_DATA && window.HAUSA_DATA.dictionary) {
+                const word = lower.split(/\s+/)[0];
+                const entry = window.HAUSA_DATA.dictionary[word];
+                if (entry) {
+                    return `Kalma: ${word}\nMa'ana: ${entry.meaning || '—'}\nMisali: ${entry.example || '—'}`;
+                }
+            }
+            // Fallback chat templates
+            const replies = [
+                'Nagode! Ka kara bayani, don in fahimta sosai.',
+                'Lallai. Wanne bangare kake son mu tattauna?',
+                'Ina jin Hausa da Turanci. Ka yi tambaya lafiya.',
+                'Zan iya taimako da karin magana, fassara, ko hira mai sauki.'
+            ];
+            return replies[Math.floor(Math.random() * replies.length)];
+        }
+        
+        function demoTranslate(text) {
+            // Very naive placeholder translation: echo with note; if dictionary has entries, try map words
+            if (typeof window !== 'undefined' && window.HAUSA_DATA && window.HAUSA_DATA.en2ha) {
+                const words = text.toLowerCase().split(/\s+/);
+                const mapped = words.map(w => window.HAUSA_DATA.en2ha[w] || w);
+                return mapped.join(' ');
+            }
+            return `${text} (demo)`;
+        }
+        
+        // ================================
+        // Voice Features
+        // ================================
+        
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = (config.sttLanguage || 'ha-NG');
+                recognition.onresult = async (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    const input = document.getElementById('message-input');
+                    input.value = transcript;
+                    showStatus('Recognized: ' + transcript, 'success');
+                    if (config.autoListen) {
+                        await new Promise(r => setTimeout(r, 150));
+                        sendMessage();
+                    }
+                };
+                recognition.onerror = (event) => {
+                    showStatus('Voice recognition error: ' + event.error, 'error');
+                    stopVoiceInput();
+                };
+                recognition.onend = () => {
+                    stopVoiceInput();
+                };
+            }
+        }
+
+        function toggleVoiceInput() {
+            if (!isRecording) {
+                startVoiceInput();
+            } else {
+                stopVoiceInput();
+            }
+        }
+
+        async function startVoiceInput() {
+            isRecording = true;
+            document.getElementById('voice-btn').classList.add('recording');
+            document.getElementById('audio-viz').classList.remove('hidden');
+            startMicVisualizer().catch(() => {/* fallback */});
+            beep();
+            showStatus('🎤 Listening... Speak in Hausa or English', 'info');
+            setActivity('Listening');
+            if (config.sttProvider === 'openai-whisper') {
+                await startWhisperRecording();
+            } else {
+                if (!recognition) {
+                    showStatus('Speech recognition not supported in this browser', 'error');
+                    stopVoiceInput();
+                    return;
+                }
+                recognition.lang = (config.sttLanguage || 'ha-NG');
+                recognition.start();
+            }
+        }
+
+        function stopVoiceInput() {
+            isRecording = false;
+            try { if (recognition) recognition.stop(); } catch {}
+            try { if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); } catch {}
+            document.getElementById('voice-btn').classList.remove('recording');
+            document.getElementById('audio-viz').classList.add('hidden');
+            stopMicVisualizer();
+            setActivity('Idle');
+            beep(70, 500);
+        }
+
+        async function startWhisperRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                micStream = stream;
+                recordedChunks = [];
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = async () => {
+                    try {
+                        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                        await transcribeWithWhisper(blob);
+                    } catch (e) {
+                        showStatus('Transcription failed: ' + (e.message || e), 'error');
+                    }
+                };
+                mediaRecorder.start();
+            } catch (e) {
+                showStatus('Microphone error: ' + (e.message || e), 'error');
+                stopVoiceInput();
+            }
+        }
+
+        async function transcribeWithWhisper(blob) {
+            if (!config.apiKey) {
+                showStatus('OpenAI key required for Whisper', 'error');
+                return;
+            }
+            const fd = new FormData();
+            fd.append('file', blob, 'speech.webm');
+            fd.append('model', 'whisper-1');
+            const lang = (config.sttLanguage || 'ha-NG');
+            fd.append('language', lang.toLowerCase().startsWith('ha') ? 'ha' : lang);
+            const resp = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${config.apiKey}` },
+                body: fd
+            });
+            if (!resp.ok) {
+                const err = await safeJson(resp);
+                throw new Error(err.error?.message || 'Whisper transcription failed');
+            }
+            const data = await resp.json();
+            const transcript = data.text || '';
+            const input = document.getElementById('message-input');
+            input.value = transcript;
+            showStatus('Recognized: ' + transcript, 'success');
+            if (config.autoListen) {
+                await new Promise(r => setTimeout(r, 150));
+                sendMessage();
+            }
+        }
+        
+        async function speakText(text) {
+            try {
+                setActivity('Speaking');
+                if (config.ttsProvider === 'google-tts') {
+                    await speakWithGoogleTTS(text);
+                    setActivity('Idle');
+                    return;
+                }
+                if (config.ttsProvider === 'azure-tts') {
+                    await speakWithAzureTTS(text);
+                    setActivity('Idle');
+                    return;
+                }
+                // Fallback: Web Speech API
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    await new Promise(resolve => {
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.lang = 'ha-NG';
+                        utterance.rate = 0.95;
+                        utterance.pitch = 1.0;
+                        const voices = window.speechSynthesis.getVoices();
+                        const hausaVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ha'));
+                        if (hausaVoice) utterance.voice = hausaVoice;
+                        utterance.onend = resolve;
+                        window.speechSynthesis.speak(utterance);
+                    });
+                    showStatus('🔊 Playing audio (browser voice)...', 'info');
+                    setActivity('Idle');
+                } else {
+                    showStatus('Text-to-speech not supported in this browser', 'error');
+                    setActivity('Idle');
+                }
+            } catch (e) {
+                console.error('TTS error', e);
+                showStatus('TTS error: ' + (e.message || e), 'error');
+                setActivity('Idle');
+            }
+        }
+
+        async function speakWithGoogleTTS(text) {
+            if (!config.ttsApiKey) {
+                showStatus('Google TTS API key required', 'error');
+                return;
+            }
+            const voiceName = config.ttsVoice || 'ha-GH-Standard-A';
+            const cacheKey = await ttsCacheKey('google', voiceName, 0.95, 0, text);
+            const cached = await ttsCacheGet(cacheKey);
+            if (cached) { await playAudioBlob(cached); showStatus('🔊 Playing audio (cache)...', 'info'); return; }
+            const body = {
+                input: { text },
+                voice: { languageCode: 'ha-GH', name: voiceName },
+                audioConfig: { audioEncoding: 'MP3', speakingRate: 0.95, pitch: 0.0 }
+            };
+            const resp = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${encodeURIComponent(config.ttsApiKey)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!resp.ok) {
+                const err = await safeJson(resp);
+                throw new Error(err.error?.message || 'Google TTS request failed');
+            }
+            const data = await resp.json();
+            if (!data.audioContent) throw new Error('No audio content from Google TTS');
+            const blob = base64ToBlob(data.audioContent, 'audio/mpeg');
+            await ttsCachePut(cacheKey, blob);
+            await playAudioBlob(blob);
+            showStatus('🔊 Playing audio (Google TTS)...', 'info');
+        }
+
+        async function speakWithAzureTTS(text) {
+            if (!config.ttsApiKey || !config.ttsRegion) {
+                showStatus('Azure Speech key and region required', 'error');
+                return;
+            }
+            const tokenResp = await fetch(`https://${config.ttsRegion}.api.cognitive.microsoft.com/sts/v1.0/issueToken`, {
+                method: 'POST',
+                headers: { 'Ocp-Apim-Subscription-Key': config.ttsApiKey }
+            });
+            if (!tokenResp.ok) {
+                throw new Error('Failed to obtain Azure token');
+            }
+            const token = await tokenResp.text();
+            const voice = config.ttsVoice || 'ha-NG-AishaNeural';
+            const ssml = `<?xml version="1.0" encoding="utf-8"?>
+                <speak version="1.0" xml:lang="ha-NG">
+                  <voice name="${voice}">
+                    <prosody rate="0.95">${escapeXml(text)}</prosody>
+                  </voice>
+                </speak>`;
+            const synthResp = await fetch(`https://${config.ttsRegion}.tts.speech.microsoft.com/cognitiveservices/v1`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/ssml+xml',
+                    'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
+                    'User-Agent': 'HausaChatbotClient'
+                },
+                body: ssml
+            });
+            if (!synthResp.ok) {
+                throw new Error('Azure TTS synthesis failed');
+            }
+            const cacheKey = await ttsCacheKey('azure', voice, 0.95, 0, text);
+            const cached = await ttsCacheGet(cacheKey);
+            if (cached) { await playAudioBlob(cached); showStatus('🔊 Playing audio (cache)...', 'info'); return; }
+            const blob = await synthResp.blob();
+            await ttsCachePut(cacheKey, blob);
+            await playAudioBlob(blob);
+            showStatus('🔊 Playing audio (Azure TTS)...', 'info');
+        }
+        
+        // ================================
+        // Utility Functions
+        // ================================
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function escapeXml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+        }
+
+        async function safeJson(resp) {
+            try {
+                return await resp.json();
+            } catch {
+                return {};
+            }
+        }
+
+        function base64ToBlob(base64, contentType) {
+            const byteChars = atob(base64);
+            const byteNumbers = new Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+            const byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: contentType });
+        }
+
+        async function sha256Hex(str) {
+            const enc = new TextEncoder().encode(str);
+            const hash = await crypto.subtle.digest('SHA-256', enc);
+            const bytes = Array.from(new Uint8Array(hash));
+            return bytes.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function ttsCacheKey(provider, voice, rate, pitch, text) {
+            const h = await sha256Hex(`${provider}|${voice}|${rate}|${pitch}|${text}`);
+            return `${provider}:${voice}:${rate}:${pitch}:${h}`;
+        }
+
+        // IndexedDB cache for TTS
+        let ttsDBPromise = null;
+        function ttsDB() {
+            if (ttsDBPromise) return ttsDBPromise;
+            ttsDBPromise = new Promise((resolve, reject) => {
+                const req = indexedDB.open('ttsCache', 1);
+                req.onupgradeneeded = (e) => {
+                    const db = req.result;
+                    if (!db.objectStoreNames.contains('audio')) {
+                        const store = db.createObjectStore('audio', { keyPath: 'key' });
+                        store.createIndex('created', 'created');
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+            return ttsDBPromise;
+        }
+
+        async function ttsCacheGet(key) {
+            try {
+                const db = await ttsDB();
+                return await new Promise((resolve, reject) => {
+                    const tx = db.transaction('audio', 'readonly');
+                    const store = tx.objectStore('audio');
+                    const getReq = store.get(key);
+                    getReq.onsuccess = () => {
+                        const rec = getReq.result;
+                        resolve(rec ? rec.blob : null);
+                    };
+                    getReq.onerror = () => resolve(null);
+                });
+            } catch { return null; }
+        }
+
+        async function ttsCachePut(key, blob) {
+            try {
+                const db = await ttsDB();
+                await new Promise((resolve, reject) => {
+                    const tx = db.transaction('audio', 'readwrite');
+                    const store = tx.objectStore('audio');
+                    store.put({ key, blob, created: Date.now() });
+                    tx.oncomplete = resolve;
+                    tx.onerror = () => resolve();
+                });
+                // Opportunistic prune over 120 entries
+                pruneTTSCache(120, 100).catch(() => {});
+            } catch {}
+        }
+
+        async function pruneTTSCache(max = 120, keep = 100) {
+            const db = await ttsDB();
+            const count = await new Promise((resolve) => {
+                const tx = db.transaction('audio', 'readonly');
+                const store = tx.objectStore('audio');
+                const req = store.count();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => resolve(0);
+            });
+            if (count <= max) return;
+            const toDelete = count - keep;
+            await new Promise((resolve) => {
+                const tx = db.transaction('audio', 'readwrite');
+                const store = tx.objectStore('audio');
+                const idx = store.index('created');
+                let removed = 0;
+                idx.openCursor().onsuccess = (e) => {
+                    const cursor = e.target.result;
+                    if (cursor && removed < toDelete) {
+                        store.delete(cursor.primaryKey);
+                        removed++;
+                        cursor.continue();
+                    } else {
+                        resolve();
+                    }
+                };
+            });
+        }
+
+        function playAudioUrl(url) {
+            return new Promise((resolve, reject) => {
+                try { if (currentAudio) { currentAudio.pause(); currentAudio = null; } } catch {}
+                const audio = new Audio(url);
+                currentAudio = audio;
+                audio.onended = () => { currentAudio = null; resolve(); };
+                audio.onerror = (e) => { currentAudio = null; reject(e); };
+                audio.play().catch(err => { currentAudio = null; reject(err); });
+            });
+        }
+
+        function playAudioBlob(blob) {
+            return new Promise((resolve, reject) => {
+                const url = URL.createObjectURL(blob);
+                try { if (currentAudio) { currentAudio.pause(); currentAudio = null; } } catch {}
+                const audio = new Audio(url);
+                currentAudio = audio;
+                audio.onended = () => { currentAudio = null; URL.revokeObjectURL(url); resolve(); };
+                audio.onerror = (e) => { currentAudio = null; URL.revokeObjectURL(url); reject(e); };
+                audio.play().catch(err => { currentAudio = null; URL.revokeObjectURL(url); reject(err); });
+            });
+        }
+        
+        // ================================
+        // Initialize on page load
+        // ================================
+        
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Load voices for speech synthesis
+        if ('speechSynthesis' in window) {
+            speechSynthesis.onvoiceschanged = () => {
+                speechSynthesis.getVoices();
+            };
+        }
+
+        async function testTTS() {
+            try {
+                const sample = 'Sannu! Ina fata kana jin daɗi. Bari mu gwada murya.';
+                await speakText(sample);
+            } catch (e) {
+                showStatus('Test TTS failed: ' + (e.message || e), 'error');
+            }
+        }
+
+        function stopAllAudio() {
+            try { if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; } } catch {}
+            try { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); } catch {}
+        }
+
+        function stopAutoNow() {
+            stopAllAudio();
+            stopVoiceInput();
+            config.autoListen = false;
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+            const btn = document.getElementById('auto-listen-btn');
+            if (btn) btn.textContent = '🎧 Auto Listen: Off';
+            clearAutoListenTimeout();
+            showStatus('Stopped auto conversation and audio', 'info');
+        }
+
+        async function startMicVisualizer() {
+            try {
+                if (!navigator.mediaDevices?.getUserMedia) throw new Error('getUserMedia not supported');
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioCtx.createMediaStreamSource(micStream);
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+                source.connect(analyser);
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                const bars = Array.from(document.querySelectorAll('#audio-viz .wave'));
+                const animate = () => {
+                    if (!analyser) return;
+                    analyser.getByteTimeDomainData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < dataArray.length; i++) {
+                        const v = (dataArray[i] - 128) / 128; // -1..1
+                        sum += Math.abs(v);
+                    }
+                    const avg = sum / dataArray.length; // 0..1
+                    const height = Math.max(6, Math.min(24, Math.round(avg * 80))); // px
+                    bars.forEach((el, idx) => {
+                        const variance = (idx % 3) * 4;
+                        el.style.height = (height + variance) + 'px';
+                    });
+                    micVizRAF = requestAnimationFrame(animate);
+                };
+                micVizRAF = requestAnimationFrame(animate);
+            } catch (e) {
+                // Silently ignore; CSS animation will show
+            }
+        }
+
+        function stopMicVisualizer() {
+            try {
+                if (micVizRAF) cancelAnimationFrame(micVizRAF);
+                micVizRAF = null;
+                if (analyser && analyser.disconnect) analyser.disconnect();
+                analyser = null;
+                if (audioCtx && audioCtx.close) audioCtx.close();
+                audioCtx = null;
+                if (micStream) {
+                    micStream.getTracks().forEach(t => t.stop());
+                }
+                micStream = null;
+            } catch {}
+        }
+
+        function beep(duration = 90, frequency = 720) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const o = ctx.createOscillator();
+                const g = ctx.createGain();
+                o.connect(g);
+                g.connect(ctx.destination);
+                o.type = 'sine';
+                o.frequency.value = frequency;
+                g.gain.setValueAtTime(0.0001, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.02);
+                g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration/1000);
+                o.start();
+                o.stop(ctx.currentTime + duration/1000 + 0.01);
+            } catch {}
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const tag = (document.activeElement && document.activeElement.tagName) || '';
+            const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+            if (inInput) return;
+            if (e.key === 'm' || e.key === 'M') { e.preventDefault(); toggleVoiceInput(); }
+            if (e.key === 'p' || e.key === 'P') { e.preventDefault(); stopAllAudio(); }
+            if (e.key === 's' || e.key === 'S') { e.preventDefault(); stopAutoNow(); }
+            if (e.key === 'v' || e.key === 'V') { e.preventDefault(); toggleVoiceResponses(); }
+            if (e.key === 'l' || e.key === 'L') { e.preventDefault(); toggleAutoListen(); }
+        });
+    </script>
+ </body>
+ </html>

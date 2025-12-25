@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-labelledby="faviconTitle" role="img">
+  <title id="faviconTitle">Adamu Abubakar favicon</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&amp;display=swap');
+      .favicon-bg {
+        fill: #1e293b;
+      }
+      .favicon-text {
+        font-family: 'Great Vibes', cursive;
+        font-size: 36px;
+        font-weight: 400;
+        fill: #10b981;
+        text-anchor: middle;
+      }
+      .favicon-accent {
+        fill: #fbbf24;
+      }
+    </style>
+  </defs>
+  <rect width="100" height="100" rx="15" class="favicon-bg"/>
+  <text x="50" y="65" class="favicon-text">
+    <tspan class="favicon-accent">A</tspan>.<tspan class="favicon-accent">A</tspan>.
+  </text>
+</svg>
