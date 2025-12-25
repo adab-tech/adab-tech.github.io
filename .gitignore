@@ -1,47 +1,6 @@
 # Jekyll (legacy)
-_site/
 .sass-cache/
-.jekyll-cache/
-.jekyll-metadata
-vendor/
-
-# Bundler (legacy)
-Gemfile.lock
-.bundle/
-
-# Hugo
-public/
-resources/_gen/
-.hugo_build.lock
-
-# macOS
-.DS_Store
-
-# Windows
-Thumbs.db
-
-# Editor files
-*.swp
-*.swo
-*~
-.vscode/
-.idea/
-
-# Environment
-.env
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-backend/venv/
-backend/.env
-*.log
-
-# Model files
-*.jsonl
-model_info.json
+_site/
 .next
 temitope-hospital-starter/out
 node_modules
