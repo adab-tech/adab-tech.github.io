@@ -10,7 +10,7 @@ const path = require('path');
   try {
     browser = await chromium.launch();
     const page = await browser.newPage();
-  await page.goto('http://127.0.0.1:8080', { waitUntil: 'networkidle' });
+  await page.goto('http://127.0.0.1:8000', { waitUntil: 'networkidle' });
 
     // inject axe-core into the page by adding the source as a script
     await page.addScriptTag({ content: axeCore.source });
