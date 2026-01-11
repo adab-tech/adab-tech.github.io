@@ -1,0 +1,41 @@
+name: accessibility-audits
+
+on:
+  push:
+    branches: [ main, site/accessibility-contrast ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site (Eleventy)
+        run: npm run build
+
+      - name: Serve site in background
+        run: npx http-server _site -p 8080 &
+
+      - name: Run pa11y audit
+        run: npx pa11y http://127.0.0.1:8080 --reporter json > pa11y-report.json
+
+      - name: Run axe audit (Playwright)
+        run: node axe-audit.js > axe-report.json
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-reports
+          path: |
+            pa11y-report.json
+            axe-report.json
