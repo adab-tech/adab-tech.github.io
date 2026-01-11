@@ -5,12 +5,15 @@
   "scripts": {
     "start": "python3 -m http.server 8000",
     "pa11y": "pa11y http://127.0.0.1:8000 --reporter cli",
-    "axe-audit": "node axe-audit.js"
+    "axe-audit": "node axe-audit.js",
+    "audit:pa11y": "pa11y http://127.0.0.1:8000 --reporter json > pa11y-report.json",
+    "audit:axe": "node axe-audit.js > axe-report.json",
+    "audit": "npm run audit:pa11y && npm run audit:axe"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.7.0",
-  "playwright": "^1.49.0",
-  "axe-core": "^4.11.0",
+    "playwright": "^1.49.0",
+    "axe-core": "^4.11.0",
     "pa11y": "^6.1.4"
   }
 }

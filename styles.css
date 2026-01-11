@@ -13,12 +13,13 @@
   --color-secondary-dark: #6d28d9;
   --color-accent: #f59e0b;
   
-  --color-text: #1e293b;
-  --color-text-light: #64748b;
+  /* Primary text and backgrounds tuned for stronger WCAG contrast on desktop */
+  --color-text: #0f1724; /* darker than before for better contrast on white */
+  --color-text-light: #334155; /* stronger secondary text for readability */
   --color-background: #ffffff;
-  --color-background-alt: #f8fafc;
+  --color-background-alt: #f1f5f9; /* slightly darker alt section background to lift content */
   --color-surface: #ffffff;
-  --color-border: #e2e8f0;
+  --color-border: #cbd5e1; /* darker border for clearer separation */
   
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
@@ -71,8 +72,9 @@
   --transition-slow: 350ms ease;
 
   /* Focus ring */
-  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.35);
-  --focus-ring-dark: 0 0 0 3px rgba(59, 130, 246, 0.45);
+  /* Stronger focus rings for keyboard users */
+  --focus-ring: 0 0 0 4px rgba(37, 99, 235, 0.45);
+  --focus-ring-dark: 0 0 0 4px rgba(59, 130, 246, 0.55);
   
   /* Container */
   --container-max-width: 1280px;
@@ -171,6 +173,7 @@ a {
 
 a:hover {
   color: var(--color-primary-dark);
+  text-decoration: underline;
 }
 
 /* Visible, consistent focus treatment */
@@ -555,7 +558,7 @@ button {
   color: var(--color-text);
 }
 
-.code-body .comment { color: #6b7280; }
+.code-body .comment { color: #475569; /* stronger contrast for comments */ }
 .code-body .keyword { color: #7c3aed; font-weight: 600; }
 .code-body .function { color: #2563eb; }
 .code-body .string { color: #059669; }
@@ -1424,11 +1427,12 @@ section {
   }
 }
 
-/* Focus styles */
+/* Focus styles: use visible focus ring without relying solely on outline */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-md);
 }
 
 /* High contrast mode support */
@@ -1439,5 +1443,31 @@ button:focus-visible {
   
   [data-theme="dark"] {
     --color-border: #ffffff;
+  }
+}
+
+/* Desktop-only contrast boost for improved WCAG compliance on large screens */
+@media (min-width: 1025px) {
+  :root {
+    --color-text: #0b1220;
+    --color-text-light: #334155;
+    --color-background-alt: #eef2f7;
+    --color-border: #bfcfe6;
+  }
+
+  body {
+    font-size: 1.02rem; /* slight increase for desktop readability */
+  }
+
+  .hero-description,
+  .project-description,
+  .about-text p,
+  .cta-card p {
+    color: var(--color-text-light);
+  }
+
+  /* strengthen nav link contrast on desktop */
+  .nav-link {
+    color: var(--color-text);
   }
 }
