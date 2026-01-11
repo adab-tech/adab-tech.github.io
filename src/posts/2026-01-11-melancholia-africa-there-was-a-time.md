@@ -1,10 +1,10 @@
 ---
-title: "Melancholia Africa: There was a time,"
+title: "melancholia-africana"
 excerpt: "A poem of longing, memory, and the small comforts of home."
 description: "A short poem about exile, food, memory, and longing."
 date: 2026-01-11
 layout: layouts/post.njk
-permalink: /blog/posts/melancholia-africa-there-was-a-time/
+permalink: /blog/posts/melancholia-africana/
 tags:
   - poetry
   - africa
