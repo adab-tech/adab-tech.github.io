@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-01-11T22:27:19.510Z",
+  "timestamp": "2026-01-11T22:59:15.144Z",
   "url": "http://127.0.0.1:8000/",
   "toolOptions": {
     "runOnly": {
@@ -25,24 +25,6 @@
     "reporter": "v1"
   },
   "inapplicable": [
-    {
-      "id": "meta-viewport",
-      "impact": null,
-      "tags": [
-        "cat.sensory-and-visual-cues",
-        "wcag2aa",
-        "wcag144",
-        "EN-301-549",
-        "EN-9.1.4.4",
-        "ACT",
-        "RGAAv4",
-        "RGAA-10.4.2"
-      ],
-      "description": "Ensure <meta name=\"viewport\"> does not disable text scaling and zooming",
-      "help": "Zooming and scaling must not be disabled",
-      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/meta-viewport?application=axeAPI",
-      "nodes": []
-    },
     {
       "id": "valid-lang",
       "impact": null,
@@ -89,22 +71,47 @@
             {
               "id": "color-contrast",
               "data": {
-                "fgColor": "#000000",
+                "fgColor": "#0b1220",
                 "bgColor": "#ffffff",
-                "contrastRatio": 21,
-                "fontSize": "24.0pt (32px)",
-                "fontWeight": "bold",
-                "expectedContrastRatio": "3:1"
+                "contrastRatio": 18.72,
+                "fontSize": "12.2pt (16.32px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 21"
+              "message": "Element has sufficient color contrast of 18.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<h1>Directory listing for /</h1>",
+          "html": "<p>&lt;!doctype html&gt;</p>",
+          "target": [
+            "body > p"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#0b1220",
+                "bgColor": "#ffffff",
+                "contrastRatio": 18.72,
+                "fontSize": "24.5pt (32.64px)",
+                "fontWeight": "bold",
+                "expectedContrastRatio": "3:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 18.72"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<h1>Adamu Abubakar</h1>",
           "target": [
             "h1"
           ]
@@ -114,24 +121,24 @@
             {
               "id": "color-contrast",
               "data": {
-                "fgColor": "#0000ee",
+                "fgColor": "#0b1220",
                 "bgColor": "#ffffff",
-                "contrastRatio": 9.39,
-                "fontSize": "12.0pt (16px)",
+                "contrastRatio": 18.72,
+                "fontSize": "12.2pt (16.32px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 9.39"
+              "message": "Element has sufficient color contrast of 18.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<a href=\"blog/\">blog/</a>",
+          "html": "<p>Welcome — this site hosts notes, projects and a blog. Visit the <a href=\"/blog/\">blog</a>.</p>",
           "target": [
-            "a[href$=\"blog/\"]"
+            "main > p"
           ]
         },
         {
@@ -139,74 +146,61 @@
             {
               "id": "color-contrast",
               "data": {
-                "fgColor": "#0000ee",
+                "fgColor": "#2563eb",
                 "bgColor": "#ffffff",
-                "contrastRatio": 9.39,
-                "fontSize": "12.0pt (16px)",
+                "contrastRatio": 5.16,
+                "fontSize": "12.2pt (16.32px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 9.39"
+              "message": "Element has sufficient color contrast of 5.16"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<a href=\"script.js\">script.js</a>",
+          "html": "<a href=\"/blog/\">blog</a>",
           "target": [
-            "a[href$=\"script.js\"]"
+            "a"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "meta-viewport",
+      "impact": null,
+      "tags": [
+        "cat.sensory-and-visual-cues",
+        "wcag2aa",
+        "wcag144",
+        "EN-301-549",
+        "EN-9.1.4.4",
+        "ACT",
+        "RGAAv4",
+        "RGAA-10.4.2"
+      ],
+      "description": "Ensure <meta name=\"viewport\"> does not disable text scaling and zooming",
+      "help": "Zooming and scaling must not be disabled",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/meta-viewport?application=axeAPI",
+      "nodes": [
         {
           "any": [
             {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#0000ee",
-                "bgColor": "#ffffff",
-                "contrastRatio": 9.39,
-                "fontSize": "12.0pt (16px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
+              "id": "meta-viewport",
+              "data": null,
               "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 9.39"
+              "impact": "moderate",
+              "message": "<meta> tag does not disable zooming on mobile devices"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<a href=\"static/\">static/</a>",
+          "html": "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">",
           "target": [
-            "a[href$=\"static/\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#0000ee",
-                "bgColor": "#ffffff",
-                "contrastRatio": 9.39,
-                "fontSize": "12.0pt (16px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 9.39"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<a href=\"styles.css\">styles.css</a>",
-          "target": [
-            "a[href$=\"styles.css\"]"
+            "meta[name=\"viewport\"]"
           ]
         }
       ]
