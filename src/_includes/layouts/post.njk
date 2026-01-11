@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title }} - Adamu Abubakar</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <nav class="navbar" id="navbar" aria-label="Main navigation">
+      <div class="nav-container">
+        <a href="/" class="nav-brand">
+          <span class="brand-name">Adamu Abubakar</span>
+        </a>
+        <div class="nav-menu">
+          <a href="/blog/" class="nav-link">Blog</a>
+          <a href="/">Home</a>
+        </div>
+      </div>
+    </nav>
+
+    <main id="main-content" tabindex="-1">
+      <section style="padding-top:6rem;">
+        <div class="container">
+          <article class="post">
+            <h1 class="section-title">{{ title }}</h1>
+            <p class="lead">{{ excerpt }}</p>
+            <div class="post-body">{{ content | safe }}</div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-bottom">
+          <p>&copy; {{ "now" | date("YYYY") }} Adamu Abubakar.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
