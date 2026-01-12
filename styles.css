@@ -52,7 +52,8 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  
+    /* Slightly larger base type for improved readability */
+    --font-size-base: 1.0625rem;
   /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
@@ -65,11 +66,18 @@
   --elevate: translateY(-6px);
   --shine: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0) 70%);
   
-  /* Transitions */
-  --transition-fast: 150ms ease;
+    /* Primary refined to a cleaner, more vivid blue for better contrast */
+    --color-primary: #0b5cff;
+    --color-primary-dark: #053ea6;
+    --color-primary-light: #3d8bff;
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    --gradient-hero: linear-gradient(135deg, rgba(11, 92, 255, 0.08) 0%, rgba(124, 58, 237, 0.06) 100%);
   --transition-base: 250ms ease;
   --transition-slow: 350ms ease;
 
+
+    /* Subtle elevation for interactive elements */
+    --interactive-elev: 0 8px 30px rgba(2,6,23,0.08);
   /* Focus ring */
   --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.35);
   --focus-ring-dark: 0 0 0 3px rgba(59, 130, 246, 0.45);
@@ -80,6 +88,91 @@
 }
 
 /* Dark Mode Variables */
+
+  /* Buttons - refined */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.6rem;
+    font-weight: 600;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .btn:focus-visible {
+    box-shadow: var(--focus-ring), var(--interactive-elev);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: #fff;
+    border: none;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Hero layout improvements */
+  .hero .hero-content {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 2.25rem;
+    align-items: center;
+  }
+
+  @media (max-width: 880px) {
+    .hero .hero-content {
+      grid-template-columns: 1fr;
+      padding-top: 1.25rem;
+    }
+  }
+
+  /* Hero visual card */
+  .hero-visual .hero-card {
+    border-radius: var(--radius-xl);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 1rem;
+    box-shadow: var(--interactive-elev);
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+  }
+
+  .hero-visual .hero-card.floating:hover {
+    transform: translateY(-8px) rotate(-0.5deg);
+    box-shadow: 0 18px 60px rgba(2,6,23,0.12);
+  }
+
+  /* Code snippet polish */
+  .code-snippet {
+    background: linear-gradient(180deg, rgba(12,17,23,0.98), rgba(20,24,28,0.98));
+    color: #dbeafe;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+    font-size: 0.875rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .code-header .dot { width: 8px; height: 8px; display: inline-block; border-radius: 999px; margin-right: 6px; background: #ff5f56; }
+
+  /* Stronger visible focus for keyboard users */
+  :where(a, button, input, textarea, select, summary):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(11,92,255,0.14), 0 6px 18px rgba(2,6,23,0.08);
+    border-radius: var(--radius-md);
+  }
 [data-theme="dark"] {
   --color-text: #f1f5f9;
   --color-text-light: #94a3b8;
