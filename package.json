@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "start": "python3 -m http.server 8000",
+    "build": "npx @11ty/eleventy",
+    "dev": "npx @11ty/eleventy --serve",
     "pa11y": "pa11y http://127.0.0.1:8000 --reporter cli",
     "axe-audit": "node axe-audit.js"
   },
