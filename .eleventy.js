@@ -10,6 +10,11 @@ module.exports = function(eleventyConfig) {
   });
 
   return {
+    templateFormats: ["md", "njk", "html"],
+    pathPrefix: "/",
+    markdownTemplateEngine: "njk",
+    htmlTemplateEngine: "njk",
+    dataTemplateEngine: "njk",
     dir: {
       input: "src",
       includes: "_includes",
@@ -18,3 +23,4 @@ module.exports = function(eleventyConfig) {
     }
   };
 };
+
