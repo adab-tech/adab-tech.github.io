@@ -424,7 +424,12 @@ const ATS = {
         <div>
           <h4 class="text-lg font-bold text-gray-900 mb-3">Improvement Suggestions</h4>
           <div class="space-y-3">
-            ${suggestions.slice(0, 8).map(sug => `
+            ${suggestions.slice(0, 8).map(sug => {
+              const issue = Utils && typeof Utils.escapeHtml === 'function' ? Utils.escapeHtml(sug.issue) : String(sug.issue || '');
+              const suggestion = Utils && typeof Utils.escapeHtml === 'function' ? Utils.escapeHtml(sug.suggestion) : String(sug.suggestion || '');
+              const examples = sug.examples && sug.examples.length ? (Utils && typeof Utils.escapeHtml === 'function' ? sug.examples.map(ex => Utils.escapeHtml(ex)).join(', ') : sug.examples.join(', ')) : '';
+
+              return `
               <div class="p-4 rounded-lg border-l-4 ${
                 sug.severity === 'high' ? 'border-red-500 bg-red-50' :
                 sug.severity === 'medium' ? 'border-yellow-500 bg-yellow-50' :
@@ -439,17 +444,17 @@ const ATS = {
                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                   </svg>
                   <div class="flex-1">
-                    <div class="font-semibold text-gray-900 text-sm">${sug.issue}</div>
-                    <div class="text-sm text-gray-700 mt-1">${sug.suggestion}</div>
-                    ${sug.examples ? `
+                    <div class="font-semibold text-gray-900 text-sm">${issue}</div>
+                    <div class="text-sm text-gray-700 mt-1">${suggestion}</div>
+                    ${examples ? `
                       <div class="mt-2 text-xs text-gray-600">
-                        <span class="font-semibold">Examples:</span> ${sug.examples.join(', ')}
+                        <span class="font-semibold">Examples:</span> ${examples}
                       </div>
                     ` : ''}
                   </div>
                 </div>
               </div>
-            `).join('')}
+            `}).join('')}
           </div>
         </div>
       ` : '<p class="text-green-600 font-medium">✓ No issues found! Your resume looks great.</p>'}

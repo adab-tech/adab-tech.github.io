@@ -1,0 +1,34 @@
+:root {
+  /* Palette */
+  --brand-500: #0b5cff;
+  --brand-600: #053ea6;
+  --accent-500: #7c3aed;
+  --muted-400: #94a3b8;
+  --bg: #ffffff;
+  --surface: #f8fafc;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+
+  /* Type scale */
+  --type-00: 10px;
+  --type-0: 12px;
+  --type-1: 14px;
+  --type-2: 16px;
+  --type-3: 18px;
+  --type-4: 20px;
+  --type-5: 24px;
+  --type-6: 32px;
+  --type-7: 42px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+}
+
+/* Small utilities for prototyping */
+.u-center { text-align: center; }
+.u-muted { color: var(--text-muted); }

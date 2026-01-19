@@ -26,13 +26,14 @@ const PDFExport = {
       // Get the resume HTML content
       const htmlContent = Templates.render(resumeData, templateId);
       
-      // Create temporary container
-      const tempContainer = document.createElement('div');
-      tempContainer.innerHTML = htmlContent;
-      tempContainer.style.position = 'absolute';
-      tempContainer.style.left = '-9999px';
-      tempContainer.style.width = '8.5in';
-      document.body.appendChild(tempContainer);
+  // Create temporary container and sanitize HTML before inserting into the DOM
+  const tempContainer = document.createElement('div');
+  tempContainer.style.position = 'absolute';
+  tempContainer.style.left = '-9999px';
+  tempContainer.style.width = '8.5in';
+  // Use sanitizer to remove scripts and unsafe attributes from template HTML
+  Utils.sanitizeAndSetInnerHTML(tempContainer, htmlContent);
+  document.body.appendChild(tempContainer);
 
       // Use html2canvas if available, otherwise fallback to text-based PDF
       if (typeof html2canvas !== 'undefined') {

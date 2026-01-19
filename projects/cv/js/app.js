@@ -28,78 +28,16 @@ const App = {
       
       // Initial preview render
       this.updatePreview();
-      
+
       // Setup keyboard shortcuts
       this.setupKeyboardShortcuts();
-      
+
       this.isInitialized = true;
       console.log('CV Builder initialized successfully');
     } catch (error) {
       console.error('Initialization error:', error);
       Utils.showToast('Failed to initialize application', 'error');
     }
-  },
-
-  /**
-   * Setup all event listeners
-   */
-  setupEventListeners() {
-    // Contact information inputs
-    this.setupContactListeners();
-    
-    // Summary section
-    this.setupSummaryListeners();
-    
-    // Experience section
-    this.setupExperienceListeners();
-    
-    // Education section
-    this.setupEducationListeners();
-    
-    // Skills section
-    this.setupSkillsListeners();
-    
-    // Template selector
-    this.setupTemplateListener();
-    
-    // Toolbar buttons
-    this.setupToolbarListeners();
-    
-    // Settings modal
-    this.setupSettingsListeners();
-    
-    // ATS score modal
-    this.setupAtsListeners();
-  },
-
-  /**
-   * Setup contact information listeners
-   */
-  setupContactListeners() {
-    const contactFields = ['fullName', 'email', 'phone', 'location', 'linkedin', 'website'];
-    
-    contactFields.forEach(field => {
-      const input = document.getElementById(field);
-      if (input) {
-        input.addEventListener('input', Utils.debounce(() => {
-          this.currentResume.content.contact[field] = input.value;
-          this.saveAndUpdate();
-        }, 300));
-
-        // Validation on blur
-        input.addEventListener('blur', () => {
-          if (field === 'email' && input.value && !Utils.validateEmail(input.value)) {
-            input.classList.add('border-red-500');
-            Utils.showToast('Please enter a valid email address', 'warning');
-          } else if ((field === 'linkedin' || field === 'website') && input.value && !Utils.validateUrl(input.value)) {
-            input.classList.add('border-red-500');
-            Utils.showToast('Please enter a valid URL', 'warning');
-          } else {
-            input.classList.remove('border-red-500');
-          }
-        });
-      }
-    });
   },
 
   /**
@@ -191,98 +129,37 @@ const App = {
     this.saveAndUpdate();
   },
 
-  /**
-   * Create experience entry DOM element
-   */
-  createExperienceElement(entry) {
-    const div = document.createElement('div');
-    div.className = 'experience-entry bg-gray-50 p-4 rounded-lg border border-gray-200';
-    div.dataset.id = entry.id;
-    
-    div.innerHTML = `
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-900">Experience Entry</h3>
-        <button class="remove-experience-btn text-red-600 hover:text-red-800 transition-colors" title="Remove entry">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="space-y-3">
-        <div class="grid md:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Job Title *</label>
-            <input type="text" class="exp-title w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Software Engineer" value="${Utils.escapeHtml(entry.title || '')}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Company *</label>
-            <input type="text" class="exp-company w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Tech Corp" value="${Utils.escapeHtml(entry.company || '')}">
-          </div>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" class="exp-location w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="San Francisco, CA" value="${Utils.escapeHtml(entry.location || '')}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
-            <input type="month" class="exp-start w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" value="${entry.startDate || ''}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-            <input type="month" class="exp-end w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" value="${entry.endDate || ''}" ${entry.current ? 'disabled' : ''}>
-          </div>
-        </div>
-        
-        <div class="flex items-center">
-          <input type="checkbox" class="exp-current w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary" ${entry.current ? 'checked' : ''}>
-          <label class="ml-2 text-sm text-gray-700">I currently work here</label>
-        </div>
-        
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="block text-sm font-medium text-gray-700">Achievements / Responsibilities</label>
-            <button class="add-bullet-btn flex items-center space-x-1 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors font-medium">
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-              </svg>
-              <span>Add Bullet</span>
-            </button>
-          </div>
-          <div class="bullets-list space-y-2">
-            ${entry.bullets.map((bullet, index) => this.createBulletHTML(bullet, index)).join('')}
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Add event listeners
-    this.attachExperienceEventListeners(div, entry);
-    
-    return div;
-  },
+  // createExperienceElement removed (DOM-based implementation present later)
 
   /**
-   * Create bullet point HTML
+   * Create bullet point element
    */
-  createBulletHTML(bullet, index) {
-    return `
-      <div class="bullet-item flex items-start space-x-2" data-index="${index}">
-        <textarea class="bullet-text flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" rows="2" placeholder="Describe your achievement or responsibility...">${Utils.escapeHtml(bullet || '')}</textarea>
-        <button class="enhance-bullet-btn p-2 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors" title="Enhance with AI">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-        </button>
-        <button class="remove-bullet-btn p-2 text-red-600 hover:text-red-800 transition-colors" title="Remove bullet">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
-    `;
+  createBulletElement(bullet, index) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'bullet-item flex items-start space-x-2';
+    wrapper.dataset.index = index;
+
+    const textarea = document.createElement('textarea');
+    textarea.className = 'bullet-text flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    textarea.rows = 2;
+    textarea.placeholder = 'Describe your achievement or responsibility...';
+    textarea.value = bullet || '';
+
+    const enhanceBtn = document.createElement('button');
+    enhanceBtn.className = 'enhance-bullet-btn p-2 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors';
+    enhanceBtn.title = 'Enhance with AI';
+    enhanceBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>`;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-bullet-btn p-2 text-red-600 hover:text-red-800 transition-colors';
+    removeBtn.title = 'Remove bullet';
+    removeBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`;
+
+    wrapper.appendChild(textarea);
+    wrapper.appendChild(enhanceBtn);
+    wrapper.appendChild(removeBtn);
+
+    return wrapper;
   },
 
   /**
@@ -344,10 +221,9 @@ const App = {
       if (exp) {
         exp.bullets.push('');
         const bulletsList = entryElement.querySelector('.bullets-list');
-        const bulletElement = document.createElement('div');
-        bulletElement.innerHTML = this.createBulletHTML('', exp.bullets.length - 1);
-        bulletsList.appendChild(bulletElement.firstElementChild);
-        this.attachBulletEventListeners(bulletElement.firstElementChild, id);
+        const bulletEl = this.createBulletElement('', exp.bullets.length - 1);
+        bulletsList.appendChild(bulletEl);
+        this.attachBulletEventListeners(bulletEl, id);
         this.saveAndUpdate();
       }
     });
@@ -458,53 +334,55 @@ const App = {
    * Create education entry DOM element
    */
   createEducationElement(entry) {
-    const div = document.createElement('div');
-    div.className = 'education-entry bg-gray-50 p-4 rounded-lg border border-gray-200';
-    div.dataset.id = entry.id;
-    
-    div.innerHTML = `
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-900">Education Entry</h3>
-        <button class="remove-education-btn text-red-600 hover:text-red-800 transition-colors" title="Remove entry">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="space-y-3">
-        <div class="grid md:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Degree *</label>
-            <input type="text" class="edu-degree w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Bachelor of Science in Computer Science" value="${Utils.escapeHtml(entry.degree || '')}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Institution *</label>
-            <input type="text" class="edu-institution w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="University Name" value="${Utils.escapeHtml(entry.institution || '')}">
-          </div>
-        </div>
-        
-        <div class="grid md:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" class="edu-location w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="Boston, MA" value="${Utils.escapeHtml(entry.location || '')}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Graduation Date</label>
-            <input type="month" class="edu-graduation w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" value="${entry.graduationDate || ''}">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">GPA (optional)</label>
-            <input type="text" class="edu-gpa w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm" placeholder="3.8" value="${Utils.escapeHtml(entry.gpa || '')}">
-          </div>
-        </div>
-      </div>
-    `;
-    
-    // Add event listeners
-    this.attachEducationEventListeners(div, entry);
-    
-    return div;
+  const div = document.createElement('div');
+  div.className = 'education-entry bg-gray-50 p-4 rounded-lg border border-gray-200';
+  div.dataset.id = entry.id;
+
+  const header = document.createElement('div');
+  header.className = 'flex items-center justify-between mb-4';
+  const h3 = document.createElement('h3'); h3.className = 'text-lg font-semibold text-gray-900'; h3.textContent = 'Education Entry';
+  const removeBtn = document.createElement('button'); removeBtn.className = 'remove-education-btn text-red-600 hover:text-red-800 transition-colors'; removeBtn.title = 'Remove entry'; removeBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`;
+  header.appendChild(h3); header.appendChild(removeBtn);
+
+  const body = document.createElement('div'); body.className = 'space-y-3';
+
+  const grid1 = document.createElement('div'); grid1.className = 'grid md:grid-cols-2 gap-3';
+  const degWrap = document.createElement('div');
+  const degLabel = document.createElement('label'); degLabel.className = 'block text-sm font-medium text-gray-700 mb-1'; degLabel.textContent = 'Degree *';
+  const degInput = document.createElement('input'); degInput.type = 'text'; degInput.className = 'edu-degree w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm'; degInput.placeholder = 'Bachelor of Science in Computer Science'; degInput.value = entry.degree || '';
+  degWrap.appendChild(degLabel); degWrap.appendChild(degInput);
+
+  const instWrap = document.createElement('div');
+  const instLabel = document.createElement('label'); instLabel.className = 'block text-sm font-medium text-gray-700 mb-1'; instLabel.textContent = 'Institution *';
+  const instInput = document.createElement('input'); instInput.type = 'text'; instInput.className = 'edu-institution w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm'; instInput.placeholder = 'University Name'; instInput.value = entry.institution || '';
+  instWrap.appendChild(instLabel); instWrap.appendChild(instInput);
+
+  grid1.appendChild(degWrap); grid1.appendChild(instWrap);
+
+  const grid2 = document.createElement('div'); grid2.className = 'grid md:grid-cols-3 gap-3';
+  const locWrap = document.createElement('div');
+  const locLabel = document.createElement('label'); locLabel.className = 'block text-sm font-medium text-gray-700 mb-1'; locLabel.textContent = 'Location';
+  const locInput = document.createElement('input'); locInput.type = 'text'; locInput.className = 'edu-location w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm'; locInput.placeholder = 'Boston, MA'; locInput.value = entry.location || '';
+  locWrap.appendChild(locLabel); locWrap.appendChild(locInput);
+
+  const gradWrap = document.createElement('div');
+  const gradLabel = document.createElement('label'); gradLabel.className = 'block text-sm font-medium text-gray-700 mb-1'; gradLabel.textContent = 'Graduation Date';
+  const gradInput = document.createElement('input'); gradInput.type = 'month'; gradInput.className = 'edu-graduation w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm'; gradInput.value = entry.graduationDate || '';
+  gradWrap.appendChild(gradLabel); gradWrap.appendChild(gradInput);
+
+  const gpaWrap = document.createElement('div');
+  const gpaLabel = document.createElement('label'); gpaLabel.className = 'block text-sm font-medium text-gray-700 mb-1'; gpaLabel.textContent = 'GPA (optional)';
+  const gpaInput = document.createElement('input'); gpaInput.type = 'text'; gpaInput.className = 'edu-gpa w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm'; gpaInput.placeholder = '3.8'; gpaInput.value = entry.gpa || '';
+  gpaWrap.appendChild(gpaLabel); gpaWrap.appendChild(gpaInput);
+
+  grid2.appendChild(locWrap); grid2.appendChild(gradWrap); grid2.appendChild(gpaWrap);
+
+  body.appendChild(grid1); body.appendChild(grid2);
+
+  div.appendChild(header); div.appendChild(body);
+
+  this.attachEducationEventListeners(div, entry);
+  return div;
   },
 
   /**
@@ -610,44 +488,61 @@ const App = {
    */
   renderSkills() {
     const container = document.getElementById('skillsList');
+    // Clear container
     container.innerHTML = '';
-    
+
     const skills = this.currentResume.content.skills;
-    
+
     Object.entries(skills).forEach(([category, skillList]) => {
       if (skillList && skillList.length > 0) {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'skill-category mb-3';
-        
-        categoryDiv.innerHTML = `
-          <h4 class="text-sm font-semibold text-gray-700 mb-2">${category}</h4>
-          <div class="flex flex-wrap gap-2">
-            ${skillList.map(skill => `
-              <div class="skill-item flex items-center space-x-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                <span class="skill-text">${Utils.escapeHtml(skill)}</span>
-                <button class="remove-skill-btn text-blue-600 hover:text-blue-900" data-category="${category}" data-skill="${Utils.escapeHtml(skill)}">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+        // Header
+        const header = document.createElement('h4');
+        header.className = 'text-sm font-semibold text-gray-700 mb-2';
+        header.textContent = category;
+        categoryDiv.appendChild(header);
+
+        // Skills container
+        const skillsWrap = document.createElement('div');
+        skillsWrap.className = 'flex flex-wrap gap-2';
+
+        skillList.forEach(skill => {
+          const skillItem = document.createElement('div');
+          skillItem.className = 'skill-item flex items-center space-x-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm';
+
+          const span = document.createElement('span');
+          span.className = 'skill-text';
+          span.textContent = skill;
+
+          const btn = document.createElement('button');
+          btn.className = 'remove-skill-btn text-blue-600 hover:text-blue-900';
+          btn.setAttribute('data-category', category);
+          // Store raw skill value in dataset to avoid HTML-escaped entities
+          btn.dataset.skill = skill;
+
+          btn.innerHTML = `<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
-                </button>
-              </div>
-            `).join('')}
-          </div>
-        `;
-        
-        container.appendChild(categoryDiv);
-        
-        // Add remove listeners
-        categoryDiv.querySelectorAll('.remove-skill-btn').forEach(btn => {
+                  </svg>`;
+
+          // Attach listener
           btn.addEventListener('click', () => {
-            const category = btn.dataset.category;
+            const category = btn.getAttribute('data-category');
             const skill = btn.dataset.skill;
             if (confirm(`Remove "${skill}" from ${category}?`)) {
               this.removeSkill(category, skill);
               Utils.showToast('Skill removed', 'success');
             }
           });
+
+          skillItem.appendChild(span);
+          skillItem.appendChild(btn);
+          skillsWrap.appendChild(skillItem);
         });
+
+        categoryDiv.appendChild(skillsWrap);
+        container.appendChild(categoryDiv);
       }
     });
     
@@ -814,8 +709,8 @@ const App = {
         // Calculate score
         const scoreData = ATS.calculateScore(this.currentResume);
         
-        // Render results
-        contentDiv.innerHTML = ATS.renderScoreModal(scoreData);
+  // Render results (sanitize output before inserting)
+  Utils.sanitizeAndSetInnerHTML(contentDiv, ATS.renderScoreModal(scoreData));
       });
     }
     
@@ -939,8 +834,9 @@ const App = {
     if (!previewContainer) return;
     
     try {
-      const html = Templates.render(this.currentResume, this.currentResume.template);
-      previewContainer.innerHTML = html;
+  const html = Templates.render(this.currentResume, this.currentResume.template);
+  // Safely set preview HTML to avoid executing any injected scripts or event handlers
+  Utils.sanitizeAndSetInnerHTML(previewContainer, html);
     } catch (error) {
       console.error('Preview render error:', error);
       previewContainer.innerHTML = `
