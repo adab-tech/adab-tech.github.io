@@ -1,158 +1,149 @@
 /**
- * AI Integration Module
- * Handles OpenAI API calls for content generation
+ * Local AI-like utilities
+ *
+ * This module provides deterministic, client-side content generation and
+ * enhancement utilities so the app works completely offline without any
+ * external API keys. The functions are heuristic and template-driven but
+ * designed to give consistent, useful output for summaries, bullets, and
+ * keyword suggestions.
  */
 
 const AI = {
-  apiKey: null,
-  baseUrl: 'https://api.openai.com/v1/chat/completions',
-  model: 'gpt-3.5-turbo',
-  
-  /**
-   * Initialize AI module with API key from settings
-   */
-  init() {
-    const settings = Storage.getSettings();
-    this.apiKey = settings.apiKey;
-  },
+  // No external API required. init left for compatibility.
+  init() {},
 
-  /**
-   * Check if API key is configured
-   */
   isConfigured() {
-    return this.apiKey && this.apiKey.length > 0 && !this.apiKey.includes('[REDACTED]');
+    // Always configured: local features require no key
+    return true;
+  },
+
+  // Small curated lists used to improve bullets and summaries
+  _actionVerbs: [
+    'Led', 'Designed', 'Implemented', 'Built', 'Developed', 'Managed', 'Improved', 'Optimized',
+    'Spearheaded', 'Directed', 'Coordinated', 'Delivered', 'Authored', 'Reduced', 'Increased', 'Scaled'
+  ],
+
+  _impactPhrases: [
+    'resulting in', 'achieving', 'delivering', 'leading to', 'with an outcome of', 'producing'
+  ],
+
+  _commonKeywords: [
+    'team leadership', 'project management', 'stakeholder engagement', 'data analysis', 'machine learning',
+    'NLP', 'Python', 'JavaScript', 'cloud', 'AWS', 'communication', 'research', 'product', 'UX', 'agile'
+  ],
+
+  _pickRandom(list, seed = 0) {
+    // deterministic pseudo-random: use simple hash of list length and seed
+    const idx = Math.abs((list.length + seed) * 9301) % list.length;
+    return list[idx];
   },
 
   /**
-   * Make API call to OpenAI
+   * Generate a short professional summary using provided inputs.
+   * Returns a concise 2-4 sentence paragraph suitable for an ATS.
    */
-  async callAPI(messages, maxTokens = 300, temperature = 0.7) {
-    if (!this.isConfigured()) {
-      throw new Error('OpenAI API key not configured. Please add your API key in Settings.');
-    }
-
+  async generateSummary(jobTitle = 'Professional', yearsExperience = '5+', skills = '') {
     try {
-      const response = await fetch(this.baseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`
-        },
-        body: JSON.stringify({
-          model: this.model,
-          messages: messages,
-          max_tokens: maxTokens,
-          temperature: temperature
-        })
-      });
+      const skillsList = skills ? skills.split(/[,;]\s*/).slice(0,5) : [];
+      const skillPhrase = skillsList.length ? skillsList.join(', ') : 'cross-functional skills';
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || `API error: ${response.status}`);
-      }
+      const templates = [
+        `${jobTitle} with ${yearsExperience} years of experience in ${skillPhrase}. Proven track record of delivering measurable results and driving projects to completion on time and within scope. Excels at collaborating across teams and translating business needs into technical solutions.`,
+        `Results-oriented ${jobTitle} with ${yearsExperience} years' experience and expertise in ${skillPhrase}. Demonstrated ability to improve processes and drive impact through data-informed decisions and clear communication. Ready to contribute to high-performing teams and deliver value immediately.`,
+        `Experienced ${jobTitle} (${yearsExperience} years) skilled in ${skillPhrase}. Strong background in problem solving, execution, and delivering client-focused solutions that improve outcomes and efficiency.`
+      ];
 
-      const data = await response.json();
-      return data.choices[0].message.content.trim();
-    } catch (error) {
-      console.error('AI API Error:', error);
-      throw error;
+      // Choose a template deterministically using jobTitle length
+      const seed = jobTitle.length;
+      const summary = templates[Math.abs(seed) % templates.length];
+      return summary;
+    } catch (err) {
+      console.error('generateSummary error', err);
+      return '';
     }
   },
 
   /**
-   * Generate professional summary
-   */
-  async generateSummary(jobTitle, yearsExperience, skills) {
-    const prompt = `You are a professional resume writer. Generate a compelling 3-5 sentence professional summary for a ${jobTitle} with ${yearsExperience} years of experience. Focus on these key skills: ${skills}. Make it ATS-friendly and impactful. Return only the summary text without any introductory phrases.`;
-
-    const messages = [
-      {
-        role: 'system',
-        content: 'You are an expert resume writer specializing in creating ATS-optimized professional summaries.'
-      },
-      {
-        role: 'user',
-        content: prompt
-      }
-    ];
-
-    return await this.callAPI(messages, 250, 0.7);
-  },
-
-  /**
-   * Enhance bullet point
+   * Enhance a single bullet point with an action verb and optional metric hints.
+   * This is a heuristic upgrade that tries to make bullets more achievement-focused.
    */
   async enhanceBullet(bulletPoint) {
-    const prompt = `Enhance this resume bullet point to be more impactful using action verbs and quantifiable metrics where possible: "${bulletPoint}". Keep it concise (1-2 lines). Return only the enhanced bullet point without any introductory phrases or explanations.`;
+    try {
+      if (!bulletPoint || !bulletPoint.trim()) return bulletPoint;
+      let text = bulletPoint.trim();
 
-    const messages = [
-      {
-        role: 'system',
-        content: 'You are an expert resume writer who enhances achievement descriptions with strong action verbs and metrics.'
-      },
-      {
-        role: 'user',
-        content: prompt
+      // If text already starts with a past-tense verb, trust it
+      const startsWithVerb = /^([A-Z][a-z]+ed|Led|Managed|Designed)\b/.test(text);
+      if (!startsWithVerb) {
+        // Prepend a strong action verb deterministically
+        const verb = this._pickRandom(this._actionVerbs, text.length);
+        text = `${verb} ${text.charAt(0).toLowerCase()}${text.slice(1)}`;
       }
-    ];
 
-    return await this.callAPI(messages, 150, 0.7);
+      // If bullet contains a number or percent, assume it's quantified
+      const hasNumber = /\d+%?|\$\d+/.test(text);
+      if (!hasNumber) {
+        // Add a short outcome phrase if it seems appropriate
+        const phrase = this._pickRandom(this._impactPhrases, text.length);
+        // Add a neutral measurable hint to encourage quantification
+        text = `${text} — ${phrase} improved performance.`;
+      }
+
+      // Keep result concise: strip excessive whitespace
+      return text.replace(/\s+/g, ' ').trim();
+    } catch (err) {
+      console.error('enhanceBullet error', err);
+      return bulletPoint;
+    }
   },
 
   /**
-   * Generate keyword suggestions
+   * Generate keyword suggestions based on a job title and available skills.
+   * Returns up to 10 keywords as an array.
    */
-  async generateKeywords(jobTitle) {
-    const prompt = `Generate 10 relevant ATS keywords for a ${jobTitle} position. Return as a comma-separated list without any introductory text or explanations.`;
+  async generateKeywords(jobTitle = '', extraSkills = []) {
+    try {
+      const tokens = (jobTitle || '').split(/[^A-Za-z0-9]+/).filter(Boolean).map(t => t.toLowerCase());
+      const keywords = new Set();
 
-    const messages = [
-      {
-        role: 'system',
-        content: 'You are an ATS optimization expert who provides relevant keywords for resume optimization.'
-      },
-      {
-        role: 'user',
-        content: prompt
-      }
-    ];
+      // Add tokens from job title
+      tokens.forEach(t => {
+        if (t.length > 2) keywords.add(t);
+      });
 
-    const keywords = await this.callAPI(messages, 150, 0.7);
-    return keywords.split(',').map(k => k.trim()).filter(k => k.length > 0);
+      // Add curated common keywords
+      this._commonKeywords.forEach(k => keywords.add(k));
+
+      // Add extra skills passed as array
+      (Array.isArray(extraSkills) ? extraSkills : []).slice(0,10).forEach(s => {
+        s.split(/[,;]+/).forEach(x => keywords.add(x.trim()));
+      });
+
+      // Return up to 10 items, prioritize title tokens then common keywords
+      const result = Array.from(keywords).slice(0,10);
+      return result;
+    } catch (err) {
+      console.error('generateKeywords error', err);
+      return [];
+    }
   },
 
   /**
-   * Show API key configuration modal
+   * UI helpers kept for compatibility (local messages only)
    */
   showConfigModal() {
     return `
       <div class="text-center p-6">
-        <svg class="w-16 h-16 mx-auto mb-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-        <h3 class="text-xl font-bold text-gray-900 mb-3">OpenAI API Key Required</h3>
-        <p class="text-gray-600 mb-4">
-          To use AI-powered features, you need to configure your OpenAI API key.
-          Your key is stored locally and never sent to our servers.
-        </p>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Local AI Features Ready</h3>
+        <p class="text-gray-600 mb-4">All AI-powered features run locally in your browser. No API key or account is required.</p>
         <div class="space-y-3">
-          <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
-            Get API Key from OpenAI
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-            </svg>
-          </a>
-          <button onclick="document.getElementById('settingsBtn').click()" class="block w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
-            Configure in Settings
-          </button>
+          <button onclick="document.getElementById('settingsBtn').click()" class="block w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">Open Settings</button>
         </div>
       </div>
     `;
   },
 
-  /**
-   * Show loading state during AI generation
-   */
-  showLoadingState(message = 'Generating with AI...') {
+  showLoadingState(message = 'Working...') {
     return `
       <div class="flex items-center justify-center space-x-3 p-4">
         <div class="spinner"></div>
@@ -162,58 +153,39 @@ const AI = {
   },
 
   /**
-   * Generate summary with UI feedback
+   * Wrappers used by the UI — keep the same names as before but operate locally
    */
   async generateSummaryWithFeedback() {
-    if (!this.isConfigured()) {
-      Utils.showToast('Please configure your OpenAI API key in Settings', 'warning');
-      return null;
-    }
-
-    // Get job title and skills from form
-    const jobTitle = document.getElementById('fullName')?.value || 'Professional';
+    const jobTitle = (document.getElementById('fullName')?.value || 'Professional').trim() || 'Professional';
     const allSkills = this.getAllSkills();
-    const skills = allSkills.slice(0, 5).join(', ') || 'various technical and soft skills';
-    
+    const skills = allSkills.slice(0,5).join(', ');
     try {
-      Utils.showToast('Generating professional summary...', 'info');
+      Utils.showToast('Generating professional summary (local)...', 'info');
       const summary = await this.generateSummary(jobTitle, '5+', skills);
-      Utils.showToast('Summary generated successfully!', 'success');
+      Utils.showToast('Summary generated locally', 'success');
       return summary;
-    } catch (error) {
-      Utils.showToast(error.message || 'Failed to generate summary', 'error');
+    } catch (err) {
+      Utils.showToast('Failed to generate summary', 'error');
       return null;
     }
   },
 
-  /**
-   * Enhance bullet with UI feedback
-   */
   async enhanceBulletWithFeedback(bulletText) {
-    if (!this.isConfigured()) {
-      Utils.showToast('Please configure your OpenAI API key in Settings', 'warning');
+    if (!bulletText || bulletText.trim().length < 3) {
+      Utils.showToast('Please enter some text to enhance', 'warning');
       return null;
     }
-
-    if (!bulletText || bulletText.trim().length < 10) {
-      Utils.showToast('Please enter some text to enhance (at least 10 characters)', 'warning');
-      return null;
-    }
-
     try {
-      Utils.showToast('Enhancing bullet point...', 'info');
+      Utils.showToast('Enhancing bullet locally...', 'info');
       const enhanced = await this.enhanceBullet(bulletText);
-      Utils.showToast('Bullet point enhanced!', 'success');
+      Utils.showToast('Bullet enhanced', 'success');
       return enhanced;
-    } catch (error) {
-      Utils.showToast(error.message || 'Failed to enhance bullet point', 'error');
+    } catch (err) {
+      Utils.showToast('Failed to enhance bullet', 'error');
       return null;
     }
   },
 
-  /**
-   * Get all skills from the current form
-   */
   getAllSkills() {
     const skills = [];
     document.querySelectorAll('.skill-item').forEach(item => {
@@ -224,12 +196,12 @@ const AI = {
   }
 };
 
-// Initialize AI module on load
+// Initialize (no-op) to preserve expected lifecycle
 if (typeof Storage !== 'undefined') {
   AI.init();
 }
 
-// Export for use in other modules
+// Export for CommonJS/ESM compatibility
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = AI;
 }

@@ -136,12 +136,6 @@ const App = {
 
     if (generateBtn) {
       generateBtn.addEventListener('click', async () => {
-        if (!AI.isConfigured()) {
-          Utils.showToast('Please configure your OpenAI API key in Settings', 'warning');
-          document.getElementById('settingsBtn').click();
-          return;
-        }
-
         generateBtn.disabled = true;
         generateBtn.innerHTML = `
           <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +160,7 @@ const App = {
             <span>AI Generate</span>
           `;
         }
-      });
+  });
     }
   },
 
@@ -382,12 +376,8 @@ const App = {
       }
     }, 300));
     
-    // Enhance with AI
+      // Enhance with AI (local)
     enhanceBtn.addEventListener('click', async () => {
-      if (!AI.isConfigured()) {
-        Utils.showToast('Please configure your OpenAI API key in Settings', 'warning');
-        return;
-      }
       
       const originalText = textarea.value;
       if (!originalText.trim()) {
@@ -714,10 +704,9 @@ const App = {
    * Setup settings modal listeners
    */
   setupSettingsListeners() {
-    const settingsBtn = document.getElementById('settingsBtn');
-    const settingsModal = document.getElementById('settingsModal');
-    const closeBtn = document.getElementById('closeSettingsBtn');
-    const apiKeyInput = document.getElementById('apiKey');
+  const settingsBtn = document.getElementById('settingsBtn');
+  const settingsModal = document.getElementById('settingsModal');
+  const closeBtn = document.getElementById('closeSettingsBtn');
     const exportBtn = document.getElementById('exportDataBtn');
     const importBtn = document.getElementById('importDataBtn');
     const importFileInput = document.getElementById('importFileInput');
@@ -727,11 +716,9 @@ const App = {
     if (settingsBtn) {
       settingsBtn.addEventListener('click', () => {
         settingsModal.classList.remove('hidden');
-        // Load current settings
+        // Load current settings (no API key required)
         const settings = Storage.getSettings();
-        if (apiKeyInput) {
-          apiKeyInput.value = settings.apiKey || '';
-        }
+        // Future settings can be loaded here
       });
     }
     
@@ -749,15 +736,7 @@ const App = {
       }
     });
     
-    // Save API key on blur
-    if (apiKeyInput) {
-      apiKeyInput.addEventListener('blur', () => {
-        const apiKey = apiKeyInput.value.trim();
-        Storage.saveSettings({ apiKey });
-        AI.apiKey = apiKey;
-        Utils.showToast('API key saved', 'success');
-      });
-    }
+  // No API key to save (all AI features are local)
     
     // Export data
     if (exportBtn) {

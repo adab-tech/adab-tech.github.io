@@ -21,7 +21,6 @@ const Storage = {
       const initialData = {
         resumes: [],
         settings: {
-          apiKey: '',
           defaultTemplate: 'professional',
           autoSave: true
         }
@@ -143,7 +142,6 @@ const Storage = {
   getSettings() {
     const data = this.getData();
     return data?.settings || {
-      apiKey: '',
       defaultTemplate: 'professional',
       autoSave: true
     };
@@ -164,16 +162,9 @@ const Storage = {
    * Export all data as JSON
    */
   exportData() {
-    const data = this.getData();
-    if (!data) return null;
-    
-    // Remove sensitive data before export
-    const exportData = JSON.parse(JSON.stringify(data));
-    if (exportData.settings.apiKey) {
-      exportData.settings.apiKey = '[REDACTED]';
-    }
-    
-    return JSON.stringify(exportData, null, 2);
+  const data = this.getData();
+  if (!data) return null;
+  return JSON.stringify(data, null, 2);
   },
 
   /**
