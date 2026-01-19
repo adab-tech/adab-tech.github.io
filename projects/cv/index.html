@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered CV Builder - Create professional resumes with AI assistance, ATS optimization, and real-time preview. No account required.">
+    <title>AI-Powered CV Builder | Adamu Abubakar</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#7c3aed',
+                        accent: '#f59e0b',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        heading: ['Poppins', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="text-gray-600 hover:text-primary transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                    </a>
+                    <div class="text-sm text-gray-500">
+                        <a href="../../index.html" class="hover:text-primary transition-colors">Home</a>
+                        <span class="mx-2">/</span>
+                        <a href="../../index.html#projects" class="hover:text-primary transition-colors">Projects</a>
+                        <span class="mx-2">/</span>
+                        <span class="text-gray-900 font-medium">CV Builder</span>
+                    </div>
+                </div>
+                <a href="editor.html" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                    Launch Editor
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 pt-20 pb-32">
+        <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-flex items-center space-x-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-8">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"/>
+                    </svg>
+                    <span>100% Free • No Account Required • Works Offline</span>
+                </div>
+                
+                <h1 class="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6">
+                    Build Your Perfect Resume with
+                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Power</span>
+                </h1>
+                
+                <p class="text-xl text-gray-600 mb-10 leading-relaxed">
+                    Create ATS-optimized, professional resumes in minutes. AI-powered content generation, 
+                    real-time preview, and expert templates—all running in your browser.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="editor.html" class="inline-flex items-center justify-center bg-primary text-white px-8 py-4 rounded-xl hover:bg-blue-700 transition-all transform hover:-translate-y-1 hover:shadow-xl font-semibold text-lg">
+                        Get Started Free
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="inline-flex items-center justify-center bg-white text-gray-700 px-8 py-4 rounded-xl hover:shadow-lg transition-all border-2 border-gray-200 font-semibold text-lg">
+                        Learn More
+                    </a>
+                </div>
+                
+                <div class="mt-12 flex flex-wrap justify-center gap-8 text-sm text-gray-600">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>No Sign-up Required</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Your Data Stays Private</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Export to PDF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-heading text-4xl font-bold text-gray-900 mb-4">
+                    Everything You Need to Stand Out
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Professional tools to create resumes that get noticed by recruiters and pass ATS systems
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1: AI Content Generation -->
+                <div class="group bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-blue-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">AI-Powered Content</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Generate compelling professional summaries and enhance bullet points with AI. 
+                        Get keyword suggestions tailored to your industry.
+                    </p>
+                </div>
+
+                <!-- Feature 2: ATS Optimization -->
+                <div class="group bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-purple-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">ATS Scoring & Tips</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Real-time ATS scoring with detailed feedback. Get actionable suggestions to 
+                        optimize your resume for applicant tracking systems.
+                    </p>
+                </div>
+
+                <!-- Feature 3: Professional Templates -->
+                <div class="group bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-pink-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">Professional Templates</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Choose from expertly designed templates. Modern, Executive, or Classic—all 
+                        optimized for readability and ATS compatibility.
+                    </p>
+                </div>
+
+                <!-- Feature 4: Real-time Preview -->
+                <div class="group bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-green-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">Live Preview</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        See your resume update in real-time as you type. What you see is exactly 
+                        what you'll get in the final PDF export.
+                    </p>
+                </div>
+
+                <!-- Feature 5: PDF Export -->
+                <div class="group bg-gradient-to-br from-yellow-50 to-yellow-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-yellow-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">One-Click PDF Export</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Export your resume as a professionally formatted PDF with a single click. 
+                        Print-ready and perfect for online applications.
+                    </p>
+                </div>
+
+                <!-- Feature 6: Browser Storage -->
+                <div class="group bg-gradient-to-br from-indigo-50 to-indigo-100 p-8 rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2">
+                    <div class="bg-indigo-600 text-white w-14 h-14 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-3">Auto-Save</h3>
+                    <p class="text-gray-700 leading-relaxed">
+                        Your work is automatically saved in your browser. No account needed, 
+                        and your data never leaves your device.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-heading text-4xl font-bold text-gray-900 mb-4">
+                    Three Simple Steps to Your Perfect Resume
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    From blank page to polished resume in minutes
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">
+                        1
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-4">Fill In Your Info</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Enter your contact details, work experience, education, and skills. 
+                        Use AI to generate compelling content if you need help.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-purple-500 to-pink-600 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">
+                        2
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-4">Choose a Template</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Select from professional templates and see your resume come to life 
+                        in real-time with live preview.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-gradient-to-br from-pink-500 to-red-600 text-white w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">
+                        3
+                    </div>
+                    <h3 class="font-heading text-2xl font-bold text-gray-900 mb-4">Download & Apply</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Check your ATS score, make any final tweaks, and export as PDF. 
+                        You're ready to apply with confidence!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy & Trust -->
+    <section class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="bg-gradient-to-br from-green-50 to-blue-50 p-12 rounded-3xl">
+                <svg class="w-16 h-16 text-green-600 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                <h2 class="font-heading text-3xl font-bold text-gray-900 mb-4">
+                    Your Privacy is Our Priority
+                </h2>
+                <p class="text-lg text-gray-700 mb-6 leading-relaxed">
+                    Everything runs in your browser. Your resume data is stored locally on your device 
+                    and never sent to our servers. AI features are optional and only used when you 
+                    provide your own OpenAI API key.
+                </p>
+                <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>No tracking</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>No cookies</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>No data collection</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+        <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+            <h2 class="font-heading text-4xl md:text-5xl font-bold text-white mb-6">
+                Ready to Build Your Resume?
+            </h2>
+            <p class="text-xl text-blue-100 mb-10">
+                Join thousands of job seekers creating professional resumes that get results
+            </p>
+            <a href="editor.html" class="inline-flex items-center justify-center bg-white text-primary px-10 py-5 rounded-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 font-bold text-lg">
+                Start Building Now - It's Free
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">AI-Powered CV Builder</h3>
+                    <p class="text-sm leading-relaxed">
+                        Create professional resumes with AI assistance, ATS optimization, and real-time preview.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="editor.html" class="hover:text-white transition-colors">Launch Editor</a></li>
+                        <li><a href="../../index.html" class="hover:text-white transition-colors">Back to Portfolio</a></li>
+                        <li><a href="../../index.html#contact" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-white font-bold text-lg mb-4">Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="README.md" class="hover:text-white transition-colors">Documentation</a></li>
+                        <li><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" class="hover:text-white transition-colors">Get OpenAI API Key</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2024 Adamu Abubakar. Built with ❤️ for job seekers everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .bg-grid-pattern {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</body>
+</html>
