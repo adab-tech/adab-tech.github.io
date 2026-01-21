@@ -803,7 +803,9 @@
         // ================================
         
         function validateFile(file, allowedTypes, maxSize) {
-            if (!allowedTypes.includes(file.type.split('/')[0]) && !allowedTypes.some(t => file.type.includes(t))) {
+            // Check if the file type category (e.g., 'image', 'audio') is in allowedTypes
+            const fileTypeCategory = file.type.split('/')[0];
+            if (!allowedTypes.includes(fileTypeCategory)) {
                 return { valid: false, error: 'File type not supported' };
             }
             if (file.size > maxSize * 1024 * 1024) {
@@ -848,6 +850,10 @@
                         ctx.drawImage(img, 0, 0, width, height);
                         
                         canvas.toBlob((blob) => {
+                            if (!blob) {
+                                reject(new Error('Failed to compress image'));
+                                return;
+                            }
                             resolve(new File([blob], file.name, { type: file.type }));
                         }, file.type, 0.85);
                     };
@@ -883,8 +889,14 @@
             });
             
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error?.message || 'Transcription failed');
+                let errorMessage = 'Transcription failed';
+                try {
+                    const error = await response.json();
+                    errorMessage = error.error?.message || errorMessage;
+                } catch (e) {
+                    // Response is not JSON, use default error message
+                }
+                throw new Error(errorMessage);
             }
             
             const data = await response.json();
