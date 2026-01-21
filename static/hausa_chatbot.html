@@ -860,21 +860,17 @@
         }
         
         async function processAudio(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = reject;
-                reader.readAsArrayBuffer(file);
-            });
+            // Return the file directly for FormData usage
+            return file;
         }
         
-        async function transcribeAudio(audioBlob, fileName) {
+        async function transcribeAudio(audioFile, fileName) {
             if (!config.apiKey || config.provider !== 'openai') {
                 throw new Error('OpenAI API key required for audio transcription');
             }
             
             const formData = new FormData();
-            formData.append('file', new Blob([audioBlob], { type: 'audio/wav' }), fileName);
+            formData.append('file', audioFile, fileName);
             formData.append('model', 'whisper-1');
             formData.append('language', 'ha');
             
@@ -1079,16 +1075,16 @@
                             size: file.size
                         });
                     } else if (fileType === 'audio') {
-                        const blob = await processAudio(file);
+                        const audioFile = await processAudio(file);
                         
                         // Try to transcribe audio if OpenAI is available
                         if (config.provider === 'openai' && !config.demoMode && config.apiKey) {
                             try {
                                 setActivity('Transcribing audio');
-                                const transcription = await transcribeAudio(blob, file.name);
+                                const transcription = await transcribeAudio(audioFile, file.name);
                                 processedFiles.push({
                                     type: 'audio',
-                                    blob,
+                                    audioFile,
                                     transcription,
                                     name: file.name,
                                     size: file.size
@@ -1097,7 +1093,7 @@
                                 console.error('Transcription error:', e);
                                 processedFiles.push({
                                     type: 'audio',
-                                    blob,
+                                    audioFile,
                                     name: file.name,
                                     size: file.size,
                                     error: e.message
@@ -1106,7 +1102,7 @@
                         } else {
                             processedFiles.push({
                                 type: 'audio',
-                                blob,
+                                audioFile,
                                 name: file.name,
                                 size: file.size
                             });
@@ -1319,13 +1315,13 @@
             // Build messages with file context
             let userMessage = message;
             
-            // Add transcribed audio to message
+            // Add transcribed audio to message with better formatting
             const audioTranscriptions = files
                 .filter(f => f.type === 'audio' && f.transcription)
-                .map(f => f.transcription);
+                .map((f, i) => `Audio ${i + 1}: "${f.transcription}"`);
             
             if (audioTranscriptions.length > 0) {
-                userMessage += '\n\n[Audio transcription: ' + audioTranscriptions.join('; ') + ']';
+                userMessage += '\n\n[Audio transcriptions:\n' + audioTranscriptions.join('\n') + ']';
             }
             
             const messages = [
@@ -1383,15 +1379,24 @@
         async function getGeminiResponse(message, files = []) {
             const systemPrompt = `You are a helpful Hausa language assistant. You can communicate fluently in Hausa and help users learn the language, translate, and have conversations. Always be respectful and culturally appropriate.`;
             
-            // Add file context to message
+            // Add file context to message with better formatting
             let enhancedMessage = message;
             if (files.length > 0) {
-                const fileDescriptions = files.map(f => {
-                    if (f.type === 'image') return `[Image: ${f.name}]`;
-                    if (f.type === 'audio') return f.transcription ? `[Audio transcribed: ${f.transcription}]` : `[Audio: ${f.name}]`;
-                    return '';
-                }).filter(d => d).join(' ');
-                enhancedMessage = fileDescriptions + ' ' + message;
+                const fileDescriptions = [];
+                files.forEach((f, i) => {
+                    if (f.type === 'image') {
+                        fileDescriptions.push(`[Attached Image ${i + 1}: ${f.name}]`);
+                    } else if (f.type === 'audio') {
+                        if (f.transcription) {
+                            fileDescriptions.push(`[Attached Audio ${i + 1} - Transcription: "${f.transcription}"]`);
+                        } else {
+                            fileDescriptions.push(`[Attached Audio ${i + 1}: ${f.name}]`);
+                        }
+                    }
+                });
+                if (fileDescriptions.length > 0) {
+                    enhancedMessage = fileDescriptions.join('\n') + '\n\n' + (message || 'Please help me with these files.');
+                }
             }
             
             // Build conversation context
