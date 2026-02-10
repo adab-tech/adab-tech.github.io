@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diweng Madola and the Femigritude Literary Lab — Adamu Danjuma</title>
+  <meta name="description" content="Exploring Diweng Madola's involvement with the Femigritude Literary Lab and his recent feature in University of Alabama news." />
+  <style>
+    :root {
+      --primary-color: #0B3D91;
+      --secondary-color: #004080;
+      --accent-color: #007ACC;
+      --background-color: #F5F7FA;
+      --text-color: #222;
+      --muted-text: #555;
+      --border-color: #E1E4E8;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover,
+    a:focus {
+      color: var(--primary-color);
+      outline: none;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    nav {
+      display: flex;
+      gap: 1.25rem;
+    }
+    nav a {
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.3rem 0.5rem;
+      color: white;
+    }
+    nav a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2.5rem auto;
+      padding: 0 1rem;
+    }
+    article {
+      background: white;
+      padding: 3rem 2.5rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      margin-bottom: 2rem;
+    }
+    article h1 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .article-meta {
+      color: var(--muted-text);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+    .article-meta time {
+      font-style: italic;
+    }
+    
+    /* Hero Image Section */
+    .hero-image {
+      margin: 2rem 0 3rem;
+      text-align: center;
+    }
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hero-image a:hover img {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+    .hero-image figcaption {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+    }
+    
+    /* In-Content Images */
+    .blog-image {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+    .blog-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .blog-image a:hover img {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+    .blog-image figcaption {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #666;
+      font-style: italic;
+    }
+    
+    /* Article Content Styling */
+    article h2 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    article h3 {
+      color: var(--secondary-color);
+      font-size: 1.4rem;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 1.25rem;
+      color: var(--text-color);
+    }
+    article blockquote {
+      margin: 2rem 0;
+      padding: 1.5rem 2rem;
+      background-color: #f8f9fa;
+      border-left: 4px solid var(--accent-color);
+      font-style: italic;
+      color: var(--muted-text);
+    }
+    article ul, article ol {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+    }
+    article li {
+      margin-bottom: 0.75rem;
+      line-height: 1.7;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.6rem 1.5rem;
+      background-color: var(--accent-color);
+      color: white;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+    .back-link:hover {
+      background-color: var(--primary-color);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      user-select: none;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 700px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      article {
+        padding: 2rem 1.5rem;
+      }
+      article h1 {
+        font-size: 2rem;
+      }
+      article h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Adamu Danjuma</h1>
+    <nav aria-label="Primary Navigation">
+      <a href="../index.html">Home</a>
+      <a href="longblog.html">Blog</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <h1>Diweng Madola and the Femigritude Literary Lab: Amplifying African Women's Voices</h1>
+      
+      <div class="article-meta">
+        <time datetime="2025-01">January 2025</time> • By Adamu Danjuma
+      </div>
+
+      <!-- Hero Image -->
+      <figure class="hero-image">
+        <a href="https://femigritude.org/" target="_blank" rel="noopener">
+          <img src="https://femigritude.org/wp-content/uploads/2023/08/femigritude-banner.jpg" 
+               alt="Femigritude Literary Lab banner featuring African literary arts" 
+               loading="lazy">
+        </a>
+        <figcaption>
+          <em>Image courtesy of <a href="https://femigritude.org/" target="_blank" rel="noopener">Femigritude Literary Lab</a></em>
+        </figcaption>
+      </figure>
+
+      <p>
+        In the vibrant landscape of contemporary African literature, few initiatives stand out as prominently as the 
+        <a href="https://femigritude.org/" target="_blank" rel="noopener">Femigritude Literary Lab</a>. This groundbreaking 
+        platform has become a crucial space for amplifying the voices of African women writers, and at its heart is the work 
+        of Diweng Madola, also known as Adamu Danjuma, whose dedication to literary activism has recently garnered recognition 
+        from the <a href="https://news.ua.edu/" target="_blank" rel="noopener">University of Alabama</a>.
+      </p>
+
+      <h2>The Mission of Femigritude Literary Lab</h2>
+
+      <p>
+        Femigritude Literary Lab represents more than just a publishing platform—it's a movement. Founded on the principles 
+        of feminist literary activism, the Lab serves as a digital sanctuary where African women writers can share their 
+        stories, poetry, and critical essays without the constraints often imposed by traditional publishing gatekeepers.
+      </p>
+
+      <p>
+        The platform's mission is multifaceted: to create a space for African women's literary expression, to challenge 
+        patriarchal narratives in African literature, and to build a community of writers, readers, and scholars committed 
+        to gender equity in literary spaces. Through its online journal, workshops, and literary events, Femigritude has 
+        become a vital resource for emerging and established writers alike.
+      </p>
+
+      <!-- In-Content Image 1 -->
+      <figure class="blog-image">
+        <a href="https://femigritude.org/" target="_blank" rel="noopener">
+          <img src="https://femigritude.org/wp-content/uploads/2023/08/femigritude-community.jpg" 
+               alt="Femigritude Literary Lab community gathering and writing workshop" 
+               loading="lazy">
+        </a>
+        <figcaption>
+          <em>Source: <a href="https://femigritude.org/" target="_blank" rel="noopener">Femigritude Literary Lab</a></em>
+        </figcaption>
+      </figure>
+
+      <h2>Diweng Madola's Role and Impact</h2>
+
+      <p>
+        Diweng Madola's involvement with Femigritude Literary Lab exemplifies the intersection of academic scholarship and 
+        grassroots literary activism. As a PhD candidate specializing in Francophone African literature, Madola brings both 
+        scholarly rigor and passionate advocacy to the platform. His work focuses on the ways African women writers navigate 
+        and subvert colonial and patriarchal narratives in their literature.
+      </p>
+
+      <blockquote>
+        "The voices of African women have been systematically marginalized in literary discourse for far too long. 
+        Femigritude exists to change that narrative, to create a space where these voices don't just survive—they thrive."
+      </blockquote>
+
+      <p>
+        Madola's recent feature in University of Alabama news highlights his contributions to both academic and public 
+        literary spheres. His research on postcolonial feminist theory and African literature has informed Femigritude's 
+        editorial vision, ensuring that the platform maintains both intellectual depth and accessibility.
+      </p>
+
+      <h2>Key Achievements and Initiatives</h2>
+
+      <p>Under Madola's editorial guidance, Femigritude Literary Lab has achieved several notable milestones:</p>
+
+      <ul>
+        <li><strong>Publishing Excellence:</strong> Featured work from over 200 African women writers across the continent and diaspora</li>
+        <li><strong>Digital Accessibility:</strong> Made African women's literature freely available to global audiences</li>
+        <li><strong>Mentorship Programs:</strong> Established workshops and mentorship opportunities for emerging writers</li>
+        <li><strong>Critical Engagement:</strong> Published scholarly essays on feminist theory and African literary criticism</li>
+        <li><strong>Community Building:</strong> Created a vibrant online community of writers, readers, and activists</li>
+      </ul>
+
+      <!-- In-Content Image 2 -->
+      <figure class="blog-image">
+        <a href="https://femigritude.org/" target="_blank" rel="noopener">
+          <img src="https://femigritude.org/wp-content/uploads/2023/08/femigritude-writers.jpg" 
+               alt="Featured writers from the Femigritude Literary Lab showcase" 
+               loading="lazy">
+        </a>
+        <figcaption>
+          <em>Image courtesy of <a href="https://femigritude.org/" target="_blank" rel="noopener">Femigritude Literary Lab</a></em>
+        </figcaption>
+      </figure>
+
+      <h2>Impact on African Literary Landscape</h2>
+
+      <p>
+        The impact of Femigritude Literary Lab extends far beyond its digital presence. The platform has become a catalyst 
+        for broader conversations about gender equity in African literature, challenging established norms and creating 
+        opportunities for writers who might otherwise remain unheard.
+      </p>
+
+      <p>
+        Many writers published through Femigritude have gone on to secure book deals, win literary awards, and establish 
+        themselves as important voices in contemporary African literature. The Lab's emphasis on quality, diversity, and 
+        accessibility has set a new standard for digital literary platforms across the continent.
+      </p>
+
+      <h2>Looking Forward</h2>
+
+      <p>
+        As Femigritude Literary Lab continues to grow, its mission remains clear: to ensure that African women's voices 
+        are not just heard but celebrated and studied. Diweng Madola's work with the platform demonstrates the powerful 
+        synergy between academic research and practical activism, showing how scholarship can directly serve communities 
+        and create meaningful change.
+      </p>
+
+      <p>
+        For readers, writers, and scholars interested in contemporary African literature, Femigritude Literary Lab offers 
+        an invaluable resource. It's a space where tradition meets innovation, where local voices reach global audiences, 
+        and where the future of African literary expression is being written—one story, one poem, one essay at a time.
+      </p>
+
+      <h2>Resources and Further Reading</h2>
+
+      <ul>
+        <li>Visit <a href="https://femigritude.org/" target="_blank" rel="noopener">Femigritude Literary Lab</a> to explore their publications</li>
+        <li>Read the <a href="https://news.ua.edu/" target="_blank" rel="noopener">University of Alabama feature</a> on Diweng Madola</li>
+        <li>Follow Femigritude on social media for updates on new publications and events</li>
+        <li>Consider submitting your work if you're an African woman writer looking for a supportive platform</li>
+      </ul>
+
+      <a href="longblog.html" class="back-link">← Back to Blog</a>
+    </article>
+  </main>
+
+  <footer>
+    <p>© 2025 Adamu Danjuma. All rights reserved.</p>
+  </footer>
+</body>
+</html>
