@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Join Us: Femigritude Literary Lab Invites You to Get Involved! — Adamu Danjuma</title>
+  <meta name="description" content="The Femigritude Literary Lab invites young African women and girls to submit creative work. Learn about this transformative movement centering African women's voices through writing, healing, and empowerment." />
+  <style>
+    :root {
+      --primary-color: #0B3D91;
+      --secondary-color: #004080;
+      --accent-color: #007ACC;
+      --background-color: #F5F7FA;
+      --text-color: #222;
+      --muted-text: #555;
+      --border-color: #E1E4E8;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    a {
+      color: var(--accent-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover,
+    a:focus {
+      color: var(--primary-color);
+      outline: none;
+    }
+    header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    nav {
+      display: flex;
+      gap: 1.25rem;
+    }
+    nav a {
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 0.3rem 0.5rem;
+      color: white;
+    }
+    nav a:hover {
+      background-color: rgba(255 255 255 / 0.2);
+      border-radius: 4px;
+    }
+    main {
+      max-width: 900px;
+      margin: 2.5rem auto;
+      padding: 0 1rem;
+    }
+    .article-header {
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .article-header h1 {
+      font-size: 2.2rem;
+      margin: 0 0 1rem;
+      color: var(--primary-color);
+      line-height: 1.3;
+    }
+    .article-header .subtitle {
+      font-size: 1.3rem;
+      color: var(--muted-text);
+      font-weight: 600;
+      margin: 0;
+    }
+    .article-content {
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 3px 15px rgba(11, 61, 145, 0.1);
+      margin-bottom: 2rem;
+    }
+    .article-content h2 {
+      color: var(--primary-color);
+      font-size: 1.8rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+    .article-content h3 {
+      color: var(--secondary-color);
+      font-size: 1.4rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+    .article-content p {
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+    .article-content ul {
+      margin: 1rem 0;
+      padding-left: 2rem;
+    }
+    .article-content li {
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .article-content strong {
+      color: var(--text-color);
+      font-weight: 700;
+    }
+    .article-content hr {
+      border: none;
+      border-top: 2px solid var(--border-color);
+      margin: 2.5rem 0;
+    }
+    .btn-back {
+      display: inline-block;
+      background-color: var(--accent-color);
+      color: white;
+      font-weight: 700;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      margin-bottom: 2rem;
+    }
+    .btn-back:hover,
+    .btn-back:focus {
+      background-color: var(--primary-color);
+      outline: none;
+      color: white;
+    }
+    .cta-box {
+      background: linear-gradient(135deg, #0B3D91 0%, #007ACC 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 10px;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .cta-box h3 {
+      margin-top: 0;
+      font-size: 1.6rem;
+    }
+    .cta-box p {
+      margin-bottom: 1.5rem;
+    }
+    .cta-box a {
+      color: white;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+    .cta-box a:hover {
+      color: #E1E4E8;
+    }
+    .hashtags {
+      color: var(--accent-color);
+      font-size: 0.95rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      user-select: none;
+    }
+    @media (max-width: 700px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .article-header h1 {
+        font-size: 1.8rem;
+      }
+      .article-header .subtitle {
+        font-size: 1.1rem;
+      }
+      .article-content {
+        padding: 1.5rem 1rem;
+      }
+      .article-content h2 {
+        font-size: 1.5rem;
+      }
+      .article-content h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Adamu Danjuma</h1>
+    <nav aria-label="Primary Navigation">
+      <a href="longblog.html">Back to Blog</a>
+    </nav>
+  </header>
+
+  <main>
+    <a href="longblog.html" class="btn-back">← Back to Blog</a>
+
+    <article>
+      <div class="article-header">
+        <h1>✨ Join Us: Femigritude Literary Lab Invites You to Get Involved! ✨</h1>
+        <p class="subtitle">Empowering African Women Through the Written Word</p>
+      </div>
+
+      <div class="article-content">
+        <p>The <strong>Femigritude Literary Lab</strong> is calling on writers, organizations, sponsors, and allies to join a powerful movement centering African women—particularly young women and girls—as essential voices in literature, healing, and social transformation.</p>
+
+        <h2>🌍 About the Lab & Our Founder</h2>
+        
+        <p><strong>Initiated by <a href="http://barefield.ua.edu/2026/01/20/french-student-brings-research-to-life-with-visit-to-burkina-faso/" target="_blank" rel="noopener noreferrer">Diweng Mercy Dafong</a>, PhD Candidate, Department of Modern Languages & Classics, The University of Alabama</strong>, the Femigritude Literary Lab (FLL) was born from groundbreaking research and direct collaboration with Burkinabè women writers, artists, and intellectuals.</p>
+
+        <p>During her first research visit to Burkina Faso, Dafong worked directly with women and girls in refugee camps, partnered with <strong>Mots d'Elles</strong> (Burkina Faso's national association of female writers), and organized the inaugural <strong>Concours d'Écriture Diweng Mercy Dafong</strong>—a writing contest that gave young girls a platform to express their experiences, confront crises, and begin healing through creative expression.</p>
+
+        <h3>Our Mission</h3>
+        
+        <p>The Lab creates spaces where African women use writing as a tool for:</p>
+        <ul>
+          <li><strong>Healing and self-reclamation</strong></li>
+          <li><strong>Analyzing lived realities</strong></li>
+          <li><strong>Challenging erasure</strong></li>
+          <li><strong>Envisioning alternative futures</strong></li>
+        </ul>
+
+        <p>We believe that in the face of violence, migration, and insecurity, women are not peripheral witnesses or passive victims—they are central thinkers, creators, and architects of survival and societal reconstruction.</p>
+
+        <hr>
+
+        <h2>✍️ FOR WRITERS: Submit Your Work</h2>
+
+        <p>We invite <strong>young African women and girls</strong>, including high school and university students, to share their creative voices through:</p>
+        <ul>
+          <li><strong>Short fiction</strong></li>
+          <li><strong>Essays</strong></li>
+          <li><strong>Poetry</strong></li>
+          <li><strong>Creative nonfiction</strong></li>
+        </ul>
+
+        <p><strong>Themes we explore:</strong></p>
+        <ul>
+          <li>Migration and displacement</li>
+          <li>Women's roles in crisis and survival</li>
+          <li>Healing and reconstruction</li>
+          <li>Resilience in the face of social challenges</li>
+          <li>Imagining new futures</li>
+        </ul>
+
+        <h3>📬 How to Submit</h3>
+
+        <p>Submissions are accepted through our <strong>annual themed competitions</strong>, including the <strong>Concours d'Écriture Diweng Mercy Dafong</strong>. Our second edition is expanding to include university students in Burkina Faso and is supported by the Outstanding Service by Graduate Student Award from the Barefield College of Arts & Sciences at The University of Alabama.</p>
+
+        <p>👉 <strong>Visit:</strong> <a href="https://sites.google.com/view/femigritude-literary-lab/home" target="_blank" rel="noopener noreferrer">https://sites.google.com/view/femigritude-literary-lab/home</a> for current calls and guidelines.</p>
+
+        <hr>
+
+        <h2>🤝 FOR PARTNERS & COLLABORATORS: Get Involved</h2>
+
+        <p>There are many ways to support and collaborate with the Femigritude Literary Lab:</p>
+
+        <h3>1. Collaborate Ethically</h3>
+        <p>Join as a partner or collaborator, centering your involvement on ethical support of young women's creativity and story ownership. We prioritize respect, consent, and empowerment in all collaborations.</p>
+
+        <h3>2. Participate in Workshops</h3>
+        <p>Help organize or facilitate workshops and shared creative spaces where young women and girls can heal and reclaim their voices through writing.</p>
+
+        <h3>3. Support or Sponsor Initiatives</h3>
+        <p>Provide financial support, resources, or sponsorships to sustain Lab activities, contests, and programming that empower emerging female voices. Our second writing contest already has committed juries, collaborators, and sponsors—join us!</p>
+
+        <h3>4. Become a Community Partner</h3>
+        <p>Join organizations like <strong>Mots d'Elles</strong> (Burkina Faso's national association of female writers) and educational institutions that actively partner with us to organize and expand writing contests and empowerment projects.</p>
+
+        <h3>5. Amplify Young Voices</h3>
+        <p>Serve on juries, contribute as a mentor, or help celebrate and promote the work of emerging writers through our competitions and publications.</p>
+
+        <h3>6. Respect and Celebrate Creativity</h3>
+        <p>All involvement is rooted in respect for participants' creativity and ownership of their stories, fostering an environment where young women's literary and artistic empowerment can flourish.</p>
+
+        <hr>
+
+        <h2>💫 Why Get Involved?</h2>
+
+        <ul>
+          <li><strong>Be part of a transformative movement</strong> centering African women's voices</li>
+          <li><strong>Support ethical, empowering literary spaces</strong> grounded in authentic community engagement</li>
+          <li><strong>Help amplify stories</strong> that challenge narratives and imagine new possibilities</li>
+          <li><strong>Connect with a vibrant community</strong> of writers, artists, and thinkers across Burkina Faso and beyond</li>
+          <li><strong>Make a real impact</strong> on young women's lives through creative expression and research-to-action initiatives</li>
+        </ul>
+
+        <p>As Dr. Cheryl Toman, Department Chair and Dafong's advisor, noted: This work is "a model for authentic, impactful fieldwork" that moves beyond scholarship to real-world service and community engagement.</p>
+
+        <hr>
+
+        <h2>📖 Read More About Our Story</h2>
+
+        <p>Learn more about how the Femigritude Literary Lab came to life:<br>
+        👉 <a href="http://barefield.ua.edu/2026/01/20/french-student-brings-research-to-life-with-visit-to-burkina-faso/" target="_blank" rel="noopener noreferrer"><strong>French Student Brings Research to Life with Visit to Burkina Faso</strong></a> - University of Alabama News</p>
+
+        <hr>
+
+        <div class="cta-box">
+          <h3>📞 Ready to Join Us?</h3>
+          <p>Whether you're a writer ready to share your story, an organization seeking ethical partnership, or an individual wanting to sponsor transformative work, we welcome you.</p>
+          
+          <p><strong>🔗 Learn More & Get Involved:</strong></p>
+          <ul style="list-style: none; padding: 0; margin: 1rem 0;">
+            <li style="margin-bottom: 0.8rem;"><strong>Main Site:</strong> <a href="https://sites.google.com/view/femigritude-literary-lab/home" target="_blank" rel="noopener noreferrer">https://sites.google.com/view/femigritude-literary-lab/home</a></li>
+            <li style="margin-bottom: 0.8rem;"><strong>Get Involved:</strong> <a href="https://sites.google.com/view/femigritude-literary-lab/get-involved" target="_blank" rel="noopener noreferrer">https://sites.google.com/view/femigritude-literary-lab/get-involved</a></li>
+            <li><strong>Community Partners:</strong> <a href="https://sites.google.com/view/femigritude-literary-lab/community-partners" target="_blank" rel="noopener noreferrer">https://sites.google.com/view/femigritude-literary-lab/community-partners</a></li>
+          </ul>
+        </div>
+
+        <hr>
+
+        <h2>🌟 Your Voice Matters. Your Support Matters. Your Partnership Matters.</h2>
+
+        <p>The Femigritude Literary Lab is more than a literary project—it's a movement building reparative spaces where African women can write themselves into existence, challenge narratives, and create new possibilities.</p>
+
+        <p><strong>Join us in centering African women's voices as essential to our collective future.</strong></p>
+
+        <hr>
+
+        <p style="text-align: center; margin-top: 2rem;">
+          <strong>Femigritude Literary Lab</strong><br>
+          <em>Initiated by Diweng Mercy Dafong, PhD Candidate</em><br>
+          <em>Department of Modern Languages & Classics, The University of Alabama</em>
+        </p>
+
+        <div class="hashtags">
+          #FemigritudeLiteraryLab #AfricanWomenWriters #CallForSubmissions #GetInvolved #WomenInLiterature #WritingForChange #AfricanVoices #LiteraryEmpowerment #EthicalCollaboration #BurkinaFaso #UniversityOfAlabama #RollTide
+        </div>
+      </div>
+    </article>
+
+    <a href="longblog.html" class="btn-back">← Back to Blog</a>
+  </main>
+
+  <footer>
+    <p>© 2025 Adamu Danjuma. All rights reserved.</p>
+  </footer>
+</body>
+</html>
