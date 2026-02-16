@@ -41,6 +41,38 @@ const App = {
   },
 
   /**
+   * Setup all event listeners
+   */
+  setupEventListeners() {
+    this.setupContactListeners();
+    this.setupSummaryListeners();
+    this.setupExperienceListeners();
+    this.setupEducationListeners();
+    this.setupSkillsListeners();
+    this.setupTemplateListener();
+    this.setupToolbarListeners();
+    this.setupSettingsListeners();
+    this.setupAtsListeners();
+  },
+
+  /**
+   * Setup contact information listeners
+   */
+  setupContactListeners() {
+    const contactFields = ['fullName', 'email', 'phone', 'location', 'linkedin', 'website'];
+    
+    contactFields.forEach(field => {
+      const input = document.getElementById(field);
+      if (input) {
+        input.addEventListener('input', Utils.debounce(() => {
+          this.currentResume.content.contact[field] = input.value;
+          this.saveAndUpdate();
+        }, 300));
+      }
+    });
+  },
+
+  /**
    * Setup summary section listeners
    */
   setupSummaryListeners() {
@@ -129,7 +161,152 @@ const App = {
     this.saveAndUpdate();
   },
 
-  // createExperienceElement removed (DOM-based implementation present later)
+  /**
+   * Create experience entry DOM element
+   */
+  createExperienceElement(entry) {
+    const div = document.createElement('div');
+    div.className = 'experience-entry bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4';
+    div.dataset.id = entry.id;
+
+    const header = document.createElement('div');
+    header.className = 'flex items-center justify-between mb-4';
+    
+    const h3 = document.createElement('h3');
+    h3.className = 'text-lg font-semibold text-gray-900';
+    h3.textContent = 'Work Experience Entry';
+    
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-experience-btn text-red-600 hover:text-red-800 transition-colors';
+    removeBtn.title = 'Remove entry';
+    removeBtn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>`;
+    
+    header.appendChild(h3);
+    header.appendChild(removeBtn);
+
+    const body = document.createElement('div');
+    body.className = 'space-y-3';
+
+    // Job title and company row
+    const grid1 = document.createElement('div');
+    grid1.className = 'grid md:grid-cols-2 gap-3';
+
+    const titleWrap = document.createElement('div');
+    const titleLabel = document.createElement('label');
+    titleLabel.className = 'block text-sm font-medium text-gray-700 mb-1';
+    titleLabel.textContent = 'Job Title *';
+    const titleInput = document.createElement('input');
+    titleInput.type = 'text';
+    titleInput.className = 'exp-title w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    titleInput.placeholder = 'Software Engineer';
+    titleInput.value = entry.title || '';
+    titleWrap.appendChild(titleLabel);
+    titleWrap.appendChild(titleInput);
+
+    const companyWrap = document.createElement('div');
+    const companyLabel = document.createElement('label');
+    companyLabel.className = 'block text-sm font-medium text-gray-700 mb-1';
+    companyLabel.textContent = 'Company *';
+    const companyInput = document.createElement('input');
+    companyInput.type = 'text';
+    companyInput.className = 'exp-company w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    companyInput.placeholder = 'Company Name';
+    companyInput.value = entry.company || '';
+    companyWrap.appendChild(companyLabel);
+    companyWrap.appendChild(companyInput);
+
+    grid1.appendChild(titleWrap);
+    grid1.appendChild(companyWrap);
+
+    // Location and dates row
+    const grid2 = document.createElement('div');
+    grid2.className = 'grid md:grid-cols-3 gap-3';
+
+    const locWrap = document.createElement('div');
+    const locLabel = document.createElement('label');
+    locLabel.className = 'block text-sm font-medium text-gray-700 mb-1';
+    locLabel.textContent = 'Location';
+    const locInput = document.createElement('input');
+    locInput.type = 'text';
+    locInput.className = 'exp-location w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    locInput.placeholder = 'San Francisco, CA';
+    locInput.value = entry.location || '';
+    locWrap.appendChild(locLabel);
+    locWrap.appendChild(locInput);
+
+    const startWrap = document.createElement('div');
+    const startLabel = document.createElement('label');
+    startLabel.className = 'block text-sm font-medium text-gray-700 mb-1';
+    startLabel.textContent = 'Start Date';
+    const startInput = document.createElement('input');
+    startInput.type = 'month';
+    startInput.className = 'exp-start w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    startInput.value = entry.startDate || '';
+    startWrap.appendChild(startLabel);
+    startWrap.appendChild(startInput);
+
+    const endWrap = document.createElement('div');
+    const endLabel = document.createElement('label');
+    endLabel.className = 'block text-sm font-medium text-gray-700 mb-1';
+    endLabel.textContent = 'End Date';
+    const endInput = document.createElement('input');
+    endInput.type = 'month';
+    endInput.className = 'exp-end w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm';
+    endInput.value = entry.endDate || '';
+    endInput.disabled = entry.current;
+    endWrap.appendChild(endLabel);
+    endWrap.appendChild(endInput);
+
+    grid2.appendChild(locWrap);
+    grid2.appendChild(startWrap);
+    grid2.appendChild(endWrap);
+
+    // Current job checkbox
+    const currentWrap = document.createElement('div');
+    currentWrap.className = 'flex items-center';
+    const currentCheckbox = document.createElement('input');
+    currentCheckbox.type = 'checkbox';
+    currentCheckbox.className = 'exp-current mr-2';
+    currentCheckbox.checked = entry.current || false;
+    const currentLabel = document.createElement('label');
+    currentLabel.className = 'text-sm text-gray-700';
+    currentLabel.textContent = 'I currently work here';
+    currentWrap.appendChild(currentCheckbox);
+    currentWrap.appendChild(currentLabel);
+
+    // Bullets section
+    const bulletsHeader = document.createElement('div');
+    bulletsHeader.className = 'flex items-center justify-between mt-4 mb-2';
+    const bulletsTitle = document.createElement('h4');
+    bulletsTitle.className = 'text-sm font-semibold text-gray-700';
+    bulletsTitle.textContent = 'Key Achievements & Responsibilities';
+    const addBulletBtn = document.createElement('button');
+    addBulletBtn.className = 'add-bullet-btn text-sm px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors';
+    addBulletBtn.textContent = '+ Add Bullet';
+    bulletsHeader.appendChild(bulletsTitle);
+    bulletsHeader.appendChild(addBulletBtn);
+
+    const bulletsList = document.createElement('div');
+    bulletsList.className = 'bullets-list space-y-2';
+    
+    // Add existing bullets
+    (entry.bullets || []).forEach((bullet, index) => {
+      const bulletEl = this.createBulletElement(bullet, index);
+      bulletsList.appendChild(bulletEl);
+    });
+
+    body.appendChild(grid1);
+    body.appendChild(grid2);
+    body.appendChild(currentWrap);
+    body.appendChild(bulletsHeader);
+    body.appendChild(bulletsList);
+
+    div.appendChild(header);
+    div.appendChild(body);
+
+    this.attachExperienceEventListeners(div, entry);
+    return div;
+  },
 
   /**
    * Create bullet point element
