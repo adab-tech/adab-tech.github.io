@@ -51,6 +51,26 @@ jobs:
           path: |
             axe-results.json
 
+      - name: Comment accessibility summary on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const paExists = fs.existsSync('pa11y.json');
+            const axeExists = fs.existsSync('axe-results.json');
+            let paCount = 'n/a';
+            let axeCount = 'n/a';
+            if (paExists) {
+              try { const pa = JSON.parse(fs.readFileSync('pa11y.json','utf8')); paCount = Array.isArray(pa) ? pa.length : (pa.issues? pa.issues.length : Object.keys(pa).length); } catch(e) { paCount = 'parse error'; }
+            }
+            if (axeExists) {
+              try { const axe = JSON.parse(fs.readFileSync('axe-results.json','utf8')); axeCount = (axe.violations && axe.violations.length) ? axe.violations.length : 0; } catch(e) { axeCount = 'parse error'; }
+            }
+            const artifactsUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts`;
+            const body = `Accessibility report summary:\n- Pa11y issues: ${paCount}\n- Axe violations: ${axeCount}\n\nDownload artifacts (pa11y.json, axe-results.json) from the workflow run: ${artifactsUrl}`;
+            await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
+
   deploy:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
