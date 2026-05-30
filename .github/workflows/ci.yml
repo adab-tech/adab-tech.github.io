@@ -67,7 +67,8 @@ jobs:
             if (axeExists) {
               try { const axe = JSON.parse(fs.readFileSync('axe-results.json','utf8')); axeCount = (axe.violations && axe.violations.length) ? axe.violations.length : 0; } catch(e) { axeCount = 'parse error'; }
             }
-            const body = `Accessibility report summary:\n- Pa11y issues: ${paCount}\n- Axe violations: ${axeCount}\n\nArtifacts: pa11y.json, axe-results.json`;
+            const artifactsUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts`;
+            const body = `Accessibility report summary:\n- Pa11y issues: ${paCount}\n- Axe violations: ${axeCount}\n\nDownload artifacts (pa11y.json, axe-results.json) from the workflow run: ${artifactsUrl}`;
             await github.rest.issues.createComment({owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number, body});
 
   deploy:
