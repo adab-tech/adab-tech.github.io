@@ -1,34 +1,29 @@
 {
-  "name": "adab-tech-site-a11y",
+  "name": "adab-tech.github.io",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "http-server -p 8000",
-    "start:py": "python -m http.server 8000",
-    "pa11y": "pa11y http://127.0.0.1:8000 --reporter cli",
-    "axe-audit": "node axe-audit.js",
-    "prepare": "simple-git-hooks",
-    "precommit": "npm audit --audit-level=low || true"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
-  "engines": {
-    "node": ">=18 <25"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "npm run precommit"
-  },
-  "lint-staged": {
-    "*.{js,css,html}": [
-      "echo 'Files staged:'",
-      "git diff --name-only --staged"
-    ]
+  "dependencies": {
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@axe-core/playwright": "^4.7.0",
-    "axe-core": "^4.11.0",
-    "http-server": "^14.1.1",
-    "lint-staged": "^13.3.0",
-    "pa11y": "^9.1.1",
-    "playwright": "^1.49.0",
-    "simple-git-hooks": "^2.13.1"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6",
+    "gh-pages": "^6.3.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
