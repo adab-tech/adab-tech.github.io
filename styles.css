@@ -1038,16 +1038,6 @@ section {
   display: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .cal-inline-mount {
-    display: none;
-  }
-
-  .booking-fallback.is-hidden {
-    display: inline-flex;
-  }
-}
-
 .contact-links span,
 .contact-copy,
 .footer-brand p,

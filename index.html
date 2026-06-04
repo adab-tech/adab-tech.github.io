@@ -16,8 +16,32 @@
     <title>Adamu Abubakar — African Language AI & Computational Linguistics</title>
     <link rel="icon" href="assets/brand/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="assets/brand/logo-mark.svg">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="styles.css?v=20260604">
+    <link rel="stylesheet" href="animations.css?v=20260604">
+    <script>
+        (function () {
+            if (!('serviceWorker' in navigator)) return;
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+                regs.forEach(function (reg) {
+                    var script =
+                        (reg.active && reg.active.scriptURL) ||
+                        (reg.installing && reg.installing.scriptURL) ||
+                        (reg.waiting && reg.waiting.scriptURL) ||
+                        '';
+                    if (script.indexOf('/sw.js') !== -1 && script.indexOf('/static/') === -1) {
+                        reg.unregister();
+                        if (window.caches) {
+                            caches.keys().then(function (keys) {
+                                keys.forEach(function (key) {
+                                    caches.delete(key);
+                                });
+                            });
+                        }
+                    }
+                });
+            });
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -568,9 +592,9 @@
         </div>
     </footer>
 
-    <script src="assets/brand/site-config.js"></script>
-    <script src="script.js"></script>
-    <script src="animations.js"></script>
-    <script src="booking.js"></script>
+    <script src="assets/brand/site-config.js?v=20260604"></script>
+    <script src="script.js?v=20260604"></script>
+    <script src="animations.js?v=20260604"></script>
+    <script src="booking.js?v=20260604"></script>
 </body>
 </html>

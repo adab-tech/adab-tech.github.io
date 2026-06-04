@@ -72,6 +72,13 @@
 
     const fallback = document.querySelector('.booking-fallback');
     if (fallback) fallback.classList.add('is-hidden');
+
+    window.setTimeout(function () {
+      const hasEmbed = mount.querySelector('iframe, [data-cal-namespace], .cal-inline-embed');
+      if (!hasEmbed && fallback) {
+        fallback.classList.remove('is-hidden');
+      }
+    }, 12000);
   }
 
   function initCalEmbed() {

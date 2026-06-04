@@ -57,7 +57,7 @@
   <script src="js/hausa-explorer-app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(function () {});
+      navigator.serviceWorker.register('/static/sw.js', { scope: '/static/' }).catch(function () {});
     }
   </script>
 </body>

@@ -1,76 +1,78 @@
-// Service Worker for Hausa Explorer PWA
-const CACHE_NAME = 'hausa-explorer-v1';
+// Service Worker for Hausa Explorer PWA (scoped to /static/ only)
+const CACHE_NAME = 'hausa-explorer-v4';
 const urlsToCache = [
-  '/hausa_explorer.html',
-  '/manifest.json'
+  '/static/hausa_explorer.html',
+  '/static/css/hausa-explorer.css',
+  '/static/js/hausa-explorer-data.js',
+  '/static/js/hausa-lessons.js',
+  '/static/js/robinson-lookup.js',
+  '/static/js/hausa-explorer-app.js',
+  '/static/data/robinson-en-ha-index.json',
+  '/static/data/ATTRIBUTION.md',
+  '/manifest.json',
 ];
 
-// Install event - cache resources
-self.addEventListener('install', event => {
+function isStaticAsset(url) {
+  return url.pathname.startsWith('/static/');
+}
+
+self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(urlsToCache);
-      })
-      .catch(err => {
-        console.log('Cache installation failed:', err);
-      })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache)).catch((err) => {
+      console.log('Cache installation failed:', err);
+    })
   );
+  self.skipWaiting();
 });
 
-// Fetch event - serve from cache when offline
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
-        
-        // Clone the request
-        const fetchRequest = event.request.clone();
-        
-        return fetch(fetchRequest)
-          .then(response => {
-            // Check if valid response
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            
-            // Clone the response
-            const responseToCache = response.clone();
-            
-            // Cache the fetched response for future use
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-            
-            return response;
-          })
-          .catch(error => {
-            console.log('Fetch failed, serving offline fallback:', error);
-            // Return a basic offline page or cached response if available
-            return caches.match('/hausa_explorer.html');
-          });
-      })
-  );
-});
-
-// Activate event - clean up old caches
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
         })
-      );
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin || !isStaticAsset(url)) {
+    return;
+  }
+
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((r) => r || caches.match('/static/hausa_explorer.html')))
+    );
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      const networkFetch = fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+
+      return cached || networkFetch;
     })
   );
 });
