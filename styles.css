@@ -1015,21 +1015,37 @@ section {
 }
 
 .booking-panel__embed {
-  min-height: 120px;
+  min-height: 520px;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: color-mix(in srgb, var(--bg) 70%, var(--surface));
-  overflow: hidden;
+  overflow: auto;
+  position: relative;
 }
 
-.booking-panel__embed cal-inline {
-  display: block;
+.cal-inline-mount {
+  width: 100%;
   min-height: 520px;
+  overflow: auto;
 }
 
 .booking-fallback {
   margin: 1.5rem auto;
   display: inline-flex;
+}
+
+.booking-fallback.is-hidden {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cal-inline-mount {
+    display: none;
+  }
+
+  .booking-fallback.is-hidden {
+    display: inline-flex;
+  }
 }
 
 .contact-links span,

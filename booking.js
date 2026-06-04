@@ -1,12 +1,14 @@
 /**
- * Booking calendar (Cal.com) + link wiring from site-config.js
+ * Cal.com inline booking (official embed) + external link wiring
  */
 (function () {
   'use strict';
 
   const cfg = window.ADAMU_SITE || {};
-  const bookingUrl = cfg.bookingUrl || 'https://cal.com/';
-  const calLink = cfg.bookingCalLink || '';
+  const bookingUrl = cfg.bookingUrl || 'https://cal.com/adamu-abubakar/intro';
+  const calLink = cfg.bookingCalLink || 'adamu-abubakar/intro';
+  const calNamespace = cfg.calNamespace || 'intro';
+  const calMountId = cfg.calMountId || 'my-cal-inline-intro';
 
   function wireBookingLinks() {
     document.querySelectorAll('[data-booking-url]').forEach((el) => {
@@ -16,31 +18,75 @@
     });
   }
 
+  function loadCalEmbed() {
+    const mount = document.getElementById(calMountId);
+    if (!mount) return;
+
+    (function (C, A, L) {
+      const p = function (a, ar) {
+        a.q.push(ar);
+      };
+      const d = C.document;
+      C.Cal =
+        C.Cal ||
+        function () {
+          const cal = C.Cal;
+          const ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {};
+            cal.q = cal.q || [];
+            d.head.appendChild(d.createElement('script')).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            const api = function () {
+              p(api, arguments);
+            };
+            const namespace = ar[1];
+            api.q = api.q || [];
+            if (typeof namespace === 'string') {
+              cal.ns[namespace] = cal.ns[namespace] || api;
+              p(cal.ns[namespace], ar);
+              p(cal, ['initNamespace', namespace]);
+            } else {
+              p(cal, ar);
+            }
+            return;
+          }
+          p(cal, ar);
+        };
+    })(window, 'https://app.cal.com/embed/embed.js', 'init');
+
+    Cal('init', calNamespace, { origin: 'https://app.cal.com' });
+
+    Cal.ns[calNamespace]('inline', {
+      elementOrSelector: `#${calMountId}`,
+      config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true' },
+      calLink,
+    });
+
+    Cal.ns[calNamespace]('ui', {
+      hideEventTypeDetails: false,
+      layout: 'month_view',
+    });
+
+    const fallback = document.querySelector('.booking-fallback');
+    if (fallback) fallback.classList.add('is-hidden');
+  }
+
   function initCalEmbed() {
-    const host = document.getElementById('calEmbedHost');
-    if (!host || !calLink) return;
+    if (!calLink) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
 
-    const script = document.createElement('script');
-    script.src = 'https://app.cal.com/embed/embed.js';
-    script.async = true;
-    script.onload = () => {
-      const fallback = host.querySelector('.booking-fallback');
-      if (fallback) fallback.remove();
+    if (window.Cal && window.Cal.loaded) {
+      loadCalEmbed();
+      return;
+    }
 
-      const inline = document.createElement('cal-inline');
-      inline.setAttribute('calLink', calLink);
-      inline.style.width = '100%';
-      inline.style.minHeight = '520px';
-      inline.style.display = 'block';
-      host.appendChild(inline);
-    };
-    script.onerror = () => {
-      /* fallback link remains */
-    };
-    document.body.appendChild(script);
+    loadCalEmbed();
   }
 
   function init() {

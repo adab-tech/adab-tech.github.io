@@ -5,4 +5,6 @@
 window.ADAMU_SITE = {
   bookingUrl: 'https://cal.com/adamu-abubakar/intro',
   bookingCalLink: 'adamu-abubakar/intro',
+  calNamespace: 'intro',
+  calMountId: 'my-cal-inline-intro',
 };
