@@ -44,12 +44,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="../index.html" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
                     <a href="provider.html" class="text-sm text-gray-600 hover:text-blue-600">Provider View</a>
-                    <button onclick="openSettings()" class="text-gray-600 hover:text-blue-600" title="Settings">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </button>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-medium">Offline — no API</span>
                 </div>
             </div>
         </div>
@@ -109,7 +104,7 @@
 
                 <!-- Voice Input Button -->
                 <div class="mb-6">
-                    <button onclick="toggleVoiceInput()" id="voice-btn" 
+                    <button type="button" onclick="toggleVoiceInput()" id="voice-btn" 
                         class="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
@@ -136,14 +131,14 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap gap-3">
-                    <button onclick="processInput()" id="process-btn" 
+                    <button type="button" onclick="processInput()" id="process-btn" 
                         class="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition flex items-center justify-center space-x-2">
                         <span>Process Symptoms</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                         </svg>
                     </button>
-                    <button onclick="clearForm()" 
+                    <button type="button" onclick="clearForm()" 
                         class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
                         Clear
                     </button>
@@ -192,47 +187,13 @@
                 </div>
 
                 <!-- Share with Provider Button -->
-                <button onclick="shareWithProvider()" 
+                <button type="button" onclick="shareWithProvider()" 
                     class="w-full bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
                     </svg>
                     <span>Share with Healthcare Provider</span>
                 </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
-                <h2 class="text-xl font-bold">Settings</h2>
-            </div>
-            <div class="p-6">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
-                    <select id="ai-provider" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="openai">OpenAI GPT</option>
-                        <option value="gemini">Google Gemini</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-                    <input type="password" id="api-key" placeholder="Enter your API key" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Your API key is stored locally in your browser</p>
-                </div>
-                <div class="flex space-x-3">
-                    <button onclick="saveSettings()" 
-                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
-                        Save
-                    </button>
-                    <button onclick="closeSettings()" 
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
-                        Cancel
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -247,7 +208,7 @@
 
     <!-- Scripts -->
     <script src="../lib/prompts/templates.js"></script>
-    <script src="../lib/ai-router.js"></script>
+    <script src="../lib/local-engine.js"></script>
     <script>
         // Initialize
         let recognition = null;
@@ -321,43 +282,32 @@
             }
         }
 
-        async function processInput() {
+        function processInput() {
             const input = document.getElementById('symptom-input').value.trim();
-            
             if (!input) {
                 alert('Please describe your symptoms');
                 return;
             }
 
-            // Check API key
-            if (!aiRouter.getApiKey()) {
-                openSettings();
-                alert('Please configure your API key in settings');
-                return;
-            }
-
             showLoading(true);
-
-            try {
-                // Normalize input
-                const normalized = await aiRouter.normalize(input);
-                document.getElementById('normalized-text').textContent = normalized;
-
-                // Translate if requested
+            setTimeout(() => {
+                const sourceLang = document.getElementById('input-language').value;
                 const targetLang = document.getElementById('translation-language').value;
+                const result = khadEngine.processPatientReport({ text: input, sourceLang, targetLang });
+
+                document.getElementById('normalized-text').textContent = result.normalized;
+
                 if (targetLang) {
-                    const translated = await aiRouter.translate(normalized, targetLang);
-                    document.getElementById('translated-text').textContent = translated;
+                    const text = result.translated || result.translatedNote || 'Translation unavailable for this phrase.';
+                    document.getElementById('translated-text').textContent = text;
                     document.getElementById('translation-result').classList.remove('hidden');
                 } else {
                     document.getElementById('translation-result').classList.add('hidden');
                 }
 
-                // Summarize symptoms
-                const summary = await aiRouter.summarizeSymptoms(normalized);
                 const summaryElement = document.getElementById('symptom-summary');
                 summaryElement.textContent = '';
-                summary.split('\n').forEach(line => {
+                result.summary.split('\n').forEach(line => {
                     if (line.trim()) {
                         const p = document.createElement('p');
                         p.textContent = line;
@@ -365,28 +315,21 @@
                     }
                 });
 
-                // Store data for provider view
                 storePatientData({
                     original: input,
-                    normalized: normalized,
-                    translated: targetLang ? document.getElementById('translated-text').textContent : null,
-                    summary: summary,
-                    timestamp: new Date().toISOString(),
-                    language: document.getElementById('input-language').value
+                    normalized: result.normalized,
+                    translated: result.translated,
+                    summary: result.summary,
+                    risk: result.risk,
+                    timestamp: result.processedAt,
+                    language: sourceLang,
+                    engine: result.engine,
                 });
 
-                // Show results
                 document.getElementById('results-section').classList.remove('hidden');
-                
-                // Scroll to results
                 document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error processing symptoms: ' + error.message);
-            } finally {
                 showLoading(false);
-            }
+            }, 350);
         }
 
         function clearForm() {
@@ -416,53 +359,6 @@
             }).catch(() => {
                 alert('Unable to copy. Please manually copy the information above.');
             });
-        }
-
-        function openSettings() {
-            document.getElementById('settings-modal').classList.remove('hidden');
-            
-            // Load current settings
-            const provider = aiRouter.getProvider();
-            const apiKey = aiRouter.getApiKey();
-            
-            document.getElementById('ai-provider').value = provider || 'openai';
-            document.getElementById('api-key').value = apiKey || '';
-        }
-
-        function closeSettings() {
-            document.getElementById('settings-modal').classList.add('hidden');
-        }
-
-        function saveSettings() {
-            const provider = document.getElementById('ai-provider').value;
-            const apiKey = document.getElementById('api-key').value;
-            
-            if (!apiKey) {
-                alert('Please enter an API key');
-                return;
-            }
-            
-            // Validate API key format
-            if (!aiRouter.validateApiKey(apiKey, provider)) {
-                const warningMsg = provider === 'openai' 
-                    ? 'OpenAI API keys should start with "sk-". Please verify your key.'
-                    : 'Please verify your API key format.';
-                
-                if (!confirm(warningMsg + '\n\nDo you want to save it anyway?')) {
-                    return;
-                }
-            }
-            
-            aiRouter.setProvider(provider);
-            try {
-                aiRouter.setApiKey(apiKey);
-            } catch (error) {
-                alert('Error saving API key: ' + error.message);
-                return;
-            }
-            
-            closeSettings();
-            alert('Settings saved successfully!');
         }
 
         function showLoading(show) {

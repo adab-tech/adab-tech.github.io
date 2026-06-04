@@ -67,7 +67,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                     </span>
-                    <span class="text-sm font-medium">AI-Powered Healthcare Communication</span>
+                    <span class="text-sm font-medium">Offline Healthcare Communication</span>
                 </div>
             </div>
             
@@ -194,42 +194,27 @@
         </div>
     </section>
 
-    <!-- AI Backend Section -->
+    <!-- Offline Engine Section -->
     <section class="py-20 bg-gradient-to-br from-slate-50 to-slate-100">
         <div class="max-w-7xl mx-auto px-4">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-gray-800 mb-4">AI-Powered Backend</h2>
-                <p class="text-xl text-gray-600">Flexible integration with leading AI platforms</p>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Runs Entirely in Your Browser</h2>
+                <p class="text-xl text-gray-600">No API keys, no cloud calls — pattern-based symptom extraction and phrase translation</p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
-                    <div class="bg-gradient-to-r from-green-400 to-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">OpenAI GPT</h3>
-                    <p class="text-gray-600">GPT-3.5 and GPT-4 models for advanced language understanding</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Symptom patterns</h3>
+                    <p class="text-gray-600">Rule-based extraction for common presentations and urgency hints</p>
                 </div>
-
                 <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
-                    <div class="bg-gradient-to-r from-blue-400 to-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Google Gemini</h3>
-                    <p class="text-gray-600">Gemini Pro for scalable AI text analysis and generation</p>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Phrase library</h3>
+                    <p class="text-gray-600">Hausa ↔ English phrases for clinic-ready communication</p>
                 </div>
-            </div>
-
-            <div class="mt-12 text-center">
-                <p class="text-gray-600 mb-4">Configured via the AI Router module for seamless switching</p>
-                <a href="#" onclick="alert('Configure API keys in the Settings menu of each interface'); return false;" 
-                   class="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition">
-                    Learn More
-                </a>
+                <div class="bg-white p-8 rounded-2xl shadow-lg text-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Local handoff</h3>
+                    <p class="text-gray-600">Patient reports sync to the provider view via browser storage</p>
+                </div>
             </div>
         </div>
     </section>
@@ -283,7 +268,7 @@
                         <svg class="w-6 h-6 text-green-500 mt-1 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        <span><strong>Privacy-Focused:</strong> API keys stored locally, no server-side data storage</span>
+                        <span><strong>Privacy-Focused:</strong> No external APIs; data stays in your browser</span>
                     </li>
                     <li class="flex items-start">
                         <svg class="w-6 h-6 text-green-500 mt-1 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -301,8 +286,8 @@
                     <li>• <strong>TailwindCSS</strong> for responsive styling</li>
                     <li>• <strong>Vanilla JavaScript</strong> for client-side logic</li>
                     <li>• <strong>Web Speech API</strong> for voice input</li>
-                    <li>• <strong>AI Router Module</strong> for backend abstraction</li>
-                    <li>• <strong>LocalStorage</strong> for configuration persistence</li>
+                    <li>• <strong>Local Engine</strong> for offline symptom and translation workflows</li>
+                    <li>• <strong>LocalStorage</strong> for patient–provider handoff</li>
                 </ul>
 
                 <h3 class="text-2xl font-bold text-gray-800 mb-4">Use Cases</h3>

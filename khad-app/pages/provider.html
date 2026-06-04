@@ -49,12 +49,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="../index.html" class="text-sm text-gray-600 hover:text-blue-600">Home</a>
                     <a href="patient.html" class="text-sm text-gray-600 hover:text-blue-600">Patient View</a>
-                    <button type="button" onclick="openSettings()" class="text-gray-600 hover:text-blue-600" title="Settings">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </button>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded-full font-medium">Offline — no API</span>
                 </div>
             </div>
         </div>
@@ -223,40 +218,6 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
-            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white">
-                <h2 class="text-xl font-bold">Settings</h2>
-            </div>
-            <div class="p-6">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">AI Provider</label>
-                    <select id="ai-provider" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        <option value="openai">OpenAI GPT</option>
-                        <option value="gemini">Google Gemini</option>
-                    </select>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">API Key</label>
-                    <input type="password" id="api-key" placeholder="Enter your API key" 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <p class="text-xs text-gray-500 mt-1">Your API key is stored locally in your browser</p>
-                </div>
-                <div class="flex space-x-3">
-                    <button type="button" onclick="saveSettings()" 
-                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 transition">
-                        Save
-                    </button>
-                    <button type="button" onclick="closeSettings()" 
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Loading Overlay -->
     <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl p-8 flex flex-col items-center space-y-4">
@@ -267,7 +228,7 @@
 
     <!-- Scripts -->
     <script src="../lib/prompts/templates.js"></script>
-    <script src="../lib/ai-router.js"></script>
+    <script src="../lib/local-engine.js"></script>
     <script>
         let currentAnalysis = null;
 
@@ -292,55 +253,28 @@
             }
         }
 
-        async function analyzeSymptoms() {
+        function analyzeSymptoms() {
             const input = document.getElementById('patient-input').value.trim();
-            
+
             if (!input) {
                 alert('Please enter patient symptom description');
                 return;
             }
 
-            // Check API key
-            if (!aiRouter.getApiKey()) {
-                openSettings();
-                alert('Please configure your API key in settings');
-                return;
-            }
-
             showLoading(true);
-
-            try {
-                // Normalize input
-                const normalized = await aiRouter.normalize(input);
-
-                // Summarize symptoms
-                const summary = await aiRouter.summarizeSymptoms(normalized);
-
-                // Assess risk
-                const riskRaw = await aiRouter.assessRisk(summary);
-                const risk = riskRaw.trim().toUpperCase().replace(/[^A-Z]/g, '');
-                
-                // Validate risk level
-                const validRisk = ['LOW', 'MEDIUM', 'HIGH'].includes(risk) ? risk : 'MEDIUM';
-
-                // Store analysis
+            setTimeout(() => {
+                const result = khadEngine.processPatientReport({ text: input, sourceLang: 'en', targetLang: null });
                 currentAnalysis = {
                     original: input,
-                    normalized: normalized,
-                    summary: summary,
-                    risk: validRisk,
-                    timestamp: new Date().toISOString()
+                    normalized: result.normalized,
+                    summary: result.summary,
+                    risk: result.risk,
+                    timestamp: result.processedAt,
+                    engine: result.engine,
                 };
-
-                // Display results
                 displayAnalysis(currentAnalysis);
-
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error analyzing symptoms: ' + error.message);
-            } finally {
                 showLoading(false);
-            }
+            }, 350);
         }
 
         function displayAnalysis(data) {
@@ -476,53 +410,6 @@
             printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
-        }
-
-        function openSettings() {
-            document.getElementById('settings-modal').classList.remove('hidden');
-            
-            // Load current settings
-            const provider = aiRouter.getProvider();
-            const apiKey = aiRouter.getApiKey();
-            
-            document.getElementById('ai-provider').value = provider || 'openai';
-            document.getElementById('api-key').value = apiKey || '';
-        }
-
-        function closeSettings() {
-            document.getElementById('settings-modal').classList.add('hidden');
-        }
-
-        function saveSettings() {
-            const provider = document.getElementById('ai-provider').value;
-            const apiKey = document.getElementById('api-key').value;
-            
-            if (!apiKey) {
-                alert('Please enter an API key');
-                return;
-            }
-            
-            // Validate API key format
-            if (!aiRouter.validateApiKey(apiKey, provider)) {
-                const warningMsg = provider === 'openai' 
-                    ? 'OpenAI API keys should start with "sk-". Please verify your key.'
-                    : 'Please verify your API key format.';
-                
-                if (!confirm(warningMsg + '\n\nDo you want to save it anyway?')) {
-                    return;
-                }
-            }
-            
-            aiRouter.setProvider(provider);
-            try {
-                aiRouter.setApiKey(apiKey);
-            } catch (error) {
-                alert('Error saving API key: ' + error.message);
-                return;
-            }
-            
-            closeSettings();
-            alert('Settings saved successfully!');
         }
 
         function showLoading(show) {

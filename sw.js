@@ -1,7 +1,14 @@
 // Service Worker for Hausa Explorer PWA
-const CACHE_NAME = 'hausa-explorer-v1';
+const CACHE_NAME = 'hausa-explorer-v3';
 const urlsToCache = [
   '/static/hausa_explorer.html',
+  '/static/css/hausa-explorer.css',
+  '/static/js/hausa-explorer-data.js',
+  '/static/js/hausa-lessons.js',
+  '/static/js/robinson-lookup.js',
+  '/static/js/hausa-explorer-app.js',
+  '/static/data/robinson-en-ha-index.json',
+  '/static/data/ATTRIBUTION.md',
   '/manifest.json'
 ];
 
@@ -53,7 +60,7 @@ self.addEventListener('fetch', event => {
           .catch(error => {
             console.log('Fetch failed, serving offline fallback:', error);
             // Return a basic offline page or cached response if available
-            return caches.match('/hausa_explorer.html');
+            return caches.match('/static/hausa_explorer.html');
           });
       })
   );

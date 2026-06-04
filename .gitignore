@@ -8,3 +8,6 @@ axe-results.json
 pa11y.json
 .lighthouseci/
 server.pid
+
+# Archival dictionary PDFs (hosted on Internet Archive; index JSON is committed)
+assets/dictionaries/**/*.pdf
