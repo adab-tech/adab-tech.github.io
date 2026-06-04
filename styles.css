@@ -989,6 +989,12 @@ section {
   background: color-mix(in srgb, #ffd21e 18%, var(--surface-strong));
 }
 
+.contact-icon--fb:hover {
+  color: #1877f2;
+  border-color: color-mix(in srgb, #1877f2 40%, var(--border));
+  background: color-mix(in srgb, #1877f2 12%, var(--surface-strong));
+}
+
 .contact-cta-row {
   display: flex;
   flex-wrap: wrap;
