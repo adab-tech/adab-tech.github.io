@@ -259,7 +259,13 @@ button {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.65rem;
+}
+
+.nav-menu .nav-links-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .nav-link {
@@ -786,9 +792,14 @@ section {
 }
 
 .project-card:hover {
-  transform: translateY(-6px);
   box-shadow: var(--shadow-lg);
   border-color: color-mix(in srgb, var(--accent) 24%, var(--border));
+}
+
+@media (pointer: fine) {
+  .project-card:not(.is-tilting):hover {
+    transform: translateY(-6px);
+  }
 }
 
 .project-card__top {

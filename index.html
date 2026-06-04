@@ -15,6 +15,7 @@
 
     <title>Adamu Abubakar — African Language AI & Computational Linguistics</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -26,6 +27,7 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
     <nav class="navbar" id="navbar" aria-label="Main navigation">
         <div class="nav-container">
@@ -48,11 +50,14 @@
             </button>
 
             <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link" aria-current="page">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#skills" class="nav-link">Skills</a>
-                <a href="#contact" class="nav-link">Contact</a>
+                <div class="nav-links-group" id="navLinksGroup">
+                    <span class="nav-indicator" id="navIndicator" aria-hidden="true"></span>
+                    <a href="#home" class="nav-link" aria-current="page">Home</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#projects" class="nav-link">Projects</a>
+                    <a href="#skills" class="nav-link">Skills</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
                 <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" aria-pressed="false">
                     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="5"/>
@@ -73,22 +78,30 @@
         </div>
     </nav>
 
+    <div class="build-ticker" aria-hidden="true">
+        <div class="build-ticker__track">
+            <span>OpportunityFinder</span><span>Hausa Language Explorer</span><span>Khad Health App</span><span>Hausa AI Chatbot</span><span>Adamsy Free TV</span><span>Robinson Dictionary NLP</span>
+            <span>OpportunityFinder</span><span>Hausa Language Explorer</span><span>Khad Health App</span><span>Hausa AI Chatbot</span><span>Adamsy Free TV</span><span>Robinson Dictionary NLP</span>
+        </div>
+    </div>
+
     <main id="main-content" tabindex="-1">
         <section class="hero" id="home">
             <div class="hero-background">
-                <div class="hero-gradient"></div>
-                <div class="hero-grid"></div>
-                <div class="hero-orb hero-orb--one"></div>
-                <div class="hero-orb hero-orb--two"></div>
+                <div class="hero-gradient" data-parallax="0.15"></div>
+                <div class="hero-grid" data-parallax="0.08"></div>
+                <div class="hero-glyphs" id="heroGlyphs" aria-hidden="true"></div>
+                <div class="hero-orb hero-orb--one" data-parallax="0.35"></div>
+                <div class="hero-orb hero-orb--two" data-parallax="0.28"></div>
             </div>
 
             <div class="container hero-content">
-                <div class="hero-copy" data-animate="fade-up">
+                <div class="hero-copy" data-animate="fade-up" data-parallax="0.12">
                     <p class="eyebrow">Computational linguistics • African language technology • Applied AI</p>
                     <p id="dynamic-greeting" class="greeting" aria-live="polite" lang="en">Welcome</p>
 
                     <h1 class="hero-title">
-                        Designing AI that speaks <span class="highlight">African languages</span>
+                        <span class="hero-title__typed" id="heroTitleTyped" data-typewriter="Designing AI that speaks African languages"></span><span class="hero-title__cursor" id="heroTitleCursor" aria-hidden="true"></span>
                     </h1>
 
                     <p class="hero-subtitle">
@@ -113,27 +126,32 @@
 
                     <div class="hero-metrics" aria-label="Highlights">
                         <article class="metric-card">
-                            <span class="metric-value">5+</span>
+                            <span class="metric-value" data-count="5" data-suffix="+">0+</span>
                             <span class="metric-label">Years solving language-tech problems</span>
                         </article>
                         <article class="metric-card">
-                            <span class="metric-value">10+</span>
+                            <span class="metric-value" data-count="10" data-suffix="+">0+</span>
                             <span class="metric-label">Languages across the portfolio</span>
                         </article>
                         <article class="metric-card">
-                            <span class="metric-value">15+</span>
-                            <span class="metric-label">Projects shipped or documented</span>
+                            <span class="metric-value" data-count="8" data-suffix="">0</span>
+                            <span class="metric-label">Featured portfolio builds</span>
                         </article>
                         <article class="metric-card">
-                            <span class="metric-value">Hausa</span>
+                            <span class="metric-value metric-value--text">Hausa</span>
                             <span class="metric-label">A language-first product lens</span>
                         </article>
                     </div>
                 </div>
 
-                <div class="hero-visual" data-animate="fade-left">
+                <div class="hero-visual" data-animate="fade-left" data-parallax="0.18">
                     <div class="signal-board">
                         <div class="signal-card signal-card--accent">
+                            <div class="nlp-signal" aria-hidden="true">
+                                <span class="nlp-signal__bar"></span><span class="nlp-signal__bar"></span><span class="nlp-signal__bar"></span>
+                                <span class="nlp-signal__bar"></span><span class="nlp-signal__bar"></span><span class="nlp-signal__bar"></span>
+                                <span class="nlp-signal__bar"></span><span class="nlp-signal__bar"></span>
+                            </div>
                             <span class="signal-label">Current focus</span>
                             <h2>Multilingual systems that are useful on day one.</h2>
                             <ul class="signal-list">
@@ -155,15 +173,7 @@
                                     <span class="dot"></span>
                                     <span class="dot"></span>
                                 </div>
-                                <pre><code><span class="comment"># African language NLP</span>
-<span class="keyword">def</span> <span class="function">analyze_hausa</span>(text):
-    <span class="keyword">return</span> tokenize(text)
-
-<span class="comment"># Multilingual AI</span>
-result = <span class="function">translate</span>(
-    text=<span class="string">"Barka da zuwa"</span>,
-    target=<span class="string">"en"</span>
-)</code></pre>
+                                <pre><code id="heroCodeSnippet" class="code-snippet-fade"></code></pre>
                             </article>
                         </div>
                     </div>
@@ -200,23 +210,59 @@ result = <span class="function">translate</span>(
                             I care about products that can survive in the real world: healthcare documentation, education platforms, chat experiences, and research systems that are maintainable, inclusive, and grounded in community needs.
                         </p>
 
+                        <ol class="journey-timeline" id="journeyTimeline" aria-label="Career journey">
+                            <li class="journey-timeline__item">
+                                <span class="journey-timeline__dot" aria-hidden="true"></span>
+                                <div class="journey-timeline__content">
+                                    <span class="journey-timeline__year">Foundation</span>
+                                    <p>Computational linguistics, multilingual NLP, and language data for African settings.</p>
+                                </div>
+                            </li>
+                            <li class="journey-timeline__item">
+                                <span class="journey-timeline__dot" aria-hidden="true"></span>
+                                <div class="journey-timeline__content">
+                                    <span class="journey-timeline__year">Hausa-first products</span>
+                                    <p>Chat, explorer, and dictionary tooling — from research prototypes to shipped demos.</p>
+                                </div>
+                            </li>
+                            <li class="journey-timeline__item">
+                                <span class="journey-timeline__dot" aria-hidden="true"></span>
+                                <div class="journey-timeline__content">
+                                    <span class="journey-timeline__year">Applied AI</span>
+                                    <p>Healthcare communication (Khad), opportunity discovery, and accessible web experiences.</p>
+                                </div>
+                            </li>
+                            <li class="journey-timeline__item">
+                                <span class="journey-timeline__dot" aria-hidden="true"></span>
+                                <div class="journey-timeline__content">
+                                    <span class="journey-timeline__year">Today</span>
+                                    <p>Open collaborations across education, health, and language technology on adamu.tech.</p>
+                                </div>
+                            </li>
+                        </ol>
+
                         <div class="about-stats">
                             <article class="stat">
-                                <span class="stat-number">5+</span>
+                                <span class="stat-number" data-count="5" data-suffix="+">0+</span>
                                 <span class="stat-label">Years Experience</span>
                             </article>
                             <article class="stat">
-                                <span class="stat-number">10+</span>
+                                <span class="stat-number" data-count="10" data-suffix="+">0+</span>
                                 <span class="stat-label">Languages</span>
                             </article>
                             <article class="stat">
-                                <span class="stat-number">15+</span>
-                                <span class="stat-label">Projects</span>
+                                <span class="stat-number" data-count="8" data-suffix="">0</span>
+                                <span class="stat-label">Featured Projects</span>
                             </article>
                         </div>
                     </div>
 
                     <div class="about-aside" data-animate="fade-left">
+                        <div class="africa-map-wrap" aria-hidden="true">
+                            <svg class="africa-map" viewBox="0 0 120 140" role="img" aria-label="Stylized Africa outline">
+                                <path class="africa-map__path" d="M58 8 C72 6 88 14 96 28 C104 42 108 58 102 74 C98 92 88 108 76 122 C64 132 48 136 36 128 C24 118 16 102 14 84 C12 66 18 48 28 34 C38 20 48 12 58 8 Z M42 52 C48 48 56 50 58 58 C60 66 52 72 44 68 C36 64 36 56 42 52 Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
                         <div class="language-grid">
                             <div class="language-item"><span class="language-icon">🗣️</span><span class="language-name">Hausa</span></div>
                             <div class="language-item"><span class="language-icon">🌍</span><span class="language-name">Yoruba</span></div>
@@ -247,9 +293,10 @@ result = <span class="function">translate</span>(
                     <p class="section-description">
                         A curated selection of practical systems, experiments, and documentation work across AI, health, productivity, and language technology.
                     </p>
+                    <p class="projects-live-count"><span class="projects-live-count__value" id="projectsCount" data-count="8">0</span> featured builds in this portfolio</p>
                 </div>
 
-                <div class="project-grid">
+                <div class="project-grid" id="projectGrid">
                     <article class="project-card project-card--featured" data-animate="fade-up">
                         <div class="project-card__top">
                             <span class="project-index">01</span>
@@ -471,5 +518,6 @@ result = <span class="function">translate</span>(
     </footer>
 
     <script src="script.js"></script>
+    <script src="animations.js"></script>
 </body>
 </html>
