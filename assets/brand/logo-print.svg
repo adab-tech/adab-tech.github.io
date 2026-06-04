@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-labelledby="printTitle">
+  <title id="printTitle">Adamu Abubakar logo  print master</title>
+  <defs>
+    <linearGradient id="printGrad" x1="8%" y1="6%" x2="92%" y2="94%">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="52%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#bb6b1f"/>
+    </linearGradient>
+  </defs>
+  <!-- 3mm bleed guide @ 300dpi H 35px; safe margin 80px -->
+  <rect x="80" y="80" width="1040" height="1040" rx="200" fill="url(#printGrad)"/>
+  <path fill="none" stroke="#ffffff" stroke-width="44" stroke-linecap="round" opacity="0.45" d="M280 640 Q600 480 920 640"/>
+  <path fill="#ffffff" d="M600 280 L820 920 H740 L680 760 H520 L460 920 H380 L600 280 Z M560 560 H640 L600 440 Z"/>
+  <text x="600" y="1080" text-anchor="middle" font-family="'Space Grotesk', 'Inter', Arial, sans-serif" font-size="48" font-weight="700" fill="#102036">Adamu Abubakar · African Language AI</text>
+</svg>
