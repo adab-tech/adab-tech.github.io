@@ -176,6 +176,21 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMenu();
     });
+
+    // Close menu when viewport crosses desktop breakpoint
+    const mobileMq = window.matchMedia('(max-width: 840px)');
+    const onViewportChange = () => {
+      if (!mobileMq.matches) closeMenu();
+    };
+    if (typeof mobileMq.addEventListener === 'function') {
+      mobileMq.addEventListener('change', onViewportChange);
+    } else if (typeof mobileMq.addListener === 'function') {
+      mobileMq.addListener(onViewportChange);
+    }
+
+    window.addEventListener('orientationchange', () => {
+      if (state.isMenuOpen) closeMenu();
+    });
   }
 
   // ===================================

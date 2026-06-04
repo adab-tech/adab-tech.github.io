@@ -134,6 +134,7 @@
 
   function initParallax() {
     if (motionHeavyDisabled() || !window.matchMedia('(pointer: fine)').matches) return;
+    if (window.matchMedia('(max-width: 1024px)').matches) return;
 
     const items = document.querySelectorAll('[data-parallax]');
     if (!items.length) return;

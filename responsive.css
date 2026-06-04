@@ -1,0 +1,309 @@
+/* ===================================
+   Cross-platform & responsive layer
+   Screen sizes, touch, safe areas, OS prefs
+   =================================== */
+
+:root {
+  --nav-height: 5.25rem;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --touch-min: 2.75rem;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-padding-top: calc(var(--nav-height) + var(--safe-top) + 0.5rem);
+}
+
+.navbar {
+  padding-top: var(--safe-top);
+}
+
+.skip-link {
+  top: calc(0.75rem + var(--safe-top));
+  left: calc(0.75rem + var(--safe-left));
+}
+
+.footer-bottom {
+  padding-bottom: calc(1rem + var(--safe-bottom));
+}
+
+/* Dynamic viewport height (mobile browser chrome) */
+@supports (height: 100dvh) {
+  .hero {
+    min-height: max(32rem, calc(100dvh - var(--nav-height) - var(--safe-top)));
+  }
+}
+
+/* Touch-friendly controls */
+.contact-icon,
+.theme-toggle,
+.mobile-menu-toggle,
+.nav-status-pill--cta {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+@media (pointer: coarse) {
+  .contact-icon {
+    width: var(--touch-min);
+    height: var(--touch-min);
+  }
+
+  .nav-link {
+    min-height: var(--touch-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn {
+    min-height: 3rem;
+  }
+
+  .btn:hover,
+  .contact-icon:hover,
+  .nav-status-pill--cta:hover {
+    transform: none;
+  }
+
+  .project-card:hover {
+    transform: none;
+  }
+}
+
+/* Large desktops */
+@media (min-width: 1400px) {
+  :root {
+    --container-max-width: 1280px;
+  }
+
+  .hero-content {
+    gap: clamp(2.5rem, 5vw, 6rem);
+  }
+}
+
+/* Tablets & small laptops */
+@media (max-width: 1024px) {
+  .nav-container {
+    gap: 0.75rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.75rem;
+  }
+
+  .signal-board {
+    width: 100%;
+  }
+
+  .project-card--featured {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 840px) {
+  .nav-container {
+    min-height: auto;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .nav-brand {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .brand-copy {
+    min-width: 0;
+  }
+
+  .brand-name {
+    font-size: 0.98rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-menu {
+    order: 4;
+    max-height: min(70vh, 28rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-menu.active {
+    margin-top: 0.5rem;
+  }
+
+  .hero {
+    padding-bottom: 3.5rem;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
+  .hero-visual {
+    margin-top: 0.5rem;
+  }
+
+  .contact-cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contact-cta-row .btn {
+    width: 100%;
+  }
+
+  .booking-panel__embed {
+    max-height: min(70vh, 380px);
+  }
+
+  .cal-inline-mount {
+    min-height: 300px;
+    max-height: min(70vh, 380px);
+  }
+}
+
+/* Phones */
+@media (max-width: 560px) {
+  .brand-tagline {
+    display: none;
+  }
+
+  .brand-mark-img {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .nav-meta {
+    gap: 0.35rem;
+  }
+
+  .nav-status-pill--cta {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.72rem;
+  }
+
+  .hero {
+    padding-top: 1.5rem;
+  }
+
+  .hero-subtitle,
+  .hero-description {
+    font-size: 0.98rem;
+  }
+
+  .contact-icons {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .contact-card {
+    text-align: center;
+  }
+
+  .contact-lead {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .section-description {
+    font-size: 0.95rem;
+  }
+
+  .project-card {
+    padding: 1.05rem;
+  }
+
+  .code-card pre {
+    font-size: 0.82rem;
+    padding: 0.85rem;
+  }
+
+  .footer-inner {
+    gap: 1.25rem;
+  }
+
+  .footer-links {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+/* Very narrow phones */
+@media (max-width: 380px) {
+  :root {
+    --container-padding: 0.85rem;
+  }
+
+  .contact-icons {
+    gap: 0.5rem;
+  }
+
+  .contact-icon {
+    width: 2.85rem;
+    height: 2.85rem;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .hero-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+}
+
+/* OS high contrast preference */
+@media (prefers-contrast: more) {
+  :root {
+    --border: rgba(16, 32, 54, 0.28);
+    --border-strong: rgba(16, 32, 54, 0.42);
+  }
+
+  [data-theme="dark"] {
+    --border: rgba(148, 163, 184, 0.35);
+    --border-strong: rgba(148, 163, 184, 0.5);
+  }
+
+  .btn,
+  .contact-icon,
+  .project-card,
+  .nav-link {
+    border-width: 2px;
+  }
+}
+
+/* Prevent layout blowout from long URLs/strings */
+.project-description,
+.contact-lead,
+.hero-description {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

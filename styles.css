@@ -60,7 +60,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
   background: var(--bg);
 }
 body {
