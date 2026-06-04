@@ -3,7 +3,7 @@
  * @see https://cal.com — create event type, then paste your username/slug below.
  */
 window.ADAMU_SITE = {
-  assetVersion: '20260604',
+  assetVersion: '20260605',
   bookingUrl: 'https://cal.com/adamu-abubakar/intro',
   bookingCalLink: 'adamu-abubakar/intro',
   calNamespace: 'intro',

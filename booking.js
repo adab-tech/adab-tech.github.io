@@ -61,13 +61,13 @@
 
     Cal.ns[calNamespace]('inline', {
       elementOrSelector: `#${calMountId}`,
-      config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true' },
+      config: { layout: 'week_view', useSlotsViewOnSmallScreen: 'true' },
       calLink,
     });
 
     Cal.ns[calNamespace]('ui', {
       hideEventTypeDetails: false,
-      layout: 'month_view',
+      layout: 'week_view',
     });
 
     const fallback = document.querySelector('.booking-fallback');

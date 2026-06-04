@@ -16,44 +16,6 @@
   transition: width 80ms linear;
 }
 
-.build-ticker {
-  overflow: hidden;
-  border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(12px);
-}
-
-.build-ticker__track {
-  display: flex;
-  gap: 2.5rem;
-  width: max-content;
-  padding: 0.55rem 0;
-  animation: ticker-scroll 38s linear infinite;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.build-ticker__track span {
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.build-ticker__track span::before {
-  content: "◆";
-  margin-right: 0.65rem;
-  color: var(--accent);
-  font-size: 0.55rem;
-  vertical-align: middle;
-}
-
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 .nav-links-group {
   position: relative;
   display: flex;
@@ -94,28 +56,6 @@
 @keyframes theme-spin {
   from { transform: rotate(-40deg) scale(0.85); opacity: 0.5; }
   to { transform: rotate(0deg) scale(1); opacity: 1; }
-}
-
-.hero-glyphs {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.hero-glyph {
-  position: absolute;
-  font-family: var(--font-heading);
-  font-weight: 700;
-  color: color-mix(in srgb, var(--accent) 35%, transparent);
-  opacity: 0;
-  animation: glyph-float 14s ease-in-out infinite;
-}
-
-@keyframes glyph-float {
-  0%, 100% { opacity: 0; transform: translateY(8px) scale(0.92); }
-  12%, 55% { opacity: 0.55; transform: translateY(0) scale(1); }
-  70% { opacity: 0; transform: translateY(-12px) scale(1.02); }
 }
 
 .hero-title__typed .highlight {
@@ -240,19 +180,6 @@
   inherits: false;
 }
 
-.projects-live-count {
-  margin: 0.75rem 0 0;
-  font-size: 0.95rem;
-  color: var(--muted);
-}
-
-.projects-live-count__value {
-  font-family: var(--font-heading);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-
 .journey-timeline {
   list-style: none;
   margin: 1.5rem 0;
@@ -345,11 +272,6 @@
 [data-animate][data-delay="200"].animated { transition-delay: 200ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .build-ticker__track {
-    animation-duration: 90s;
-  }
-
-  .hero-glyph,
   .project-card--featured::before {
     animation: none !important;
   }
@@ -359,18 +281,12 @@
   }
 }
 
-html.reduce-motion .hero-glyph,
 html.reduce-motion .project-card--featured::before {
   animation: none !important;
 }
 
-html.reduce-motion .build-ticker__track {
-  animation-duration: 90s;
-}
-
 @media (max-width: 840px) {
   .nav-indicator { display: none; }
-  .build-ticker { display: none; }
 }
 
 @media (pointer: coarse) {

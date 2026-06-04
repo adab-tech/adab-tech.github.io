@@ -11,8 +11,6 @@
     `<span class="comment"># Robinson lexicon lookup</span>\nentry = <span class="function">lookup</span>(<span class="string">"fever"</span>, source=<span class="string">"robinson_1914"</span>)`,
   ];
 
-  const GLYPHS = ['ɓ', 'ɗ', 'ƙ', 'ƴ', 'Sannu', 'Barka', 'Hausa', 'NLP', 'AI'];
-
   /** True when OS asks to minimize motion (parallax, tilt, loops only). */
   let reducedMotion = false;
 
@@ -159,24 +157,6 @@
     onScroll();
   }
 
-  function initHeroGlyphs() {
-    const root = document.getElementById('heroGlyphs');
-    if (!root || motionHeavyDisabled()) return;
-
-    const count = 10;
-    for (let i = 0; i < count; i += 1) {
-      const span = document.createElement('span');
-      span.className = 'hero-glyph';
-      span.textContent = GLYPHS[i % GLYPHS.length];
-      span.style.left = `${8 + Math.random() * 84}%`;
-      span.style.top = `${6 + Math.random() * 78}%`;
-      span.style.fontSize = `${0.85 + Math.random() * 1.1}rem`;
-      span.style.animationDelay = `${Math.random() * 8}s`;
-      span.style.animationDuration = `${12 + Math.random() * 8}s`;
-      root.appendChild(span);
-    }
-  }
-
   function initCodeRotation() {
     const el = document.getElementById('heroCodeSnippet');
     if (!el) return;
@@ -314,7 +294,6 @@
     initThemeMorph();
     initTypewriter();
     initParallax();
-    initHeroGlyphs();
     initCodeRotation();
     initCountUps();
     initTimeline();
