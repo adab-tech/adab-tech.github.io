@@ -2,7 +2,6 @@
 .sass-cache/
 _site/
 .next
-temitope-hospital-starter/out
 node_modules
 axe-results.json
 pa11y.json
