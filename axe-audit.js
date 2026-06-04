@@ -23,12 +23,16 @@ const path = require('path');
 
     // write results to file so the workflow can upload them
     fs.writeFileSync(outPath, JSON.stringify(results, null, 2));
-    console.log('WROTE_AXE_RESULTS', outPath);
+    const violationCount = Array.isArray(results.violations) ? results.violations.length : 0;
+    console.error(`Wrote axe results to ${outPath} (${violationCount} violations)`);
+    if (violationCount > 0) {
+      process.exitCode = 1;
+    }
   } catch (err) {
     console.error('Audit failed:', err && err.stack ? err.stack : err);
     try {
       fs.writeFileSync(outPath, JSON.stringify({ error: String(err) }, null, 2));
-      console.log('WROTE_AXE_RESULTS_ERROR', outPath);
+      console.error(`Wrote axe error to ${outPath}`);
     } catch (e) {
       console.error('Failed to write error file:', e && e.message ? e.message : e);
     }

@@ -15,29 +15,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
-      - name: Start static server
+      - name: Serve site and run axe audit
         run: |
-          npm run start &
+          npx http-server -p 8000 -c-1 &
           echo $! > server.pid
-
-      - name: Run axe audit
-        run: |
-          node axe-audit.js > axe-results.json || true
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/ > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run axe-audit
+          kill "$(cat server.pid)" 2>/dev/null || true
+        shell: bash
 
       - name: Upload axe results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: axe-results
           path: axe-results.json
-
-      - name: Stop server
-        if: always()
-        run: |
-          kill $(cat server.pid) || true

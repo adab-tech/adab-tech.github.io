@@ -16,21 +16,24 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Install LHCI
-        run: npm install -g @lhci/cli@0.7
+        run: npm install -g @lhci/cli@0.14
 
       - name: Run Lighthouse CI
         env:
-          # allow LHCI to include branch info
           LHCI_BUILD_CONTEXT__CURRENT_BRANCH: ${{ github.head_ref }}
-        run: |
-          # Run LHCI autorun; results uploaded to temporary public storage
-          # Tell LHCI where the static site files live (repo root)
-          lhci autorun --upload.target=temporary-public-storage --collect.staticDistDir=.
+          CHROME_PATH: /usr/bin/google-chrome-stable
+        run: lhci autorun
+
       - name: Upload LHCI artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lhci-report
           path: ./.lighthouseci/**/*
+          if-no-files-found: ignore
