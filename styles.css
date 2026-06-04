@@ -718,8 +718,7 @@ section {
 }
 
 .about-story,
-.about-aside,
-.contact-panel {
+.about-aside {
   padding: clamp(1.2rem, 2vw, 1.6rem);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
@@ -733,30 +732,6 @@ section {
   color: var(--muted);
   max-width: 68ch;
 }
-
-.about-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.9rem;
-  margin-top: 1.6rem;
-}
-
-.stat {
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 82%, transparent), color-mix(in srgb, var(--accent-soft) 60%, transparent));
-  border: 1px solid var(--border);
-}
-
-.stat-number {
-  display: block;
-  margin-bottom: 0.3rem;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.stat-label { color: var(--muted); font-size: 0.92rem; }
 
 .language-grid {
   display: grid;
@@ -1062,10 +1037,8 @@ section {
 }
 
 .contact-links span,
-.contact-copy,
 .footer-brand p,
 .footer-bottom p,
-.stat-label,
 .project-description,
 .hero-description,
 .hero-subtitle,
@@ -1211,7 +1184,6 @@ section {
   .hero-title { max-width: 100%; }
   .hero-metrics { grid-template-columns: 1fr; }
   .language-grid { grid-template-columns: 1fr; }
-  .about-stats { grid-template-columns: 1fr; }
   .skill-grid { grid-template-columns: 1fr; }
   .footer-inner,
   .footer-bottom { flex-direction: column; align-items: flex-start; }
