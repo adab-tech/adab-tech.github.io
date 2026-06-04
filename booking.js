@@ -77,10 +77,6 @@
   function initCalEmbed() {
     if (!calLink) return;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
-    }
-
     if (window.Cal && window.Cal.loaded) {
       loadCalEmbed();
       return;
