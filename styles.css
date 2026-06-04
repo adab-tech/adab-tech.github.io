@@ -983,6 +983,12 @@ section {
   height: 1.35rem;
 }
 
+.contact-icon--hf:hover {
+  color: #ff9d00;
+  border-color: color-mix(in srgb, #ffd21e 45%, var(--border));
+  background: color-mix(in srgb, #ffd21e 18%, var(--surface-strong));
+}
+
 .contact-cta-row {
   display: flex;
   flex-wrap: wrap;
