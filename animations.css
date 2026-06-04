@@ -7,9 +7,9 @@
   position: fixed;
   top: 0;
   left: 0;
-  height: 3px;
+  height: 4px;
   width: 0%;
-  z-index: 1100;
+  z-index: 1101;
   background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
   box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 50%, transparent);
   pointer-events: none;
@@ -65,11 +65,13 @@
   position: absolute;
   left: 0;
   top: 50%;
-  height: calc(100% - 6px);
+  height: calc(100% - 4px);
   width: 0;
+  min-width: 48px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  background: linear-gradient(135deg, var(--accent-soft), color-mix(in srgb, var(--accent-2) 18%, transparent));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 22%, transparent);
   transform: translateY(-50%);
   transition: left 280ms cubic-bezier(0.22, 1, 0.36, 1), width 280ms cubic-bezier(0.22, 1, 0.36, 1);
   z-index: 0;
@@ -217,6 +219,11 @@
   z-index: -1;
 }
 
+.project-card--featured:hover,
+.project-card--featured.is-spotlight {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent), var(--shadow-lg);
+}
+
 .project-card--featured:hover::before,
 .project-card--featured.is-spotlight::before {
   opacity: 1;
@@ -338,38 +345,27 @@
 [data-animate][data-delay="200"].animated { transition-delay: 200ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-progress,
-  .build-ticker__track,
+  .build-ticker__track {
+    animation-duration: 90s;
+  }
+
   .hero-glyph,
-  .nlp-signal__bar,
-  .hero-title__cursor,
-  .project-card--featured::before,
-  .code-snippet-fade {
+  .project-card--featured::before {
     animation: none !important;
-    transition: none !important;
   }
 
-  .hero-title__cursor { display: none; }
-
-  .journey-timeline__item,
-  [data-animate] {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-
-  .africa-map__path {
-    stroke-dashoffset: 0 !important;
+  .hero-title__cursor {
+    display: none;
   }
 }
 
-html.reduce-motion .scroll-progress,
-html.reduce-motion .build-ticker__track,
 html.reduce-motion .hero-glyph,
-html.reduce-motion .nlp-signal__bar,
-html.reduce-motion .hero-title__cursor,
 html.reduce-motion .project-card--featured::before {
   animation: none !important;
+}
+
+html.reduce-motion .build-ticker__track {
+  animation-duration: 90s;
 }
 
 @media (max-width: 840px) {

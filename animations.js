@@ -13,6 +13,7 @@
 
   const GLYPHS = ['ɓ', 'ɗ', 'ƙ', 'ƴ', 'Sannu', 'Barka', 'Hausa', 'NLP', 'AI'];
 
+  /** True when OS asks to minimize motion (parallax, tilt, loops only). */
   let reducedMotion = false;
 
   function initReducedMotion() {
@@ -23,6 +24,10 @@
     };
     apply();
     mq.addEventListener('change', apply);
+  }
+
+  function motionHeavyDisabled() {
+    return reducedMotion;
   }
 
   function initScrollProgress() {
@@ -83,14 +88,17 @@
     });
 
     window.addEventListener('resize', syncFromCurrent);
-    syncFromCurrent();
+    window.addEventListener('load', syncFromCurrent);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(syncFromCurrent);
+    });
   }
 
   function initThemeMorph() {
     const btn = document.getElementById('themeToggle');
     if (!btn) return;
     btn.addEventListener('click', () => {
-      if (reducedMotion) return;
+      if (motionHeavyDisabled()) return;
       btn.classList.add('is-spinning');
       setTimeout(() => btn.classList.remove('is-spinning'), 450);
     });
@@ -105,14 +113,8 @@
     const part2 = 'African languages';
     const full = part1 + part2;
 
-    if (reducedMotion) {
-      el.innerHTML = `${part1}<span class="highlight">${part2}</span>`;
-      cursor?.classList.add('is-done');
-      return;
-    }
-
     let i = 0;
-    const speed = 42;
+    const speed = reducedMotion ? 8 : 42;
 
     function tick() {
       const slice = full.slice(0, i);
@@ -133,7 +135,7 @@
   }
 
   function initParallax() {
-    if (reducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+    if (motionHeavyDisabled() || !window.matchMedia('(pointer: fine)').matches) return;
 
     const items = document.querySelectorAll('[data-parallax]');
     if (!items.length) return;
@@ -159,7 +161,7 @@
 
   function initHeroGlyphs() {
     const root = document.getElementById('heroGlyphs');
-    if (!root || reducedMotion) return;
+    if (!root || motionHeavyDisabled()) return;
 
     const count = 10;
     for (let i = 0; i < count; i += 1) {
@@ -180,9 +182,10 @@
     if (!el) return;
 
     let idx = 0;
-    el.innerHTML = CODE_SNIPPETS[0];
-
-    if (reducedMotion) return;
+    const setSnippet = (html) => {
+      el.innerHTML = html;
+    };
+    setSnippet(CODE_SNIPPETS[0]);
 
     setInterval(() => {
       el.classList.add('is-fading');
@@ -191,7 +194,7 @@
         el.innerHTML = CODE_SNIPPETS[idx];
         el.classList.remove('is-fading');
       }, 320);
-    }, 4200);
+    }, reducedMotion ? 8000 : 4200);
   }
 
   function animateCount(el, target, suffix, duration = 1400) {
@@ -210,20 +213,11 @@
   }
 
   function initCountUps() {
-    if (reducedMotion) {
-      document.querySelectorAll('[data-count]').forEach((el) => {
-        const target = parseInt(el.getAttribute('data-count'), 10);
-        const suffix = el.getAttribute('data-suffix') || '';
-        el.textContent = `${target}${suffix}`;
-      });
-      return;
-    }
-
     const run = (el) => {
       const target = parseInt(el.getAttribute('data-count'), 10);
       const suffix = el.getAttribute('data-suffix') || '';
       if (Number.isNaN(target)) return;
-      animateCount(el, target, suffix);
+      animateCount(el, target, suffix, reducedMotion ? 700 : 1400);
     };
 
     const observer = new IntersectionObserver(
@@ -260,7 +254,7 @@
     );
 
     observer.observe(timeline);
-    if (reducedMotion) timeline.classList.add('is-visible');
+    if (motionHeavyDisabled()) timeline.classList.add('is-visible');
   }
 
   function initAfricaStroke() {
@@ -280,11 +274,11 @@
     );
 
     observer.observe(svg);
-    if (reducedMotion) svg.classList.add('is-drawn');
+    if (motionHeavyDisabled()) svg.classList.add('is-drawn');
   }
 
   function initCardTilt() {
-    if (reducedMotion || !window.matchMedia('(pointer: fine)').matches) return;
+    if (motionHeavyDisabled() || !window.matchMedia('(pointer: fine)').matches) return;
 
     const cards = document.querySelectorAll('.project-card');
     cards.forEach((card) => {
@@ -306,7 +300,7 @@
   }
 
   function initFeaturedSpotlight() {
-    if (reducedMotion) return;
+    if (motionHeavyDisabled()) return;
     document.querySelectorAll('.project-card--featured').forEach((card) => {
       card.addEventListener('mouseenter', () => card.classList.add('is-spotlight'));
       card.addEventListener('mouseleave', () => card.classList.remove('is-spotlight'));
