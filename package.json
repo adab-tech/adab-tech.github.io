@@ -26,7 +26,7 @@
     "@axe-core/playwright": "^4.7.0",
     "axe-core": "^4.11.0",
     "http-server": "^14.1.1",
-    "lint-staged": "^13.3.0",
+    "lint-staged": "^17.0.6",
     "pa11y": "^9.1.1",
     "playwright": "^1.49.0",
     "simple-git-hooks": "^2.13.1"
