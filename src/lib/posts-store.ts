@@ -18,6 +18,17 @@ export interface ResearchPost {
   links?: { label: string; url: string }[]
 }
 
+export interface ContactInquiry {
+  id: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  preferredDate?: string
+  createdAt: string
+  status: 'New' | 'Read' | 'Replied'
+}
+
 const INITIAL_POSTS: ResearchPost[] = [
   {
     id: 'post-1',
@@ -108,14 +119,28 @@ Benchmarking localized GPU cluster operations and edge model deployments across 
   }
 ]
 
-const STORE_KEY = 'adamu_tech_posts_data'
+const INITIAL_INQUIRIES: ContactInquiry[] = [
+  {
+    id: 'inq-1',
+    name: 'Dr. Katherine Miller',
+    email: 'k.miller@linguistics-lab.org',
+    subject: 'Academic / AI Collaboration',
+    message: 'We read your paper on Hausa acoustic models and zero-shot alignment. We would love to discuss a potential collaborative research grant for West African speech synthesis.',
+    preferredDate: '2026-09-15',
+    createdAt: '2026-08-24 14:30',
+    status: 'New'
+  }
+]
+
+const POSTS_KEY = 'adamu_tech_posts_data'
+const INQUIRIES_KEY = 'adamu_tech_inquiries_data'
 
 export function getStoredPosts(): ResearchPost[] {
   if (typeof window === 'undefined') return INITIAL_POSTS
   try {
-    const raw = localStorage.getItem(STORE_KEY)
+    const raw = localStorage.getItem(POSTS_KEY)
     if (!raw) {
-      localStorage.setItem(STORE_KEY, JSON.stringify(INITIAL_POSTS))
+      localStorage.setItem(POSTS_KEY, JSON.stringify(INITIAL_POSTS))
       return INITIAL_POSTS
     }
     return JSON.parse(raw)
@@ -126,15 +151,52 @@ export function getStoredPosts(): ResearchPost[] {
 
 export function savePosts(posts: ResearchPost[]): void {
   if (typeof window !== 'undefined') {
-    localStorage.setItem(STORE_KEY, JSON.stringify(posts))
+    localStorage.setItem(POSTS_KEY, JSON.stringify(posts))
   }
+}
+
+export function getStoredInquiries(): ContactInquiry[] {
+  if (typeof window === 'undefined') return INITIAL_INQUIRIES
+  try {
+    const raw = localStorage.getItem(INQUIRIES_KEY)
+    if (!raw) {
+      localStorage.setItem(INQUIRIES_KEY, JSON.stringify(INITIAL_INQUIRIES))
+      return INITIAL_INQUIRIES
+    }
+    return JSON.parse(raw)
+  } catch (e) {
+    return INITIAL_INQUIRIES
+  }
+}
+
+export function saveInquiries(inquiries: ContactInquiry[]): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(inquiries))
+  }
+}
+
+export function addContactInquiry(inquiry: Omit<ContactInquiry, 'id' | 'createdAt' | 'status'>): ContactInquiry {
+  const newInquiry: ContactInquiry = {
+    ...inquiry,
+    id: `inq-${Date.now()}`,
+    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
+    status: 'New'
+  }
+  if (typeof window !== 'undefined') {
+    const current = getStoredInquiries()
+    const updated = [newInquiry, ...current]
+    saveInquiries(updated)
+  }
+  return newInquiry
 }
 
 export function usePostsStore() {
   const [posts, setPosts] = useState<ResearchPost[]>(INITIAL_POSTS)
+  const [inquiries, setInquiries] = useState<ContactInquiry[]>(INITIAL_INQUIRIES)
 
   useEffect(() => {
     setPosts(getStoredPosts())
+    setInquiries(getStoredInquiries())
   }, [])
 
   const addPost = (post: Omit<ResearchPost, 'id' | 'date'>) => {
@@ -161,5 +223,17 @@ export function usePostsStore() {
     savePosts(updated)
   }
 
-  return { posts, addPost, updatePost, deletePost }
+  const updateInquiryStatus = (id: string, status: ContactInquiry['status']) => {
+    const updated = inquiries.map((inq) => (inq.id === id ? { ...inq, status } : inq))
+    setInquiries(updated)
+    saveInquiries(updated)
+  }
+
+  const deleteInquiry = (id: string) => {
+    const updated = inquiries.filter((inq) => inq.id !== id)
+    setInquiries(updated)
+    saveInquiries(updated)
+  }
+
+  return { posts, addPost, updatePost, deletePost, inquiries, updateInquiryStatus, deleteInquiry }
 }

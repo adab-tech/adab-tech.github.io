@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Send, Calendar, CheckCircle2, ShieldAlert, Mail } from 'lucide-react'
+import { addContactInquiry } from '@/lib/posts-store'
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -26,9 +27,26 @@ export function ContactForm() {
     setStatus('submitting')
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // 1. Save to local Admin Studio Inbox store
+      addContactInquiry({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        preferredDate: formData.preferredDate
+      })
+
+      // 2. Trigger mailto redirect to adamudanjuma1@outlook.com / contact@adamu.tech
+      const mailSubject = encodeURIComponent(`[${formData.subject}] Message from ${formData.name}`)
+      const mailBody = encodeURIComponent(
+        `Sender Name: ${formData.name}\nSender Email: ${formData.email}\nPreferred Date: ${formData.preferredDate || 'N/A'}\n\nMessage Payload:\n${formData.message}`
+      )
+
+      window.location.href = `mailto:adamudanjuma1@outlook.com?cc=contact@adamu.tech&subject=${mailSubject}&body=${mailBody}`
+
       setStatus('success')
     } catch (error) {
+      console.error('Contact submission error:', error)
       setStatus('error')
     }
   }
@@ -44,7 +62,7 @@ export function ContactForm() {
           Research Inquiry & Calendar Booking
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
-          Direct research inquiry, speaking request, or consultation pipeline routed via Cloudflare DNS & verified Resend domain (adamu@adamu.tech).
+          Direct inquiry dispatched directly to Adamu Abubakar's primary inbox (<strong className="text-zinc-700 dark:text-zinc-200">adamudanjuma1@outlook.com</strong> / <strong className="text-zinc-700 dark:text-zinc-200">contact@adamu.tech</strong>) and logged in the Admin Studio Inbox.
         </p>
       </div>
 
@@ -56,10 +74,20 @@ export function ContactForm() {
               Payload Dispatched Successfully
             </h3>
             <p className="text-xs font-sans text-zinc-500 dark:text-zinc-400 max-w-md">
-              Your inquiry has passed edge validation and was delivered to Adamu Abubakar's research desk (adabubakar@crimson.ua.edu / adamu@adamu.tech).
+              Your inquiry has been dispatched to Adamu Abubakar's Outlook desk (<strong>adamudanjuma1@outlook.com</strong>) and saved in the Admin Studio Inbox.
             </p>
             <button
-              onClick={() => setStatus('idle')}
+              onClick={() => {
+                setStatus('idle')
+                setFormData({
+                  name: '',
+                  email: '',
+                  subject: 'Academic / AI Collaboration',
+                  message: '',
+                  preferredDate: '',
+                  website: ''
+                })
+              }}
               className="mt-4 px-4 py-2 rounded-lg bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900 font-mono text-xs hover:opacity-90 transition-opacity"
             >
               Send Another Message
@@ -154,7 +182,7 @@ export function ContactForm() {
 
             <div className="flex items-center justify-between pt-2">
               <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
-                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Cloudflare DNS & Resend Protected
+                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Direct Outlook & Contact Studio Router
               </span>
 
               <button
