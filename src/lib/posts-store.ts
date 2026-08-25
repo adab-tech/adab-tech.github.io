@@ -27,7 +27,8 @@ export interface ContactInquiry {
   subject: string
   message: string
   preferredDate?: string
-  date: string
+  date?: string
+  createdAt?: string
   status: 'New' | 'Read' | 'Replied'
 }
 
