@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Send, Calendar, CheckCircle2, ShieldAlert, Mail } from 'lucide-react'
 import { addContactInquiry } from '@/lib/posts-store'
+import { sendContactEmail } from '@/lib/email'
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -36,13 +37,14 @@ export function ContactForm() {
         preferredDate: formData.preferredDate
       })
 
-      // 2. Trigger mailto redirect to adamudanjuma1@outlook.com / contact@adamu.tech
-      const mailSubject = encodeURIComponent(`[${formData.subject}] Message from ${formData.name}`)
-      const mailBody = encodeURIComponent(
-        `Sender Name: ${formData.name}\nSender Email: ${formData.email}\nPreferred Date: ${formData.preferredDate || 'N/A'}\n\nMessage Payload:\n${formData.message}`
-      )
-
-      window.location.href = `mailto:adamudanjuma1@outlook.com?cc=contact@adamu.tech&subject=${mailSubject}&body=${mailBody}`
+      // 2. Dispatch via Resend API
+      await sendContactEmail({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        preferredDate: formData.preferredDate
+      })
 
       setStatus('success')
     } catch (error) {
@@ -62,7 +64,7 @@ export function ContactForm() {
           Research Inquiry & Calendar Booking
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
-          Direct inquiry dispatched directly to Adamu Abubakar's primary inbox (<strong className="text-zinc-700 dark:text-zinc-200">adamudanjuma1@outlook.com</strong> / <strong className="text-zinc-700 dark:text-zinc-200">contact@adamu.tech</strong>) and logged in the Admin Studio Inbox.
+          Direct inquiry dispatched to Adamu Abubakar's desk (<strong className="text-zinc-700 dark:text-zinc-200">contact@adamu.tech</strong> / <strong className="text-zinc-700 dark:text-zinc-200">adamudanjuma1@outlook.com</strong>) via Resend API and recorded in the Admin Studio Inbox.
         </p>
       </div>
 
@@ -74,7 +76,7 @@ export function ContactForm() {
               Payload Dispatched Successfully
             </h3>
             <p className="text-xs font-sans text-zinc-500 dark:text-zinc-400 max-w-md">
-              Your inquiry has been dispatched to Adamu Abubakar's Outlook desk (<strong>adamudanjuma1@outlook.com</strong>) and saved in the Admin Studio Inbox.
+              Your inquiry has been dispatched to <strong>contact@adamu.tech</strong> & <strong>adamudanjuma1@outlook.com</strong> and saved in the Admin Studio Inbox.
             </p>
             <button
               onClick={() => {
@@ -182,7 +184,7 @@ export function ContactForm() {
 
             <div className="flex items-center justify-between pt-2">
               <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
-                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Direct Outlook & Contact Studio Router
+                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Resend API & Contact Studio Router
               </span>
 
               <button
