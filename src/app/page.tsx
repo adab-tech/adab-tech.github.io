@@ -34,9 +34,9 @@ export default function Home() {
 
   return (
     <GlobalShell>
-      <div className="space-y-16 py-4">
+      <div className="space-y-14 py-2">
         {/* Profile Hero Section */}
-        <section className="relative p-8 md:p-12 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-md overflow-hidden space-y-8">
+        <section className="relative p-6 sm:p-10 md:p-12 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-sm overflow-hidden space-y-8">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div className="space-y-4 max-w-2xl">
               {/* Multilingual Dynamic Greeting */}
@@ -46,16 +46,16 @@ export default function Home() {
                 <span className="text-[10px] opacity-70">[{currentGreeting.label}]</span>
               </div>
 
-              <h1 className="text-3xl md:text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
                 Adamu Abubakar
               </h1>
 
-              <p className="text-base md:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
-                Computational Linguist & AI Researcher • Polyglot (8+ Languages)
+              <p className="text-base sm:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
+                Computational Linguist & AI Researcher • 8+ Languages Polyglot
               </p>
 
               <p className="text-sm font-sans text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure across Hausa, English, Arabic, French, Sango, Yoruba, Fulfulde, and Pidgin English (with full 10-language philological matrix in CV).
+                Engineering sovereign Hausa NLP engines, Chadic neural speech synthesis, and digital philology archives for low-resource African languages. Bridging postcolonial humanities theory with state-of-the-art agentic AI governance.
               </p>
 
               {/* Core Pillars */}
@@ -74,7 +74,7 @@ export default function Home() {
                 </span>
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
                   <Globe className="h-3.5 w-3.5 text-gold-400" />
-                  <span>8+ Languages Polyglot</span>
+                  <span>Agentic Governance</span>
                 </span>
               </div>
             </div>

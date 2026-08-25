@@ -2,20 +2,19 @@
 
 import { useState, useEffect } from 'react'
 
-export type StreamCategory = 'General' | 'Literary & Academic' | 'Personal' | 'Tech'
+export type StreamCategory = 'Literary & Academic' | 'Tech' | 'General' | 'Personal'
 
 export interface ResearchPost {
   id: string
   title: string
   category: StreamCategory
-  summary: string
-  content: string
   date: string
-  status: 'Published' | 'Draft'
+  abstract: string
   tags: string[]
+  content: string
   bibtex?: string
-  pdfUrl?: string
-  links?: { label: string; url: string }[]
+  status: 'Published' | 'Draft'
+  linkUrl?: string
 }
 
 export interface ContactInquiry {
@@ -25,215 +24,156 @@ export interface ContactInquiry {
   subject: string
   message: string
   preferredDate?: string
-  createdAt: string
+  date: string
   status: 'New' | 'Read' | 'Replied'
 }
 
 const INITIAL_POSTS: ResearchPost[] = [
   {
-    id: 'post-1',
-    title: 'Hausa Acoustic Models & Zero-Shot Phonetic Alignment',
-    category: 'Tech',
-    summary: 'Exploring neural voice synthesis techniques for low-resource Chadic languages, focusing on Hausa tone resolution and consonant duration mapping.',
-    content: `# Hausa Acoustic Models & Zero-Shot Phonetic Alignment
-
-A study into zero-shot alignment using continuous pitch contour extraction for low-resource Chadic languages.
-
-## Abstract
-Low-resource NLP models often strip tonal diacritics during tokenization. By applying custom acoustic duration loss functions, we restore pitch representation in generated audio streams.
-
-## Key Innovations
-1. Tone pitch stability improves intelligibility by 24%.
-2. Consonant duration scaling maps accurately across West African dialects.`,
+    id: 'post-agentic-humanities',
+    title: 'Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance',
+    category: 'Literary & Academic',
     date: '2026-08',
-    status: 'Published',
-    tags: ['Hausa NLP', 'TTS', 'Acoustics', 'Speech AI'],
-    bibtex: `@article{abubakar2026hausa,
-  author = {Abubakar, Adamu},
-  title = {Hausa Acoustic Models and Zero-Shot Phonetic Alignment},
-  journal = {Journal of African Language Technology},
-  year = {2026},
-  volume = {4},
-  pages = {12--28}
+    abstract: 'Investigates the philosophical contest of AI agency through literary and postcolonial theory across four global case studies: the AI deepfake of Wole Soyinka, China\'s Agent Hospital, Sophia\'s Saudi citizenship, and Project CETI sperm whale bioacoustics.',
+    tags: ['Agentic AI', 'Postcolonial Theory', 'AI Governance', 'Cultural Epistemology', 'Wole Soyinka Deepfake'],
+    content: '# Humanities Perspectives on Agentic AI\n\n### Abstract\nThe emergence of agentic AI—systems that plan, act, adapt, and operate with increasing autonomy—marks a fundamental shift in human-machine interaction. This paper demonstrates why technical frameworks alone cannot resolve the ontological contest of agency, utilizing humanistic traditions to establish an indigenous cultural governance blueprint.',
+    bibtex: `@article{abubakar2026agentic,
+  title={Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance},
+  author={Abubakar, Adamu Danjuma},
+  journal={Working Papers in Applied Computational Humanities},
+  year={2026},
+  institution={University of Alabama}
 }`,
-    pdfUrl: '#',
-    links: [{ label: 'View Code', url: 'https://github.com/adab-tech' }]
+    status: 'Published'
   },
   {
-    id: 'post-2',
-    title: 'Orality, Prosody, and Scriptural Structure in Hausa Ajami Poetry',
-    category: 'Literary & Academic',
-    summary: 'A critical textual analysis examining rhythm, metric scansion, and dialectal variations in 19th-century West African Ajami manuscripts.',
-    content: `# Orality, Prosody, and Scriptural Structure in Hausa Ajami Poetry
-
-A critical textual analysis examining rhythm, metric scansion, and dialectal variations in West African Ajami manuscripts.
-
-## Abstract
-West African Ajami manuscripts encode oral poetic meter through specialized orthographic diacritics. This paper maps 19th-century Kano manuscript verse demarcations to contemporary Hausa prosodic theory.`,
-    date: '2026-05',
-    status: 'Published',
-    tags: ['Ajami Manuscripts', 'African Literature', 'Philology'],
-    bibtex: `@article{abubakar2026orality,
-  author = {Abubakar, Adamu},
-  title = {Orality, Prosody, and Scriptural Structure in Hausa Ajami Poetry},
-  journal = {African Philology and Digital Humanities},
-  year = {2026},
-  volume = {12},
-  pages = {101--125}
-}`,
-    pdfUrl: '#',
-    links: [{ label: 'Download PDF', url: '#' }]
-  },
-  {
-    id: 'post-3',
-    title: 'Computational Morphology for Resource-Constrained African Languages',
-    category: 'Literary & Academic',
-    summary: 'Methodology for automated morphological segmentation, inflections, and verb class categorization across West African linguistic families.',
-    content: `# Computational Morphology for Resource-Constrained African Languages
-
-Methodology for automated morphological segmentation, inflections, and verb class categorization.`,
-    date: '2026-03',
-    status: 'Published',
-    tags: ['Morphology', 'Computational Linguistics', 'NLP'],
-    bibtex: `@inproceedings{abubakar2026morphology,
-  author = {Abubakar, Adamu},
-  title = {Computational Morphology for Resource-Constrained African Languages},
-  booktitle = {Proceedings of ACL Workshop on African NLP},
-  year = {2026}
-}`,
-    pdfUrl: '#',
-    links: [{ label: 'Paper Abstract', url: '#' }]
-  },
-  {
-    id: 'post-4',
-    title: 'Sovereign Compute & Scalable AI Infrastructure for Regional Labs',
+    id: 'post-robinson-lexicon',
+    title: 'Robinson Hausa–English Lexicon (1914): 20,628 Pairs for Neural Voice & ASR Alignment',
     category: 'Tech',
-    summary: 'Benchmarking localized GPU cluster operations and edge model deployments across West African networks.',
-    content: `# Sovereign Compute & Scalable AI Infrastructure
-
-Benchmarking localized GPU cluster operations and edge model deployments across West African networks.`,
-    date: '2026-01',
-    status: 'Published',
-    tags: ['Infrastructure', 'Cloudflare', 'Edge AI'],
-    links: [{ label: 'System Spec', url: '#' }]
-  }
-]
-
-const INITIAL_INQUIRIES: ContactInquiry[] = [
+    date: '2026-08',
+    abstract: 'Curated and open-sourced 20,628 English→Hausa word/phrase pairs from C.H. Robinson\'s Cambridge dictionary (1914) to warm-start speech embedding spaces and lexical translation for Murya AI on Hugging Face.',
+    tags: ['Hausa NLP', 'Lexicography', 'Speech AI', 'Hugging Face', 'Murya'],
+    content: '# Robinson Hausa-English Lexicon (1914)\n\nReleased on Hugging Face as `adab-tech/murya-hausa-en-lexicon-robinson1914`.',
+    bibtex: `@dataset{abubakar2026robinson,
+  title={Robinson Hausa-English Lexicon (1914): 20,628 Lexical Pairs},
+  author={Abubakar, Adamu Danjuma},
+  year={2026},
+  publisher={Hugging Face},
+  url={https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914}
+}`,
+    status: 'Published'
+  },
   {
-    id: 'inq-1',
-    name: 'Dr. Katherine Miller',
-    email: 'k.miller@linguistics-lab.org',
-    subject: 'Academic / AI Collaboration',
-    message: 'We read your paper on Hausa acoustic models and zero-shot alignment. We would love to discuss a potential collaborative research grant for West African speech synthesis.',
-    preferredDate: '2026-09-15',
-    createdAt: '2026-08-24 14:30',
-    status: 'New'
+    id: 'post-waxal-nlp',
+    title: 'WaxalNLP: A Large-Scale Multilingual African Language Speech Corpus for ASR & TTS',
+    category: 'Tech',
+    date: '2026-07',
+    abstract: 'Co-developed and curated speech datasets spanning 20+ African languages (Hausa, Yoruba, Sango, Fulfulde, etc.) with 540+ community downloads, advancing sovereign acoustic modeling (arXiv:2602.02734).',
+    tags: ['WaxalNLP', 'African Speech AI', 'ASR', 'TTS', 'arXiv:2602.02734'],
+    content: '# WaxalNLP Multilingual Speech Corpus\n\nLarge-scale multilingual ASR/TTS dataset released on Hugging Face under `adab-tech/WaxalNLP`.',
+    bibtex: `@dataset{abubakar2026waxal,
+  title={WaxalNLP: A Large-Scale Multilingual African Language Speech Corpus},
+  author={Abubakar, Adamu Danjuma and Waxal Collaborators},
+  year={2026},
+  eprint={2602.02734},
+  archivePrefix={arXiv}
+}`,
+    status: 'Published'
+  },
+  {
+    id: 'post-sango-code',
+    title: 'Code-170k-Sango: Democratizing Programming Education in Central African Creoles',
+    category: 'Tech',
+    date: '2026-01',
+    abstract: 'Engineered 176,999 multi-turn programming conversations translated into pure Sango to empower low-resource African developers and bridge language barriers in software engineering.',
+    tags: ['Sango', 'Code Generation', 'Low-Resource LLMs', 'Hugging Face'],
+    content: '# Code-170k-Sango\n\nReleased on Hugging Face under `adab-tech/Code-170k-sango`.',
+    bibtex: `@dataset{abubakar2026sango,
+  title={Code-170k-sango: High-Quality Programming Dialogues in Sango},
+  author={Abubakar, Adamu Danjuma},
+  year={2026},
+  publisher={Hugging Face},
+  url={https://huggingface.co/datasets/adab-tech/Code-170k-sango}
+}`,
+    status: 'Published'
   }
 ]
 
-const POSTS_KEY = 'adamu_tech_posts_data'
-const INQUIRIES_KEY = 'adamu_tech_inquiries_data'
-
-export function getStoredPosts(): ResearchPost[] {
-  if (typeof window === 'undefined') return INITIAL_POSTS
-  try {
-    const raw = localStorage.getItem(POSTS_KEY)
-    if (!raw) {
-      localStorage.setItem(POSTS_KEY, JSON.stringify(INITIAL_POSTS))
-      return INITIAL_POSTS
-    }
-    return JSON.parse(raw)
-  } catch (e) {
-    return INITIAL_POSTS
-  }
-}
-
-export function savePosts(posts: ResearchPost[]): void {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(POSTS_KEY, JSON.stringify(posts))
-  }
-}
-
-export function getStoredInquiries(): ContactInquiry[] {
-  if (typeof window === 'undefined') return INITIAL_INQUIRIES
-  try {
-    const raw = localStorage.getItem(INQUIRIES_KEY)
-    if (!raw) {
-      localStorage.setItem(INQUIRIES_KEY, JSON.stringify(INITIAL_INQUIRIES))
-      return INITIAL_INQUIRIES
-    }
-    return JSON.parse(raw)
-  } catch (e) {
-    return INITIAL_INQUIRIES
-  }
-}
-
-export function saveInquiries(inquiries: ContactInquiry[]): void {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(inquiries))
-  }
-}
-
-export function addContactInquiry(inquiry: Omit<ContactInquiry, 'id' | 'createdAt' | 'status'>): ContactInquiry {
-  const newInquiry: ContactInquiry = {
-    ...inquiry,
-    id: `inq-${Date.now()}`,
-    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16),
-    status: 'New'
-  }
-  if (typeof window !== 'undefined') {
-    const current = getStoredInquiries()
-    const updated = [newInquiry, ...current]
-    saveInquiries(updated)
-  }
-  return newInquiry
-}
+const STORAGE_KEY = 'adamu_tech_research_posts_v2'
+const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v2'
 
 export function usePostsStore() {
   const [posts, setPosts] = useState<ResearchPost[]>(INITIAL_POSTS)
-  const [inquiries, setInquiries] = useState<ContactInquiry[]>(INITIAL_INQUIRIES)
+  const [inquiries, setInquiries] = useState<ContactInquiry[]>([])
 
   useEffect(() => {
-    setPosts(getStoredPosts())
-    setInquiries(getStoredInquiries())
+    if (typeof window !== 'undefined') {
+      const savedPosts = localStorage.getItem(STORAGE_KEY)
+      if (savedPosts) {
+        try {
+          setPosts(JSON.parse(savedPosts))
+        } catch (e) {
+          setPosts(INITIAL_POSTS)
+        }
+      } else {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_POSTS))
+      }
+
+      const savedInquiries = localStorage.getItem(INQUIRIES_KEY)
+      if (savedInquiries) {
+        try {
+          setInquiries(JSON.parse(savedInquiries))
+        } catch (e) {
+          setInquiries([])
+        }
+      }
+    }
   }, [])
+
+  const savePosts = (newPosts: ResearchPost[]) => {
+    setPosts(newPosts)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newPosts))
+    }
+  }
 
   const addPost = (post: Omit<ResearchPost, 'id' | 'date'>) => {
     const newPost: ResearchPost = {
       ...post,
       id: `post-${Date.now()}`,
-      date: new Date().toISOString().substring(0, 7)
+      date: new Date().toISOString().slice(0, 7)
     }
     const updated = [newPost, ...posts]
-    setPosts(updated)
     savePosts(updated)
-    return newPost
   }
 
-  const updatePost = (id: string, updatedFields: Partial<ResearchPost>) => {
-    const updated = posts.map((p) => (p.id === id ? { ...p, ...updatedFields } : p))
-    setPosts(updated)
-    savePosts(updated)
+  const updatePost = (id: string, updated: Partial<ResearchPost>) => {
+    const newPosts = posts.map(p => p.id === id ? { ...p, ...updated } : p)
+    savePosts(newPosts)
   }
 
   const deletePost = (id: string) => {
-    const updated = posts.filter((p) => p.id !== id)
-    setPosts(updated)
-    savePosts(updated)
+    const newPosts = posts.filter(p => p.id !== id)
+    savePosts(newPosts)
   }
 
-  const updateInquiryStatus = (id: string, status: ContactInquiry['status']) => {
-    const updated = inquiries.map((inq) => (inq.id === id ? { ...inq, status } : inq))
-    setInquiries(updated)
-    saveInquiries(updated)
-  }
+  return { posts, addPost, updatePost, deletePost, inquiries }
+}
 
-  const deleteInquiry = (id: string) => {
-    const updated = inquiries.filter((inq) => inq.id !== id)
-    setInquiries(updated)
-    saveInquiries(updated)
+export function addContactInquiry(inquiry: Omit<ContactInquiry, 'id' | 'date' | 'status'>) {
+  if (typeof window === 'undefined') return
+  try {
+    const existingStr = localStorage.getItem(INQUIRIES_KEY)
+    const list: ContactInquiry[] = existingStr ? JSON.parse(existingStr) : []
+    const newInquiry: ContactInquiry = {
+      ...inquiry,
+      id: `inq-${Date.now()}`,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+      status: 'New'
+    }
+    list.unshift(newInquiry)
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(list))
+  } catch (e) {
+    console.error('Failed to save inquiry to local storage', e)
   }
-
-  return { posts, addPost, updatePost, deletePost, inquiries, updateInquiryStatus, deleteInquiry }
 }
