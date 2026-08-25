@@ -6,8 +6,11 @@ import { AudioTTSWidget } from '@/components/AudioTTSWidget'
 import { EcosystemGrid } from '@/components/EcosystemGrid'
 import { TaxonomyGrid } from '@/components/TaxonomyGrid'
 import { AssetGallery } from '@/components/AssetGallery'
+import { PhoneticSoundboard } from '@/components/PhoneticSoundboard'
+import { AjamiTransliterationWidget } from '@/components/AjamiTransliterationWidget'
+import { DialectMapWidget } from '@/components/DialectMapWidget'
 import { ContactForm } from '@/components/ContactForm'
-import { Cpu, BookOpen, Terminal, Sparkles, ArrowRight, Award } from 'lucide-react'
+import { Cpu, BookOpen, Terminal, Sparkles, Globe } from 'lucide-react'
 
 const GREETINGS = [
   { text: 'Barka da zuwa', lang: 'ha', label: 'Hausa' },
@@ -48,11 +51,11 @@ export default function Home() {
               </h1>
 
               <p className="text-base md:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
-                Computational Linguist & AI Researcher
+                Computational Linguist & AI Researcher • Polyglot (6+ Languages)
               </p>
 
               <p className="text-sm font-sans text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure.
+                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure across Hausa, English, Arabic, Yoruba, French, and Igbo.
               </p>
 
               {/* Core Pillars */}
@@ -69,10 +72,14 @@ export default function Home() {
                   <Cpu className="h-3.5 w-3.5 text-indigo-500" />
                   <span>Speech AI Systems</span>
                 </span>
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+                  <Globe className="h-3.5 w-3.5 text-gold-400" />
+                  <span>6+ Languages Polyglot</span>
+                </span>
               </div>
             </div>
 
-            {/* Terminal Card */}
+            {/* Terminal Code Card */}
             <div className="w-full md:w-80 rounded-xl border border-zinc-800 bg-midnight-950 p-4 font-mono text-xs text-zinc-300 shadow-xl space-y-3 shrink-0">
               <div className="flex items-center justify-between pb-2 border-b border-zinc-800 text-zinc-500 text-[10px]">
                 <div className="flex space-x-1.5">
@@ -87,25 +94,34 @@ export default function Home() {
                 <p><span className="text-purple-400">from</span> murya <span className="text-purple-400">import</span> Synthesizer</p>
                 <p className="pt-1"><span className="text-blue-400">model</span> = Synthesizer.load(<span className="text-emerald-400">"hausa-v1"</span>)</p>
                 <p><span className="text-blue-400">wav</span> = model.infer(<span className="text-emerald-400">"Barka da zuwa"</span>)</p>
-                <p className="text-zinc-500 pt-1"># Audio: 24kHz PCM Stream</p>
+                <p className="text-zinc-500 pt-1"># Audio: 24kHz Native Stream</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Milestone 1: Live Interactive Hausa TTS Audio Synthesizer Widget */}
+        {/* Gem 1: Hausa Phonetic Soundboard */}
+        <PhoneticSoundboard />
+
+        {/* Gem 2: Live Boko to Ajami Transliteration Demo */}
+        <AjamiTransliterationWidget />
+
+        {/* Audio TTS Widget with Real Murya WAV Audio */}
         <AudioTTSWidget />
 
-        {/* Milestone 2: Ecosystem Grid */}
+        {/* Gem 5: Dialectal & Tone Explorer Map */}
+        <DialectMapWidget />
+
+        {/* Production Ecosystem Grid */}
         <EcosystemGrid />
 
-        {/* Milestone 2: Research Taxonomy Grid */}
+        {/* Research Taxonomy Grid with BibTeX */}
         <TaxonomyGrid />
 
-        {/* Milestone 3: Asset Gallery Engine */}
+        {/* Visual Asset Gallery */}
         <AssetGallery />
 
-        {/* Milestone 4: Communications Pipeline */}
+        {/* Communications Pipeline */}
         <ContactForm />
       </div>
     </GlobalShell>

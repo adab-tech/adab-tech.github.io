@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Sun, Moon, ShieldCheck, ExternalLink } from 'lucide-react'
+import { CommandCVModal } from '@/components/CommandCVModal'
 
 interface ShellProps {
   children: React.ReactNode
@@ -71,6 +72,7 @@ export function GlobalShell({ children }: ShellProps) {
             <a href="https://orcid.org/0009-0009-4672-4956" target="_blank" rel="noreferrer" className="font-mono text-xs text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-50 border border-zinc-200 dark:border-zinc-800 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900">
               ORCID
             </a>
+            <CommandCVModal />
 
             {/* Quick Admin Studio Link */}
             <a
