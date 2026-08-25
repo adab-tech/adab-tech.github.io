@@ -1,7 +1,27 @@
 'use client'
 
 import React, { useState } from 'react'
-import { FileText, X, Globe, Download, Terminal, Award, BookOpen, Cpu } from 'lucide-react'
+import { FileText, X, Globe, Download, Terminal, Cpu } from 'lucide-react'
+
+export interface LanguageSkill {
+  name: string
+  level: string
+  note: string
+  category: 'African' | 'Global' | 'Research'
+}
+
+const POLYGLOT_LANGUAGES: LanguageSkill[] = [
+  { name: 'Hausa', level: 'Native (L1)', note: 'Speech AI & Acoustic Focus', category: 'African' },
+  { name: 'English', level: 'Native / Fluent', note: 'Academic & Technical Writing', category: 'Global' },
+  { name: 'Pidgin English', level: 'Fluent', note: 'West African Creoles', category: 'African' },
+  { name: 'Sango', level: 'Conversational', note: 'Central African Lingua Franca', category: 'African' },
+  { name: 'Fulfulde', level: 'Fluent / Conversational', note: 'Sahelian Chadic-Congo', category: 'African' },
+  { name: 'Yoruba', level: 'Conversational', note: 'West African Niger-Congo', category: 'African' },
+  { name: 'Arabic', level: 'Advanced / Classical', note: 'Ajami Scriptural Philology', category: 'Research' },
+  { name: 'French', level: 'Fluent', note: 'International Academic Research', category: 'Global' },
+  { name: 'German', level: 'Basic', note: 'Reading & Philological Research', category: 'Research' },
+  { name: 'Spanish', level: 'Basic', note: 'Reading & Research', category: 'Research' }
+]
 
 export function CommandCVModal() {
   const [isOpen, setIsOpen] = useState(false)
@@ -35,36 +55,23 @@ export function CommandCVModal() {
               </p>
             </div>
 
-            {/* Polyglot Linguistic Matrix (6+ Languages) */}
+            {/* Polyglot Linguistic Matrix (10 Languages) */}
             <div className="space-y-2">
-              <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                <Globe className="h-4 w-4" /> POLYGLOT LINGUISTIC MATRIX (6+ LANGUAGES)
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">Hausa</span>
-                  <span className="text-[10px] text-emerald-400">Native (L1) • Speech Models</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">English</span>
-                  <span className="text-[10px] text-emerald-400">Native / Fluent Academic</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">Arabic</span>
-                  <span className="text-[10px] text-amber-400">Classical & Ajami Script</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">Yoruba</span>
-                  <span className="text-[10px] text-indigo-400">West African Family</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">French</span>
-                  <span className="text-[10px] text-indigo-400">International Research</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                  <span className="font-bold text-zinc-100 block">Igbo</span>
-                  <span className="text-[10px] text-indigo-400">Comparative NLP</span>
-                </div>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
+                  <Globe className="h-4 w-4" /> POLYGLOT LINGUISTIC MATRIX (10 LANGUAGES)
+                </h3>
+                <span className="text-[10px] text-zinc-400">African, European & Semitic</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
+                {POLYGLOT_LANGUAGES.map((lang) => (
+                  <div key={lang.name} className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
+                    <span className="font-bold text-zinc-100 block truncate">{lang.name}</span>
+                    <span className="text-[10px] text-emerald-400 block font-semibold">{lang.level}</span>
+                    <span className="text-[9px] text-zinc-500 block truncate">{lang.note}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -92,7 +99,7 @@ export function CommandCVModal() {
 
               <button
                 onClick={() => {
-                  alert('CV download initiated: Adamu_Abubakar_Academic_CV.pdf')
+                  alert('Official Academic CV initiated: Adamu_Abubakar_CV.pdf')
                 }}
                 className="px-5 py-2 rounded-lg bg-gold-500 text-zinc-950 font-bold text-xs hover:bg-gold-400 transition-colors flex items-center gap-1.5 shadow-md"
               >
