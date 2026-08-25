@@ -137,6 +137,13 @@ export function usePostsStore() {
     }
   }
 
+  const saveInquiries = (newInquiries: ContactInquiry[]) => {
+    setInquiries(newInquiries)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(INQUIRIES_KEY, JSON.stringify(newInquiries))
+    }
+  }
+
   const addPost = (post: Omit<ResearchPost, 'id' | 'date'>) => {
     const newPost: ResearchPost = {
       ...post,
@@ -157,7 +164,17 @@ export function usePostsStore() {
     savePosts(newPosts)
   }
 
-  return { posts, addPost, updatePost, deletePost, inquiries }
+  const updateInquiryStatus = (id: string, status: 'New' | 'Read' | 'Replied') => {
+    const updated = inquiries.map(inq => inq.id === id ? { ...inq, status } : inq)
+    saveInquiries(updated)
+  }
+
+  const deleteInquiry = (id: string) => {
+    const updated = inquiries.filter(inq => inq.id !== id)
+    saveInquiries(updated)
+  }
+
+  return { posts, addPost, updatePost, deletePost, inquiries, updateInquiryStatus, deleteInquiry }
 }
 
 export function addContactInquiry(inquiry: Omit<ContactInquiry, 'id' | 'date' | 'status'>) {
