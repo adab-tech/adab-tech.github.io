@@ -13,7 +13,7 @@ const POLYGLOT_LANGUAGES: LanguageSkill[] = [
   { name: 'Hausa', level: 'Native (L1)', note: 'ACTFL OPI Tester Eligible · Primary Speech AI Corpuses' },
   { name: 'English', level: 'Near Native', note: 'Academic Writing, Research Publications & Specs' },
   { name: 'French', level: 'Near Native', note: 'Instructor of Record (FR 101/102/201/202) · B.A. French' },
-  { name: 'Sango', level: 'Fluent (C1)', note: 'Central African Lingua Franca · Creolistics Focus' },
+  { name: 'Sango', level: 'Fluent (C1)', note: 'Central African Lingua Franca · App Development for CAR & Diaspora' },
   { name: 'Yoruba', level: 'Fluent', note: 'West African Niger-Congo Tonal Language' },
   { name: 'Nigerian Pidgin', level: 'Fluent', note: 'Anglophone West African Creole & Dialectology' },
   { name: 'Fulfulde', level: 'Fluent', note: 'Sahelian Chadic-Congo Pastoralist Dialect' },

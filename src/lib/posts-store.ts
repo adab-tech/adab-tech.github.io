@@ -89,13 +89,13 @@ const INITIAL_POSTS: ResearchPost[] = [
   },
   {
     id: 'post-sango-code',
-    title: 'Code-170k-Sango: Democratizing Programming Education in Central African Creoles',
+    title: 'Code-170k-Sango: Application Development Pipeline for the Central African Republic & Diaspora',
     category: 'Tech',
     date: '2026-01',
-    abstract: 'Engineered 176,999 multi-turn programming conversations translated into pure Sango to empower low-resource African developers and bridge language barriers in software engineering.',
-    summary: 'Engineered 176,999 multi-turn programming conversations translated into pure Sango to empower low-resource African developers and bridge language barriers in software engineering.',
-    tags: ['Sango', 'Code Generation', 'Low-Resource LLMs', 'Hugging Face'],
-    content: '# Code-170k-Sango\n\nReleased on Hugging Face under `adab-tech/Code-170k-sango`.',
+    abstract: 'Forked and maintained the 176k-sample Sango coding corpus on Hugging Face as an open pipeline to engineer language applications, educational tooling, and sovereign AI systems for the Central African Republic (CAR) and its global diaspora.',
+    summary: 'Forked and maintained the 176k-sample Sango coding corpus on Hugging Face as an open pipeline to engineer language applications, educational tooling, and sovereign AI systems for the Central African Republic (CAR) and its global diaspora.',
+    tags: ['Sango (CAR)', 'Diaspora AI', 'Low-Resource NLP', 'Hugging Face', 'Code-170k'],
+    content: '# Code-170k-Sango\n\nForked and hosted on Hugging Face under `adab-tech/Code-170k-sango` to support software and NLP application development for the Central African Republic and its diaspora.',
     bibtex: `@dataset{abubakar2026sango,
   title={Code-170k-sango: High-Quality Programming Dialogues in Sango},
   author={Abubakar, Adamu Danjuma},
@@ -107,7 +107,7 @@ const INITIAL_POSTS: ResearchPost[] = [
   }
 ]
 
-const STORAGE_KEY = 'adamu_tech_research_posts_v4'
+const STORAGE_KEY = 'adamu_tech_research_posts_v5'
 const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v4'
 
 export function usePostsStore() {
