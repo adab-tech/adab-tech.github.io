@@ -63,7 +63,7 @@ export function GlobalShell({ children }: ShellProps) {
             <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors flex items-center space-x-1" aria-label="HuggingFace">
               <span className="font-mono text-xs font-bold text-amber-500">HF</span>
             </a>
-            <a href="https://www.linkedin.com/company/murya-voice" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/adamudanjuma" target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors" aria-label="LinkedIn Profile">
               <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
                 <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg>
@@ -98,36 +98,74 @@ export function GlobalShell({ children }: ShellProps) {
         {children}
       </main>
 
-      {/* Footer */}
+      {/* Footer Ecosystem Map */}
       <footer className="w-full border-t border-zinc-200 dark:border-zinc-800 py-8 bg-white dark:bg-midnight-950">
-        <div className="max-w-6xl mx-auto px-4 space-y-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-zinc-400">
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-zinc-900 dark:text-zinc-100">adamu.tech</span>
-              <span>·</span>
-              <span>Adamu Danjuma Abubakar</span>
-              <span>© {new Date().getFullYear()}</span>
+        <div className="max-w-6xl mx-auto px-4 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-mono text-xs text-zinc-400 pb-6 border-b border-zinc-100 dark:border-zinc-900">
+            
+            {/* Identity & Scope */}
+            <div className="space-y-2 md:col-span-2">
+              <div className="flex items-center space-x-2">
+                <span className="font-bold text-zinc-900 dark:text-zinc-100 text-sm">adamu.tech</span>
+                <span>·</span>
+                <span>Adamu Danjuma Abubakar</span>
+              </div>
+              <p className="font-sans text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-md">
+                Computational Linguist & AI Researcher. Structuring low-resource African language speech synthesis, digital philology, and regional cloud infrastructure.
+              </p>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <a href="https://murya.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors flex items-center gap-1">
-                <span>murya.ng</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-              <a href="https://imodoye.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors flex items-center gap-1">
-                <span>imodoye.ng</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
-              <a href="https://adab.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors flex items-center gap-1">
-                <span>adab.ng</span>
-                <ExternalLink className="h-3 w-3" />
-              </a>
+            {/* Ecosystem Platforms */}
+            <div className="space-y-2">
+              <span className="font-bold text-zinc-900 dark:text-zinc-200 text-xs">Production Platforms</span>
+              <ul className="space-y-1.5 text-zinc-500 dark:text-zinc-400">
+                <li>
+                  <a href="https://murya.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors inline-flex items-center gap-1">
+                    <span>murya.ng</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </li>
+                <li>
+                  <a href="https://imodoye.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors inline-flex items-center gap-1">
+                    <span>imodoye.ng</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </li>
+                <li>
+                  <a href="https://adab.ng" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors inline-flex items-center gap-1">
+                    <span>adab.ng</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Scholarly Archives */}
+            <div className="space-y-2">
+              <span className="font-bold text-zinc-900 dark:text-zinc-200 text-xs">Scholarly Profiles</span>
+              <ul className="space-y-1.5 text-zinc-500 dark:text-zinc-400">
+                <li>
+                  <a href="https://orcid.org/0009-0009-4672-4956" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors">
+                    ORCID Record
+                  </a>
+                </li>
+                <li>
+                  <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors">
+                    Hugging Face AI
+                  </a>
+                </li>
+                <li>
+                  <a href="https://www.linkedin.com/in/adamudanjuma" target="_blank" rel="noreferrer" className="hover:text-gold-400 transition-colors">
+                    LinkedIn Network
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-500 pt-3 border-t border-zinc-100 dark:border-zinc-900">
-            <div>DNS: Cloudflare Edge Routing</div>
-            <div>Mail Dispatch: contact@adamu.tech / adamudanjuma1@outlook.com</div>
+          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-500">
+            <div>© {new Date().getFullYear()} adamu.tech · All rights preserved.</div>
+            <div>Cloudflare Edge DNS · Resend (contact@adamu.tech / adamudanjuma1@outlook.com)</div>
           </div>
         </div>
       </footer>
