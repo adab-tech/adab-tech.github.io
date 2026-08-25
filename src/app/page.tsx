@@ -51,11 +51,11 @@ export default function Home() {
               </h1>
 
               <p className="text-base md:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
-                Computational Linguist & AI Researcher • Polyglot (10 Languages)
+                Computational Linguist & AI Researcher • Polyglot (7+ Languages)
               </p>
 
               <p className="text-sm font-sans text-zinc-600 dark:text-zinc-300 leading-relaxed">
-                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure across Hausa, English, Pidgin English, Sango, Fulfulde, Yoruba, French, Arabic, German, and Spanish.
+                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure across Hausa, English, French, Sango, Yoruba, Fulfulde, and Pidgin English (with full 10-language philological matrix in CV).
               </p>
 
               {/* Core Pillars */}
@@ -74,7 +74,7 @@ export default function Home() {
                 </span>
                 <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
                   <Globe className="h-3.5 w-3.5 text-gold-400" />
-                  <span>10 Languages Polyglot</span>
+                  <span>7+ Languages Polyglot</span>
                 </span>
               </div>
             </div>
