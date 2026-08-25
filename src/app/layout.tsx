@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Layout from "@/components/Layout";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Adamu Abubakar - Computational Linguistics & AI",
-  description: "Specializing in African language technology, NLP, and AI-powered solutions",
+  title: "Adamu Abubakar — Computational Linguist & AI Researcher",
+  description: "Official research platform, speech AI synthesis demo, and philology archive for Adamu Abubakar (adab-tech / adamu.tech).",
 };
 
 export default function RootLayout({
@@ -16,9 +12,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Layout>{children}</Layout>
+    <html lang="en" className="dark">
+      <body className="bg-parchment-50 dark:bg-midnight-950 text-zinc-900 dark:text-zinc-50 antialiased selection:bg-amber-500/20">
+        {children}
       </body>
     </html>
   );

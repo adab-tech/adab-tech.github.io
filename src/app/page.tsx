@@ -1,102 +1,113 @@
-'use client';
+'use client'
 
-import Image from "next/image";
-import { useGreeting } from '@/hooks/useGreeting';
-import { useScrollAnimations } from '@/hooks/useScrollAnimations';
+import React, { useState, useEffect } from 'react'
+import { GlobalShell } from '@/components/GlobalShell'
+import { AudioTTSWidget } from '@/components/AudioTTSWidget'
+import { EcosystemGrid } from '@/components/EcosystemGrid'
+import { TaxonomyGrid } from '@/components/TaxonomyGrid'
+import { AssetGallery } from '@/components/AssetGallery'
+import { ContactForm } from '@/components/ContactForm'
+import { Cpu, BookOpen, Terminal, Sparkles, ArrowRight, Award } from 'lucide-react'
 
 const GREETINGS = [
-  { text: 'Welcome', lang: 'en' },
-  { text: 'Bienvenue', lang: 'fr' },
-  { text: 'Ẹ káàbọ', lang: 'yo' },
-  { text: 'Barka da zuwa', lang: 'ha' },
-  { text: 'مرحبا', lang: 'ar' },
-  { text: 'Bienvenido', lang: 'es' },
-  { text: 'Willkommen', lang: 'de' },
-  { text: 'Benvenuto', lang: 'it' },
-  { text: 'स्वागत है', lang: 'hi' },
-  { text: 'ようこそ', lang: 'ja' },
-  { text: '欢迎', lang: 'zh' },
-  { text: 'Добро пожаловать', lang: 'ru' },
-  { text: 'Karibu', lang: 'sw' },
-  { text: 'Bem-vindo', lang: 'pt' }
-];
+  { text: 'Barka da zuwa', lang: 'ha', label: 'Hausa' },
+  { text: 'Welcome', lang: 'en', label: 'English' },
+  { text: 'Bienvenue', lang: 'fr', label: 'French' },
+  { text: 'Ẹ káàbọ', lang: 'yo', label: 'Yoruba' },
+  { text: 'مرحبا', lang: 'ar', label: 'Arabic' }
+]
 
 export default function Home() {
-  const greeting = useGreeting(GREETINGS);
-  useScrollAnimations();
+  const [greetingIndex, setGreetingIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setGreetingIndex((prev) => (prev + 1) % GREETINGS.length)
+    }, 3000)
+    return () => clearInterval(timer)
+  }, [])
+
+  const currentGreeting = GREETINGS[greetingIndex]
 
   return (
-    <section className="hero" id="home">
-      <div className="hero-background">
-        <div className="hero-gradient"></div>
-        <div className="hero-pattern"></div>
-      </div>
-      
-      <div className="container hero-content">
-        <div className="hero-text" data-animate="fade-up">
-          <div className="greeting-container">
-            <h1 id="dynamic-greeting" className="greeting visible" aria-live="polite" lang={greeting.lang}>{greeting.text}</h1>
-            <noscript>
-              <h1 className="greeting-fallback">Welcome</h1>
-            </noscript>
-          </div>
-          
-          <h2 className="hero-title">
-            I'm <span className="highlight">Adamu Abubakar</span>
-          </h2>
-          
-          <p className="hero-subtitle">
-            Computational Linguist & AI Researcher specializing in African Language Technology
-          </p>
-          
-          <p className="hero-description">
-            Building bridges between technology and African languages through NLP, machine learning, 
-            and innovative AI solutions. Expert in Hausa language processing and multilingual systems.
-          </p>
-          
-          <div className="hero-buttons">
-            <a href="#projects" className="btn btn-primary">
-              <span>View My Work</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-            <a href="#contact" className="btn btn-secondary">
-              <span>Get in Touch</span>
-            </a>
-          </div>
-        </div>
-        
-        <div className="hero-visual" data-animate="fade-left">
-          <div className="hero-card floating">
-            <div className="code-snippet">
-              <div className="code-header">
-                <span className="dot"></span>
-                <span className="dot"></span>
-                <span className="dot"></span>
+    <GlobalShell>
+      <div className="space-y-16 py-4">
+        {/* Profile Hero Section */}
+        <section className="relative p-8 md:p-12 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-md overflow-hidden space-y-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="space-y-4 max-w-2xl">
+              {/* Multilingual Dynamic Greeting */}
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-mono">
+                <Sparkles className="h-3.5 w-3.5 animate-pulse" />
+                <span className="font-bold">{currentGreeting.text}</span>
+                <span className="text-[10px] opacity-70">[{currentGreeting.label}]</span>
               </div>
-              <div className="code-body">
-                <code>
-                  <span className="comment"># African Language NLP</span><br />
-                  <span className="keyword">def</span> <span className="function">analyze_hausa</span>(text):<br />
-                  &nbsp;&nbsp;<span className="keyword">return</span> tokenize(text)<br />
-                  <br />
-                  <span className="comment"># Multilingual AI</span><br />
-                  result = <span className="function">translate</span>(<br />
-                  &nbsp;&nbsp;text=<span className="string">"Barka da zuwa"</span>,<br />
-                  &nbsp;&nbsp;target=<span className="string">"en"</span><br />
-                  )
-                </code>
+
+              <h1 className="text-3xl md:text-5xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+                Adamu Abubakar
+              </h1>
+
+              <p className="text-base md:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
+                Computational Linguist & AI Researcher
+              </p>
+
+              <p className="text-sm font-sans text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                Pioneering Hausa-first NLP engines, neural voice synthesis, and digital literary structuring for low-resource African languages. Bridging computational linguistics with sovereign regional AI infrastructure.
+              </p>
+
+              {/* Core Pillars */}
+              <div className="pt-2 flex flex-wrap gap-2">
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+                  <Terminal className="h-3.5 w-3.5 text-emerald-500" />
+                  <span>Hausa-first NLP</span>
+                </span>
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+                  <BookOpen className="h-3.5 w-3.5 text-amber-500" />
+                  <span>Ajami Philology</span>
+                </span>
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md text-xs font-mono bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700">
+                  <Cpu className="h-3.5 w-3.5 text-indigo-500" />
+                  <span>Speech AI Systems</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Terminal Card */}
+            <div className="w-full md:w-80 rounded-xl border border-zinc-800 bg-midnight-950 p-4 font-mono text-xs text-zinc-300 shadow-xl space-y-3 shrink-0">
+              <div className="flex items-center justify-between pb-2 border-b border-zinc-800 text-zinc-500 text-[10px]">
+                <div className="flex space-x-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                </div>
+                <span>hausa_tts.py</span>
+              </div>
+              <div className="space-y-1 text-[11px] leading-relaxed">
+                <p className="text-zinc-500"># Murya Speech Synthesis</p>
+                <p><span className="text-purple-400">from</span> murya <span className="text-purple-400">import</span> Synthesizer</p>
+                <p className="pt-1"><span className="text-blue-400">model</span> = Synthesizer.load(<span className="text-emerald-400">"hausa-v1"</span>)</p>
+                <p><span className="text-blue-400">wav</span> = model.infer(<span className="text-emerald-400">"Barka da zuwa"</span>)</p>
+                <p className="text-zinc-500 pt-1"># Audio: 24kHz PCM Stream</p>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Milestone 1: Live Interactive Hausa TTS Audio Synthesizer Widget */}
+        <AudioTTSWidget />
+
+        {/* Milestone 2: Ecosystem Grid */}
+        <EcosystemGrid />
+
+        {/* Milestone 2: Research Taxonomy Grid */}
+        <TaxonomyGrid />
+
+        {/* Milestone 3: Asset Gallery Engine */}
+        <AssetGallery />
+
+        {/* Milestone 4: Communications Pipeline */}
+        <ContactForm />
       </div>
-      
-      <div className="scroll-indicator">
-        <span>Scroll Down</span>
-        <div className="scroll-arrow"></div>
-      </div>
-    </section>
-  );
+    </GlobalShell>
+  )
 }
