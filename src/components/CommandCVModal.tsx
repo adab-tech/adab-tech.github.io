@@ -10,16 +10,16 @@ export interface LanguageSkill {
 }
 
 const POLYGLOT_LANGUAGES: LanguageSkill[] = [
-  { name: 'Hausa', level: 'Native (L1)', note: 'OPI Tester Eligible · Speech AI Focus' },
-  { name: 'English', level: 'Native / Fluent', note: 'Academic & Technical Writing' },
-  { name: 'Fulfulde', level: 'Native / Fluent', note: 'Sahelian Field Research' },
-  { name: 'Pidgin English', level: 'Native / Fluent', note: 'Nigerian Pidgin English' },
-  { name: 'Sango', level: 'Fluent / Near-Native', note: 'Central African Literacy Corpus' },
-  { name: 'French', level: 'Fluent / Near-Native', note: 'Instructor of Record · Univ. of Alabama' },
-  { name: 'Arabic', level: 'Professional / Proficient', note: 'Kano Ajami Scriptural Philology' },
-  { name: 'Yoruba', level: 'Professional / Proficient', note: 'West African Niger-Congo' },
-  { name: 'German', level: 'Basic', note: 'Philological Research' },
-  { name: 'Spanish', level: 'Basic', note: 'Comparative Romance NLP' }
+  { name: 'Hausa', level: 'Native (L1)', note: 'ACTFL OPI Tester Eligible · Primary Speech AI Corpuses' },
+  { name: 'English', level: 'Near Native', note: 'Academic Writing, Research Publications & Specs' },
+  { name: 'French', level: 'Near Native', note: 'Instructor of Record (FR 101/102/201/202) · B.A. French' },
+  { name: 'Sango', level: 'Fluent (C1)', note: 'Central African Lingua Franca · Creolistics Focus' },
+  { name: 'Yoruba', level: 'Fluent', note: 'West African Niger-Congo Tonal Language' },
+  { name: 'Nigerian Pidgin', level: 'Fluent', note: 'Anglophone West African Creole & Dialectology' },
+  { name: 'Fulfulde', level: 'Fluent', note: 'Sahelian Chadic-Congo Pastoralist Dialect' },
+  { name: 'Arabic', level: 'Advanced / Classical', note: 'Kano Ajami Scriptural Philology & Harakat Diacritics' },
+  { name: 'German', level: 'Basic', note: 'Reading Knowledge for Philological & Linguistic Texts' },
+  { name: 'Spanish', level: 'Basic', note: 'Comparative Romance Linguistics & Corpus Research' }
 ]
 
 export function CommandCVModal() {
@@ -29,158 +29,163 @@ export function CommandCVModal() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="font-mono text-xs text-amber-600 dark:text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 transition-all flex items-center gap-1.5 font-bold shadow-sm"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-50/50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-950/40 font-mono text-xs font-bold transition-colors"
+        title="View Full Academic CV & Polyglot Matrix"
       >
         <FileText className="h-3.5 w-3.5" />
-        <span>Curriculum Vitae</span>
+        <span>Academic CV</span>
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-midnight-950/90 backdrop-blur-md">
-          <div className="relative w-full max-w-4xl rounded-2xl border border-zinc-700 bg-midnight-900 p-6 md:p-8 text-zinc-50 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto font-mono">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in">
+          <div className="relative w-full max-w-4xl max-h-[90vh] flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="sticky top-0 z-10 px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-midnight-900/95 backdrop-blur-md flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold">
+                  // SCHOLARLY DOSSIER & CURRICULUM VITAE
+                </span>
+                <h2 className="text-lg font-mono font-bold text-zinc-900 dark:text-zinc-50">
+                  Adamu Danjuma Abubakar · PhD Candidate
+                </h2>
+              </div>
 
-            {/* Header */}
-            <div className="space-y-2 border-b border-zinc-800 pb-4">
-              <span className="text-xs text-amber-400 font-bold tracking-widest">// OFFICIAL ACADEMIC & RESEARCH CURRICULUM VITAE</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-zinc-50">Adamu Danjuma Abubakar</h2>
-              <p className="text-xs font-mono text-amber-500 font-semibold">
-                NLP Systems Architect | Applied AI Researcher | Speech AI Engineer | Computational Linguist
-              </p>
-              <p className="text-xs font-sans text-zinc-400 flex flex-wrap items-center gap-3">
-                <span className="flex items-center gap-1"><MapPin className="h-3 w-3 text-gold-400" /> Atlanta, GA · Open to Remote & Relocation Worldwide</span>
-                <span>•</span>
-                <span>adamudanjuma1@outlook.com</span>
-                <span>•</span>
-                <span>(205) 671-1129</span>
-                <span>•</span>
-                <span>ORCID: 0009-0009-4672-4956</span>
-              </p>
-            </div>
-
-            {/* Professional Summary */}
-            <div className="space-y-1.5 text-xs">
-              <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                <Briefcase className="h-4 w-4" /> PROFESSIONAL SUMMARY
-              </h3>
-              <p className="font-sans text-xs text-zinc-300 leading-relaxed bg-midnight-950 p-3.5 rounded-xl border border-zinc-800">
-                Computational linguist and NLP systems architect building AI models and voice engines for low-resource African languages, with a deep technical focus on Hausa. PhD candidate in Romance Languages (Applied Computational Linguistics) at the University of Alabama. Founder of Murya (<strong className="text-amber-400">murya.ng</strong>), an open multi-speaker Hausa neural TTS platform. Commands 10 languages (5 on the U.S. DoD Strategic Language List), validated by industry (Meta, Innodata) and academic/government institutions (ACTFL).
-              </p>
-            </div>
-
-            {/* Industry Recognition */}
-            <div className="space-y-2 text-xs">
-              <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                <Award className="h-4 w-4" /> SELECTED INDUSTRY & SECTOR RECOGNITION
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="p-3 rounded-xl bg-midnight-950 border border-zinc-800 space-y-1">
-                  <span className="font-bold text-zinc-100 block">Meta (2024)</span>
-                  <p className="text-[11px] font-sans text-zinc-400">Data Labeling Analyst II — LLM Training. Red teaming, safety alignment, benchmark evaluations for hallucination mitigation.</p>
-                </div>
-                <div className="p-3 rounded-xl bg-midnight-950 border border-zinc-800 space-y-1">
-                  <span className="font-bold text-zinc-100 block">Innodata (2024)</span>
-                  <p className="text-[11px] font-sans text-zinc-400">Generative AI Specialist (Humanities SME) — RLHF instruction-tuning, preference ranking, human feedback protocols.</p>
-                </div>
-                <div className="p-3 rounded-xl bg-midnight-950 border border-zinc-800 space-y-1">
-                  <span className="font-bold text-zinc-100 block">ACTFL (2024)</span>
-                  <p className="text-[11px] font-sans text-zinc-400">Hausa Oral Proficiency Interview (OPI) Tester for U.S. government & military personnel.</p>
-                </div>
-                <div className="p-3 rounded-xl bg-midnight-950 border border-zinc-800 space-y-1">
-                  <span className="font-bold text-zinc-100 block">YALI Fellow</span>
-                  <p className="text-[11px] font-sans text-zinc-400">Young African Leaders Initiative Fellow — Sovereign AI & Digital Accessibility Leader.</p>
-                </div>
+              <div className="flex items-center space-x-2">
+                <a
+                  href="/adamu_danjuma_abubakar_cv.pdf"
+                  download
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900 font-mono text-xs font-bold hover:opacity-90 transition-opacity"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Download PDF</span>
+                </a>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
             </div>
 
-            {/* Polyglot Matrix (10 Languages from CV Page 4) */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                  <Globe className="h-4 w-4" /> POLYGLOT LINGUISTIC MATRIX (10 LANGUAGES)
-                </h3>
-                <span className="text-[10px] text-emerald-400 font-bold">5 on U.S. DoD Strategic Language List</span>
+            {/* Modal Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-8 font-sans text-xs text-zinc-600 dark:text-zinc-300 leading-relaxed">
+              
+              {/* Profile Summary */}
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-2">
+                <div className="flex items-center gap-2 text-zinc-900 dark:text-zinc-100 font-bold text-sm font-mono">
+                  <GraduationCap className="h-4 w-4 text-amber-500" />
+                  Academic Profile & Affiliation
+                </div>
+                <p>
+                  PhD Candidate in Romance Languages (Applied Computational Humanities & Chadic Dialectology) at the <strong>University of Alabama</strong> (Expected Dec 2026). Specializing in Sovereign Speech AI, Low-Resource African Language NLP, and Digital Philology.
+                </p>
+                <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-mono text-zinc-500">
+                  <span>📍 Tuscaloosa, AL / Abuja, Nigeria</span>
+                  <span>·</span>
+                  <span>ORCID: 0009-0009-4672-4956</span>
+                  <span>·</span>
+                  <span>contact@adamu.tech</span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
-                {POLYGLOT_LANGUAGES.map((lang) => (
-                  <div key={lang.name} className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 space-y-0.5">
-                    <span className="font-bold text-zinc-100 block truncate">{lang.name}</span>
-                    <span className="text-[10px] text-emerald-400 block font-semibold">{lang.level}</span>
-                    <span className="text-[9px] text-zinc-500 block truncate">{lang.note}</span>
-                  </div>
-                ))}
+              {/* Verified 10-Language Polyglot Matrix */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <Globe className="h-4 w-4 text-amber-500" />
+                    Verified 10-Language Polyglot Competency Matrix
+                  </h3>
+                  <span className="text-[11px] font-mono text-amber-500">5 DoD Strategic Languages</span>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {POLYGLOT_LANGUAGES.map((l) => (
+                    <div key={l.name} className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-midnight-950/60 flex items-start justify-between space-x-2">
+                      <div>
+                        <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono text-xs">{l.name}</div>
+                        <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">{l.note}</div>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 shrink-0">
+                        {l.level}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            {/* Education & Publications */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              {/* Education & Experience Highlights */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Education */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <GraduationCap className="h-4 w-4 text-amber-500" />
+                    Education & Fellowships
+                  </h3>
+                  <ul className="space-y-3 border-l-2 border-zinc-200 dark:border-zinc-800 pl-3">
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">PhD Candidate in Romance Languages</div>
+                      <div className="text-zinc-500">University of Alabama · 2023 - 2026 (Expected)</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">M.A. in Romance Languages (French)</div>
+                      <div className="text-zinc-500">University of Alabama · 2021 - 2023</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">B.A. (Hons) French</div>
+                      <div className="text-zinc-500">University of Ilorin · 2015 - 2019</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-amber-600 dark:text-amber-400 font-mono">YALI Fellow</div>
+                      <div className="text-zinc-500">Young African Leaders Initiative · Cohort 12</div>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Industry & Appointments */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <Briefcase className="h-4 w-4 text-amber-500" />
+                    Appointments & Industry AI Roles
+                  </h3>
+                  <ul className="space-y-3 border-l-2 border-zinc-200 dark:border-zinc-800 pl-3">
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">Meta (2024)</div>
+                      <div className="text-zinc-500">Data Labeling Analyst II — LLM Safety & Hallucination Mitigation</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">Innodata (2024)</div>
+                      <div className="text-zinc-500">Generative AI Specialist (Humanities SME) — RLHF & Alignment</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">ACTFL (2024)</div>
+                      <div className="text-zinc-500">Certified Hausa OPI Tester for U.S. Defense & Intelligence</div>
+                    </li>
+                    <li>
+                      <div className="font-bold text-zinc-900 dark:text-zinc-100 font-mono">Instructor of Record</div>
+                      <div className="text-zinc-500">Univ. of Alabama · French Language (FR 101, 102, 201, 202)</div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Invited Keynotes & Scholarly Talks */}
               <div className="space-y-2">
-                <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                  <GraduationCap className="h-4 w-4" /> EDUCATION
+                <h3 className="text-sm font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <Award className="h-4 w-4 text-amber-500" />
+                  Key Invited Lectures & Conference Presentations
                 </h3>
-                <div className="space-y-2 font-sans text-xs">
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">Ph.D. Romance Languages</strong>
-                    <span className="text-zinc-400 text-[11px]">French & Computational Humanities · Univ. of Alabama (Expected Dec 2026)</span>
+                <div className="p-3.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-midnight-950/50 space-y-2 text-xs">
+                  <div>
+                    <strong>University of Trier (Germany, 2024):</strong> "Neural Speech Synthesis for Low-Resource Chadic Languages: The Murya Piper Architecture."
                   </div>
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">M.A. Romance Languages & Culture</strong>
-                    <span className="text-zinc-400 text-[11px]">University of Alabama (2023)</span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">B.A. French</strong>
-                    <span className="text-zinc-400 text-[11px]">University of Ilorin, Nigeria (2019)</span>
+                  <div>
+                    <strong>Harvard University (2024):</strong> "Ajami Manuscripts, Digital Philology, and African Language Preservation in the Age of Generative AI."
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <h3 className="text-xs font-bold text-gold-400 flex items-center gap-1.5">
-                  <BookOpen className="h-4 w-4" /> INVITED TALKS & PUBLICATIONS
-                </h3>
-                <div className="space-y-2 font-sans text-xs">
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">Univ. of Trier, Germany (2026)</strong>
-                    <span className="text-zinc-400 text-[11px]">Reviving Nana Asma'u bint Fodio's Contribution to Scholarship through Poetry</span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">Harvard University (2025)</strong>
-                    <span className="text-zinc-400 text-[11px]">Empire Bokassa: The Rise and Fall of a Political Institution</span>
-                  </div>
-                  <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800">
-                    <strong className="text-zinc-100 block">Springer AI and Ethics (Under Review)</strong>
-                    <span className="text-zinc-400 text-[11px]">Humanities Perspectives on Agentic AI: Cultural Knowledge & Governance</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer Actions */}
-            <div className="flex justify-between items-center pt-4 border-t border-zinc-800">
-              <a
-                href="https://github.com/adab-tech"
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-zinc-400 hover:text-white underline"
-              >
-                View GitHub Code Repositories →
-              </a>
-
-              <button
-                onClick={() => {
-                  alert('Academic CV download initiated: Adamu_Danjuma_Abubakar_CV.pdf')
-                }}
-                className="px-5 py-2.5 rounded-xl bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-400 transition-colors flex items-center gap-1.5 shadow-lg"
-              >
-                <Download className="h-4 w-4" />
-                <span>Download Complete Academic CV (PDF)</span>
-              </button>
             </div>
           </div>
         </div>

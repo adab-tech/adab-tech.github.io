@@ -3,109 +3,120 @@
 import React, { useState } from 'react'
 import { Sparkles, ArrowRightLeft, BookOpen, Copy, Check } from 'lucide-react'
 
-// Rule-based Boko to Ajami transliteration map
-const BOKO_TO_AJAMI_MAP: Record<string, string> = {
-  'barka': 'بَرْكَا',
-  'da': 'دَا',
-  'zuwa': 'زُووَا',
-  'muryar': 'مُورْيَارْ',
-  'hausa': 'هَوْسَا',
-  'neman': 'نَيْمَانْ',
-  'ilimi': 'عِلِمِي',
-  'wajibi': 'وَاجِبِي',
-  'ne': 'نَيْ',
-  'gaskiya': 'غَسْكِيَا',
-  'ta': 'تَا',
-  'fi': 'فِي',
-  'karfin': 'قَرْفِينْ',
-  'takobi': 'تَكُوبِي'
-}
+const PRESETS = [
+  { label: 'Greeting', text: 'barka da zuwa' },
+  { label: 'Voice of Hausa', text: 'muryar hausa' },
+  { label: 'Knowledge Pursuit', text: 'neman ilimi wajibi ne' },
+  { label: 'Literature & Poetry', text: 'rubutun ajami da boko' }
+]
 
 export function AjamiTransliterationWidget() {
-  const [bokoInput, setBokoInput] = useState('Barka da zuwa Muryar Hausa')
+  const [inputText, setInputText] = useState('barka da zuwa muryar hausa')
   const [copied, setCopied] = useState(false)
 
+  // Boko to Ajami conversion mapping
   const transliterateToAjami = (text: string): string => {
-    const words = text.toLowerCase().split(/\s+/)
-    return words
-      .map((w) => BOKO_TO_AJAMI_MAP[w.replace(/[^a-zɓɗƙƴ']/g, '')] || 'بَرْكَا')
-      .join(' ')
+    if (!text.trim()) return ''
+    const lower = text.toLowerCase()
+
+    const wordMap: Record<string, string> = {
+      'barka': 'بَرْكَا',
+      'da': 'دَا',
+      'zuwa': 'زُووَا',
+      'muryar': 'مُورْيَارْ',
+      'hausa': 'هَوْسَا',
+      'neman': 'نَيْمَانْ',
+      'ilimi': 'عِلِمِي',
+      'wajibi': 'وَاجِبِي',
+      'ne': 'نَيْ',
+      'rubutun': 'رُوبُوتُونْ',
+      'ajami': 'عَجَمِي',
+      'boko': 'بَوْكَوْ',
+      'kasa': 'قَاسَا',
+      'mutum': 'مُوتُومْ'
+    }
+
+    const words = lower.split(/\s+/)
+    const mapped = words.map(w => wordMap[w] || w).join(' ')
+    return mapped
   }
 
-  const ajamiOutput = transliterateToAjami(bokoInput)
+  const ajamiOutput = transliterateToAjami(inputText)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(ajamiOutput)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    if (typeof navigator !== 'undefined') {
+      navigator.clipboard.writeText(ajamiOutput)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
   }
 
   return (
     <section className="space-y-6">
       <div className="flex flex-col space-y-1">
         <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold">
-          // TRANSLITERATION ENGINE
+          // DIGITAL PHILOLOGY & SCRIPT ENGINE
         </span>
         <h2 className="text-xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
           <BookOpen className="h-5 w-5 text-amber-500" />
-          Hausa Boko ⇄ Ajami Transliteration Demo
+          Boko ⇄ 19th-Century Kano Ajami Transliteration Engine
         </h2>
-        <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
-          Live rule-based engine converting contemporary Latin Boko text to 19th-century West African Ajami script with harakat.
+        <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400 max-w-3xl leading-relaxed">
+          Rule-based Harakat diacritization mapping modern Latinized Boko orthography to classical 19th-century Kano Ajami Arabic manuscript typography.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Boko Input */}
-        <div className="p-5 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 space-y-3">
-          <div className="flex items-center justify-between font-mono text-xs">
-            <span className="font-bold text-zinc-900 dark:text-zinc-100">Hausa Boko Input (Latin Script)</span>
-            <span className="text-[10px] text-amber-500 font-bold">Boko Orthography</span>
-          </div>
-
-          <textarea
-            rows={3}
-            value={bokoInput}
-            onChange={(e) => setBokoInput(e.target.value)}
-            placeholder="Type Hausa Boko text..."
-            className="w-full p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-amber-500 leading-relaxed"
-          />
-
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {['Barka da zuwa', 'Gaskiya ta fi karfin takobi', 'Neman ilimi wajibi ne'].map((sample) => (
-              <button
-                key={sample}
-                onClick={() => setBokoInput(sample)}
-                className="text-[10px] font-mono px-2.5 py-1 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 hover:border-amber-500 border border-transparent transition-colors"
-              >
-                "{sample}"
-              </button>
-            ))}
-          </div>
+      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 p-5 sm:p-7 shadow-sm space-y-5">
+        {/* Preset sample buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs font-mono text-zinc-400 mr-1">Presets:</span>
+          {PRESETS.map((p) => (
+            <button
+              key={p.label}
+              onClick={() => setInputText(p.text)}
+              className="px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 hover:border-amber-500/50 text-xs font-mono text-zinc-700 dark:text-zinc-300 transition-colors"
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
 
-        {/* Ajami Output */}
-        <div className="p-5 rounded-2xl border border-amber-500/30 bg-amber-500/5 dark:bg-midnight-900 space-y-3 relative overflow-hidden">
-          <div className="flex items-center justify-between font-mono text-xs">
-            <span className="font-bold text-amber-600 dark:text-amber-400">Hausa Ajami Output (West African Script)</span>
-            <button
-              onClick={handleCopy}
-              className="inline-flex items-center space-x-1 text-[11px] text-amber-600 dark:text-amber-400 hover:underline"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Input: Latin Boko */}
+          <div className="space-y-2">
+            <label className="text-xs font-mono font-bold text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
+              <span>Standard Boko (Latin Orthography)</span>
+              <span className="text-[10px] text-zinc-400">Editable</span>
+            </label>
+            <textarea
+              rows={3}
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Type standard Hausa (e.g. barka da zuwa)..."
+              className="w-full p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-amber-500"
+            />
+          </div>
+
+          {/* Output: Kano Ajami Arabic */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-mono font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-1">
+                <span>Kano Ajami Manuscript Script (عجمي)</span>
+              </label>
+              <button
+                onClick={handleCopy}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
+              >
+                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
+              </button>
+            </div>
+            <div
+              dir="rtl"
+              className="w-full min-h-[90px] p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-amber-50/20 dark:bg-midnight-950/60 font-serif text-2xl text-amber-600 dark:text-amber-400 flex items-center justify-end leading-relaxed tracking-wide select-all"
             >
-              {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-              <span>{copied ? 'Copied' : 'Copy Ajami'}</span>
-            </button>
-          </div>
-
-          <div className="w-full h-24 p-4 rounded-xl bg-white dark:bg-midnight-950 border border-amber-500/20 flex items-center justify-end dir-rtl">
-            <p className="font-serif text-2xl md:text-3xl text-zinc-900 dark:text-amber-400 font-bold tracking-wide leading-loose">
-              {ajamiOutput}
-            </p>
-          </div>
-
-          <div className="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1">
-            <span>Encoding: Unicode Arabic / Harakat</span>
-            <span className="text-amber-500 font-bold">Imodoye Archival Rule v2</span>
+              {ajamiOutput || '...'}
+            </div>
           </div>
         </div>
       </div>
