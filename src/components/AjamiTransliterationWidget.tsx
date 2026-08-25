@@ -1,43 +1,85 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Sparkles, ArrowRightLeft, BookOpen, Copy, Check } from 'lucide-react'
+import { Sparkles, ArrowRightLeft, BookOpen, Copy, Check, Info } from 'lucide-react'
 
 const PRESETS = [
   { label: 'Greeting', text: 'barka da zuwa' },
   { label: 'Voice of Hausa', text: 'muryar hausa' },
   { label: 'Knowledge Pursuit', text: 'neman ilimi wajibi ne' },
-  { label: 'Literature & Poetry', text: 'rubutun ajami da boko' }
+  { label: 'Ajami Literature', text: 'rubutun ajami da boko' },
+  { label: 'Hooked Letters', text: 'ɓauna ɗaki ƙofa ƴaƴa' }
 ]
 
+// Extended 19th-Century Kano Ajami Grapheme Dictionary
+const BOKO_TO_AJAMI_MAP: Record<string, string> = {
+  // Common Words with Historical Harakat
+  'barka': 'بَرْكَا',
+  'da': 'دَا',
+  'zuwa': 'زُووَا',
+  'muryar': 'مُورْيَارْ',
+  'hausa': 'هَوْسَا',
+  'neman': 'نَيْمَانْ',
+  'ilimi': 'عِلِمِي',
+  'wajibi': 'وَاجِبِي',
+  'ne': 'نَيْ',
+  'rubutun': 'رُوبُوتُونْ',
+  'ajami': 'عَجَمِي',
+  'boko': 'بَوْكَوْ',
+  'kasa': 'قَاسَا',
+  'mutum': 'مُوتُومْ',
+  'girma': 'غِرْمَا',
+  'sarki': 'سَرْكِي',
+  'allah': 'اللّٰه',
+  // Hooked Consonant Words with Kano Ajami Variants (ݕ, ݑ, ق, ۑ)
+  'ɓauna': 'ݕَوْنَا',
+  'ɗaki': 'ݑَاكِي',
+  'ƙofa': 'قَوْفَا',
+  'ƴaƴa': 'ۑَاعْيَا',
+  "a'a": 'أَعْأَ'
+}
+
 export function AjamiTransliterationWidget() {
-  const [inputText, setInputText] = useState('barka da zuwa muryar hausa')
+  const [inputText, setInputText] = useState('barka da zuwa muryar hausa ɓauna ɗaki ƙofa')
   const [copied, setCopied] = useState(false)
 
-  // Boko to Ajami conversion mapping
+  // Transliterate text with character-level and word-level fallbacks
   const transliterateToAjami = (text: string): string => {
     if (!text.trim()) return ''
     const lower = text.toLowerCase()
 
-    const wordMap: Record<string, string> = {
-      'barka': 'بَرْكَا',
-      'da': 'دَا',
-      'zuwa': 'زُووَا',
-      'muryar': 'مُورْيَارْ',
-      'hausa': 'هَوْسَا',
-      'neman': 'نَيْمَانْ',
-      'ilimi': 'عِلِمِي',
-      'wajibi': 'وَاجِبِي',
-      'ne': 'نَيْ',
-      'rubutun': 'رُوبُوتُونْ',
-      'ajami': 'عَجَمِي',
-      'boko': 'بَوْكَوْ',
-      'kasa': 'قَاسَا',
-      'mutum': 'مُوتُومْ'
-    }
-
     const words = lower.split(/\s+/)
-    const mapped = words.map(w => wordMap[w] || w).join(' ')
+    const mapped = words.map(w => {
+      if (BOKO_TO_AJAMI_MAP[w]) return BOKO_TO_AJAMI_MAP[w]
+      
+      // Fallback character transliteration
+      return w
+        .replace(/ɓ/g, 'ݕ')
+        .replace(/ɗ/g, 'ݑ')
+        .replace(/ƙ/g, 'ق')
+        .replace(/ƴ/g, 'ۑ')
+        .replace(/ts/g, 'ڟ')
+        .replace(/c/g, 'چ')
+        .replace(/sh/g, 'ش')
+        .replace(/b/g, 'ب')
+        .replace(/d/g, 'د')
+        .replace(/f/g, 'ف')
+        .replace(/g/g, 'غ')
+        .replace(/h/g, 'ه')
+        .replace(/j/g, 'ج')
+        .replace(/k/g, 'ك')
+        .replace(/l/g, 'ل')
+        .replace(/m/g, 'م')
+        .replace(/n/g, 'ن')
+        .replace(/r/g, 'ر')
+        .replace(/s/g, 'س')
+        .replace(/t/g, 'ت')
+        .replace(/w/g, 'و')
+        .replace(/y/g, 'ي')
+        .replace(/z/g, 'ز')
+        .replace(/'/g, 'ء')
+    }).join(' ')
+
     return mapped
   }
 
@@ -62,7 +104,7 @@ export function AjamiTransliterationWidget() {
           Boko ⇄ 19th-Century Kano Ajami Transliteration Engine
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400 max-w-3xl leading-relaxed">
-          Rule-based Harakat diacritization mapping modern Latinized Boko orthography to classical 19th-century Kano Ajami Arabic manuscript typography.
+          Rule-based Harakat diacritization mapping modern Latinized Boko orthography to classical 19th-century Kano Ajami manuscript typography, supporting specialized Chadic graphemes (<strong className="text-zinc-800 dark:text-zinc-200">ݕ, ݑ, ق, ۑ, ڟ</strong>).
         </p>
       </div>
 
@@ -86,7 +128,7 @@ export function AjamiTransliterationWidget() {
           <div className="space-y-2">
             <label className="text-xs font-mono font-bold text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
               <span>Standard Boko (Latin Orthography)</span>
-              <span className="text-[10px] text-zinc-400">Editable</span>
+              <span className="text-[10px] text-zinc-400">Editable Live</span>
             </label>
             <textarea
               rows={3}
@@ -118,6 +160,14 @@ export function AjamiTransliterationWidget() {
               {ajamiOutput || '...'}
             </div>
           </div>
+        </div>
+
+        <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+          <span className="flex items-center gap-1">
+            <Info className="h-3.5 w-3.5 text-amber-500" />
+            Specialized Kano Graphemes: ɓ ➔ ݕ (U+0755), ɗ ➔ ݑ (U+0751), ƙ ➔ ق, ƴ ➔ ۑ (U+06D1)
+          </span>
+          <span>Zero External Dependencies · Pure Unicode UTF-8</span>
         </div>
       </div>
     </section>
