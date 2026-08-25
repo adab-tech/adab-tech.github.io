@@ -38,10 +38,10 @@ export function ContactForm() {
       <div className="flex flex-col space-y-1">
         <h2 className="text-xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
           <Mail className="h-5 w-5 text-amber-500" />
-          COMMUNICATIONS PIPELINE & CALENDAR BOOKING
+          Communications Pipeline & Calendar Booking
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
-          Direct research inquiry, speaking request, or consultation pipeline routed via Resend API & Cloudflare Edge.
+          Direct research inquiry, speaking request, or consultation pipeline routed via Cloudflare DNS & verified Resend domain (adamu@adamu.tech).
         </p>
       </div>
 
@@ -50,10 +50,10 @@ export function ContactForm() {
           <div className="py-12 flex flex-col items-center justify-center text-center space-y-3">
             <CheckCircle2 className="h-12 w-12 text-emerald-500" />
             <h3 className="text-lg font-mono font-bold text-zinc-900 dark:text-zinc-50">
-              PAYLOAD DISPATCHED SUCCESSFULLY
+              Payload Dispatched Successfully
             </h3>
             <p className="text-xs font-sans text-zinc-500 dark:text-zinc-400 max-w-md">
-              Your inquiry has passed edge validation and was delivered to Adamu Abubakar's research desk via Resend.
+              Your inquiry has passed edge validation and was delivered to Adamu Abubakar's research desk (adabubakar@crimson.ua.edu / adamu@adamu.tech).
             </p>
             <button
               onClick={() => setStatus('idle')}
@@ -151,7 +151,7 @@ export function ContactForm() {
 
             <div className="flex items-center justify-between pt-2">
               <span className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
-                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Protected by Edge Honeypot Guard
+                <ShieldAlert className="h-3.5 w-3.5 text-zinc-500" /> Cloudflare DNS & Resend Protected
               </span>
 
               <button

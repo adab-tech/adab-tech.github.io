@@ -22,7 +22,7 @@ export function AdminHeader() {
             <ShieldCheck className="h-4 w-4" />
           </div>
           <span className="font-mono text-sm font-bold tracking-tight text-zinc-50">
-            ADAMU-TECH ADMIN SUITE
+            adamu<span className="text-gold-500">.tech</span> Admin Studio
           </span>
           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
             AUTHENTICATED

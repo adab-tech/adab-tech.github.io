@@ -2,11 +2,24 @@
 
 import { useState, useEffect } from 'react'
 
-const ADMIN_SECRET = 'adamu2026'
+const PASS_KEY = 'adamu_tech_admin_password'
 const AUTH_KEY = 'adamu_tech_admin_session'
+const DEFAULT_PASS = 'adamu2026'
+
+export function getAdminPassword(): string {
+  if (typeof window === 'undefined') return DEFAULT_PASS
+  return localStorage.getItem(PASS_KEY) || DEFAULT_PASS
+}
+
+export function setAdminPassword(newPassword: string): void {
+  if (typeof window !== 'undefined' && newPassword.trim().length >= 4) {
+    localStorage.setItem(PASS_KEY, newPassword.trim())
+  }
+}
 
 export function verifyAdminPassword(password: string): boolean {
-  if (password === ADMIN_SECRET || password === 'admin' || password === 'adamutech') {
+  const currentSecret = getAdminPassword()
+  if (password === currentSecret || password === 'admin' || password === 'adamutech') {
     if (typeof window !== 'undefined') {
       localStorage.setItem(AUTH_KEY, JSON.stringify({ authenticated: true, timestamp: Date.now() }))
     }
@@ -53,5 +66,9 @@ export function useAdminAuth() {
     setIsAuthenticated(false)
   }
 
-  return { isAuthenticated, loading, login, logout }
+  const updatePassword = (newPass: string) => {
+    setAdminPassword(newPass)
+  }
+
+  return { isAuthenticated, loading, login, logout, updatePassword, currentPassword: getAdminPassword() }
 }

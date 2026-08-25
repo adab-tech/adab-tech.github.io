@@ -59,7 +59,7 @@ export function EcosystemGrid() {
     <section className="space-y-6">
       <div className="flex flex-col space-y-1">
         <h2 className="text-xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          PRODUCTION ECOSYSTEM MATRIX
+          Production Ecosystem Matrix
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
           Active domain platforms engineered for computational linguistics, literature, and digital infrastructure.

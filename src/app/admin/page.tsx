@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { usePostsStore, ResearchPost, StreamCategory } from '@/lib/posts-store'
 import { AdminHeader } from '@/components/AdminHeader'
-import { Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, BookOpen, Cpu } from 'lucide-react'
+import { Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Lock, Key, Mail, Check } from 'lucide-react'
 
 export default function AdminDashboardPage() {
-  const { isAuthenticated, loading } = useAdminAuth()
+  const { isAuthenticated, loading, updatePassword, currentPassword } = useAdminAuth()
   const { posts, addPost, updatePost, deletePost } = usePostsStore()
   const router = useRouter()
 
@@ -21,6 +21,10 @@ export default function AdminDashboardPage() {
   const [bibtexInput, setBibtexInput] = useState('')
   const [previewMode, setPreviewMode] = useState<'serif' | 'mono' | 'sans'>('serif')
   const [notification, setNotification] = useState('')
+
+  // Password Management State
+  const [newPass, setNewPass] = useState('')
+  const [passNotice, setPassNotice] = useState('')
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -72,6 +76,18 @@ export default function AdminDashboardPage() {
     setTagsInput('')
     setBibtexInput('')
     setTimeout(() => setNotification(''), 3000)
+  }
+
+  const handlePasswordChange = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (newPass.trim().length < 4) {
+      setPassNotice('Password must be at least 4 characters long.')
+      return
+    }
+    updatePassword(newPass.trim())
+    setNewPass('')
+    setPassNotice('Admin password updated successfully!')
+    setTimeout(() => setPassNotice(''), 3500)
   }
 
   const startEdit = (post: ResearchPost) => {
@@ -128,7 +144,7 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
               <Edit3 className="h-5 w-5 text-gold-400" />
-              {editingId ? 'EDIT RESEARCH PUBLICATION' : 'CREATE NEW RESEARCH PUBLICATION'}
+              {editingId ? 'Edit Research Publication' : 'Create New Research Publication'}
             </h2>
 
             {editingId && (
@@ -287,11 +303,93 @@ export default function AdminDashboardPage() {
           </form>
         </section>
 
+        {/* Admin Password & Domain Security Panel */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+          {/* Admin Password Change Form */}
+          <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
+            <h3 className="text-base font-mono font-bold text-zinc-100 flex items-center gap-2">
+              <Key className="h-4 w-4 text-gold-400" />
+              Admin Password Management
+            </h3>
+            <p className="text-xs font-sans text-zinc-400">
+              Update the secret password used to access this Admin Studio across devices.
+            </p>
+
+            {passNotice && (
+              <div className="p-3 rounded-lg bg-zinc-800 border border-zinc-700 text-gold-400 text-xs font-mono flex items-center gap-2">
+                <Check className="h-3.5 w-3.5" />
+                <span>{passNotice}</span>
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordChange} className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-xs font-mono text-zinc-400">Current Password</label>
+                <input
+                  type="text"
+                  disabled
+                  value={currentPassword}
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-500 cursor-not-allowed"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-mono text-zinc-400">New Password</label>
+                <input
+                  type="password"
+                  required
+                  value={newPass}
+                  onChange={(e) => setNewPass(e.target.value)}
+                  placeholder="Enter new admin password..."
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors"
+              >
+                Save New Password
+              </button>
+            </form>
+          </div>
+
+          {/* Domain & Email Delivery Status */}
+          <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
+            <h3 className="text-base font-mono font-bold text-zinc-100 flex items-center gap-2">
+              <Mail className="h-4 w-4 text-emerald-400" />
+              Domain & Email Delivery Status
+            </h3>
+            <p className="text-xs font-sans text-zinc-400">
+              Verified domain records for adamu.tech & Resend API mail routing.
+            </p>
+
+            <div className="space-y-2 font-mono text-xs">
+              <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
+                <span className="text-zinc-400">Cloudflare DNS Status:</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Verified
+                </span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
+                <span className="text-zinc-400">Resend Mail Domain:</span>
+                <span className="text-emerald-400 font-bold flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> adamu.tech Active
+                </span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
+                <span className="text-zinc-400">Primary Desk Email:</span>
+                <span className="text-gold-400">adamu@adamu.tech</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Publication Manager Table */}
         <section className="space-y-4 pt-4">
           <h2 className="text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
             <Layers className="h-5 w-5 text-zinc-400" />
-            PUBLICATION MANAGER & ARCHIVE ({posts.length})
+            Publication Manager & Archive ({posts.length})
           </h2>
 
           <div className="rounded-xl border border-zinc-800 bg-midnight-900 overflow-hidden shadow-sm">

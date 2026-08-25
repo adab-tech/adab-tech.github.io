@@ -36,7 +36,7 @@ export function TaxonomyGrid() {
         <div>
           <h2 className="text-xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
             <Filter className="h-5 w-5 text-amber-500" />
-            RESEARCH & PROJECT TAXONOMY
+            Research & Project Taxonomy
           </h2>
           <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
             Categorized research publications, technical engines, and academic notes.

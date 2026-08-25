@@ -50,7 +50,7 @@ export function AssetGallery() {
       <div className="flex flex-col space-y-1">
         <h2 className="text-xl font-mono font-bold tracking-tight text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
           <ImageIcon className="h-5 w-5 text-amber-500" />
-          VISUAL ASSET GALLERY & RESEARCH DATA SHEETS
+          Visual Asset Gallery & Data Sheets
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
           Physical manuscript scans, computational linguistics infographics, and architectural diagrams.
