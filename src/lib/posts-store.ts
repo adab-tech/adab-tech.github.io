@@ -9,7 +9,8 @@ export interface ResearchPost {
   title: string
   category: StreamCategory
   date: string
-  abstract: string
+  abstract?: string
+  summary?: string
   tags: string[]
   content: string
   bibtex?: string
@@ -35,6 +36,7 @@ const INITIAL_POSTS: ResearchPost[] = [
     category: 'Literary & Academic',
     date: '2026-08',
     abstract: 'Investigates the philosophical contest of AI agency through literary and postcolonial theory across four global case studies: the AI deepfake of Wole Soyinka, China\'s Agent Hospital, Sophia\'s Saudi citizenship, and Project CETI sperm whale bioacoustics.',
+    summary: 'Investigates the philosophical contest of AI agency through literary and postcolonial theory across four global case studies: the AI deepfake of Wole Soyinka, China\'s Agent Hospital, Sophia\'s Saudi citizenship, and Project CETI sperm whale bioacoustics.',
     tags: ['Agentic AI', 'Postcolonial Theory', 'AI Governance', 'Cultural Epistemology', 'Wole Soyinka Deepfake'],
     content: '# Humanities Perspectives on Agentic AI\n\n### Abstract\nThe emergence of agentic AI—systems that plan, act, adapt, and operate with increasing autonomy—marks a fundamental shift in human-machine interaction. This paper demonstrates why technical frameworks alone cannot resolve the ontological contest of agency, utilizing humanistic traditions to establish an indigenous cultural governance blueprint.',
     bibtex: `@article{abubakar2026agentic,
@@ -52,6 +54,7 @@ const INITIAL_POSTS: ResearchPost[] = [
     category: 'Tech',
     date: '2026-08',
     abstract: 'Curated and open-sourced 20,628 English→Hausa word/phrase pairs from C.H. Robinson\'s Cambridge dictionary (1914) to warm-start speech embedding spaces and lexical translation for Murya AI on Hugging Face.',
+    summary: 'Curated and open-sourced 20,628 English→Hausa word/phrase pairs from C.H. Robinson\'s Cambridge dictionary (1914) to warm-start speech embedding spaces and lexical translation for Murya AI on Hugging Face.',
     tags: ['Hausa NLP', 'Lexicography', 'Speech AI', 'Hugging Face', 'Murya'],
     content: '# Robinson Hausa-English Lexicon (1914)\n\nReleased on Hugging Face as `adab-tech/murya-hausa-en-lexicon-robinson1914`.',
     bibtex: `@dataset{abubakar2026robinson,
@@ -69,6 +72,7 @@ const INITIAL_POSTS: ResearchPost[] = [
     category: 'Tech',
     date: '2026-07',
     abstract: 'Co-developed and curated speech datasets spanning 20+ African languages (Hausa, Yoruba, Sango, Fulfulde, etc.) with 540+ community downloads, advancing sovereign acoustic modeling (arXiv:2602.02734).',
+    summary: 'Co-developed and curated speech datasets spanning 20+ African languages (Hausa, Yoruba, Sango, Fulfulde, etc.) with 540+ community downloads, advancing sovereign acoustic modeling (arXiv:2602.02734).',
     tags: ['WaxalNLP', 'African Speech AI', 'ASR', 'TTS', 'arXiv:2602.02734'],
     content: '# WaxalNLP Multilingual Speech Corpus\n\nLarge-scale multilingual ASR/TTS dataset released on Hugging Face under `adab-tech/WaxalNLP`.',
     bibtex: `@dataset{abubakar2026waxal,
@@ -86,6 +90,7 @@ const INITIAL_POSTS: ResearchPost[] = [
     category: 'Tech',
     date: '2026-01',
     abstract: 'Engineered 176,999 multi-turn programming conversations translated into pure Sango to empower low-resource African developers and bridge language barriers in software engineering.',
+    summary: 'Engineered 176,999 multi-turn programming conversations translated into pure Sango to empower low-resource African developers and bridge language barriers in software engineering.',
     tags: ['Sango', 'Code Generation', 'Low-Resource LLMs', 'Hugging Face'],
     content: '# Code-170k-Sango\n\nReleased on Hugging Face under `adab-tech/Code-170k-sango`.',
     bibtex: `@dataset{abubakar2026sango,
@@ -99,8 +104,8 @@ const INITIAL_POSTS: ResearchPost[] = [
   }
 ]
 
-const STORAGE_KEY = 'adamu_tech_research_posts_v2'
-const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v2'
+const STORAGE_KEY = 'adamu_tech_research_posts_v3'
+const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v3'
 
 export function usePostsStore() {
   const [posts, setPosts] = useState<ResearchPost[]>(INITIAL_POSTS)
