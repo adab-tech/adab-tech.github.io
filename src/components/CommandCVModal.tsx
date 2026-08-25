@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { FileText, X, Globe, Download, Terminal, Cpu } from 'lucide-react'
+import { FileText, X, Globe, Download, Cpu } from 'lucide-react'
 
 export interface LanguageSkill {
   name: string
@@ -12,14 +12,14 @@ export interface LanguageSkill {
 
 const POLYGLOT_LANGUAGES: LanguageSkill[] = [
   { name: 'Hausa', level: 'Native (L1)', note: 'Speech AI & Acoustic Focus', category: 'African' },
-  { name: 'English', level: 'Native / Fluent', note: 'Academic & Technical Writing', category: 'Global' },
+  { name: 'English', level: 'Near Native', note: 'Academic & Technical Writing', category: 'Global' },
+  { name: 'French', level: 'Near Native', note: 'International Academic Research', category: 'Global' },
+  { name: 'Sango', level: 'Fluent', note: 'Central African Lingua Franca', category: 'African' },
+  { name: 'Yoruba', level: 'Fluent', note: 'West African Niger-Congo', category: 'African' },
   { name: 'Pidgin English', level: 'Fluent', note: 'West African Creoles', category: 'African' },
-  { name: 'Sango', level: 'Conversational', note: 'Central African Lingua Franca', category: 'African' },
-  { name: 'Fulfulde', level: 'Fluent / Conversational', note: 'Sahelian Chadic-Congo', category: 'African' },
-  { name: 'Yoruba', level: 'Conversational', note: 'West African Niger-Congo', category: 'African' },
+  { name: 'Fulfulde', level: 'Fluent', note: 'Sahelian Chadic-Congo', category: 'African' },
   { name: 'Arabic', level: 'Advanced / Classical', note: 'Ajami Scriptural Philology', category: 'Research' },
-  { name: 'French', level: 'Fluent', note: 'International Academic Research', category: 'Global' },
-  { name: 'German', level: 'Basic', note: 'Reading & Philological Research', category: 'Research' },
+  { name: 'German', level: 'Basic', note: 'Reading & Research', category: 'Research' },
   { name: 'Spanish', level: 'Basic', note: 'Reading & Research', category: 'Research' }
 ]
 
