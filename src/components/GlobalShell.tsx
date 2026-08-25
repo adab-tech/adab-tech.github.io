@@ -23,7 +23,7 @@ export function GlobalShell({ children }: ShellProps) {
     <div className="min-h-screen flex flex-col bg-parchment-50 dark:bg-midnight-950 text-zinc-900 dark:text-zinc-50 transition-colors">
       {/* Header Navigation */}
       <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-parchment-50/90 dark:bg-midnight-950/90 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 h-14 flex items-center justify-between overflow-x-hidden">
           
           {/* Unique Multiprofile Logo & Brand Name */}
           <a href="/" className="flex items-center space-x-2.5 group">
