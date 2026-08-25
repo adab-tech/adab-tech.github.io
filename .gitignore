@@ -1,0 +1,6 @@
+# Jekyll (legacy)
+.sass-cache/
+_site/
+.next
+temitope-hospital-starter/out
+node_modules
