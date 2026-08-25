@@ -14,8 +14,10 @@ export interface ResearchPost {
   tags: string[]
   content: string
   bibtex?: string
-  status: 'Published' | 'Draft'
+  pdfUrl?: string
   linkUrl?: string
+  links?: { label: string; url: string }[]
+  status: 'Published' | 'Draft'
 }
 
 export interface ContactInquiry {
@@ -104,8 +106,8 @@ const INITIAL_POSTS: ResearchPost[] = [
   }
 ]
 
-const STORAGE_KEY = 'adamu_tech_research_posts_v3'
-const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v3'
+const STORAGE_KEY = 'adamu_tech_research_posts_v4'
+const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v4'
 
 export function usePostsStore() {
   const [posts, setPosts] = useState<ResearchPost[]>(INITIAL_POSTS)
