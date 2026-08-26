@@ -177,6 +177,34 @@ export const DEFAULT_INQUIRIES: ContactInquiry[] = [
   }
 ]
 
+export function addContactInquiry(inquiry: {
+  name: string
+  email: string
+  subject: string
+  message: string
+  preferredDate?: string
+}) {
+  if (typeof window === 'undefined') return
+  try {
+    const stored = localStorage.getItem(INQUIRIES_KEY)
+    const current: ContactInquiry[] = stored ? JSON.parse(stored) : DEFAULT_INQUIRIES
+    const newInquiry: ContactInquiry = {
+      id: 'inq-' + Date.now(),
+      name: inquiry.name,
+      email: inquiry.email,
+      subject: inquiry.subject || 'General Inquiry',
+      message: inquiry.message,
+      status: 'Unread',
+      date: new Date().toISOString().split('T')[0],
+      createdAt: new Date().toISOString()
+    }
+    const updated = [newInquiry, ...current]
+    localStorage.setItem(INQUIRIES_KEY, JSON.stringify(updated))
+  } catch (e) {
+    console.warn('Error saving inquiry:', e)
+  }
+}
+
 export function usePostsStore() {
   const [posts, setPosts] = useState<ResearchPost[]>(DEFAULT_POSTS)
   const [inquiries, setInquiries] = useState<ContactInquiry[]>(DEFAULT_INQUIRIES)
@@ -243,12 +271,16 @@ export function usePostsStore() {
     }
   }
 
-  const markInquiryAsRead = (id: string) => {
-    const updated = inquiries.map(i => i.id === id ? { ...i, status: 'Read' as const } : i)
+  const updateInquiryStatus = (id: string, status: 'Unread' | 'Read' | 'Archived') => {
+    const updated = inquiries.map(i => i.id === id ? { ...i, status } : i)
     setInquiries(updated)
     if (typeof window !== 'undefined') {
       localStorage.setItem(INQUIRIES_KEY, JSON.stringify(updated))
     }
+  }
+
+  const markInquiryAsRead = (id: string) => {
+    updateInquiryStatus(id, 'Read')
   }
 
   return {
@@ -259,6 +291,7 @@ export function usePostsStore() {
     deletePost,
     addInquiry,
     deleteInquiry,
+    updateInquiryStatus,
     markInquiryAsRead
   }
 }
