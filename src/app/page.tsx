@@ -10,7 +10,7 @@ import { PhoneticSoundboard } from '@/components/PhoneticSoundboard'
 import { AjamiTransliterationWidget } from '@/components/AjamiTransliterationWidget'
 import { DialectMapWidget } from '@/components/DialectMapWidget'
 import { ContactForm } from '@/components/ContactForm'
-import { Cpu, BookOpen, Terminal, Sparkles, Globe } from 'lucide-react'
+import { Cpu, BookOpen, Terminal, Sparkles, Globe, Shield, ArrowRight, Activity } from 'lucide-react'
 
 const GREETINGS = [
   { text: 'Barka da zuwa', lang: 'ha', label: 'Hausa' },
@@ -96,6 +96,36 @@ export default function Home() {
                 <p><span className="text-blue-400">wav</span> = model.infer(<span className="text-emerald-400">"Barka da zuwa"</span>)</p>
                 <p className="text-zinc-500 pt-1"># Audio: 24kHz Native Stream</p>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Sovereign Manifesto Callout Banner */}
+        <section className="p-6 sm:p-8 rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent dark:from-amber-950/30 dark:via-midnight-950 dark:to-midnight-900 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1.5 max-w-2xl">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold flex items-center gap-1.5">
+                <Shield className="h-3.5 w-3.5" />
+                // SOVEREIGN HAUSA AI MANIFESTO · PRODUCERS NOT CONSUMERS
+              </span>
+              <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-900 dark:text-zinc-50 leading-snug">
+                "It is about time the Global South saw itself, not as mere consumers, but as active producers of sovereign technology."
+              </h2>
+              <p className="text-xs font-sans text-zinc-600 dark:text-zinc-400 leading-relaxed italic">
+                — Adamu Danjuma Abubakar · <em>"Motsi ya fi laɓewa." (Action is better than hiding.)</em>
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <a
+                href="https://huggingface.co/adab-tech"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm"
+              >
+                <span>Hugging Face Ecosystem</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </a>
             </div>
           </div>
         </section>
