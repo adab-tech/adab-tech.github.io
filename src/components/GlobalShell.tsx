@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ShieldCheck, ExternalLink, Menu, X, ArrowUp, Globe, FileText } from 'lucide-react'
+import { ShieldCheck, ExternalLink, Menu, X, ArrowUp, Globe, FileText, Sun, Moon } from 'lucide-react'
 
 interface ShellProps {
   children: React.ReactNode
@@ -30,17 +30,18 @@ export function GlobalShell({ children }: ShellProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0B1120] text-[#F8FAFC]">
-      {/* Sticky Header */}
+      {/* Sticky Header - Streamlined & Minimalist */}
       <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-[#0B1120]/95 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center space-x-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-mono font-bold text-zinc-950 text-base shadow-sm group-hover:scale-105 transition-transform">
+          
+          {/* Minimalist Home Icon (Replaces text brand) */}
+          <Link href="/" className="flex items-center space-x-2.5 group" title="Return to Home Dossier">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-mono font-bold text-zinc-950 text-base shadow-sm group-hover:scale-105 transition-transform">
               A
             </div>
-            <div className="flex flex-col">
-              <span className="font-mono font-bold text-sm text-zinc-100 tracking-tight">adamu.tech</span>
-              <span className="font-mono text-[10px] text-amber-400">Sovereign African AI</span>
-            </div>
+            <span className="font-mono text-xs font-semibold text-zinc-300 group-hover:text-amber-400 transition-colors hidden sm:inline-block">
+              Adamu Abubakar
+            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -51,15 +52,15 @@ export function GlobalShell({ children }: ShellProps) {
             <Link href="/papers/agentic-ai" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
               Pre-Print Paper
             </Link>
-            <Link href="/cv" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
+            <Link href="/cv" className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/20 hover:bg-amber-400/20 transition-all">
               Academic CV
             </Link>
-            <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-amber-400 text-xs font-mono flex items-center gap-1">
-              <span>Hugging Face</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
             <a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-amber-400 text-xs font-mono flex items-center gap-1">
               <span>Google Scholar</span>
+              <ExternalLink className="h-3 w-3" />
+            </a>
+            <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-amber-400 text-xs font-mono flex items-center gap-1">
+              <span>Hugging Face</span>
               <ExternalLink className="h-3 w-3" />
             </a>
             <Link href="/admin" className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-300 hover:text-amber-400 hover:border-amber-500/50 transition-colors">
@@ -99,19 +100,10 @@ export function GlobalShell({ children }: ShellProps) {
             <Link
               href="/cv"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-mono text-zinc-200 hover:text-amber-400"
+              className="block text-sm font-mono font-bold text-amber-400"
             >
               Academic CV
             </Link>
-            <a
-              href="https://huggingface.co/adab-tech"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between text-sm font-mono text-zinc-400 hover:text-amber-400"
-            >
-              <span>Hugging Face</span>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
             <a
               href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
               target="_blank"
@@ -119,6 +111,15 @@ export function GlobalShell({ children }: ShellProps) {
               className="flex items-center justify-between text-sm font-mono text-zinc-400 hover:text-amber-400"
             >
               <span>Google Scholar</span>
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+            <a
+              href="https://huggingface.co/adab-tech"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-between text-sm font-mono text-zinc-400 hover:text-amber-400"
+            >
+              <span>Hugging Face</span>
               <ExternalLink className="h-3.5 w-3.5" />
             </a>
             <Link
