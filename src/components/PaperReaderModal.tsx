@@ -1,12 +1,24 @@
 'use client'
 
-import React, { useState } from 'react'
-import { BookOpen, X, Download, Quote, Check, Clock, Globe, Shield, Sparkles, FileText, Bookmark, Share2 } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { BookOpen, X, Download, Quote, Check, Clock, Globe, Shield, Sparkles, ExternalLink, Maximize2 } from 'lucide-react'
+import Link from 'next/link'
 
 export function PaperReaderModal() {
   const [isOpen, setIsOpen] = useState(false)
   const [copiedBibtex, setCopiedBibtex] = useState(false)
-  const [activeTab, setActiveTab] = useState<'paper' | 'cite'>('paper')
+
+  // Prevent background scroll bleed when modal is active
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   const bibtex = `@article{abubakar2026agentic,
   title={Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance},
@@ -14,7 +26,7 @@ export function PaperReaderModal() {
   journal={Working Papers in Applied Computational Humanities},
   year={2026},
   institution={University of Alabama},
-  url={https://adamu.tech}
+  url={https://adamu.tech/papers/agentic-ai}
 }`
 
   const handleCopyBibtex = () => {
@@ -36,31 +48,40 @@ export function PaperReaderModal() {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in">
-          <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-2xl overflow-hidden">
-            {/* Header Navigation */}
-            <div className="sticky top-0 z-10 px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-midnight-900/95 backdrop-blur-md flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold">
-                  // SCHOLARLY WORKING PAPER · FULL MANUSCRIPT (47,946 CHARS)
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-zinc-950/95 backdrop-blur-md animate-in fade-in">
+          <div className="relative w-full max-w-4xl h-full max-h-[94vh] flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0E1526] shadow-2xl overflow-hidden">
+            
+            {/* Header Navigation Bar */}
+            <div className="sticky top-0 z-20 px-4 sm:px-6 py-3.5 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#0E1526] flex items-center justify-between">
+              <div className="space-y-0.5 max-w-[60%] sm:max-w-md">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-amber-500 font-bold block">
+                  // SCHOLARLY WORKING MANUSCRIPT
                 </span>
-                <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-900 dark:text-zinc-50 line-clamp-1">
+                <h2 className="text-sm sm:text-base font-mono font-bold text-zinc-900 dark:text-zinc-50 truncate">
                   Humanities Perspectives on Agentic AI
                 </h2>
               </div>
 
               <div className="flex items-center space-x-2">
+                <Link
+                  href="/papers/agentic-ai"
+                  className="hidden md:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-zinc-700 dark:text-zinc-300 hover:text-amber-500 transition-colors"
+                >
+                  <Maximize2 className="h-3.5 w-3.5" />
+                  <span>Journal Page View</span>
+                </Link>
+
                 <button
                   onClick={handleCopyBibtex}
                   className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-zinc-700 dark:text-zinc-300 hover:border-amber-500 transition-colors"
                 >
                   {copiedBibtex ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Quote className="h-3.5 w-3.5 text-amber-500" />}
-                  <span>{copiedBibtex ? 'BibTeX Copied' : 'Cite BibTeX'}</span>
+                  <span>{copiedBibtex ? 'BibTeX Copied' : 'BibTeX'}</span>
                 </button>
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="p-2 rounded-lg text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   aria-label="Close reader"
                 >
                   <X className="h-5 w-5" />
@@ -68,8 +89,8 @@ export function PaperReaderModal() {
               </div>
             </div>
 
-            {/* Scrollable Manuscript Body */}
-            <div className="flex-1 overflow-y-auto p-6 sm:p-10 space-y-8 font-serif text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed max-w-3xl mx-auto">
+            {/* Solid Opaque Reader Body with Zero Background Bleed */}
+            <div className="flex-1 overflow-y-auto p-5 sm:p-8 md:p-10 space-y-8 font-serif text-sm text-zinc-800 dark:text-zinc-200 leading-relaxed max-w-3xl mx-auto bg-white dark:bg-[#0E1526]">
               
               {/* Paper Title & Metadata */}
               <div className="space-y-3 border-b border-zinc-200 dark:border-zinc-800 pb-6 font-sans">
@@ -80,13 +101,13 @@ export function PaperReaderModal() {
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-zinc-500 dark:text-zinc-400">
                   <span className="font-bold text-amber-600 dark:text-amber-400">Adamu Danjuma Abubakar</span>
                   <span>·</span>
-                  <span>University of Alabama (Romance Languages & Applied Computational Humanities)</span>
+                  <span>University of Alabama</span>
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" /> ~18 min read
                   </span>
                   <span>·</span>
-                  <span>Pre-Print · Aug 2026</span>
+                  <span>Pre-Print · 2026</span>
                 </div>
               </div>
 
@@ -100,7 +121,7 @@ export function PaperReaderModal() {
                 </p>
               </div>
 
-              {/* Table of Contents Navigation Bar */}
+              {/* Table of Contents */}
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs space-y-2 font-sans">
                 <span className="font-bold text-zinc-900 dark:text-zinc-100 uppercase tracking-wider text-[11px] block">
                   Table of Contents (7 Major Sections)
