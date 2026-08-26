@@ -14,11 +14,24 @@ export function GlobalShell({ children }: ShellProps) {
   const [showBackToTop, setShowBackToTop] = useState(false)
 
   useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
+    try {
+      const stored = localStorage.getItem('theme')
+      if (stored) {
+        setDark(stored !== 'light')
+      }
+    } catch(e) {}
+  }, [])
+
+  useEffect(() => {
+    try {
+      if (dark) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
+    } catch(e) {}
   }, [dark])
 
   useEffect(() => {

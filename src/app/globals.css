@@ -2,38 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 40 40% 98%;
-    --foreground: 220 50% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 220 50% 10%;
-    --border: 220 15% 90%;
-    --input: 220 15% 90%;
-    --ring: 45 65% 52%;
-    --radius: 0.75rem;
-  }
-
-  .dark {
-    --background: 225 60% 6%;
-    --foreground: 40 30% 96%;
-    --card: 225 50% 8%;
-    --card-foreground: 40 30% 96%;
-    --border: 225 30% 18%;
-    --input: 225 30% 18%;
-    --ring: 45 65% 52%;
-  }
+:root {
+  --bg-primary: #F8F6F1;
+  --text-primary: #0F172A;
+  --bg-card: #FFFFFF;
+  --border-color: #E2E8F0;
+  --accent-gold: #D97706;
 }
 
-@layer base {
-  * {
-    border-color: hsl(var(--border));
-  }
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: Inter, system-ui, sans-serif;
-  }
+.dark {
+  --bg-primary: #0B1120;
+  --text-primary: #F8FAFC;
+  --bg-card: #0E1526;
+  --border-color: #1E293B;
+  --accent-gold: #F59E0B;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 @keyframes pulse-slow {
