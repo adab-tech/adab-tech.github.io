@@ -3,7 +3,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
-import { ArrowLeft, Printer, Download, Mail, Globe, MapPin, Award, BookOpen, GraduationCap, Briefcase, Languages, Shield } from 'lucide-react'
+import { ArrowLeft, Printer, Download, Mail, Globe, MapPin, Award, BookOpen, GraduationCap, Briefcase, Languages, Shield, ExternalLink } from 'lucide-react'
+import { VisitorCounter } from '@/components/VisitorCounter'
 
 const LANGUAGES_DATA = [
   { name: 'Hausa', level: 'Native / Bilingual (C2)', note: 'First Language · West Chadic Dialectologist · ACTFL Certified Tester' },
@@ -39,10 +40,11 @@ export default function AcademicCVPage() {
             <span>Back to Platform Dossier</span>
           </Link>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
+            <VisitorCounter />
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm"
             >
               <Printer className="h-3.5 w-3.5" />
               <span>Print / Download PDF</span>
@@ -70,6 +72,29 @@ export default function AcademicCVPage() {
                   <span>·</span>
                   <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-amber-500" /> adamudanjuma1@outlook.com</span>
                 </div>
+              </div>
+
+              {/* External Profile Badges */}
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <a
+                  href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-blue-600 dark:text-blue-400 hover:border-blue-500 transition-colors"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>Google Scholar</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+                <a
+                  href="https://huggingface.co/adab-tech"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-amber-600 dark:text-amber-400 hover:border-amber-500 transition-colors"
+                >
+                  <span>Hugging Face</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               </div>
             </div>
           </div>
@@ -174,12 +199,23 @@ export default function AcademicCVPage() {
             </div>
           </section>
 
-          {/* Core Publications */}
+          {/* Peer-Reviewed & Google Scholar Publications */}
           <section className="space-y-4">
-            <h2 className="text-lg font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
-              <BookOpen className="h-5 w-5 text-amber-500" />
-              Selected Publications & Working Papers
-            </h2>
+            <div className="flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800 pb-2">
+              <h2 className="text-lg font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-amber-500" />
+                Publications & Google Scholar Record
+              </h2>
+              <a
+                href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs font-mono text-blue-500 hover:underline flex items-center gap-1"
+              >
+                <span>View Google Scholar Profile</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
 
             <div className="space-y-3 text-xs font-sans">
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
@@ -187,19 +223,48 @@ export default function AcademicCVPage() {
                   Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance
                 </div>
                 <div className="text-zinc-500 font-mono text-[11px]">Working Papers in Applied Computational Humanities (2026) · Pre-Print</div>
-                <p className="text-zinc-700 dark:text-zinc-300 pt-1 leading-relaxed">
-                  Proposes a 5-pillar humanistic governance framework for autonomous multi-agent systems, analyzed through 4 global case studies (Soyinka deepfake, China Agent Hospital, Sophia, and Amodei).
-                </p>
               </div>
 
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
                 <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
-                  Murya TTS: High-Fidelity Hausa Speech Synthesis Model
+                  Pathos and Power: Interdisciplinary Perspectives on Widowhood in Africa, Past and Present
                 </div>
-                <div className="text-zinc-500 font-mono text-[11px]">Hugging Face Repository · adab-tech/murya-piper-hausa-tts (2026)</div>
-                <p className="text-zinc-700 dark:text-zinc-300 pt-1 leading-relaxed">
-                  24kHz Piper VITS model fine-tuned on the Hausa partition of the Google WAXAL dataset (1,970 samples) with Litvinova R-to-L tone heuristics.
-                </p>
+                <div className="text-zinc-500 font-mono text-[11px]">African Studies Review (2026) · Review of Davidson & Lawrance (Ohio UP, 2025)</div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
+                <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
+                  Gender in French Banlieue Cinema: Intersectional Perspectives
+                </div>
+                <div className="text-zinc-500 font-mono text-[11px]">French Review (2025) · Review of Caporale, Mouflard & Zanzana (2025)</div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
+                <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
+                  This too shall pass
+                </div>
+                <div className="text-zinc-500 font-mono text-[11px]">Literary & Philosophical Essay (2024)</div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
+                <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
+                  Nature's Hymn
+                </div>
+                <div className="text-zinc-500 font-mono text-[11px]">Poetic & Philological Treatise (2023)</div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
+                <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
+                  Je pars by Diary Sow
+                </div>
+                <div className="text-zinc-500 font-mono text-[11px]">Francophone Literary Studies (2023) · Review of Diary Sow (2021)</div>
+              </div>
+
+              <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
+                <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
+                  Les Larmes d'une Plume Esseulée
+                </div>
+                <div className="text-zinc-500 font-mono text-[11px]">French Literary Collection (2020)</div>
               </div>
             </div>
           </section>

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { VisitorCounter } from '@/components/VisitorCounter'
 import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { usePostsStore, ResearchPost, StreamCategory, ContactInquiry } from '@/lib/posts-store'

@@ -84,7 +84,7 @@ export function GlobalShell({ children }: ShellProps) {
             </a>
 
             <a
-              href="https://huggingface.co/adab-tech"
+              href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-amber-500 text-xs font-mono flex items-center gap-1"><span>Hugging Face</span><ExternalLink className="h-3 w-3" /></a><a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
               target="_blank"
               rel="noreferrer"
               className="px-2 py-1 rounded-lg text-xs font-mono font-bold text-amber-500 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors"
