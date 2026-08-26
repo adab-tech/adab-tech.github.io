@@ -24,7 +24,7 @@ export interface ContactInquiry {
   email: string
   subject: string
   message: string
-  status: 'Unread' | 'Read' | 'Archived'
+  status: 'Unread' | 'Read' | 'Replied' | 'Archived'
   date: string
   createdAt?: string
 }
@@ -293,7 +293,7 @@ export function usePostsStore() {
     }
   }
 
-  const updateInquiryStatus = (id: string, status: 'Unread' | 'Read' | 'Archived') => {
+  const updateInquiryStatus = (id: string, status: 'Unread' | 'Read' | 'Replied' | 'Archived') => {
     const updated = inquiries.map(i => i.id === id ? { ...i, status } : i)
     setInquiries(updated)
     if (typeof window !== 'undefined') {
