@@ -107,7 +107,7 @@ const INITIAL_POSTS: ResearchPost[] = [
   }
 ]
 
-const STORAGE_KEY = 'adamu_tech_research_posts_v5'
+const STORAGE_KEY = 'adamu_tech_research_posts_v6'
 const INQUIRIES_KEY = 'adamu_tech_contact_inquiries_v4'
 
 export function usePostsStore() {

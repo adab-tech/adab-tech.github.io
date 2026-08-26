@@ -133,7 +133,7 @@ export function AudioTTSWidget() {
           Murya.ng Neural Speech Synthesis Live Acoustic Player
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400 max-w-3xl leading-relaxed">
-          High-fidelity 24kHz multi-speaker Hausa Piper-TTS acoustic generation trained on Google WAXAL corpuses (1,970 samples) and Robinson 1914 Lexicon with Litvinova right-to-left tonal melody contouring.
+          High-fidelity 24kHz multi-speaker Hausa Piper-TTS acoustic generation fine-tuned on the Hausa (hau) subset of the Google WAXAL corpus (1,970 samples) and Robinson 1914 Lexicon with Litvinova right-to-left tonal melody contouring.
         </p>
       </div>
 
