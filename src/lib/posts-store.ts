@@ -14,6 +14,8 @@ export interface ResearchPost {
   bibtex?: string
   status?: 'Published' | 'Draft'
   scholarUrl?: string
+  pdfUrl?: string
+  links?: { label: string; url: string }[]
 }
 
 export interface ContactInquiry {
