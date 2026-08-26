@@ -54,7 +54,7 @@ export default function Home() {
               </h1>
 
               <p className="text-base sm:text-lg font-mono text-amber-600 dark:text-gold-400 font-semibold">
-                Computational Linguist & AI Researcher • 8+ Languages Polyglot
+                Computational Linguist & AI Researcher • 10 Languages Polyglot
               </p>
 
               <p className="text-sm font-sans text-zinc-600 dark:text-zinc-300 leading-relaxed">

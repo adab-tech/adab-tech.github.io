@@ -7,16 +7,16 @@ import { ArrowLeft, Printer, Download, Mail, Globe, MapPin, Award, BookOpen, Gra
 import { VisitorCounter } from '@/components/VisitorCounter'
 
 const LANGUAGES_DATA = [
-  { name: 'Hausa', level: 'Native / Bilingual (C2)', note: 'First Language · West Chadic Dialectologist · ACTFL Certified Tester' },
+  { name: 'Hausa', level: 'Native / Bilingual (C2)', note: 'First Language · West Chadic Dialectologist · ACTFL Certified' },
   { name: 'English', level: 'Bilingual / Near-Native (C2)', note: 'Academic & Professional Primary Working Language' },
   { name: 'French', level: 'Full Professional (C1/C2)', note: 'B.A. French (Unilorin), M.A. French (UA) · Romance Philology' },
+  { name: 'Fulfulde (Fula)', level: 'Full Proficiency (C1/C2)', note: 'Senegambian & Sahelian Cross-Border Lingua Franca' },
+  { name: 'Nigerian Pidgin English', level: 'Advanced Proficiency (C1/C2)', note: 'West African Anglophone Creole · Sociolinguistic Modeling' },
   { name: 'Arabic', level: 'Advanced / Working (B2/C1)', note: 'Classical Arabic & Kano Ajami Paleography' },
-  { name: 'Yoruba', level: 'Professional Working (B2)', note: 'Southwestern Nigerian Lingua Franca · Tone Modeling' },
   { name: 'Sango', level: 'Fluent (C1)', note: 'Central African Lingua Franca · App Development for CAR & Diaspora' },
-  { name: 'Fulfulde (Fula)', level: 'Working Proficiency (B1)', note: 'Senegambian & Sahelian Cross-Border Lingua Franca' },
-  { name: 'Spanish', level: 'Reading & Research (B1)', note: 'Comparative Romance Linguistics' },
-  { name: 'Italian', level: 'Reading Knowledge (A2/B1)', note: 'Romance Philology & Historical Syntax' },
-  { name: 'Portuguese', level: 'Elementary Working (A2)', note: 'Lusophone Atlantic Studies' }
+  { name: 'Yoruba', level: 'Professional Working (B2)', note: 'Southwestern Nigerian Lingua Franca · Tone Modeling' },
+  { name: 'Spanish', level: 'Basic Working Proficiency (A2/B1)', note: 'Comparative Romance Linguistics & Reading' },
+  { name: 'German', level: 'Basic Working Proficiency (A2/B1)', note: 'Germanic Philology & Academic Reading' }
 ]
 
 export default function AcademicCVPage() {
@@ -63,7 +63,7 @@ export default function AcademicCVPage() {
                   Adamu Danjuma Abubakar
                 </h1>
                 <p className="text-base font-mono text-amber-600 dark:text-amber-400 font-semibold">
-                  Applied Computational Linguist · Speech AI Architect · Polyglot (8+ Languages)
+                  Applied Computational Linguist · Speech AI Architect · Polyglot (10 Languages: Hausa, Fulfulde, French, English, Pidgin, Arabic...)
                 </p>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-mono text-zinc-500 dark:text-zinc-400 pt-1">
                   <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-amber-500" /> Tuscaloosa, AL / Kano, Nigeria</span>
