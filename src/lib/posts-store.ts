@@ -233,8 +233,23 @@ export function usePostsStore() {
     }
   }, [])
 
-  const addPost = (post: ResearchPost) => {
-    const updated = [post, ...posts]
+  const addPost = (post: Partial<ResearchPost> & { title: string; category: StreamCategory }) => {
+    const fullPost: ResearchPost = {
+      id: post.id || 'post-' + Date.now(),
+      title: post.title,
+      category: post.category,
+      date: post.date || new Date().toISOString().split('T')[0],
+      abstract: post.abstract || post.summary || '',
+      summary: post.summary || post.abstract || '',
+      tags: post.tags || [],
+      content: post.content || '',
+      bibtex: post.bibtex,
+      status: post.status || 'Published',
+      scholarUrl: post.scholarUrl,
+      pdfUrl: post.pdfUrl,
+      links: post.links
+    }
+    const updated = [fullPost, ...posts]
     setPosts(updated)
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
