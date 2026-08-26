@@ -27,6 +27,7 @@ export interface ContactInquiry {
   status: 'Unread' | 'Read' | 'Replied' | 'Archived'
   date: string
   createdAt?: string
+  preferredDate?: string
 }
 
 const STORAGE_KEY = 'adamu_tech_research_posts_v7'
