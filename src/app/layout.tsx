@@ -5,10 +5,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#F8F6F1' },
-    { media: '(prefers-color-scheme: dark)', color: '#0B1120' }
-  ]
+  themeColor: '#0B1120'
 }
 
 export const metadata: Metadata = {
@@ -30,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="dark scroll-smooth" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -38,20 +35,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
           rel="stylesheet"
         />
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            try {
-              var theme = localStorage.getItem('theme');
-              if (theme === 'light') {
-                document.documentElement.classList.remove('dark');
-              } else {
-                document.documentElement.classList.add('dark');
-              }
-            } catch (e) {}
-          })();
-        ` }} />
       </head>
-      <body className="antialiased min-h-screen bg-[#F8F6F1] dark:bg-[#0B1120] text-zinc-950 dark:text-zinc-50 font-sans selection:bg-amber-500/20 selection:text-amber-500 overflow-x-hidden" suppressHydrationWarning>
+      <body className="antialiased min-h-screen bg-[#0B1120] text-[#F8FAFC] font-sans selection:bg-amber-500/20 selection:text-amber-400 overflow-x-hidden" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
         {children}
       </body>
     </html>
