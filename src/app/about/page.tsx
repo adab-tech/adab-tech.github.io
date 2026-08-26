@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
-import { ArrowLeft, Printer, Download, Mail, Globe, MapPin, Award, BookOpen, GraduationCap, Briefcase, Languages, Shield, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Printer, Download, Mail, Globe, MapPin, Award, BookOpen, GraduationCap, Briefcase, Languages, Shield, ExternalLink, Cpu, Sparkles, CheckCircle2, Layers } from 'lucide-react'
 import { VisitorCounter } from '@/components/VisitorCounter'
 
 const LANGUAGES_DATA = [
@@ -136,22 +136,46 @@ export default function AcademicCVPage() {
             </div>
           </section>
 
-          {/* Research & Industry Experience */}
+          {/* Research & Industry Experience — Enriched with Murya Forensics */}
           <section className="space-y-4">
             <h2 className="text-lg font-mono font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2 border-b border-zinc-100 dark:border-zinc-800 pb-2">
               <Briefcase className="h-5 w-5 text-amber-500" />
               Applied AI & Research Experience
             </h2>
 
-            <div className="space-y-4 text-xs font-sans">
-              <div className="space-y-1.5">
+            <div className="space-y-6 text-xs font-sans">
+              
+              {/* Murya Forensic Breakdown */}
+              <div className="p-5 rounded-2xl border border-amber-500/30 bg-amber-50/20 dark:bg-midnight-950/60 space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                  <span>Founder & Lead Systems Architect — Murya Speech AI</span>
+                  <span className="text-sm text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Cpu className="h-4 w-4" />
+                    Founder & Lead Systems Architect — Murya Speech AI (app.murya.ng)
+                  </span>
                   <span className="text-amber-600 dark:text-amber-400">2024 – Present</span>
                 </div>
-                <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
-                  Architected the sovereign 24kHz Piper VITS ONNX neural speech synthesis pipeline for Hausa (<code className="font-mono text-[11px] bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">adab-tech/murya-piper-hausa-tts</code>). Integrated Litvinova Right-to-Left tonal melody heuristics and curated the 20,628-pair Robinson 1914 Lexicon for embedding warm-start.
+
+                <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed font-sans">
+                  Pioneered and built <strong>Murya OS</strong>, a sovereign African speech synthesis and conversational intelligence ecosystem running live in production at <a href="https://app.murya.ng" target="_blank" rel="noreferrer" className="text-amber-600 dark:text-amber-400 underline font-bold">app.murya.ng</a>:
                 </p>
+
+                <ul className="space-y-2 pl-4 list-disc text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                  <li>
+                    <strong>24kHz Neural Acoustic Modeling:</strong> Architected and fine-tuned multi-speaker Piper VITS ONNX models (<code className="bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded font-mono text-[10px]">adab-tech/murya-piper-hausa-tts</code>) featuring <em>Malama Asabe</em> (Female) and <em>Malam Garba</em> (Male) with zero-latency streaming.
+                  </li>
+                  <li>
+                    <strong>Litvinova Right-to-Left Tonal Melody Mapping:</strong> Integrated syllable weight segmentation (Light CV vs Heavy CVV/CVC) and backwards pitch-accent contouring directly into speech generation.
+                  </li>
+                  <li>
+                    <strong>Native Chadic Sociolinguistics:</strong> Engineered cultural pragmatics protocols (<code className="font-mono text-[10px]">Kunya & Girmamawa</code>), gendered address forms (<code className="font-mono text-[10px]">Namiji ka/maka vs Mace ki/miki</code>), and pedagogical tutor modes (<code className="font-mono text-[10px]">Malamin Hausa</code>).
+                  </li>
+                  <li>
+                    <strong>30,708-Entry Ƙamus (Lexical Engine):</strong> Curated the 20,628-pair Robinson 1914 Lexicon on Hugging Face and secured direct written permission from Prof. Paul Newman to ingest the 1977 <em>Modern Hausa–English Dictionary</em>, creating an authoritative, zero-hallucination lexical grounding service.
+                  </li>
+                  <li>
+                    <strong>Bidirectional WebSocket Audio Pipeline:</strong> Engineered the offline-first <code className="font-mono text-[10px]">/api/live</code> real-time audio pipeline with 16kHz Faster-Whisper VAD and rising-edge microphone buffer purging to eliminate self-echo and streaming latency.
+                  </li>
+                </ul>
               </div>
 
               <div className="space-y-1.5">
