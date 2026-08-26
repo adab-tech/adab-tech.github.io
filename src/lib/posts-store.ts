@@ -239,8 +239,13 @@ export function usePostsStore() {
     }
   }
 
-  const updatePost = (post: ResearchPost) => {
-    const updated = posts.map(p => p.id === post.id ? post : p)
+  const updatePost = (idOrPost: string | ResearchPost, updates?: Partial<ResearchPost>) => {
+    let updated: ResearchPost[]
+    if (typeof idOrPost === 'string') {
+      updated = posts.map(p => p.id === idOrPost ? { ...p, ...(updates || {}) } : p)
+    } else {
+      updated = posts.map(p => p.id === idOrPost.id ? idOrPost : p)
+    }
     setPosts(updated)
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
