@@ -5,6 +5,7 @@ import { GlobalShell } from '@/components/GlobalShell'
 import { PaperReaderModal } from '@/components/PaperReaderModal'
 import { CommandCVModal } from '@/components/CommandCVModal'
 import { AudioTTSWidget } from '@/components/AudioTTSWidget'
+import { MuryaArchitectureSection } from '@/components/MuryaArchitectureSection'
 import { EcosystemGrid } from '@/components/EcosystemGrid'
 import { TaxonomyGrid } from '@/components/TaxonomyGrid'
 import { AssetGallery } from '@/components/AssetGallery'
@@ -146,6 +147,9 @@ export default function Home() {
 
         {/* Audio TTS Widget with Real Murya WAV Audio */}
         <AudioTTSWidget />
+
+        {/* Murya Systems Architecture & 3 Strategic Initiatives */}
+        <MuryaArchitectureSection />
 
         {/* Gem 5: Dialectal & Tone Explorer Map */}
         <DialectMapWidget />
