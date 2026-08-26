@@ -253,14 +253,14 @@ export default function AcademicCVPage() {
                 <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
                   Pathos and Power: Interdisciplinary Perspectives on Widowhood in Africa, Past and Present
                 </div>
-                <div className="text-zinc-500 font-mono text-[11px]">African Studies Review (2026) · Review of Davidson & Lawrance (Ohio UP, 2025)</div>
+                <div className="text-zinc-500 font-mono text-[11px]">African Studies Review (2026), pp. 1–2 · Review of Davidson & Lawrance (Ohio UP, 2025)</div>
               </div>
 
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
                 <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
                   Gender in French Banlieue Cinema: Intersectional Perspectives
                 </div>
-                <div className="text-zinc-500 font-mono text-[11px]">French Review (2025) · Review of Caporale, Mouflard & Zanzana (2025)</div>
+                <div className="text-zinc-500 font-mono text-[11px]">Women in French Studies 33 (1), 221-223 (2025) · Review of Caporale, Mouflard & Zanzana</div>
               </div>
 
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
@@ -281,7 +281,7 @@ export default function AcademicCVPage() {
                 <div className="font-mono font-bold text-zinc-900 dark:text-zinc-100 text-sm">
                   Je pars by Diary Sow
                 </div>
-                <div className="text-zinc-500 font-mono text-[11px]">Francophone Literary Studies (2023) · Review of Diary Sow (2021)</div>
+                <div className="text-zinc-500 font-mono text-[11px]">Women in French Studies 31 (1), 174-176 (2023) · Review of Diary Sow (2021)</div>
               </div>
 
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
