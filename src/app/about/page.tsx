@@ -66,11 +66,11 @@ export default function AcademicCVPage() {
                   Applied Computational Linguist · Speech AI Architect · Polyglot (10 Languages)
                 </p>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400 pt-1">
-                  <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-amber-500 shrink-0" /> Tuscaloosa, AL / Kano, Nigeria</span>
+                  <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-amber-500 shrink-0" /> Tuscaloosa, AL · Open to Relocation & Global Remote</span>
                   <span>·</span>
                   <span className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-amber-500 shrink-0" /> adamu.tech</span>
                   <span>·</span>
-                  <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-amber-500 shrink-0" /> adamudanjuma1@outlook.com</span>
+                  <span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-amber-500 shrink-0" /> contact@adamu.tech</span>
                 </div>
               </div>
 

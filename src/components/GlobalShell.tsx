@@ -177,7 +177,7 @@ export function GlobalShell({ children }: ShellProps) {
 
           <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-400 gap-2 border-t border-zinc-800/60 pt-6">
             <div>© 2026 adamu.tech · Adamu Danjuma Abubakar</div>
-            <div>Automated Email Router · contact@adamu.tech / adamudanjuma1@outlook.com</div>
+            <div>Automated Email Router · contact@adamu.tech / contact@adamu.tech</div>
           </div>
         </div>
       </footer>
