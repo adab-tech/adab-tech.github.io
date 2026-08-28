@@ -16,30 +16,39 @@ export interface DomainProject {
 const projects: DomainProject[] = [
   {
     domain: "murya.ng",
-    label: "Murya AI",
-    category: "AI Hausa Speech Synthesis",
-    description: "Advanced Text-to-Speech synthesis architecture optimized for low-resource African language speech patterns.",
+    label: "Murya Speech OS",
+    category: "Sovereign Hausa Speech AI",
+    description: "8-speaker WAXAL-Piper VITS synthesis architecture with offline-first IndexedDB Ƙamus grounding and real-time live voice.",
     type: "tech",
-    url: "https://murya.ng",
-    tags: ["Speech AI", "Hausa NLP", "PyTorch", "Voice Engine"]
+    url: "https://app.murya.ng",
+    tags: ["Speech AI", "Hausa NLP", "Piper VITS", "FastAPI", "WASM"]
+  },
+  {
+    domain: "globalopportunities.app",
+    label: "Global Opportunities",
+    category: "Academic & Career Discovery",
+    description: "Worldwide scholarships, fellowships, grants, and international jobs platform with real-time deadline indexing and alerts.",
+    type: "tech",
+    url: "https://globalopportunities.app",
+    tags: ["Next.js", "Grants Engine", "Fellowships", "Automated Alerts"]
   },
   {
     domain: "imodoye.ng",
-    label: "Imodoye",
-    category: "Digital Literary Archive",
-    description: "Digital research repository and literary archive structuring African oral tradition and contemporary Hausa prose.",
+    label: "Imodoye Digital Archive",
+    category: "Philology & Digital Humanities",
+    description: "Digital research repository structuring 19th-century Kano Ajami manuscripts and localized clinical communication aids.",
     type: "literary",
     url: "https://imodoye.ng",
-    tags: ["Computational Linguistics", "African Philology", "Digital Humanities"]
+    tags: ["Ajami Paleography", "Hausa Philology", "Digital Humanities"]
   },
   {
     domain: "adab.ng",
     label: "Adab Infrastructure",
     category: "Real Estate PropTech",
-    description: "Modern prop-tech and property listing platform operating across Nigeria with intelligent search and lister portals.",
+    description: "Modern prop-tech and property listing platform operating across Nigeria with intelligent search portals.",
     type: "real-estate",
     url: "https://adab.ng",
-    tags: ["PropTech", "Next.js", "Supabase", "Vercel"]
+    tags: ["PropTech", "Next.js", "Supabase", "Cloudflare"]
   }
 ]
 

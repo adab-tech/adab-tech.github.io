@@ -18,10 +18,20 @@ const ECOSYSTEM_PROJECTS = [
     statusColor: 'emerald',
     role: 'Founder & Lead Systems Architect',
     type: 'Tier 1 · Sovereign Speech AI Platform',
-    desc: '24 kHz multi-speaker neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding.',
+    desc: '8-speaker WAXAL-Piper VITS neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding and rising-edge echo cancellation.',
     url: 'https://app.murya.ng',
     repo: 'https://github.com/adab-tech/hausa-ai',
     modelUrl: 'https://huggingface.co/adab-tech/murya-piper-hausa-tts'
+  },
+  {
+    name: 'Global Opportunities Platform',
+    status: 'Live Production',
+    statusColor: 'emerald',
+    role: 'Founder & Lead Full-Stack Architect',
+    type: 'Tier 1 · Academic & Grant Discovery Engine',
+    desc: 'Worldwide scholarships, research fellowships, grants, and international jobs platform featuring real-time deadline indexing and automated alerts.',
+    url: 'https://globalopportunities.app',
+    repo: 'https://github.com/adab-tech'
   },
   {
     name: 'Humanities Perspectives on Agentic AI',
@@ -44,12 +54,12 @@ const ECOSYSTEM_PROJECTS = [
     repo: 'https://huggingface.co/adab-tech'
   },
   {
-    name: 'Imodoye Health & Language Suite',
-    status: 'Research Pilot',
+    name: 'Imodoye Digital Archive & Health Suite',
+    status: 'Research & Archive Pilot',
     statusColor: 'emerald',
-    role: 'Lead Architect',
-    type: 'Tier 4 · Clinical Language Tool (Informational)',
-    desc: 'Localized Yoruba and Hausa clinical communication and documentation assistance suite for West African community healthcare workers (informational & translation aid; non-diagnostic).',
+    role: 'Lead Architect & Philologist',
+    type: 'Tier 4 · Digital Humanities & Clinical Aid',
+    desc: 'Ajami manuscript cataloging alongside localized Yoruba/Hausa clinical communication and documentation translation tools (informational & non-diagnostic).',
     url: 'https://imodoye.ng',
     repo: 'https://github.com/adab-tech'
   }
@@ -179,7 +189,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs font-mono">
               <div className="space-y-1">
                 <span className="text-zinc-500">Base Architecture:</span>
-                <div className="text-zinc-200">Piper VITS Multi-Speaker ONNX (24kHz)</div>
+                <div className="text-zinc-200">8-Speaker WAXAL-Piper VITS Multi-Speaker ONNX (24 kHz)</div>
               </div>
               <div className="space-y-1">
                 <span className="text-zinc-500">Voice Personas:</span>
@@ -195,7 +205,7 @@ export default function HomePage() {
               </div>
               <div className="space-y-1">
                 <span className="text-zinc-500">Inference Runtime:</span>
-                <div className="text-zinc-200">WASM ONNX Client-Side / Python FastAPI</div>
+                <div className="text-zinc-200">WASM ONNX Client-Side / FastAPI Rising-Edge Stream</div>
               </div>
               <div className="space-y-1">
                 <span className="text-zinc-500">License:</span>

@@ -16,7 +16,7 @@ export function MuryaArchitectureSection() {
           Murya OS: Sovereign Bidirectional Speech AI Pipeline
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400 max-w-3xl leading-relaxed">
-          The end-to-end technical blueprint powering <a href="https://app.murya.ng" target="_blank" rel="noreferrer" className="text-amber-600 dark:text-amber-400 font-bold hover:underline">app.murya.ng</a> — integrating 16kHz VAD ingestion, Chadic sociolinguistic reasoning, Litvinova tone contouring, and 24kHz Piper VITS multi-speaker synthesis.
+          The end-to-end technical blueprint powering <a href="https://app.murya.ng" target="_blank" rel="noreferrer" className="text-amber-600 dark:text-amber-400 font-bold hover:underline">app.murya.ng</a> — integrating 16kHz VAD ingestion, Chadic sociolinguistic reasoning, Litvinova tone contouring, and 8-Speaker 24kHz Piper VITS multi-speaker synthesis.
         </p>
       </div>
 
@@ -33,7 +33,7 @@ export function MuryaArchitectureSection() {
             </div>
             <h3 className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-100">16kHz VAD & STT</h3>
             <p className="text-[11px] text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
-              Streams raw PCM-16 frames with VAD mute buffers into <strong>Faster-Whisper</strong> for real-time transcription.
+              Streams raw PCM-16 frames with rising-edge echo cancellation (<code>assistant_speaking</code> barrier) and VAD buffers into <strong>Faster-Whisper</strong>.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export function MuryaArchitectureSection() {
               <span className="p-2 rounded-lg bg-purple-500/10 text-purple-500 font-mono text-xs font-bold">04</span>
               <Volume2 className="h-4 w-4 text-purple-500" />
             </div>
-            <h3 className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-100">24kHz Piper VITS</h3>
+            <h3 className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-100">8-Speaker 24kHz Piper VITS</h3>
             <p className="text-[11px] text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
               Synthesizes low-latency audio via ONNX runtime featuring <strong>Malama Asabe</strong> & <strong>Malam Garba</strong>.
             </p>
