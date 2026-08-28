@@ -52,12 +52,13 @@ export function CommandCVModal() {
 
               <div className="flex items-center space-x-2">
                 <a
-                  href="/adamu_danjuma_abubakar_cv.pdf"
-                  download
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900 font-mono text-xs font-bold hover:opacity-90 transition-opacity"
+                  href="/cv"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm"
                 >
-                  <Download className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Download PDF</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Open Full CV</span>
                 </a>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -79,7 +80,7 @@ export function CommandCVModal() {
                   Academic Profile & Affiliation
                 </div>
                 <p>
-                  PhD Candidate in Romance Languages (Applied Computational Humanities & Chadic Dialectology) at the <strong>University of Alabama</strong> (Expected Dec 2026). Specializing in Sovereign Speech AI, Low-Resource African Language NLP, and Digital Philology.
+                  PhD Candidate in Romance Languages at the <strong>University of Alabama</strong> (Expected Dec 2026). Specializing in Sovereign Speech AI, Low-Resource African Language NLP, and Digital Philology.
                 </p>
                 <div className="flex flex-wrap gap-3 pt-1 text-[11px] font-mono text-zinc-500">
                   <span>📍 Tuscaloosa, AL / Abuja, Nigeria</span>

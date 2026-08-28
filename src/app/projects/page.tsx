@@ -92,7 +92,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Phonetically normalized for high-accuracy neural TTS alignment',
       'Published on Hugging Face Datasets under CC-BY-NC-SA 4.0'
     ],
-    modelUrl: 'https://huggingface.co/datasets/adab-tech/hausa-lexicon-robinson-1914',
+    modelUrl: 'https://huggingface.co/adab-tech',
     repoUrl: 'https://huggingface.co/adab-tech',
     tags: ['Lexical Infrastructure', 'Hugging Face', 'Hausa Philology', 'Open Data']
   },

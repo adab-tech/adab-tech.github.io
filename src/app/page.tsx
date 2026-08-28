@@ -49,7 +49,7 @@ const ECOSYSTEM_PROJECTS = [
     role: 'Curator & Maintainer',
     type: 'Tier 3 · Lexical Infrastructure',
     desc: 'Combined 30,708-entry lexicon uniting Robinson 1914 (Public Domain) with Prof. Paul Newman 1977 authorized research subset.',
-    url: 'https://huggingface.co/datasets/adab-tech/hausa-lexicon-robinson-1914',
+    url: 'https://huggingface.co/adab-tech',
     repo: 'https://huggingface.co/adab-tech'
   },
   {

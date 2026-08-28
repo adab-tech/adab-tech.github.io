@@ -109,7 +109,7 @@ export default function AcademicCVPage() {
             <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm font-sans">
               <div className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
-                  <span>Ph.D. Candidate in Romance Languages (Applied Computational Humanities)</span>
+                  <span>Ph.D. Candidate in Romance Languages</span>
                   <span className="text-amber-400 text-xs">Expected Dec 2026</span>
                 </div>
                 <div className="text-zinc-400 font-mono text-xs">The University of Alabama · Tuscaloosa, AL</div>
@@ -120,7 +120,7 @@ export default function AcademicCVPage() {
 
               <div className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
-                  <span>Master of Arts (M.A.) in Romance Languages (French Linguistics)</span>
+                  <span>Master of Arts (M.A.) in Romance Languages</span>
                   <span className="text-zinc-400 font-mono text-xs">2023</span>
                 </div>
                 <div className="text-zinc-400 font-mono text-xs">The University of Alabama · Tuscaloosa, AL</div>
