@@ -34,14 +34,9 @@ export function GlobalShell({ children }: ShellProps) {
       <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-[#0B1120]/95 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           
-          {/* Minimalist Home Icon (Replaces text brand) */}
-          <Link href="/" className="flex items-center space-x-2.5 group" title="Return to Home Dossier">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center font-mono font-bold text-zinc-950 text-base shadow-sm group-hover:scale-105 transition-transform">
-              A
-            </div>
-            <span className="font-mono text-xs font-semibold text-zinc-300 group-hover:text-amber-400 transition-colors hidden sm:inline-block">
-              Adamu Abubakar
-            </span>
+          {/* Modern Acoustic & Linguistics Brand Logo */}
+          <Link href="/" title="Adamu.tech Dossier & Research">
+            <LogoMark />
           </Link>
 
           {/* Desktop Nav */}
@@ -144,11 +139,7 @@ export function GlobalShell({ children }: ShellProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-3 md:col-span-2">
               <div className="flex items-center space-x-2">
-                <span className="font-mono font-bold text-base text-zinc-100">
-                  adamu<span className="text-amber-400">.tech</span>
-                </span>
-                <span className="text-zinc-600 font-mono text-xs">·</span>
-                <span className="font-mono text-xs text-zinc-300">Adamu Danjuma Abubakar</span>
+                <LogoMark />
               </div>
               <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-md">
                 Applied Computational Linguist & Speech AI Architect. Specializing in West Chadic neural speech modeling, 19th-century Kano Ajami digital philology, and postcolonial AI governance frameworks.
