@@ -57,7 +57,7 @@ export function MuryaArchitectureSection() {
             </div>
             <h3 className="font-mono text-xs font-bold text-zinc-900 dark:text-zinc-100">30k Ƙamus & Tone</h3>
             <p className="text-[11px] text-zinc-600 dark:text-zinc-400 font-sans leading-relaxed">
-              Grounds tokens against <strong>30,708 dictionary entries</strong> (Robinson + Newman 1977) with Litvinova R-to-L tone mapping.
+              Grounds tokens via <strong>dictionary-constrained lexical lookup (30,708 entries)</strong> (Robinson 1914 Public Domain + Newman 1977 authorized research subset) with Litvinova R-to-L tone mapping.
             </p>
           </div>
 
@@ -123,7 +123,7 @@ export function MuryaArchitectureSection() {
         <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-100 dark:border-zinc-800 text-xs font-mono">
           <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 text-[11px]">
             <Shield className="h-3.5 w-3.5 text-amber-500" />
-            <span>Open Source Model: adab-tech/murya-piper-hausa-tts · License: MIT</span>
+            <span>Open Source Model: adab-tech/murya-piper-hausa-tts · License: CC-BY-NC-SA 4.0 (Open Weights)</span>
           </div>
 
           <div className="flex items-center gap-3">

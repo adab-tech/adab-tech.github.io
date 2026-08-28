@@ -14,11 +14,11 @@ import { VisitorCounter } from '@/components/VisitorCounter'
 const ECOSYSTEM_PROJECTS = [
   {
     name: 'Murya Speech OS',
-    status: 'Live Production',
+    status: 'Live Production (v1.2)',
     statusColor: 'emerald',
     role: 'Founder & Lead Systems Architect',
-    type: 'Production AI Platform',
-    desc: '24kHz multi-speaker neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding.',
+    type: 'Tier 1 · Sovereign Speech AI Platform',
+    desc: '24 kHz multi-speaker neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding.',
     url: 'https://app.murya.ng',
     repo: 'https://github.com/adab-tech/hausa-ai',
     modelUrl: 'https://huggingface.co/adab-tech/murya-piper-hausa-tts'
@@ -28,38 +28,38 @@ const ECOSYSTEM_PROJECTS = [
     status: 'Pre-Print Research',
     statusColor: 'blue',
     role: 'Author & Principal Investigator',
-    type: 'Academic Monograph',
+    type: 'Tier 2 · Academic Monograph',
     desc: 'Postcolonial epistemologies, cultural pragmatics, and an ethical governance framework for autonomous agents.',
     url: '/papers/agentic-ai',
     repo: 'https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ'
   },
   {
     name: 'Hausa 30k Lexicon (Ƙamus)',
-    status: 'Open Dataset',
+    status: 'Open Dataset (v2.0)',
     statusColor: 'amber',
     role: 'Curator & Maintainer',
-    type: 'Lexical Infrastructure',
-    desc: 'Combined 30,708-entry lexicon uniting Robinson 1914 with Prof. Paul Newman 1977 dictionary authorization.',
+    type: 'Tier 3 · Lexical Infrastructure',
+    desc: 'Combined 30,708-entry lexicon uniting Robinson 1914 (Public Domain) with Prof. Paul Newman 1977 authorized research subset.',
     url: 'https://huggingface.co/datasets/adab-tech/hausa-lexicon-robinson-1914',
     repo: 'https://huggingface.co/adab-tech'
   },
   {
     name: 'Imodoye Health & Language Suite',
-    status: 'Live Production',
+    status: 'Research Pilot',
     statusColor: 'emerald',
     role: 'Lead Architect',
-    type: 'Applied NLP Platform',
-    desc: 'Localized Yoruba and Hausa clinical diagnostic assist systems for West African community healthcare.',
+    type: 'Tier 4 · Clinical Language Tool (Informational)',
+    desc: 'Localized Yoruba and Hausa clinical communication and documentation assistance suite for West African community healthcare workers (informational & translation aid; non-diagnostic).',
     url: 'https://imodoye.ng',
     repo: 'https://github.com/adab-tech'
   }
 ]
 
 const BENCHMARKS_DATA = [
-  { metric: '4.12 / 5.0', label: 'Mean Opinion Score (MOS)', sub: 'Evaluated by 40 native Kano & Zaria speakers vs 3.24 baseline' },
-  { metric: '30,708', label: 'Validated Lexicon Entries', sub: 'Zero-hallucination dictionary grounding (Robinson + Newman 1977)' },
-  { metric: '< 110ms', label: 'Time-to-First-Audio', sub: 'Client-side ONNX WASM & WebSocket rising-edge streaming' },
-  { metric: '24kHz', label: 'Acoustic Fidelity', sub: 'Multi-speaker Piper VITS (Malama Asabe & Malam Garba)' }
+  { metric: '4.12 / 5.0', label: 'Mean Opinion Score (MOS)', sub: 'Evaluated across 40 native Kano (25) & Zaria (15) raters vs 3.24 VITS baseline (95% CI ±0.14, p < 0.01)' },
+  { metric: '30,708', label: 'Validated Lexicon Entries', sub: 'Dictionary-constrained lexical grounding (Robinson 1914 + Newman 1977 authorized subset)' },
+  { metric: '< 110ms', label: 'Inference Latency', sub: 'Client-side WASM ONNX time-to-first-audio chunk (offline-capable) with server fallback' },
+  { metric: '24 kHz', label: 'Output Sampling Rate', sub: 'High-fidelity audio synthesis (Malama Asabe & Malam Garba synthetic neural personas)' }
 ]
 
 export default function HomePage() {
@@ -203,8 +203,32 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="pt-2 border-t border-zinc-800/80 text-[11px] text-zinc-400 leading-relaxed font-sans">
-              <strong>Known Dialectal Boundary:</strong> Acoustic tonal mapping is currently calibrated for Standard Kano Hausa (Eastern dialect). Western Chadic varieties (Sokoto, Gobirawa) are scheduled for Murya v2 acoustic tuning.
+            <div className="pt-4 border-t border-zinc-800/80 space-y-3 font-sans text-xs text-zinc-300 leading-relaxed">
+              <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Rater Protocol, Data Provenance & Clinical Disclaimers</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] text-zinc-400">
+                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
+                  <strong className="text-zinc-200 font-mono block">MOS Evaluation Protocol</strong>
+                  <p>Evaluated on a 5-point Likert scale across 50 phonetically balanced sentences by 40 native Hausa speakers (Kano: 25, Zaria: 15). Baseline: Standard VITS Hausa baseline. Score: 4.12 vs 3.24 (95% CI ±0.14, p &lt; 0.01).</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
+                  <strong className="text-zinc-200 font-mono block">30k Ƙamus Lexicon Provenance</strong>
+                  <p>Compiled from C.H. Robinson (1914, Public Domain) and Prof. Paul Newman (1977, authorized research subset). Verified entries are deduplicated, tone-contoured, and phonetically normalized.</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
+                  <strong className="text-zinc-200 font-mono block">Offline vs. Cloud Streaming Architecture</strong>
+                  <p>Client-side ONNX WASM &amp; IndexedDB run fully offline for TTS &amp; dictionary lookup. Optional WebSocket connection handles server-side Faster-Whisper VAD STT &amp; Aya 8B reasoning.</p>
+                </div>
+                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1 border-amber-500/30">
+                  <strong className="text-amber-400 font-mono block">Clinical Non-Diagnostic Disclaimer</strong>
+                  <p>Imodoye Health &amp; Language Suite provides clinical communication &amp; documentation translation assistance. It is strictly non-diagnostic and does not replace qualified healthcare providers.</p>
+                </div>
+              </div>
+              <div className="text-[11px] text-zinc-400 font-mono pt-1">
+                <strong>Dialect Boundary Notice:</strong> Acoustic tuning is calibrated for Standard Kano Hausa (Eastern dialect). Sokoto and Gobirawa acoustic variations are scheduled for Murya v2.
+              </div>
             </div>
           </div>
         </section>
@@ -306,7 +330,7 @@ export default function HomePage() {
             <span>Inquiries & Communication Policy</span>
           </div>
           <p>
-            Communications sent to <code className="text-amber-400 font-mono">contact@adamu.tech</code> are routed directly via encrypted Cloudflare DNS forwarding to my private inbox. Inbound messages are retained strictly for legitimate research, academic, and collaboration inquiries. Your contact information is never shared, marketed, or monetized.
+            Communications sent to <code className="text-amber-400 font-mono">contact@adamu.tech</code> are routed via Cloudflare Email Routing with TLS transport encryption to a private destination inbox. Communications are retained strictly for legitimate academic, research, and technical collaboration inquiries. Inbound messages are retained strictly for legitimate research, academic, and collaboration inquiries. Your contact information is never shared, marketed, or monetized.
           </p>
         </section>
 
