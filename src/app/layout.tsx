@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   title: 'Adamu Abubakar — Computational Linguist & AI Researcher',
   description: 'Sovereign Hausa AI, speech synthesis, digital philology, and African language NLP research by Adamu Danjuma Abubakar.',
   metadataBase: new URL('https://adamu.tech'),
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' }
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'Adamu Abubakar — Computational Linguist & AI Researcher',
     description: 'Sovereign Hausa speech synthesis, Ajami manuscripts, and African language AI infrastructure.',
