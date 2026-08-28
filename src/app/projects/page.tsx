@@ -7,7 +7,6 @@ import {
   Layers, ExternalLink, Code2, ArrowRight, Cpu, BookOpen, 
   Globe, Database, Shield, Sparkles, Building2, Search, Filter 
 } from 'lucide-react'
-import { VisitorCounter } from '@/components/VisitorCounter'
 
 interface ProjectItem {
   id: string
@@ -153,7 +152,7 @@ export default function ProjectsPage() {
               <Layers className="w-3.5 h-3.5" />
               Sovereign Ecosystem & Systems Portfolio
             </span>
-            <VisitorCounter />
+            
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold text-zinc-50 tracking-tight">

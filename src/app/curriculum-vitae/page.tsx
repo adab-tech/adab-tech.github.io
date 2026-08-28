@@ -4,7 +4,6 @@ import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { ArrowLeft, Printer, Mail, Globe, MapPin, BookOpen, GraduationCap, Briefcase, Languages, ExternalLink, Cpu } from 'lucide-react'
-import { VisitorCounter } from '@/components/VisitorCounter'
 
 const LANGUAGES_DATA = [
   { name: 'Hausa', level: 'Native / Bilingual (C2)', note: 'First Language · West Chadic Dialectologist · ACTFL Certified' },
@@ -41,7 +40,7 @@ export default function AcademicCVPage() {
           </Link>
 
           <div className="flex flex-wrap items-center gap-3">
-            <VisitorCounter />
+            
             <button
               onClick={handlePrint}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm cursor-pointer"

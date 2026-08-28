@@ -144,10 +144,11 @@ export function GlobalShell({ children }: ShellProps) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="space-y-3 md:col-span-2">
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded bg-amber-500 flex items-center justify-center font-mono font-bold text-zinc-950 text-xs">
-                  A
-                </div>
-                <span className="font-mono font-bold text-zinc-100">Adamu Danjuma Abubakar</span>
+                <span className="font-mono font-bold text-base text-zinc-100">
+                  adamu<span className="text-amber-400">.tech</span>
+                </span>
+                <span className="text-zinc-600 font-mono text-xs">·</span>
+                <span className="font-mono text-xs text-zinc-300">Adamu Danjuma Abubakar</span>
               </div>
               <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-md">
                 Applied Computational Linguist & Speech AI Architect. Specializing in West Chadic neural speech modeling, 19th-century Kano Ajami digital philology, and postcolonial AI governance frameworks.

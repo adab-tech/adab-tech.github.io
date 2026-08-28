@@ -9,7 +9,6 @@ import {
   Share2, Play, Pause, Volume2, Globe, FileText, Check, AlertCircle, 
   Clock, MapPin, Mail, Sparkles, Building2
 } from 'lucide-react'
-import { VisitorCounter } from '@/components/VisitorCounter'
 
 const ECOSYSTEM_PROJECTS = [
   {
@@ -97,7 +96,7 @@ export default function HomePage() {
               <Clock className="w-3 h-3 text-emerald-400" />
               Updated Aug 2026
             </span>
-            <VisitorCounter />
+            
           </div>
 
           {/* Core Title & Bio */}

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { usePostsStore, ResearchPost, StreamCategory, ContactInquiry } from '@/lib/posts-store'
 import { AdminHeader } from '@/components/AdminHeader'
-import { Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Key, Mail, Check, Inbox, Reply, Trash2, Calendar } from 'lucide-react'
+import { Activity, Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Key, Mail, Check, Inbox, Reply, Trash2, Calendar } from 'lucide-react'
 
 export default function AdminDashboardPage() {
   const { isAuthenticated, loading, updatePassword, currentPassword } = useAdminAuth()
@@ -120,6 +120,20 @@ export default function AdminDashboardPage() {
             <span>{notification}</span>
           </div>
         )}
+
+        {/* Real-Time Live Traffic & Visitor Analytics Hub */}
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
+              <Activity className="h-5 w-5 text-amber-500" />
+              Live Traffic & Visitor Analytics
+            </h2>
+            <span className="text-[11px] font-mono text-zinc-400">
+              Live Global Engine · Updated Real-Time
+            </span>
+          </div>
+          <VisitorCounter showDetails={true} />
+        </section>
 
         {/* Stats Banner */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
