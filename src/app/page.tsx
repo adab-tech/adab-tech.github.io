@@ -31,7 +31,7 @@ const ECOSYSTEM_PROJECTS = [
     type: 'Tier 1 · Academic & Grant Discovery Engine',
     desc: 'Worldwide scholarships, research fellowships, grants, and international jobs platform featuring real-time deadline indexing and automated alerts.',
     url: 'https://globalopportunities.app',
-    repo: 'https://github.com/adab-tech'
+    repo: 'https://github.com/adab-tech/OpportunityFinder'
   },
   {
     name: 'Humanities Perspectives on Agentic AI',
@@ -61,7 +61,7 @@ const ECOSYSTEM_PROJECTS = [
     type: 'Tier 4 · Digital Humanities & Clinical Aid',
     desc: 'Ajami manuscript cataloging alongside localized Yoruba/Hausa clinical communication and documentation translation tools (informational & non-diagnostic).',
     url: 'https://imodoye.ng',
-    repo: 'https://github.com/adab-tech'
+    repo: 'https://github.com/adab-tech/imodoye-web'
   }
 ]
 

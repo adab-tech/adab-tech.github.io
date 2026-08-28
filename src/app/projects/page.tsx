@@ -60,7 +60,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Built for international researchers, scholars, and fellows'
     ],
     liveUrl: 'https://globalopportunities.app',
-    repoUrl: 'https://github.com/adab-tech',
+    repoUrl: 'https://github.com/adab-tech/OpportunityFinder',
     tags: ['Next.js', 'Grants Engine', 'Scholarships', 'Automated Alerts', 'Global Mobility']
   },
   {
@@ -111,7 +111,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Clinical communication translation assistance for community health workers'
     ],
     liveUrl: 'https://imodoye.ng',
-    repoUrl: 'https://github.com/adab-tech',
+    repoUrl: 'https://github.com/adab-tech/imodoye-web',
     tags: ['Ajami Paleography', 'Digital Humanities', 'Clinical Language Tool']
   },
   {
@@ -128,6 +128,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Enterprise cloud routing and verified agent onboarding'
     ],
     liveUrl: 'https://adab.ng',
+    repoUrl: 'https://github.com/adab-tech/adab-real-estate-web',
     tags: ['PropTech', 'Next.js', 'Supabase', 'Cloudflare']
   }
 ]
