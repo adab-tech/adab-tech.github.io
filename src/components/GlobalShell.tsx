@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { LogoMark } from '@/components/LogoMark'
+import { SocialNavIcons } from '@/components/SocialNavIcons'
 import { ShieldCheck, ExternalLink, Menu, X, ArrowUp, Globe, FileText, Sun, Moon } from 'lucide-react'
 
 interface ShellProps {
@@ -40,27 +41,28 @@ export function GlobalShell({ children }: ShellProps) {
             <LogoMark />
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center space-x-6">
+          {/* Desktop Nav with Navigation & Interactive Icon Badges */}
+          <nav className="hidden md:flex items-center space-x-5">
             <Link href="/" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
               Dossier
             </Link>
+            <Link href="/projects" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
+              Projects
+            </Link>
             <Link href="/papers/agentic-ai" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
-              Pre-Print Paper
+              Pre-Print
             </Link>
             <Link href="/cv" className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/20 hover:bg-amber-400/20 transition-all">
               Academic CV
             </Link>
-            <a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-amber-400 text-xs font-mono flex items-center gap-1">
-              <span>Google Scholar</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-            <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-amber-400 text-xs font-mono flex items-center gap-1">
-              <span>Hugging Face</span>
-              <ExternalLink className="h-3 w-3" />
-            </a>
-            <Link href="/admin" className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-300 hover:text-amber-400 hover:border-amber-500/50 transition-colors">
-              Admin Studio
+            
+            <div className="h-4 w-px bg-zinc-800" />
+            
+            {/* Hyperlinked Network Icon Hub */}
+            <SocialNavIcons />
+
+            <Link href="/admin" className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors">
+              Admin
             </Link>
           </nav>
 
@@ -142,15 +144,16 @@ export function GlobalShell({ children }: ShellProps) {
               <LogoMark showText={true} />
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono">
-              <Link href="/" className="hover:text-amber-400 transition-colors">Dossier</Link>
-              <Link href="/projects" className="hover:text-amber-400 transition-colors">Projects</Link>
-              <Link href="/papers/agentic-ai" className="hover:text-amber-400 transition-colors">Pre-Print</Link>
-              <Link href="/cv" className="hover:text-amber-400 transition-colors">Curriculum Vitae</Link>
-              <a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Scholar</a>
-              <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Hugging Face</a>
-              <a href="https://github.com/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">GitHub</a>
-              <Link href="/admin" className="hover:text-amber-400 text-zinc-500 transition-colors">Admin</Link>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-mono">
+                <Link href="/" className="hover:text-amber-400 transition-colors">Dossier</Link>
+                <Link href="/projects" className="hover:text-amber-400 transition-colors">Projects</Link>
+                <Link href="/papers/agentic-ai" className="hover:text-amber-400 transition-colors">Pre-Print</Link>
+                <Link href="/cv" className="hover:text-amber-400 transition-colors">Academic CV</Link>
+                <Link href="/admin" className="hover:text-amber-400 text-zinc-500 transition-colors">Admin</Link>
+              </div>
+              <div className="h-4 w-px bg-zinc-800 hidden sm:block" />
+              <SocialNavIcons />
             </div>
           </div>
 
