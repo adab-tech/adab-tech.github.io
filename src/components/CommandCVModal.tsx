@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { FileText, X, Globe, Download, Award, BookOpen, Cpu, Briefcase, GraduationCap, MapPin } from 'lucide-react'
+import { FileText, ExternalLink, X, Globe, Download, Award, BookOpen, Cpu, Briefcase, GraduationCap, MapPin } from 'lucide-react'
 
 export interface LanguageSkill {
   name: string
