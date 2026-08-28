@@ -176,9 +176,23 @@ export function GlobalShell({ children }: ShellProps) {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-zinc-400 gap-2 border-t border-zinc-800/60 pt-6">
-            <div>© 2026 adamu.tech · Adamu Danjuma Abubakar</div>
-            <div>Automated Email Router · contact@adamu.tech / contact@adamu.tech</div>
+          <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-4 border-t border-zinc-800/80 pt-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="System Operational"></span>
+              <span className="text-zinc-300">© 2026 adamu.tech · Adamu Danjuma Abubakar</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 text-zinc-400">
+              <a 
+                href="mailto:contact@adamu.tech" 
+                className="hover:text-amber-400 transition-colors flex items-center gap-1 text-zinc-300"
+              >
+                <span>contact@adamu.tech</span>
+              </a>
+              <span className="text-zinc-700 hidden sm:inline">|</span>
+              <span className="text-zinc-400 hidden sm:inline">Ph.D. Fellow · Computational Linguistics</span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-500">CC-BY-NC-SA 4.0</span>
+            </div>
           </div>
         </div>
       </footer>
