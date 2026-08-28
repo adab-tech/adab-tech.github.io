@@ -112,9 +112,6 @@ export default function AcademicCVPage() {
                   <span className="text-amber-400 text-xs">Expected Dec 2026</span>
                 </div>
                 <div className="text-zinc-400 font-mono text-xs">The University of Alabama · Tuscaloosa, AL</div>
-                <p className="text-zinc-300 pt-1 text-xs sm:text-sm leading-relaxed">
-                  Dissertation: <em>Sovereign African Speech Intelligence: Dialectal Synthesis, Postcolonial AI Governance, and Chadic Acoustic Architectures.</em>
-                </p>
               </div>
 
               <div className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
