@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { GraduationCap, Github, Linkedin, Mail, ExternalLink, Database, Code2 } from 'lucide-react'
+import { Mail } from 'lucide-react'
 
 export interface SocialLink {
   name: string
