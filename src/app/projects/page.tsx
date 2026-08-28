@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { 
-  Layers, ExternalLink, Github, ArrowRight, Cpu, BookOpen, 
+  Layers, ExternalLink, Code2, ArrowRight, Cpu, BookOpen, 
   Globe, Database, Shield, Sparkles, Building2, Search, Filter 
 } from 'lucide-react'
 import { VisitorCounter } from '@/components/VisitorCounter'
@@ -271,7 +271,7 @@ export default function ProjectsPage() {
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200"
                     >
-                      <Github className="w-3.5 h-3.5" />
+                      <Code2 className="w-3.5 h-3.5" />
                       <span>Source</span>
                     </a>
                   )}
