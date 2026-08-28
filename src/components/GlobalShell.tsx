@@ -46,7 +46,7 @@ export function GlobalShell({ children }: ShellProps) {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-5">
+          <nav className="hidden md:flex items-center space-x-4 lg:space-x-5">
             <Link href="/" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
               Dossier
             </Link>
@@ -73,7 +73,7 @@ export function GlobalShell({ children }: ShellProps) {
           </nav>
 
           {/* Tablet/Mobile Header Actions */}
-          <div className="flex lg:hidden items-center space-x-3">
+          <div className="flex md:hidden items-center space-x-2">
             <div className="hidden sm:flex">
               <SocialNavIcons />
             </div>
@@ -91,7 +91,7 @@ export function GlobalShell({ children }: ShellProps) {
 
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-zinc-800 bg-[#0B1120] px-4 sm:px-6 py-5 space-y-4 shadow-xl">
+          <div className="md:hidden border-b border-zinc-800 bg-[#0B1120] px-4 sm:px-6 py-5 space-y-4 shadow-xl">
             <div className="grid grid-cols-2 gap-2 text-sm font-mono">
               <Link
                 href="/"
