@@ -40,7 +40,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Rising-edge control barrier (assistant_speaking) preventing self-echo'
     ],
     liveUrl: 'https://app.murya.ng',
-    repoUrl: 'https://github.com/adab-tech/hausa-ai',
+    repoUrl: 'https://huggingface.co/adab-tech',
     modelUrl: 'https://huggingface.co/adab-tech/murya-piper-hausa-tts',
     tags: ['Speech AI', 'Piper VITS', 'FastAPI', 'WASM ONNX', 'Hausa NLP']
   },

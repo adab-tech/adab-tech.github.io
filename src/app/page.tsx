@@ -19,7 +19,7 @@ const ECOSYSTEM_PROJECTS = [
     type: 'Tier 1 · Sovereign Speech AI Platform',
     desc: '8-speaker WAXAL-Piper VITS neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding and rising-edge echo cancellation.',
     url: 'https://app.murya.ng',
-    repo: 'https://github.com/adab-tech/hausa-ai',
+    repo: 'https://huggingface.co/adab-tech',
     modelUrl: 'https://huggingface.co/adab-tech/murya-piper-hausa-tts'
   },
   {
