@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { LogoMark } from '@/components/LogoMark'
 import { ShieldCheck, ExternalLink, Menu, X, ArrowUp, Globe, FileText, Sun, Moon } from 'lucide-react'
 
 interface ShellProps {
