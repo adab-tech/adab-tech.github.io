@@ -134,55 +134,39 @@ export function GlobalShell({ children }: ShellProps) {
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/80 bg-[#070C18] text-zinc-400 py-12 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="space-y-3 md:col-span-2">
-              <div className="flex items-center space-x-2">
-                <LogoMark />
-              </div>
-              <p className="text-xs text-zinc-400 leading-relaxed font-sans max-w-md">
-                Applied Computational Linguist & Speech AI Architect. Specializing in West Chadic neural speech modeling, 19th-century Kano Ajami digital philology, and postcolonial AI governance frameworks.
-              </p>
+      {/* Minimalist, Clean Footer */}
+      <footer className="border-t border-zinc-800/80 bg-[#070C18] text-zinc-400 py-8 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex items-center space-x-3">
+              <LogoMark showText={true} />
             </div>
 
-            <div className="space-y-2">
-              <span className="text-xs font-mono font-bold text-zinc-200 uppercase tracking-wider">Navigation</span>
-              <ul className="space-y-1.5 text-xs font-mono">
-                <li><Link href="/" className="hover:text-amber-400 transition-colors">Dossier</Link></li>
-                <li><Link href="/papers/agentic-ai" className="hover:text-amber-400 transition-colors">Agentic AI Paper</Link></li>
-                <li><Link href="/cv" className="hover:text-amber-400 transition-colors">Curriculum Vitae</Link></li>
-                <li><Link href="/admin" className="hover:text-amber-400 transition-colors">Admin Studio</Link></li>
-              </ul>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-xs font-mono font-bold text-zinc-200 uppercase tracking-wider">Networks & Repos</span>
-              <ul className="space-y-1.5 text-xs font-mono">
-                <li><a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Google Scholar</a></li>
-                <li><a href="https://github.com/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">GitHub (adab-tech)</a></li>
-                <li><a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Hugging Face (adab-tech)</a></li>
-                <li><a href="https://www.linkedin.com/in/adamudanjuma" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">LinkedIn (adamudanjuma)</a></li>
-              </ul>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs font-mono">
+              <Link href="/" className="hover:text-amber-400 transition-colors">Dossier</Link>
+              <Link href="/projects" className="hover:text-amber-400 transition-colors">Projects</Link>
+              <Link href="/papers/agentic-ai" className="hover:text-amber-400 transition-colors">Pre-Print</Link>
+              <Link href="/cv" className="hover:text-amber-400 transition-colors">Curriculum Vitae</Link>
+              <a href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Scholar</a>
+              <a href="https://huggingface.co/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Hugging Face</a>
+              <a href="https://github.com/adab-tech" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">GitHub</a>
+              <Link href="/admin" className="hover:text-amber-400 text-zinc-500 transition-colors">Admin</Link>
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-4 border-t border-zinc-800/80 pt-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-3 border-t border-zinc-800/60 pt-5">
             <div className="flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" title="System Operational"></span>
-              <span className="text-zinc-300">© 2026 adamu.tech · Adamu Danjuma Abubakar</span>
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="text-zinc-400">© {new Date().getFullYear()} adamu.tech · Open Access</span>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-zinc-400">
+            <div className="flex items-center gap-3 text-zinc-400">
               <a 
                 href="mailto:contact@adamu.tech" 
-                className="hover:text-amber-400 transition-colors flex items-center gap-1 text-zinc-300"
+                className="hover:text-amber-400 transition-colors text-zinc-300 font-medium"
               >
-                <span>contact@adamu.tech</span>
+                contact@adamu.tech
               </a>
-              <span className="text-zinc-700 hidden sm:inline">|</span>
-              <span className="text-zinc-400 hidden sm:inline">Ph.D. Fellow · Computational Linguistics</span>
-              <span className="text-zinc-700">|</span>
+              <span className="text-zinc-700">·</span>
               <span className="text-zinc-500">CC-BY-NC-SA 4.0</span>
             </div>
           </div>
