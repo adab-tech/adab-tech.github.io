@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Menu, X, ArrowUp } from 'lucide-react'
 import { LogoMark } from '@/components/LogoMark'
 import { SocialNavIcons } from '@/components/SocialNavIcons'
-import { ShieldCheck, ExternalLink, Menu, X, ArrowUp, Globe, FileText, Sun, Moon } from 'lucide-react'
 
 interface ShellProps {
   children: React.ReactNode
@@ -13,8 +13,10 @@ interface ShellProps {
 export function GlobalShell({ children }: ShellProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showBackToTop, setShowBackToTop] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => {
       if (window.scrollY > 400) {
         setShowBackToTop(true)
@@ -27,22 +29,24 @@ export function GlobalShell({ children }: ShellProps) {
   }, [])
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0B1120] text-[#F8FAFC]">
-      {/* Sticky Header - Streamlined & Minimalist */}
-      <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-[#0B1120]/95 backdrop-blur-md">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-50 w-full border-b border-zinc-800/80 bg-[#0B1120]/95 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           
-          {/* Modern Acoustic & Linguistics Brand Logo */}
-          <Link href="/" title="Adamu.tech Dossier & Research">
+          {/* Logo Mark & Identity */}
+          <Link href="/" title="Adamu.tech Dossier & Research" className="shrink-0">
             <LogoMark />
           </Link>
 
-          {/* Desktop Nav with Navigation & Interactive Icon Badges */}
-          <nav className="hidden md:flex items-center space-x-5">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-5">
             <Link href="/" className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors">
               Dossier
             </Link>
@@ -58,20 +62,27 @@ export function GlobalShell({ children }: ShellProps) {
             
             <div className="h-4 w-px bg-zinc-800" />
             
-            {/* Hyperlinked Network Icon Hub */}
+            {/* Hyperlinked Social Network Icon Hub */}
             <SocialNavIcons />
 
-            <Link href="/admin" className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors">
+            <div className="h-4 w-px bg-zinc-800" />
+
+            <Link href="/admin" className="px-2.5 py-1 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors">
               Admin
             </Link>
           </nav>
 
-          {/* Mobile menu trigger */}
-          <div className="flex items-center md:hidden">
+          {/* Tablet/Mobile Header Actions */}
+          <div className="flex lg:hidden items-center space-x-3">
+            <div className="hidden sm:flex">
+              <SocialNavIcons />
+            </div>
+            
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg border border-zinc-800 text-zinc-300 hover:text-amber-400"
+              className="p-2 rounded-lg border border-zinc-800 bg-[#0E1526] text-zinc-300 hover:text-amber-400 focus:outline-none"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -80,53 +91,52 @@ export function GlobalShell({ children }: ShellProps) {
 
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-b border-zinc-800 bg-[#0B1120] px-4 py-4 space-y-3">
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-mono text-zinc-200 hover:text-amber-400"
-            >
-              Dossier
-            </Link>
-            <Link
-              href="/papers/agentic-ai"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-mono text-zinc-200 hover:text-amber-400"
-            >
-              Pre-Print Paper
-            </Link>
-            <Link
-              href="/cv"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-mono font-bold text-amber-400"
-            >
-              Academic CV
-            </Link>
-            <a
-              href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between text-sm font-mono text-zinc-400 hover:text-amber-400"
-            >
-              <span>Google Scholar</span>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-            <a
-              href="https://huggingface.co/adab-tech"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between text-sm font-mono text-zinc-400 hover:text-amber-400"
-            >
-              <span>Hugging Face</span>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-            <Link
-              href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-mono text-amber-400 pt-2 border-t border-zinc-800"
-            >
-              Admin Studio
-            </Link>
+          <div className="lg:hidden border-b border-zinc-800 bg-[#0B1120] px-4 sm:px-6 py-5 space-y-4 shadow-xl">
+            <div className="grid grid-cols-2 gap-2 text-sm font-mono">
+              <Link
+                href="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80 text-zinc-200 hover:text-amber-400 hover:border-amber-500/30"
+              >
+                Dossier
+              </Link>
+              <Link
+                href="/projects"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80 text-zinc-200 hover:text-amber-400 hover:border-amber-500/30"
+              >
+                Projects
+              </Link>
+              <Link
+                href="/papers/agentic-ai"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg bg-zinc-900/60 border border-zinc-800/80 text-zinc-200 hover:text-amber-400 hover:border-amber-500/30"
+              >
+                Pre-Print Paper
+              </Link>
+              <Link
+                href="/cv"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold hover:bg-amber-500/20"
+              >
+                Academic CV
+              </Link>
+            </div>
+
+            <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
+              <span className="text-xs font-mono text-zinc-400">Networks & Profiles:</span>
+              <SocialNavIcons />
+            </div>
+
+            <div className="pt-1">
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-center p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 hover:text-amber-400"
+              >
+                Admin Dashboard Studio
+              </Link>
+            </div>
           </div>
         )}
       </header>
@@ -141,7 +151,7 @@ export function GlobalShell({ children }: ShellProps) {
         <div className="max-w-6xl mx-auto space-y-6">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center space-x-3">
-              <LogoMark showText={true} />
+              <LogoMark />
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -152,7 +162,10 @@ export function GlobalShell({ children }: ShellProps) {
                 <Link href="/cv" className="hover:text-amber-400 transition-colors">Academic CV</Link>
                 <Link href="/admin" className="hover:text-amber-400 text-zinc-500 transition-colors">Admin</Link>
               </div>
+              
               <div className="h-4 w-px bg-zinc-800 hidden sm:block" />
+              
+              {/* Footer Network Icons */}
               <SocialNavIcons />
             </div>
           </div>
@@ -160,7 +173,7 @@ export function GlobalShell({ children }: ShellProps) {
           <div className="flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-3 border-t border-zinc-800/60 pt-5">
             <div className="flex items-center gap-2">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span className="text-zinc-400">© {new Date().getFullYear()} adamu.tech · Open Access</span>
+              <span className="text-zinc-400">© 2026 adamu.tech · Adamu Danjuma Abubakar</span>
             </div>
             <div className="flex items-center gap-3 text-zinc-400">
               <a 
