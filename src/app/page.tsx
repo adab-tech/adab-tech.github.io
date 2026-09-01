@@ -53,12 +53,12 @@ const ECOSYSTEM_PROJECTS = [
     repo: 'https://huggingface.co/adab-tech'
   },
   {
-    name: 'Imodoye Digital Archive & Health Suite',
-    status: 'Research & Archive Pilot',
+    name: "Imodoye Writers' Residency & Fellowship",
+    status: 'Live Production',
     statusColor: 'emerald',
-    role: 'Lead Architect & Philologist',
-    type: 'Tier 4 · Digital Humanities & Clinical Aid',
-    desc: 'Ajami manuscript cataloging alongside localized Yoruba/Hausa clinical communication and documentation translation tools (informational & non-diagnostic).',
+    role: 'Lead Platform Architect & Developer',
+    type: 'Tier 4 · Literary Fellowship & Publishing Platform',
+    desc: "Full-stack platform for Northern Nigeria's first writers' residency (Ilorin, Kwara State) — admin CMS for fellows, cohorts, and publications, plus a blind-review workflow for its literary journal, Imodoye Review.",
     url: 'https://imodoye.ng',
     repo: 'https://github.com/adab-tech/imodoye-web'
   },
@@ -240,9 +240,9 @@ export default function HomePage() {
                   <strong className="text-zinc-200 font-mono block">Offline vs. Cloud Streaming Architecture</strong>
                   <p>Client-side ONNX WASM &amp; IndexedDB run fully offline for TTS &amp; dictionary lookup. Optional WebSocket connection handles server-side Faster-Whisper VAD STT &amp; Aya 8B reasoning.</p>
                 </div>
-                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1 border-amber-500/30">
-                  <strong className="text-amber-400 font-mono block">Clinical Non-Diagnostic Disclaimer</strong>
-                  <p>Imodoye Health &amp; Language Suite provides clinical communication &amp; documentation translation assistance. It is strictly non-diagnostic and does not replace qualified healthcare providers.</p>
+                <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
+                  <strong className="text-zinc-200 font-mono block">Imodoye Editorial Process</strong>
+                  <p>Submissions to Imodoye Review go through a blind-review workflow in the platform&apos;s admin CMS before publication, tracked alongside fellow, cohort, and partner records in the same Neon Postgres database.</p>
                 </div>
               </div>
               <div className="text-[11px] text-zinc-400 font-mono pt-1">

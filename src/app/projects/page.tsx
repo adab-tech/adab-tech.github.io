@@ -98,20 +98,20 @@ const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'imodoye-archive',
-    title: 'Imodoye Digital Archive & Health Suite',
+    title: "Imodoye Writers' Residency & Fellowship",
     category: 'Philology & Humanities',
-    role: 'Lead Architect & Philologist',
-    status: 'Research & Archive Pilot',
+    role: 'Lead Platform Architect & Developer',
+    status: 'Live Production',
     statusColor: 'emerald',
-    description: 'Digital research repository preserving 19th-century Kano Ajami manuscripts alongside localized Yoruba and Hausa clinical communication translation aids (informational & non-diagnostic).',
+    description: "Full-stack platform for Imodoye — the first writers' residency of its kind in Northern Nigeria, founded in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
     highlights: [
-      'Ajami Arabic-script paleography and transliteration tooling',
-      'Preservation of pre-colonial West African manuscripts',
-      'Clinical communication translation assistance for community health workers'
+      'Next.js + Neon Postgres, with an admin CMS covering fellows, cohorts, partners, and publications',
+      'Blind-review editorial workflow feeding submissions to Imodoye Review',
+      'Public residency archive and impact reporting, backed by the live database'
     ],
     liveUrl: 'https://imodoye.ng',
     repoUrl: 'https://github.com/adab-tech/imodoye-web',
-    tags: ['Ajami Paleography', 'Digital Humanities', 'Clinical Language Tool']
+    tags: ["Writers' Residency", 'Literary Fellowship', 'Next.js', 'Neon Postgres']
   },
   {
     id: 'mapping-voices',
