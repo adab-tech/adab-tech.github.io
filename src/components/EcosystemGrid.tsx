@@ -34,12 +34,12 @@ const projects: DomainProject[] = [
   },
   {
     domain: "imodoye.ng",
-    label: "Imodoye Digital Archive",
-    category: "Philology & Digital Humanities",
-    description: "Digital research repository structuring 19th-century Kano Ajami manuscripts and localized clinical communication aids.",
+    label: "Imodoye Writers' Residency & Fellowship",
+    category: "Literary Fellowship & Publishing",
+    description: "Full-stack platform for Northern Nigeria's first writers' residency (Ilorin, Kwara State), with an admin CMS and a blind-review workflow for its literary journal, Imodoye Review.",
     type: "literary",
     url: "https://imodoye.ng",
-    tags: ["Ajami Paleography", "Hausa Philology", "Digital Humanities"]
+    tags: ["Writers' Residency", "Literary Fellowship", "Next.js"]
   },
   {
     domain: "adab.ng",
