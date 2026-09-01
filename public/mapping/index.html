@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mapping Voices — redirecting…</title>
+<meta name="description" content="Mapping Voices: an open, interactive atlas of real oral-history and voice-testimony archives worldwide." />
+<link rel="canonical" href="https://adab-tech.github.io/mapping/" />
+<meta http-equiv="refresh" content="0; url=https://adab-tech.github.io/mapping/" />
+<style>
+  :root {
+    --bg-primary: #0B1120;
+    --bg-card: #0E1526;
+    --border-color: #1E293B;
+    --text-primary: #F8FAFC;
+    --text-muted: #a1a1aa;
+    --accent-gold: #D4AF37;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+  }
+  .card {
+    max-width: 30rem;
+    width: 100%;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    background: var(--bg-card);
+    text-align: center;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin: 0 0 0.75rem;
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin: 0 0 0.75rem;
+  }
+  p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 1.25rem;
+  }
+  a.button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.6rem;
+    background: var(--accent-gold);
+    color: #0B1120;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .spinner {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    border: 2px solid rgba(212,175,55,0.25);
+    border-top-color: var(--accent-gold);
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+<script>
+  window.location.replace("https://adab-tech.github.io/mapping/");
+</script>
+</head>
+<body>
+  <div class="card">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="eyebrow">An atlas of testimony</p>
+    <h1>Taking you to Mapping&nbsp;Voices…</h1>
+    <p>
+      An open, interactive atlas of real oral-history and voice-testimony
+      archives — 191 verified collections across 118 countries.
+    </p>
+    <a class="button" href="https://adab-tech.github.io/mapping/">
+      Continue to the atlas →
+    </a>
+  </div>
+</body>
+</html>
