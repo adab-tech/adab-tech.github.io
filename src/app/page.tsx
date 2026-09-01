@@ -61,6 +61,16 @@ const ECOSYSTEM_PROJECTS = [
     desc: 'Ajami manuscript cataloging alongside localized Yoruba/Hausa clinical communication and documentation translation tools (informational & non-diagnostic).',
     url: 'https://imodoye.ng',
     repo: 'https://github.com/adab-tech/imodoye-web'
+  },
+  {
+    name: 'Mapping Voices',
+    status: 'Live Production',
+    statusColor: 'emerald',
+    role: 'Founder & Lead Architect',
+    type: 'Tier 5 · Global Oral-History Atlas',
+    desc: 'Open, interactive atlas of 191 real, independently verified oral-history and voice-testimony archives across 118 countries, filterable by country, theme, language, and decade.',
+    url: 'https://adamu.tech/mapping/',
+    repo: 'https://github.com/adab-tech/mapping'
   }
 ]
 

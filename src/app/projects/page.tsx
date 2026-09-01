@@ -114,6 +114,24 @@ const PROJECTS_DATA: ProjectItem[] = [
     tags: ['Ajami Paleography', 'Digital Humanities', 'Clinical Language Tool']
   },
   {
+    id: 'mapping-voices',
+    title: 'Mapping Voices',
+    category: 'Philology & Humanities',
+    role: 'Founder & Lead Architect',
+    status: 'Live Production',
+    statusColor: 'emerald',
+    description: 'An open, interactive atlas of real oral-history and voice-testimony archives worldwide — a single geographic entry point into a landscape of collections otherwise scattered across hundreds of independent institutional sites, filterable by country, theme, language, and decade.',
+    highlights: [
+      '191 independently verified real archive entries across 118 countries on every inhabited continent',
+      'Zero-dependency static app (Leaflet + OpenStreetMap) — no backend, no build step',
+      'Full UI localization in English, Hausa, French, and Arabic with native CLDR pluralization',
+      'Open source (MIT code / CC BY 4.0 data) with a public contribution pipeline for institutions and researchers'
+    ],
+    liveUrl: 'https://adamu.tech/mapping/',
+    repoUrl: 'https://github.com/adab-tech/mapping',
+    tags: ['Digital Humanities', 'Oral History', 'Leaflet', 'Open Data', 'i18n']
+  },
+  {
     id: 'adab-infrastructure',
     title: 'Adab Infrastructure (PropTech)',
     category: 'Infrastructure',
