@@ -118,7 +118,7 @@ export default function HomePage() {
               Ph.D. Candidate & Teaching Fellow · University of Alabama
             </p>
             <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
-              Applied Computational Linguist, Romance Philologist, and Speech AI Architect. Specializing in West Chadic neural speech synthesis, 19th-century Kano Ajami manuscript paleography, and postcolonial AI governance frameworks.
+              Applied Computational Linguist, Romance Philologist, and Speech AI Architect, specializing in West Chadic neural speech synthesis and postcolonial AI governance frameworks — with a secondary focus on documenting and preserving voices, including presentations on the Hausa, Ajami, Fulfulde, and Arabic poetry and scholarship of Nana Asma&apos;u bint Fodio.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-zinc-400 pt-1">
