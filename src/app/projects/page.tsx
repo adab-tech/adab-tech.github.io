@@ -34,7 +34,7 @@ const PROJECTS_DATA: ProjectItem[] = [
     statusColor: 'emerald',
     description: 'Sovereign 8-speaker neural speech synthesis and bidirectional live voice engine for Hausa. Features client-side WASM ONNX inference, offline-first IndexedDB Ƙamus grounding, and rising-edge echo cancellation.',
     highlights: [
-      '4.12 / 5.0 MOS evaluated across 40 native Kano & Zaria raters',
+      'Live blind MOS naturalness study at app.murya.ng/listen — results pending sufficient rater volume',
       '8-Speaker WAXAL-Piper VITS multi-speaker neural architecture',
       '< 110ms time-to-first-audio chunk latency in browser WASM',
       'Rising-edge control barrier (assistant_speaking) preventing self-echo'

@@ -75,7 +75,7 @@ const ECOSYSTEM_PROJECTS = [
 ]
 
 const BENCHMARKS_DATA = [
-  { metric: '4.12 / 5.0', label: 'Mean Opinion Score (MOS)', sub: 'Evaluated across 40 native Kano (25) & Zaria (15) raters vs 3.24 VITS baseline (95% CI ±0.14, p < 0.01)' },
+  { metric: 'In progress', label: 'MOS Listening Study', sub: 'Blind, anonymous ITU-T P.800-style naturalness study live at app.murya.ng/listen — results pending sufficient rater volume' },
   { metric: '30,708', label: 'Validated Lexicon Entries', sub: 'Dictionary-constrained lexical grounding (Robinson 1914 + Newman 1977 authorized subset)' },
   { metric: '< 110ms', label: 'Inference Latency', sub: 'Client-side WASM ONNX time-to-first-audio chunk (offline-capable) with server fallback' },
   { metric: '24 kHz', label: 'Output Sampling Rate', sub: 'High-fidelity audio synthesis (Malama Asabe & Malam Garba synthetic neural personas)' }
@@ -230,7 +230,7 @@ export default function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] text-zinc-400">
                 <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
                   <strong className="text-zinc-200 font-mono block">MOS Evaluation Protocol</strong>
-                  <p>Evaluated on a 5-point Likert scale across 50 phonetically balanced sentences by 40 native Hausa speakers (Kano: 25, Zaria: 15). Baseline: Standard VITS Hausa baseline. Score: 4.12 vs 3.24 (95% CI ±0.14, p &lt; 0.01).</p>
+                  <p>A blind, randomized Mean Opinion Score study (ITU-T P.800-style, 1–5 naturalness scale, real-human-speech anchor) is live and collecting ratings at app.murya.ng/listen. No score is published until each voice clears a floor of 20 ratings — the study is ongoing and results aren&apos;t final yet.</p>
                 </div>
                 <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
                   <strong className="text-zinc-200 font-mono block">30k Ƙamus Lexicon Provenance</strong>
