@@ -8,10 +8,10 @@ import { ArrowLeft, Quote, Check, Clock, Shield, Globe, Sparkles, BookOpen, Shar
 export default function AgenticAiPaperPage() {
   const [copiedBibtex, setCopiedBibtex] = useState(false)
 
-  const bibtex = `@article{abubakar2026agentic,
+  const bibtex = `@unpublished{abubakar2026agentic,
   title={Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance},
   author={Abubakar, Adamu Danjuma},
-  journal={Working Papers in Applied Computational Humanities},
+  note={Working paper},
   year={2026},
   institution={University of Alabama},
   url={https://adamu.tech/papers/agentic-ai}
