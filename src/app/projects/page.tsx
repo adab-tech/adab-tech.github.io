@@ -81,18 +81,18 @@ const PROJECTS_DATA: ProjectItem[] = [
   },
   {
     id: 'hausa-30k-lexicon',
-    title: 'Hausa 30k Lexicon (Ƙamus)',
+    title: 'Hausa Lexicon (Ƙamus)',
     category: 'Philology & Humanities',
     role: 'Curator & Maintainer',
-    status: 'Open Dataset (v2.0)',
+    status: 'Open Dataset · Internal Extension',
     statusColor: 'amber',
-    description: 'Standardized 30,708-entry phonetically tone-marked Hausa dictionary uniting Charles Henry Robinson (1914, Public Domain) with Prof. Paul Newman (1977, authorized research subset).',
+    description: 'A 20,628-entry Robinson (1914, Public Domain) Hausa-English lexicon published on Hugging Face, extended internally with a Prof. Paul Newman (1977) research subset ingested under direct written authorization and kept unpublished per that permission’s terms.',
     highlights: [
-      '30,708 verified lexical entries with syllable weight segmentation',
+      '20,628 verified lexical entries published on Hugging Face under public-domain terms',
       'Phonetically normalized for high-accuracy neural TTS alignment',
-      'Published on Hugging Face Datasets under CC-BY-NC-SA 4.0'
+      'Newman (1977) subset used for internal lexical grounding only, not redistributed'
     ],
-    modelUrl: 'https://huggingface.co/adab-tech',
+    modelUrl: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
     repoUrl: 'https://huggingface.co/adab-tech',
     tags: ['Lexical Infrastructure', 'Hugging Face', 'Hausa Philology', 'Open Data']
   },

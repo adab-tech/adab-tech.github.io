@@ -167,7 +167,7 @@ export default function AcademicCVPage() {
                     <strong>Native Chadic Sociolinguistics:</strong> Engineered cultural pragmatics protocols (<code className="font-mono text-[10px] text-amber-300">Kunya & Girmamawa</code>), gendered address forms (<code className="font-mono text-[10px] text-amber-300">Namiji ka/maka vs Mace ki/miki</code>), and pedagogical tutor modes (<code className="font-mono text-[10px] text-amber-300">Malamin Hausa</code>).
                   </li>
                   <li>
-                    <strong>30,708-Entry Ƙamus (Lexical Engine):</strong> Curated the 20,628-pair Robinson 1914 Lexicon on Hugging Face and secured direct written permission from Prof. Paul Newman to ingest the 1977 <em>Modern Hausa–English Dictionary</em>, creating an authoritative, dictionary-constrained lexical grounding service.
+                    <strong>Ƙamus Lexical Engine:</strong> Curated the 20,628-pair Robinson 1914 Lexicon, published on Hugging Face under public-domain terms, and secured direct written permission from Prof. Paul Newman to ingest the 1977 <em>Modern Hausa–English Dictionary</em> as an internal-only extension (not redistributed), creating an authoritative, dictionary-constrained lexical grounding service.
                   </li>
                   <li>
                     <strong>Bidirectional WebSocket Audio Pipeline:</strong> Engineered the offline-first <code className="font-mono text-[10px] text-amber-300">/api/live</code> real-time audio pipeline with 16kHz Faster-Whisper VAD and rising-edge microphone buffer purging to eliminate self-echo and streaming latency.
