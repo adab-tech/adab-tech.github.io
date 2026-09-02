@@ -140,13 +140,13 @@ const PROJECTS_DATA: ProjectItem[] = [
     statusColor: 'emerald',
     description: 'Full-stack property listing and real estate marketplace platform operating across Nigeria with intelligent search portals and verified lister workflows.',
     highlights: [
-      'Multi-region search with intelligent geo-spatial categorization',
-      'Scalable Next.js and Supabase backend deployment',
-      'Enterprise cloud routing and verified agent onboarding'
+      'Property search with filters, Google Maps integration, and structured data for SEO',
+      'Supabase-backed CMS for listings, inquiries, and services content',
+      'Dedicated lister portal, separate from the admin CMS, for verified agent onboarding'
     ],
     liveUrl: 'https://adab.ng',
     repoUrl: 'https://github.com/adab-tech/adab-real-estate-web',
-    tags: ['PropTech', 'Next.js', 'Supabase', 'Cloudflare']
+    tags: ['PropTech', 'Next.js', 'Supabase', 'Vercel']
   }
 ]
 
