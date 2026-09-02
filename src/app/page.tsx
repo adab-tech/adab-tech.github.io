@@ -43,13 +43,13 @@ const ECOSYSTEM_PROJECTS = [
     repo: 'https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ'
   },
   {
-    name: 'Hausa 30k Lexicon (Ƙamus)',
-    status: 'Open Dataset (v2.0)',
+    name: 'Hausa Lexicon (Ƙamus)',
+    status: 'Open Dataset · Internal Extension',
     statusColor: 'amber',
     role: 'Curator & Maintainer',
     type: 'Tier 3 · Lexical Infrastructure',
-    desc: 'Combined 30,708-entry lexicon uniting Robinson 1914 (Public Domain) with Prof. Paul Newman 1977 authorized research subset.',
-    url: 'https://huggingface.co/adab-tech',
+    desc: '20,628-entry Robinson 1914 (Public Domain) lexicon published on Hugging Face, extended internally with a Prof. Paul Newman 1977 research subset kept unpublished per that permission’s terms.',
+    url: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
     repo: 'https://huggingface.co/adab-tech'
   },
   {
@@ -76,7 +76,7 @@ const ECOSYSTEM_PROJECTS = [
 
 const BENCHMARKS_DATA = [
   { metric: 'In progress', label: 'MOS Listening Study', sub: 'Blind, anonymous ITU-T P.800-style naturalness study live at app.murya.ng/listen — results pending sufficient rater volume' },
-  { metric: '30,708', label: 'Validated Lexicon Entries', sub: 'Dictionary-constrained lexical grounding (Robinson 1914 + Newman 1977 authorized subset)' },
+  { metric: '30,729', label: 'Validated Lexicon Entries', sub: 'Internal dictionary-constrained lexical grounding (Robinson 1914 + Wiktionary CC-BY-SA + Newman 1977 authorized subset)' },
   { metric: '< 110ms', label: 'Inference Latency', sub: 'Client-side WASM ONNX time-to-first-audio chunk (offline-capable) with server fallback' },
   { metric: '24 kHz', label: 'Output Sampling Rate', sub: 'High-fidelity audio synthesis (Malama Asabe & Malam Garba synthetic neural personas)' }
 ]
