@@ -48,7 +48,7 @@ const projects: DomainProject[] = [
     description: "Modern prop-tech and property listing platform operating across Nigeria with intelligent search portals.",
     type: "real-estate",
     url: "https://adab.ng",
-    tags: ["PropTech", "Next.js", "Supabase", "Cloudflare"]
+    tags: ["PropTech", "Next.js", "Supabase", "Vercel"]
   }
 ]
 
