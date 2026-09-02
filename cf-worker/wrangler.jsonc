@@ -1,0 +1,26 @@
+{
+  // Standalone Cloudflare Worker, deployed separately from the main site
+  // (which stays on GitHub Pages — this Worker only exists to send the
+  // contact-form email without exposing a Resend API key client-side).
+  //
+  // Deploy:
+  //   cd cf-worker
+  //   npx wrangler login
+  //   npx wrangler secret put RESEND_API_KEY   # paste the real key when prompted
+  //   npx wrangler deploy
+  //
+  // After the first deploy, wrangler prints the Worker's URL
+  // (https://adamu-contact-relay.<your-subdomain>.workers.dev). Optionally
+  // route a clean custom hostname to it in the Cloudflare dashboard
+  // (Workers & Pages > adamu-contact-relay > Triggers > Add Custom Domain),
+  // e.g. contact-api.adamu.tech, since adamu.tech's DNS is already on
+  // Cloudflare.
+  "name": "adamu-contact-relay",
+  "main": "./index.js",
+  "compatibility_date": "2026-08-28",
+  "vars": {
+    // Origin allowed to call this Worker. Change if adamu.tech is ever
+    // served from a different origin.
+    "ALLOWED_ORIGIN": "https://adamu.tech"
+  }
+}

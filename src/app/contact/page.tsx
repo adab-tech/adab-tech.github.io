@@ -2,25 +2,55 @@
 
 import { useState } from 'react';
 
+// Set after deploying cf-worker/ (see cf-worker/README.md) — wrangler prints
+// this on first deploy. Left blank until then, in which case the form falls
+// back to a mailto: link instead of failing silently.
+const RELAY_URL = '';
+
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
   });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // No backend on this static site — open the visitor's own email client
-    // pre-addressed to contact@adamu.tech instead of faking a submission.
+  const openMailto = () => {
     const subject = encodeURIComponent(`New message from ${formData.name} via adamu.tech`);
     const body = encodeURIComponent(`${formData.message}\n\n— ${formData.name} (${formData.email})`);
     window.location.href = `mailto:contact@adamu.tech?subject=${subject}&body=${body}`;
-    setFormData({ name: '', email: '', message: '' });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!RELAY_URL) {
+      // No backend deployed yet — open the visitor's own email client
+      // pre-addressed to contact@adamu.tech instead of faking a submission.
+      openMailto();
+      setFormData({ name: '', email: '', message: '' });
+      return;
+    }
+
+    setStatus('sending');
+    try {
+      const res = await fetch(RELAY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error(`Relay responded ${res.status}`);
+      setStatus('sent');
+      setFormData({ name: '', email: '', message: '' });
+    } catch (err) {
+      console.error('Contact relay failed, falling back to mailto:', err);
+      setStatus('error');
+      openMailto();
+    }
   };
 
   return (
@@ -62,7 +92,15 @@ const ContactPage = () => {
               <label htmlFor="message">Message</label>
               <textarea id="message" name="message" rows={5} value={formData.message} onChange={handleChange} required></textarea>
             </div>
-            <button type="submit" className="btn btn-primary">Send Message</button>
+            <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
+              {status === 'sending' ? 'Sending…' : 'Send Message'}
+            </button>
+            {status === 'sent' && <p role="status">Message sent — thank you!</p>}
+            {status === 'error' && (
+              <p role="status">
+                Couldn&apos;t send that automatically, so your email client should have opened instead.
+              </p>
+            )}
           </form>
         </div>
       </div>
