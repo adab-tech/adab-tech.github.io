@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { usePostsStore, ResearchPost, StreamCategory, ContactInquiry } from '@/lib/posts-store'
 import { AdminHeader } from '@/components/AdminHeader'
-import { Activity, Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Key, Mail, Check, Inbox, Reply, Trash2, Calendar } from 'lucide-react'
+import { Activity, Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Key, Mail, Check, Inbox, Reply, Trash2, Calendar, AlertCircle } from 'lucide-react'
 
 export default function AdminDashboardPage() {
   const { isAuthenticated, loading, updatePassword, currentPassword } = useAdminAuth()
@@ -462,7 +462,8 @@ export default function AdminDashboardPage() {
               Domain & Email Delivery Configuration
             </h3>
             <p className="text-xs font-sans text-zinc-400">
-              Verified domain records & direct Outlook mail forwarding.
+              MX for adamu.tech points to AWS SES inbound (inbound-smtp.us-east-1.amazonaws.com) —
+              confirm the SES receipt rule actually forwards mail before relying on this.
             </p>
 
             <div className="space-y-2 font-mono text-xs">
@@ -471,13 +472,13 @@ export default function AdminDashboardPage() {
                 <span className="text-emerald-400 font-bold">adamudanjuma1@outlook.com</span>
               </div>
               <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
-                <span className="text-zinc-400">Verified Domain Email:</span>
+                <span className="text-zinc-400">Domain Email:</span>
                 <span className="text-gold-400">contact@adamu.tech</span>
               </div>
               <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
-                <span className="text-zinc-400">Cloudflare + Resend DNS:</span>
-                <span className="text-emerald-400 font-bold flex items-center gap-1">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> Active & Verified
+                <span className="text-zinc-400">MX / Inbound Routing:</span>
+                <span className="text-amber-400 font-bold flex items-center gap-1">
+                  <AlertCircle className="h-3.5 w-3.5" /> AWS SES — status unverified
                 </span>
               </div>
             </div>
