@@ -349,7 +349,7 @@ export default function HomePage() {
             <span>Inquiries & Communication Policy</span>
           </div>
           <p>
-            Communications sent to <code className="text-amber-400 font-mono">contact@adamu.tech</code> are routed via Cloudflare Email Routing with TLS transport encryption to a private destination inbox. Communications are retained strictly for legitimate academic, research, and technical collaboration inquiries. Inbound messages are retained strictly for legitimate research, academic, and collaboration inquiries. Your contact information is never shared, marketed, or monetized.
+            Communications sent to <code className="text-amber-400 font-mono">contact@adamu.tech</code> are routed via AWS SES with TLS transport encryption to a private destination inbox. Inbound messages are retained strictly for legitimate research, academic, and collaboration inquiries. Your contact information is never shared, marketed, or monetized.
           </p>
         </section>
 

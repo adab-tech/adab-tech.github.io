@@ -15,9 +15,11 @@ const ContactPage = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
-    alert('Thank you for your message!');
+    // No backend on this static site — open the visitor's own email client
+    // pre-addressed to contact@adamu.tech instead of faking a submission.
+    const subject = encodeURIComponent(`New message from ${formData.name} via adamu.tech`);
+    const body = encodeURIComponent(`${formData.message}\n\n— ${formData.name} (${formData.email})`);
+    window.location.href = `mailto:contact@adamu.tech?subject=${subject}&body=${body}`;
     setFormData({ name: '', email: '', message: '' });
   };
 
