@@ -65,12 +65,11 @@ const ContactPage = () => {
           <div className="contact-info" data-animate="fade-right">
             <h3>Contact Information</h3>
             <p>
-              Have a project in mind or want to collaborate? Feel free to reach out. 
-              I'm always open to discussing new ideas and opportunities.
+              Roles, consulting, and research collaboration — email is the fastest path.
             </p>
             
             <div className="info-item">
-              <a href="mailto:adamudanjuma1@outlook.com" aria-label="Email Adamu">
+              <a href="mailto:contact@adamu.tech" aria-label="Email Adamu">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
