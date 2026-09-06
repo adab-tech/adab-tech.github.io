@@ -30,7 +30,7 @@ const ECOSYSTEM_PROJECTS = [
     type: 'Tier 1 · Academic & Grant Discovery Engine',
     desc: 'Worldwide scholarships, research fellowships, grants, and international jobs platform featuring real-time deadline indexing and automated alerts.',
     url: 'https://globalopportunities.app',
-    repo: 'https://github.com/adab-tech/OpportunityFinder'
+    repo: 'https://github.com/adab-tech/globalopportunities'
   },
   {
     name: 'Humanities Perspectives on Agentic AI',
@@ -48,7 +48,7 @@ const ECOSYSTEM_PROJECTS = [
     statusColor: 'amber',
     role: 'Curator & Maintainer',
     type: 'Tier 3 · Lexical Infrastructure',
-    desc: '20,628-entry Robinson 1914 (Public Domain) lexicon published on Hugging Face, extended internally with a Prof. Paul Newman 1977 research subset kept unpublished per that permission’s terms.',
+    desc: '20,628 Robinson 1914 pairs published on Hugging Face (Public Domain). Internal dictionary-constrained grounding totals 30,729 entries (Robinson + Wiktionary CC-BY-SA + Newman 1977 authorized subset, not redistributed).',
     url: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
     repo: 'https://huggingface.co/adab-tech'
   },
