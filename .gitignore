@@ -1,12 +1,28 @@
-# Jekyll (legacy)
+# Dependencies and local env
+node_modules/
+.env
+.env.local
+
+# Generated reports / CI artifacts
+axe-results.json
+pa11y.json
+pa11y-report.json
+pa11y-report.txt
+accessibility_pa11y.*
+html-validate-report.txt
+.lighthouseci/
+server.pid
+*.old
+body.json
+
+# Jekyll / Next leftovers
 .sass-cache/
 _site/
 .next
-node_modules
-axe-results.json
-pa11y.json
-.lighthouseci/
-server.pid
+
+# Wallet signing secrets (never commit)
+wallet/certs/
+wallet/config.json
 
 # Archival dictionary PDFs (hosted on Internet Archive; index JSON is committed)
 assets/dictionaries/**/*.pdf

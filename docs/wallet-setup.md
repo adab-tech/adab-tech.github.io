@@ -1,4 +1,6 @@
-# Apple Wallet (Provider / Route A)
+# Apple Wallet via a pass provider
+
+For generating a signed `.pkpass` yourself, see [wallet/README.md](../wallet/README.md).
 
 This site is hosted statically (GitHub Pages), so you **can’t** generate a signed Apple Wallet pass (`.pkpass`) purely in the browser.
 
@@ -11,7 +13,7 @@ The easiest approach is to use a **pass provider** (PassKit, PassSource, etc.) a
    - **Primary fields:** your name / title
    - **Secondary fields:** phone, email, website
    - **Barcode / QR:** point it to your public card URL (example):
-     - `https://adab-tech.github.io/static/business-card.html`
+     - `https://adamu.tech/static/business-card.html`
 3. The provider will give you an **“Add to Apple Wallet” URL**.
 
 ## Plug the provider link into this repo
@@ -26,9 +28,7 @@ The page saves it locally to your browser (via `localStorage`) and updates the �
 
 ## Making it permanent (optional)
 
-If you want the “Add to Apple Wallet” button to work for **all visitors** (not just your browser), you have two options:
+If you want the button to work for all visitors (not just your browser):
 
-- **Option 1 (simple):** hardcode your provider link into `static/business-card.html` (replace `DEFAULT_PROVIDER_INFO`).
-- **Option 2 (clean):** put the provider link in a small JSON file (example `static/business-card.config.json`) and load it at runtime.
-
-If you want, tell me your provider link once you have it and I’ll wire it in permanently.
+- Hardcode the provider link in `static/business-card.html` (replace `DEFAULT_PROVIDER_INFO`).
+- Or load it at runtime from a small JSON file such as `static/business-card.config.json`.

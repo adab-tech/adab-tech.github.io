@@ -1,6 +1,8 @@
 # Apple Wallet pass (self-owned)
 
-You said you **don’t have a pass provider**. That’s totally fine — but Apple Wallet passes (`.pkpass`) must be **signed**.
+Prefer a hosted pass provider instead? See [docs/wallet-setup.md](../docs/wallet-setup.md).
+
+Apple Wallet passes (`.pkpass`) must be **signed**.
 
 Because this repo is a static site (GitHub Pages), the practical self-owned workflow is:
 

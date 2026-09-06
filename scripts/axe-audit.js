@@ -1,4 +1,4 @@
-// axe-audit.js
+// Accessibility audit helper used by `npm run axe-audit` and CI.
 const { chromium } = require('playwright');
 const axeCore = require('axe-core');
 const fs = require('fs');

@@ -27,12 +27,12 @@ Personal portfolio and project hub for **Adamu Abubakar** — computational ling
 git clone https://github.com/adab-tech/adab-tech.github.io.git
 cd adab-tech.github.io
 npm install
-npm run start          # http://localhost:8000
+npm start          # http://localhost:8000
 ```
 
 ```bash
-npm run pa11y          # accessibility scan
-npm run axe-audit      # axe audit (if configured)
+npm run pa11y      # accessibility scan
+npm run axe-audit  # axe audit
 ```
 
 ---
@@ -46,15 +46,23 @@ Pushes to `main` deploy via GitHub Actions (`.github/workflows/static.yml`) to G
 ## Structure
 
 ```text
-index.html          Main portfolio
+index.html          Portfolio homepage
 styles.css          Design system
 responsive.css      Cross-platform layout
 animations.css/js   Motion layer
 booking.js          Cal.com embed
-static/             Hausa Explorer, demos
-khad-app/           Offline health demo
+script.js           Site behavior
+sw.js               Unregisters a retired root service worker
+manifest.json       PWA manifest (Hausa Explorer)
+CNAME               Custom domain
 assets/brand/       Logo, favicon, site config
 assets/resume/      Public CV (PDF)
+khad-app/           Offline health demo
+static/             Hausa Explorer, demos, business card
+wallet/             Apple Wallet pass generator
+docs/               Maintainer documentation
+scripts/            Repo tooling (axe audit, README push)
+.github/            CI, issue, and PR templates
 ```
 
 ---

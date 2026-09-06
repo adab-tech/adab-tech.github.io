@@ -1,11 +1,10 @@
-# Push README.md to a GitHub repo via API (creates or updates)
+# Push a README.md file to another adab-tech repo via the GitHub API.
 param(
   [Parameter(Mandatory = $true)][string]$Repo,
   [Parameter(Mandatory = $true)][string]$ReadmePath
 )
 
 $owner = 'adab-tech'
-$path = 'README.md'
 $content = Get-Content -Raw -Path $ReadmePath -Encoding UTF8
 $b64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($content))
 
@@ -21,5 +20,5 @@ $body = @{
 if ($existing) { $body.sha = $existing }
 
 $json = $body | ConvertTo-Json
-gh api -X PUT "repos/$owner/$Repo/contents/README.md" --input - <<< $json
+$json | gh api -X PUT "repos/$owner/$Repo/contents/README.md" --input -
 Write-Host "Updated $owner/$Repo README"
