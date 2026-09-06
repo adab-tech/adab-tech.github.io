@@ -59,7 +59,7 @@ const PROJECTS_DATA: ProjectItem[] = [
       'Built for international researchers, scholars, and fellows'
     ],
     liveUrl: 'https://globalopportunities.app',
-    repoUrl: 'https://github.com/adab-tech/OpportunityFinder',
+    repoUrl: 'https://github.com/adab-tech/globalopportunities',
     tags: ['Next.js', 'Grants Engine', 'Scholarships', 'Automated Alerts', 'Global Mobility']
   },
   {
@@ -86,11 +86,11 @@ const PROJECTS_DATA: ProjectItem[] = [
     role: 'Curator & Maintainer',
     status: 'Open Dataset · Internal Extension',
     statusColor: 'amber',
-    description: 'A 20,628-entry Robinson (1914, Public Domain) Hausa-English lexicon published on Hugging Face, extended internally with a Prof. Paul Newman (1977) research subset ingested under direct written authorization and kept unpublished per that permission’s terms.',
+    description: 'Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.',
     highlights: [
-      '20,628 verified lexical entries published on Hugging Face under public-domain terms',
-      'Phonetically normalized for high-accuracy neural TTS alignment',
-      'Newman (1977) subset used for internal lexical grounding only, not redistributed'
+      '20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms',
+      '30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)',
+      'Newman (1977) subset is not redistributed'
     ],
     modelUrl: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
     repoUrl: 'https://huggingface.co/adab-tech',
