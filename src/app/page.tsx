@@ -122,7 +122,7 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-zinc-400 pt-1">
-              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-amber-500" /> Tuscaloosa, AL · Open to Relocation & Remote</span>
+              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-amber-500" /> Tuscaloosa, AL · Open to roles, remote, and relocation</span>
               <span>·</span>
               <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-amber-500" /> contact@adamu.tech</span>
             </div>
@@ -131,13 +131,21 @@ export default function HomePage() {
           {/* Primary Call-to-Actions (Above the Fold) */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <a
+              href="mailto:contact@adamu.tech?subject=Work%20with%20Adamu"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/20"
+            >
+              <Mail className="w-4 h-4" />
+              <span>Roles, gigs &amp; collabs</span>
+            </a>
+
+            <a
               href="https://app.murya.ng"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/20"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-zinc-700 bg-[#0E1526] text-zinc-100 font-mono text-xs font-bold hover:border-amber-500 hover:text-amber-400 transition-all shadow-sm"
             >
-              <Cpu className="w-4 h-4" />
-              <span>Try Murya OS (Live Speech AI)</span>
+              <Cpu className="w-4 h-4 text-amber-400" />
+              <span>Try Murya OS</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
 
@@ -346,10 +354,16 @@ export default function HomePage() {
         <section className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 text-xs font-sans text-zinc-400 leading-relaxed">
           <div className="flex items-center gap-2 font-mono font-bold text-zinc-200">
             <Mail className="w-4 h-4 text-amber-400" />
-            <span>Inquiries & Communication Policy</span>
+            <span>Hiring, consulting &amp; collaboration</span>
           </div>
+          <p className="text-zinc-300">
+            Available for industry roles, contract work, and research collaboration in African-language speech, low-resource NLP, and shipping research as product.{' '}
+            <a href="mailto:contact@adamu.tech?subject=Work%20with%20Adamu" className="text-amber-400 hover:underline font-mono">contact@adamu.tech</a>
+            {' · '}
+            <a href="/cv" className="text-amber-400 hover:underline font-mono">CV</a>
+          </p>
           <p>
-            Communications sent to <code className="text-amber-400 font-mono">contact@adamu.tech</code> are routed via AWS SES with TLS transport encryption to a private destination inbox. Inbound messages are retained strictly for legitimate research, academic, and collaboration inquiries. Your contact information is never shared, marketed, or monetized.
+            Mail to that address is routed privately (TLS). Inquiries are kept for legitimate work and research contact only — not shared or sold.
           </p>
         </section>
 
