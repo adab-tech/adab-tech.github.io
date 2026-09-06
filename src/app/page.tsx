@@ -15,7 +15,7 @@ const ECOSYSTEM_PROJECTS = [
     name: 'Murya Speech OS',
     status: 'Live Production (v1.2)',
     statusColor: 'emerald',
-    role: 'Founder & Lead Systems Architect',
+    role: 'Founder & linguistic lead',
     type: 'Tier 1 · Sovereign Speech AI Platform',
     desc: '8-speaker WAXAL-Piper VITS neural speech synthesis and conversational intelligence with offline-first IndexedDB Ƙamus grounding and rising-edge echo cancellation.',
     url: 'https://app.murya.ng',
@@ -26,7 +26,7 @@ const ECOSYSTEM_PROJECTS = [
     name: 'Global Opportunities Platform',
     status: 'Live Production',
     statusColor: 'emerald',
-    role: 'Founder & Lead Full-Stack Architect',
+    role: 'Founder',
     type: 'Tier 1 · Academic & Grant Discovery Engine',
     desc: 'Worldwide scholarships, research fellowships, grants, and international jobs platform featuring real-time deadline indexing and automated alerts.',
     url: 'https://globalopportunities.app',
@@ -56,7 +56,7 @@ const ECOSYSTEM_PROJECTS = [
     name: "Imodoye Writers' Residency & Fellowship",
     status: 'Live Production',
     statusColor: 'emerald',
-    role: 'Lead Platform Architect & Developer',
+    role: 'Founder & platform lead',
     type: 'Tier 4 · Literary Fellowship & Publishing Platform',
     desc: "Full-stack platform for Northern Nigeria's first writers' residency (Ilorin, Kwara State) — admin CMS for fellows, cohorts, and publications, plus a blind-review workflow for its literary journal, Imodoye Review.",
     url: 'https://imodoye.ng',
@@ -118,7 +118,7 @@ export default function HomePage() {
               Ph.D. Candidate & Teaching Fellow · University of Alabama
             </p>
             <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
-              Applied Computational Linguist, Romance Philologist, and Speech AI Architect, specializing in West Chadic neural speech synthesis and postcolonial AI governance frameworks — with a secondary focus on documenting and preserving voices, including presentations on the Hausa, Ajami, Fulfulde, and Arabic poetry and scholarship of Nana Asma&apos;u bint Fodio.
+              I build African-language speech systems from a humanities foundation — literature, philology, and linguistics, not a computer-science degree. I design the linguistic framing and the product, and I work with engineering to ship it. Try Murya, then the CV.
             </p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-zinc-400 pt-1">
