@@ -64,7 +64,7 @@ export function ContactForm() {
           Research Inquiry & Calendar Booking
         </h2>
         <p className="text-sm font-sans text-zinc-500 dark:text-zinc-400">
-          Direct inquiry dispatched to Adamu Abubakar's desk (<strong className="text-zinc-700 dark:text-zinc-200">contact@adamu.tech</strong> / <strong className="text-zinc-700 dark:text-zinc-200">adamudanjuma1@outlook.com</strong>) via Resend API and recorded in the Admin Studio Inbox.
+          Direct inquiry dispatched to Adamu Abubakar's desk (<strong className="text-zinc-700 dark:text-zinc-200">contact@adamu.tech</strong>) via Resend API and recorded in the Admin Studio Inbox.
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export function ContactForm() {
               Payload Dispatched Successfully
             </h3>
             <p className="text-xs font-sans text-zinc-500 dark:text-zinc-400 max-w-md">
-              Your inquiry has been dispatched to <strong>contact@adamu.tech</strong> & <strong>adamudanjuma1@outlook.com</strong> and saved in the Admin Studio Inbox.
+              Your inquiry has been dispatched to <strong>contact@adamu.tech</strong> and saved in the Admin Studio Inbox.
             </p>
             <button
               onClick={() => {
