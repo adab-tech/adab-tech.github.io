@@ -42,4 +42,4 @@ Next.js 16 · React 19 · TypeScript · Tailwind CSS 4
 
 ## License
 
-The site source is public on GitHub. Datasets and models linked from the pages have their own licenses (see Hugging Face cards).
+The site source is public on GitHub for reference; all rights reserved — see [LICENSE](LICENSE). Datasets and models linked from the pages have their own licenses (see Hugging Face cards).
