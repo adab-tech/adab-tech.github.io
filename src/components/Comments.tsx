@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import { Mail, MessageSquare } from 'lucide-react'
-import { GISCUS, REPLY_EMAIL, commentsEnabled, ownCommentsEnabled } from '@/config/blog'
+import { GISCUS, HCB, REPLY_EMAIL, commentsEnabled, hcbEnabled, ownCommentsEnabled } from '@/config/blog'
 import { OwnComments } from '@/components/OwnComments'
 import { listComments } from '@/lib/comments-api'
 
@@ -12,8 +12,8 @@ import { listComments } from '@/lib/comments-api'
 export function Comments({ title, slug }: { title: string; slug: string }) {
   const box = useRef<HTMLDivElement>(null)
   // 'checking' until we know whether the own comment service answers.
-  const [mode, setMode] = useState<'checking' | 'own' | 'giscus' | 'none'>(
-    ownCommentsEnabled() ? 'checking' : commentsEnabled() ? 'giscus' : 'none',
+  const [mode, setMode] = useState<'checking' | 'own' | 'hcb' | 'giscus' | 'none'>(
+    ownCommentsEnabled() ? 'checking' : hcbEnabled() ? 'hcb' : commentsEnabled() ? 'giscus' : 'none',
   )
   const own = mode === 'own'
   const useGiscus = mode === 'giscus'
@@ -24,7 +24,7 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
     let cancelled = false
     listComments(slug)
       .then(() => !cancelled && setMode('own'))
-      .catch(() => !cancelled && setMode(commentsEnabled() ? 'giscus' : 'none'))
+      .catch(() => !cancelled && setMode(hcbEnabled() ? 'hcb' : commentsEnabled() ? 'giscus' : 'none'))
     return () => {
       cancelled = true
     }
@@ -58,6 +58,31 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
     }
   }, [useGiscus])
 
+  // HTML Comment Box: its script fills #HCB_comment_box. PAGE pins each post
+  // to its canonical URL so its thread is the same however it was reached.
+  useEffect(() => {
+    if (mode !== 'hcb') return
+    const page = `https://adamu.tech/blog/${slug}/`
+    const w = window as unknown as { hcb_user?: Record<string, string> }
+    w.hcb_user = {
+      PAGE: page,
+      comments_header: '',
+      name_label: 'Name',
+      content_label: 'Share your thoughts',
+      submit: 'Post comment',
+      no_comments_msg: 'No comments yet. Be the first to share a thought.',
+    }
+    const script = document.createElement('script')
+    script.src =
+      `https://www.htmlcommentbox.com/jread?page=${encodeURIComponent(page).replace('+', '%2B')}` +
+      `&mod=${HCB.mod}&opts=${HCB.opts}&num=10&ts=${Date.now()}`
+    script.async = true
+    document.head.appendChild(script)
+    return () => {
+      script.remove()
+    }
+  }, [mode, slug])
+
   const mailto = `mailto:${REPLY_EMAIL}?subject=${encodeURIComponent(`Re: ${title}`)}`
 
   return (
@@ -79,6 +104,13 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
         <p className="text-sm text-zinc-400">Loading comments…</p>
       ) : own ? (
         <OwnComments slug={slug} />
+      ) : mode === 'hcb' ? (
+        <>
+          <p className="text-sm text-zinc-400">No account needed: add your name and comment.</p>
+          <div id="HCB_comment_box" className="hcb-dark min-h-[8rem]">
+            Loading comments…
+          </div>
+        </>
       ) : useGiscus ? (
         <>
           <p className="text-sm text-zinc-400">

@@ -41,19 +41,18 @@ title when shared. Ghost posts use Ghost's own sharing and previews.
 ## Comments
 
 Each post ends with **Reply by email** (subject filled in with the post title)
-and a public comment section:
+and a public comment section. The site uses the first one that is set up:
 
-- **The site's own comment service** (`comments-worker/`, a free Cloudflare
-  Worker on the adamu.tech zone, answering at `https://adamu.tech/api/...`):
-  readers write a name and a comment, no account needed. Nothing appears
-  until you approve it at adamu.tech/admin → **Comments**, where you can also
-  reply as the author (shown with an "Author" badge) or delete. Spam is kept
-  off by moderation, a hidden honeypot field, a minimum time on the form, and
-  a limit of 5 comments per 10 minutes per visitor.
-- Until that service is deployed, posts automatically fall back to **giscus**
-  (GitHub sign-in; comments stored as GitHub Discussions in this repo). Each
-  post checks whether `https://adamu.tech/api` answers, so nothing needs to
-  change on the site when the service goes live.
+1. **HTML Comment Box** ([htmlcommentbox.com](https://www.htmlcommentbox.com)):
+   hosted, free for small sites, readers comment anonymously (no account, no
+   email), each post has its own thread, restyled to match the site. To set
+   up: on htmlcommentbox.com click **Get the code**, then copy the value after
+   `mod=` (and `opts=`) from the snippet into `HCB` in `src/config/blog.ts`.
+   Moderate by clicking **Moderator login** under the comments on any post.
+2. **Own comment service** (`comments-worker/`, Cloudflare): optional, off
+   (`COMMENTS_API` empty); see below if you ever want it.
+3. **giscus** (GitHub sign-in; GitHub Discussions in this repo): used while
+   neither of the above is set up.
 
 ### Turning on the own comment service (one time, free)
 
