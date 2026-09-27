@@ -78,7 +78,20 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
       `&mod=${HCB.mod}&opts=${HCB.opts}&num=10&ts=${Date.now()}`
     script.async = true
     document.head.appendChild(script)
+
+    // Hide HCB's own "Not using Html Comment Box yet?" advert. Matched by its
+    // text (its markup isn't documented) so nothing else is touched.
+    const box = document.getElementById('HCB_comment_box')
+    const hidePromo = () => {
+      box?.querySelectorAll('a, p, div, span').forEach((el) => {
+        const text = el.textContent?.trim() ?? ''
+        if (/^not using html ?comment ?box yet\??$/i.test(text)) (el as HTMLElement).style.display = 'none'
+      })
+    }
+    const observer = new MutationObserver(hidePromo)
+    if (box) observer.observe(box, { childList: true, subtree: true })
     return () => {
+      observer.disconnect()
       script.remove()
     }
   }, [mode, slug])
