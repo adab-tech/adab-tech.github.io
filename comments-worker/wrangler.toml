@@ -1,0 +1,15 @@
+# Cloudflare Worker that stores blog comments for adamu.tech (free tier).
+# Deployed by .github/workflows/comments-worker.yml, which fills in
+# database_id and sets the ADMIN_KEY secret.
+name = "adamu-comments"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://adamu.tech,https://www.adamu.tech"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "adamu-comments"
+database_id = "REPLACED_BY_WORKFLOW"

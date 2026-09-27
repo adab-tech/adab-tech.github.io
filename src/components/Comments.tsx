@@ -2,17 +2,21 @@
 
 import React, { useEffect, useRef } from 'react'
 import { Mail, MessageSquare } from 'lucide-react'
-import { GISCUS, REPLY_EMAIL, commentsEnabled } from '@/config/blog'
+import { GISCUS, REPLY_EMAIL, commentsEnabled, ownCommentsEnabled } from '@/config/blog'
+import { OwnComments } from '@/components/OwnComments'
 
-// Public comments (giscus, when configured) plus a private "reply by email"
-// link that works for everyone.
-export function Comments({ title }: { title: string }) {
+// Public comments plus a private "reply by email" link that works for
+// everyone. The site's own comment service (no account needed) is used when
+// configured; otherwise giscus (GitHub sign-in).
+export function Comments({ title, slug }: { title: string; slug: string }) {
   const box = useRef<HTMLDivElement>(null)
-  const enabled = commentsEnabled()
+  const own = ownCommentsEnabled()
+  const enabled = own || commentsEnabled()
+  const useGiscus = !own && commentsEnabled()
 
   useEffect(() => {
     const el = box.current
-    if (!enabled || !el) return
+    if (!useGiscus || !el) return
     const script = document.createElement('script')
     script.src = 'https://giscus.app/client.js'
     script.async = true
@@ -36,7 +40,7 @@ export function Comments({ title }: { title: string }) {
     return () => {
       el.innerHTML = ''
     }
-  }, [enabled])
+  }, [useGiscus])
 
   const mailto = `mailto:${REPLY_EMAIL}?subject=${encodeURIComponent(`Re: ${title}`)}`
 
@@ -55,7 +59,9 @@ export function Comments({ title }: { title: string }) {
           Reply by email
         </a>
       </div>
-      {enabled ? (
+      {own ? (
+        <OwnComments slug={slug} />
+      ) : useGiscus ? (
         <>
           <p className="text-sm text-zinc-400">
             Comment below with a GitHub account, or reply privately by email.

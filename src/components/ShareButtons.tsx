@@ -40,17 +40,21 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
   }
 
   const button =
-    'inline-flex items-center justify-center h-11 min-w-11 px-3 rounded-full border border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/60 transition-colors'
+    'inline-flex shrink-0 items-center justify-center h-10 min-w-10 sm:h-11 sm:min-w-11 px-2.5 rounded-full border border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/60 transition-colors'
 
   return (
-    <div className="flex flex-wrap items-center gap-2" aria-label="Share this post">
-      <span className="text-sm text-zinc-300 mr-1">Share this post</span>
+    // Label above on phones and beside on larger screens; the buttons stay on
+    // one line (Copy link is icon-only on phones).
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3" aria-label="Share this post">
+      <span className="text-sm text-zinc-300">Share this post</span>
+      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
       {canShare && (
         <button type="button" onClick={nativeShare} className={button} aria-label="Share with an app on this device">
           <Share2 className="h-4 w-4" />
         </button>
       )}
-      {links.map((l) => (
+      {/* The phone's share sheet already offers email, so skip it there. */}
+      {links.filter((l) => !(canShare && l.label === 'Email')).map((l) => (
         <a
           key={l.label}
           href={l.href}
@@ -63,10 +67,18 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
           {l.icon}
         </a>
       ))}
-      <button type="button" onClick={copy} className={`${button} gap-1.5 text-xs font-mono`} aria-live="polite">
+      <button
+        type="button"
+        onClick={copy}
+        className={`${button} gap-1.5 text-xs font-mono`}
+        aria-live="polite"
+        aria-label={copied ? 'Link copied' : 'Copy link'}
+        title="Copy link"
+      >
         {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Link2 className="h-4 w-4" />}
-        <span>{copied ? 'Copied' : 'Copy link'}</span>
+        <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy link'}</span>
       </button>
+      </div>
     </div>
   )
 }

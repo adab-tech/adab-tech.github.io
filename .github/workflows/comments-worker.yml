@@ -1,0 +1,78 @@
+name: Deploy comments worker
+
+# Deploys comments-worker/ (the blog's comment service) to Cloudflare's free
+# tier. Needs three repository secrets (Settings -> Secrets and variables ->
+# Actions): CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, COMMENTS_ADMIN_KEY.
+# Without them the job does nothing and passes.
+on:
+  push:
+    branches: ["main"]
+    paths: ["comments-worker/**", ".github/workflows/comments-worker.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: comments-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      COMMENTS_ADMIN_KEY: ${{ secrets.COMMENTS_ADMIN_KEY }}
+      WRANGLER: npx --yes wrangler@4
+    defaults:
+      run:
+        working-directory: comments-worker
+    steps:
+      - name: Check secrets
+        id: secrets
+        working-directory: .
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$COMMENTS_ADMIN_KEY" ]; then
+            echo "::notice::Cloudflare secrets are not set yet; skipping the comments deploy (see docs/BLOG.md, Comments)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v7
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: "22"
+
+      - name: Find or create the D1 database
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          find_id() { $WRANGLER d1 list --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const db=JSON.parse(s).find(d=>d.name==="adamu-comments");process.stdout.write(db?db.uuid:"")})'; }
+          ID=$(find_id)
+          if [ -z "$ID" ]; then
+            $WRANGLER d1 create adamu-comments
+            ID=$(find_id)
+          fi
+          test -n "$ID"
+          sed -i "s/REPLACED_BY_WORKFLOW/$ID/" wrangler.toml
+          echo "D1 database: $ID"
+
+      - name: Apply the database schema
+        if: steps.secrets.outputs.ready == 'true'
+        run: $WRANGLER d1 execute adamu-comments --remote --file schema.sql
+
+      - name: Deploy the Worker
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          $WRANGLER deploy | tee deploy.log
+          URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)
+          echo "### Comments service deployed" >> "$GITHUB_STEP_SUMMARY"
+          echo "URL: \`${URL:-see the log above}\` (put this in COMMENTS_API in src/config/blog.ts)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Set the admin key
+        if: steps.secrets.outputs.ready == 'true'
+        run: printf '%s' "$COMMENTS_ADMIN_KEY" | $WRANGLER secret put ADMIN_KEY

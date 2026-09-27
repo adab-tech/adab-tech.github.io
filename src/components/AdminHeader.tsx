@@ -38,6 +38,12 @@ export function AdminHeader() {
             <span>Write a post</span>
           </a>
           <a
+            href="/admin/comments/"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+          >
+            <span>Comments</span>
+          </a>
+          <a
             href="/"
             target="_blank"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"

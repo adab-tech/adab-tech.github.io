@@ -32,30 +32,47 @@ paid Ghost plan.)
 
 ## Sharing
 
-Every post page on adamu.tech ends with share buttons (X, LinkedIn, Facebook,
-WhatsApp, email, copy link, and the phone's share sheet where available) and a
+Every post page on adamu.tech ends with one row of share buttons (X, LinkedIn,
+Facebook, WhatsApp, email, copy link; on phones the device's share sheet replaces
+the email button) and a
 generated preview image (`/blog/<slug>/og.png`) so links show a card with the
 title when shared. Ghost posts use Ghost's own sharing and previews.
 
 ## Comments
 
-Each post ends with a **Reply by email** link (subject filled in with the post
-title) and, once enabled, a public comment thread by
-[giscus](https://giscus.app): free, no ads or tracking, stored as GitHub
-Discussions in this repo, with reactions and replies. Commenters sign in with
-GitHub; readers without GitHub use the email link.
+Each post ends with **Reply by email** (subject filled in with the post title)
+and a public comment section:
 
-Enabled (category id set in `src/config/blog.ts`). To set it up again on another repo:
+- **The site's own comment service** (`comments-worker/`, free on Cloudflare):
+  readers write a name and a comment, no account needed. Nothing appears
+  until you approve it at adamu.tech/admin → **Comments**, where you can also
+  reply as the author (shown with an "Author" badge) or delete. Spam is kept
+  off by moderation, a hidden honeypot field, a minimum time on the form, and
+  a limit of 5 comments per 10 minutes per visitor. Used when `COMMENTS_API` is
+  set in `src/config/blog.ts`.
+- Until then, **giscus** (GitHub sign-in; comments stored as GitHub
+  Discussions in this repo, moderated in the Discussions tab).
 
-1. Install the giscus app on this repo: <https://github.com/apps/giscus> →
-   Install → Only select repositories → `adab-tech/adab-tech.github.io`.
-2. Open <https://giscus.app>, type `adab-tech/adab-tech.github.io` under
-   Repository, choose **Announcements** as the category, and copy the value
-   of `data-category-id` from the generated snippet.
-3. Put it in `src/config/blog.ts` (`GISCUS.categoryId`) and commit.
+### Turning on the own comment service (one time, free)
 
-Moderate in the repo's **Discussions** tab: each post gets one discussion
-(titled with its path), where you can hide, delete, or lock comments.
+1. Create a free account at <https://dash.cloudflare.com/sign-up>. Open
+   **Workers & Pages** once and choose a workers.dev subdomain when asked.
+2. Copy your **Account ID** (Workers & Pages overview, right-hand side).
+3. **My Profile → API Tokens → Create Token →** "Edit Cloudflare Workers"
+   template; add the permission **Account → D1 → Edit**; create and copy the
+   token.
+4. In this GitHub repo: **Settings → Secrets and variables → Actions → New
+   repository secret**, three times:
+   - `CLOUDFLARE_API_TOKEN`: the token
+   - `CLOUDFLARE_ACCOUNT_ID`: the account ID
+   - `COMMENTS_ADMIN_KEY`: a long password you choose (used to moderate)
+5. **Actions → Deploy comments worker → Run workflow.** The run summary shows
+   the service URL (`https://adamu-comments.<subdomain>.workers.dev`).
+6. Put that URL in `COMMENTS_API` in `src/config/blog.ts` and commit. Then
+   open adamu.tech/admin → **Comments** and enter the admin key.
+
+Cloudflare's free plan allows 100,000 requests a day, far more than a personal
+blog needs.
 
 ## Admin setup (first time on a device)
 
