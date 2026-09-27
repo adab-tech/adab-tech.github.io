@@ -68,10 +68,9 @@ jobs:
       - name: Deploy the Worker
         if: steps.secrets.outputs.ready == 'true'
         run: |
-          $WRANGLER deploy | tee deploy.log
-          URL=$(grep -oE 'https://[a-z0-9.-]+\.workers\.dev' deploy.log | head -1)
-          echo "### Comments service deployed" >> "$GITHUB_STEP_SUMMARY"
-          echo "URL: \`${URL:-see the log above}\` (put this in COMMENTS_API in src/config/blog.ts)" >> "$GITHUB_STEP_SUMMARY"
+          $WRANGLER deploy
+          echo "### Comments service deployed at https://adamu.tech/api" >> "$GITHUB_STEP_SUMMARY"
+          echo "Check: https://adamu.tech/api/comments?post=test should return {\"comments\":[]}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Set the admin key
         if: steps.secrets.outputs.ready == 'true'

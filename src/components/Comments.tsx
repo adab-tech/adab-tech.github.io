@@ -1,18 +1,34 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Mail, MessageSquare } from 'lucide-react'
 import { GISCUS, REPLY_EMAIL, commentsEnabled, ownCommentsEnabled } from '@/config/blog'
 import { OwnComments } from '@/components/OwnComments'
+import { listComments } from '@/lib/comments-api'
 
 // Public comments plus a private "reply by email" link that works for
 // everyone. The site's own comment service (no account needed) is used when
 // configured; otherwise giscus (GitHub sign-in).
 export function Comments({ title, slug }: { title: string; slug: string }) {
   const box = useRef<HTMLDivElement>(null)
-  const own = ownCommentsEnabled()
-  const enabled = own || commentsEnabled()
-  const useGiscus = !own && commentsEnabled()
+  // 'checking' until we know whether the own comment service answers.
+  const [mode, setMode] = useState<'checking' | 'own' | 'giscus' | 'none'>(
+    ownCommentsEnabled() ? 'checking' : commentsEnabled() ? 'giscus' : 'none',
+  )
+  const own = mode === 'own'
+  const useGiscus = mode === 'giscus'
+  const enabled = mode !== 'none'
+
+  useEffect(() => {
+    if (mode !== 'checking') return
+    let cancelled = false
+    listComments(slug)
+      .then(() => !cancelled && setMode('own'))
+      .catch(() => !cancelled && setMode(commentsEnabled() ? 'giscus' : 'none'))
+    return () => {
+      cancelled = true
+    }
+  }, [mode, slug])
 
   useEffect(() => {
     const el = box.current
@@ -59,7 +75,9 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
           Reply by email
         </a>
       </div>
-      {own ? (
+      {mode === 'checking' ? (
+        <p className="text-sm text-zinc-400">Loading comments…</p>
+      ) : own ? (
         <OwnComments slug={slug} />
       ) : useGiscus ? (
         <>
