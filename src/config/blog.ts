@@ -8,3 +8,20 @@ export const GHOST_URL = '' // e.g. 'https://blog.adamu.tech'
 export const GHOST_CONTENT_API_KEY = ''
 
 export const ghostEnabled = () => Boolean(GHOST_URL && GHOST_CONTENT_API_KEY)
+
+// Comments under each post (giscus: stored as GitHub Discussions in this
+// repo; free, no ads or tracking; commenters sign in with GitHub).
+// One-time setup: install https://github.com/apps/giscus on this repo, then
+// on https://giscus.app enter "adab-tech/adab-tech.github.io", choose the
+// "Announcements" category, and copy data-category-id below.
+export const GISCUS = {
+  repo: 'adab-tech/adab-tech.github.io',
+  repoId: 'R_kgDOP38YGA',
+  category: 'Announcements',
+  categoryId: '', // e.g. 'DIC_kwDO…'
+}
+
+export const commentsEnabled = () => Boolean(GISCUS.categoryId)
+
+// Readers without GitHub can always reply privately by email.
+export const REPLY_EMAIL = 'contact@adamu.tech'
