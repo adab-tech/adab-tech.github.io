@@ -5,28 +5,30 @@ post is one Markdown file in `content/blog/`. Adding a file to `main` publishes
 it: the deploy workflow rebuilds the site and the post appears at
 `adamu.tech/blog/<slug>/` about a minute later.
 
-## Writing in Ghost (blog.adamu.tech)
+## Writing (the admin editor)
 
-Ghost is the main writing suite: a modern editor with formatting, links,
-images, galleries, video, audio, embeds, and newsletters. Posts go live the
-moment you press Publish. adamu.tech/blog reads published Ghost posts live
-from Ghost's Content API and lists them next to the older Markdown posts.
+adamu.tech/admin → **Write a blog post** is a full rich-text editor (free,
+built into the site; no subscription):
 
-One-time setup:
+- Toolbar: undo/redo; paragraph, heading, subheading; bold, italic,
+  underline, strikethrough; add/remove link; bulleted and numbered lists;
+  quotation; code block; divider; align left/center/right; insert image;
+  embed YouTube video; insert table. Keyboard shortcuts work too (Ctrl/Cmd+B,
+  I, U, Z, …), and pasting from Word or Google Docs keeps basic formatting.
+- **Images**: pick a JPG, PNG, WebP or GIF. Photos are shrunk in the browser to
+  at most 2000px wide, then uploaded to `public/blog-images/` together with
+  the post when you publish; images removed before publishing are never
+  uploaded.
+- **Videos**: paste a YouTube link (embedded with youtube-nocookie.com).
+  Upload long videos to YouTube rather than to the site.
+- **Publish** sends the post, its images, and any rename as one commit, so
+  the site rebuilds once; the editor shows Building… then the live link
+  (about a minute). **Save as draft** keeps it off the site.
+- Posts written here are stored as HTML (`format: html` in the header);
+  older Markdown posts open in the editor and are saved back as HTML.
 
-1. Create a Ghost(Pro) site at <https://ghost.org> (the Starter plan is enough).
-2. In Ghost: **Settings → Domain**, set `blog.adamu.tech`. At the company that
-   manages the adamu.tech DNS, add the `CNAME` record Ghost shows for `blog`.
-3. In Ghost: **Settings → Integrations → Add custom integration** (name it
-   "adamu.tech"). Copy the **Content API key** and the **API URL**.
-4. Put them in `src/config/blog.ts` (`GHOST_URL`, `GHOST_CONTENT_API_KEY`) and
-   commit. The Content API key is read-only and meant to be public. Never use
-   the **Admin** API key here.
-5. Optional, in Ghost: **Settings → Navigation**, add a link back to
-   `https://adamu.tech`.
-
-After that, **Write a blog post** in the adamu.tech admin opens the Ghost
-editor.
+(Ghost support, `src/config/blog.ts`, is still wired in but unused; it needs a
+paid Ghost plan.)
 
 ## Sharing
 
@@ -35,7 +37,7 @@ WhatsApp, email, copy link, and the phone's share sheet where available) and a
 generated preview image (`/blog/<slug>/og.png`) so links show a card with the
 title when shared. Ghost posts use Ghost's own sharing and previews.
 
-## Publish from the admin (Markdown posts)
+## Admin setup (first time on a device)
 
 1. Go to adamu.tech/admin, log in, and choose **Write a blog post**
    (or **Write a post** in the admin header).

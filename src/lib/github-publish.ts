@@ -112,6 +112,49 @@ export async function writePost(name: string, text: string, message: string, sha
   return res.commit.sha
 }
 
+export type FileChange = { path: string; base64: string } | { path: string; delete: true }
+
+// Writes several files (a post, its images, a rename) as ONE commit on main
+// using the Git Data API, so a publish triggers a single site rebuild.
+// Returns the commit SHA.
+export async function commitFiles(changes: FileChange[], message: string): Promise<string> {
+  const ref = await gh<{ object: { sha: string } }>(`/git/ref/heads/${BRANCH}`)
+  const parent = await gh<{ tree: { sha: string } }>(`/git/commits/${ref.object.sha}`)
+  const tree = await Promise.all(
+    changes.map(async (c) => {
+      if ('delete' in c) return { path: c.path, mode: '100644', type: 'blob', sha: null }
+      const blob = await gh<{ sha: string }>(`/git/blobs`, {
+        method: 'POST',
+        body: JSON.stringify({ content: c.base64, encoding: 'base64' }),
+      })
+      return { path: c.path, mode: '100644', type: 'blob', sha: blob.sha }
+    }),
+  )
+  const newTree = await gh<{ sha: string }>(`/git/trees`, {
+    method: 'POST',
+    body: JSON.stringify({ base_tree: parent.tree.sha, tree }),
+  })
+  const commit = await gh<{ sha: string }>(`/git/commits`, {
+    method: 'POST',
+    body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] }),
+  })
+  // Not forced: if main moved since we read it, GitHub refuses and the user retries.
+  await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) })
+  return commit.sha
+}
+
+export const postPath = (name: string) => `${DIR}/${name}`
+export const textToBase64 = (text: string) => toBase64(text)
+
+export function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result).split(',')[1] ?? '')
+    reader.onerror = () => reject(reader.error)
+    reader.readAsDataURL(blob)
+  })
+}
+
 export async function deletePost(name: string, sha: string, message: string): Promise<void> {
   await gh(`/contents/${DIR}/${encodeURIComponent(name)}`, {
     method: 'DELETE',

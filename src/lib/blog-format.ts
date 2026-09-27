@@ -10,6 +10,8 @@ export type PostFields = {
   summary: string
   tags: string[]
   draft: boolean
+  // 'html' for posts written in the rich-text editor, 'md' for Markdown files.
+  format: 'md' | 'html'
   body: string
 }
 
@@ -50,6 +52,7 @@ export function parsePostFile(raw: string, file: string): PostFields {
     summary: typeof data.summary === 'string' ? data.summary : '',
     tags: Array.isArray(data.tags) ? data.tags : [],
     draft: data.draft === true,
+    format: data.format === 'html' ? 'html' : 'md',
     body: body.replace(/^\r?\n/, ''),
   }
 }
@@ -66,6 +69,7 @@ export function serializePost(p: PostFields): string {
   const tags = p.tags.map((t) => t.replace(/[,[\]"']/g, '').trim()).filter(Boolean)
   if (tags.length) lines.push(`tags: [${tags.join(', ')}]`)
   if (p.draft) lines.push('draft: true')
+  if (p.format === 'html') lines.push('format: html')
   lines.push('---', '')
   return lines.join('\n') + p.body.trim() + '\n'
 }
@@ -96,7 +100,7 @@ export function validatePost(p: PostFields, slug: string): string[] {
   if (!p.title.trim()) problems.push('Add a title.')
   if (!DATE_PATTERN.test(p.date) || Number.isNaN(Date.parse(p.date))) problems.push('Date must be YYYY-MM-DD.')
   if (!SLUG_PATTERN.test(slug)) problems.push('The web address may use only lowercase letters, numbers and hyphens.')
-  if (!p.body.trim()) problems.push('Write something in the post.')
+  if (!hasContent(p)) problems.push('Write something in the post.')
   return problems
 }
 
@@ -119,4 +123,13 @@ export function normalizeParagraphs(markdown: string): string {
     if (bothText && !together) out.push('')
   })
   return out.join('\n')
+}
+
+export function stripTags(html: string): string {
+  return html.replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function hasContent(p: PostFields): boolean {
+  if (p.format !== 'html') return Boolean(p.body.trim())
+  return Boolean(stripTags(p.body)) || /<(img|iframe|video|audio)\b/i.test(p.body)
 }

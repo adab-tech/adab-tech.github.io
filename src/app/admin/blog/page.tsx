@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useEffect, useMemo, useState, useSyncExternalStore } from 'react'
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { marked } from 'marked'
 import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, KeyRound, Loader2, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
+import { RichEditor } from '@/components/admin/RichEditor'
 import { useAdminAuth } from '@/lib/auth'
 import {
   PostFields,
@@ -28,7 +29,11 @@ import {
   listPosts,
   readPost,
   saveToken,
-  writePost,
+  commitFiles,
+  postPath,
+  textToBase64,
+  blobToBase64,
+  type FileChange,
 } from '@/lib/github-publish'
 
 // The token lives in localStorage; read it without a hydration mismatch.
@@ -48,7 +53,33 @@ const today = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-const emptyPost = (): PostFields => ({ title: '', date: today(), summary: '', tags: [], draft: false, body: '' })
+const emptyPost = (): PostFields => ({ title: '', date: today(), summary: '', tags: [], draft: false, format: 'html', body: '' })
+
+// Photos are shrunk in the browser before upload (max 2000px wide) so the
+// repo and the page stay light. GIFs keep their animation, so are left as is.
+const MAX_WIDTH = 2000
+async function prepareImage(file: File): Promise<{ blob: Blob; ext: string }> {
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace('jpeg', 'jpg')
+  if (file.type === 'image/gif') return { blob: file, ext: 'gif' }
+  const bitmap = await createImageBitmap(file)
+  if (bitmap.width <= MAX_WIDTH && file.size <= 1_500_000) return { blob: file, ext }
+  const scale = Math.min(1, MAX_WIDTH / bitmap.width)
+  const canvas = document.createElement('canvas')
+  canvas.width = Math.round(bitmap.width * scale)
+  canvas.height = Math.round(bitmap.height * scale)
+  canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
+  const png = file.type === 'image/png'
+  const blob = await new Promise<Blob>((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Could not process the image'))), png ? 'image/png' : 'image/jpeg', 0.85),
+  )
+  return { blob, ext: png ? 'png' : 'jpg' }
+}
+
+// e.g. 2026-09-27-my-post-photo-k3x9a.jpg (the random part avoids clashes).
+const imageFileName = (date: string, slug: string, base: string, ext: string) =>
+  `${date}-${slug || 'post'}-${base}-${Math.random().toString(36).slice(2, 7)}.${ext}`
+
+type PendingImage = { blob: Blob; repoPath: string; webPath: string; uploaded: boolean }
 
 type Status =
   | { kind: 'idle' }
@@ -200,7 +231,10 @@ function Editor() {
   const [slug, setSlug] = useState('')
   const [slugEdited, setSlugEdited] = useState(false)
   const [original, setOriginal] = useState<{ name: string; sha: string } | null>(null)
-  const [tab, setTab] = useState<'write' | 'preview'>('write')
+  // What the editor is (re)loaded with: changes only on New post / open.
+  const [editorSeed, setEditorSeed] = useState('')
+  // Images picked but not yet saved: local preview URL -> upload target.
+  const pending = useRef(new Map<string, PendingImage>())
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
 
   const effectiveSlug = slugEdited ? slug : slugify(post.title)
@@ -251,18 +285,14 @@ function Editor() {
     return () => clearInterval(timer)
   }, [status])
 
-  const preview = useMemo(
-    () => (tab === 'preview' ? (marked.parse(normalizeParagraphs(post.body) || '*Nothing written yet.*', { async: false, gfm: true }) as string) : ''),
-    [tab, post.body],
-  )
-
   const startNew = () => {
     setPost(emptyPost())
     setTagsText('')
     setSlug('')
     setSlugEdited(false)
     setOriginal(null)
-    setTab('write')
+    setEditorSeed('')
+    pending.current.clear()
     setStatus({ kind: 'idle' })
   }
 
@@ -270,22 +300,52 @@ function Editor() {
     setStatus({ kind: 'working', text: `Opening ${file.name}…` })
     try {
       const { text, sha } = await readPost(file.name)
-      const fields = parsePostFile(text, file.name)
+      const parsed = parsePostFile(text, file.name)
+      // Markdown posts are converted once; they are saved back as HTML.
+      const html =
+        parsed.format === 'html'
+          ? parsed.body
+          : (marked.parse(normalizeParagraphs(parsed.body), { async: false, gfm: true }) as string)
+      const fields: PostFields = { ...parsed, format: 'html', body: html }
       setPost(fields)
+      setEditorSeed(html)
+      pending.current.clear()
       setTagsText(fields.tags.join(', '))
       setSlug(file.name.match(FILE_PATTERN)?.[2] ?? '')
       setSlugEdited(true)
       setOriginal({ name: file.name, sha })
-      setTab('write')
       setStatus({ kind: 'idle' })
     } catch (err) {
       setStatus({ kind: 'error', text: err instanceof Error ? err.message : String(err) })
     }
   }
 
+  const pickImage = async (file: File) => {
+    const { blob, ext } = await prepareImage(file)
+    const base = slugify(file.name.replace(/\.[^.]+$/, '')) || 'image'
+    const name = imageFileName(post.date, effectiveSlug, base, ext)
+    const preview = URL.createObjectURL(blob)
+    pending.current.set(preview, { blob, repoPath: `public/blog-images/${name}`, webPath: `/blog-images/${name}`, uploaded: false })
+    return { src: preview, alt: file.name.replace(/\.[^.]+$/, '') }
+  }
+
   const save = async (draft: boolean) => {
+    // Swap local image previews for their final addresses, and upload only
+    // images still in the post that haven't been uploaded yet. The editor
+    // keeps showing the local previews, since the final addresses only work
+    // once the site has rebuilt.
+    let body = post.body
+    const images: PendingImage[] = []
+    for (const [preview, img] of pending.current) {
+      if (body.includes(preview)) {
+        body = body.split(preview).join(img.webPath)
+        if (!img.uploaded) images.push(img)
+      }
+    }
     const fields: PostFields = {
       ...post,
+      body,
+      format: 'html',
       draft,
       tags: tagsText.split(',').map((t) => t.trim()).filter(Boolean),
     }
@@ -303,16 +363,12 @@ function Editor() {
     const verb = original ? 'Update' : draft ? 'Draft' : 'Publish'
     setStatus({ kind: 'working', text: 'Saving to GitHub…' })
     try {
-      const renamed = original && original.name !== fileName
-      const commit = await writePost(
-        fileName,
-        serializePost(fields),
-        `Blog: ${verb.toLowerCase()} "${fields.title}"`,
-        renamed ? undefined : original?.sha,
-      )
-      if (renamed && original) {
-        await deletePost(original.name, original.sha, `Blog: rename "${original.name}" to "${fileName}"`)
-      }
+      // Post, images, and any rename go up as one commit (one site rebuild).
+      const changes: FileChange[] = [{ path: postPath(fileName), base64: textToBase64(serializePost(fields)) }]
+      for (const img of images) changes.push({ path: img.repoPath, base64: await blobToBase64(img.blob) })
+      if (original && original.name !== fileName) changes.push({ path: postPath(original.name), delete: true })
+      const commit = await commitFiles(changes, `Blog: ${verb.toLowerCase()} "${fields.title}"`)
+      images.forEach((img) => (img.uploaded = true))
       const fresh = await listPosts()
       setFiles(fresh)
       setOriginal({ name: fileName, sha: fresh.find((f) => f.name === fileName)?.sha ?? '' })
@@ -422,39 +478,11 @@ function Editor() {
           <input className={inputClass} value={tagsText} onChange={(e) => setTagsText(e.target.value)} placeholder="reflection, research" />
         </label>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2" role="tablist">
-            {(['write', 'preview'] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                role="tab"
-                aria-selected={tab === t}
-                onClick={() => setTab(t)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold ${
-                  tab === t ? 'bg-zinc-800 text-zinc-50' : 'text-zinc-400 hover:text-zinc-200'
-                }`}
-              >
-                {t === 'write' ? 'Write' : 'Preview'}
-              </button>
-            ))}
-            <span className="text-[11px] text-zinc-500 ml-auto">Markdown: ## heading, **bold**, *italic*, [link](url), &gt; quote, - list</span>
-          </div>
-          {tab === 'write' ? (
-            <textarea
-              className={`${inputClass} min-h-[24rem] leading-relaxed font-sans text-base`}
-              value={post.body}
-              onChange={(e) => setPost({ ...post, body: e.target.value })}
-              placeholder="Write your post here. Leave a blank line between paragraphs."
-              aria-label="Post text"
-            />
-          ) : (
-            <div className="p-5 rounded-lg border border-zinc-800 bg-[#0B1120] min-h-[24rem]">
-              <h1 className="font-serif-display text-3xl font-semibold text-zinc-50 mb-4">{post.title || 'Untitled'}</h1>
-              <div className="post-body" dangerouslySetInnerHTML={{ __html: preview }} />
-            </div>
-          )}
-        </div>
+        <RichEditor
+          initialHtml={editorSeed}
+          onChange={(html) => setPost((p) => ({ ...p, body: html }))}
+          onPickImage={pickImage}
+        />
 
         {problems.length > 0 && (post.title || post.body) && (
           <p className="text-xs text-zinc-400">Before publishing: {problems.join(' ')}</p>

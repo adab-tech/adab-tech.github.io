@@ -84,3 +84,31 @@ html, body {
 .post-body pre code { background: none; padding: 0; }
 .post-body table { width: 100%; border-collapse: collapse; font-size: 0.95rem; display: block; overflow-x: auto; }
 .post-body th, .post-body td { border: 1px solid #27272a; padding: 0.5em 0.75em; text-align: left; }
+
+/* Embeds and media in posts (published pages and the editor) */
+.post-body div[data-youtube-video] iframe,
+.post-body iframe {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 0.75rem;
+}
+.post-body img { display: block; margin-left: auto; margin-right: auto; }
+.post-body table p { margin: 0; }
+.post-body th { background: #131c31; color: #fafafa; }
+
+/* Rich-text editor (admin) */
+.rich-editor > *:first-child { margin-top: 0; }
+.rich-editor p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: #71717a;
+  pointer-events: none;
+}
+.rich-editor img.ProseMirror-selectednode,
+.rich-editor div[data-youtube-video].ProseMirror-selectednode { outline: 3px solid #f59e0b; outline-offset: 2px; }
+.rich-editor .selectedCell { background: rgba(245, 158, 11, 0.15); }
+.rich-editor td, .rich-editor th { min-width: 6rem; }

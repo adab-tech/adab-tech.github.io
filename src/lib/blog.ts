@@ -4,7 +4,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { marked } from 'marked'
-import { parseFrontMatter, normalizeParagraphs, FILE_PATTERN, SLUG_PATTERN, DATE_PATTERN } from './blog-format'
+import { parseFrontMatter, normalizeParagraphs, stripTags, FILE_PATTERN, SLUG_PATTERN, DATE_PATTERN } from './blog-format'
 
 const POSTS_DIR = path.join(process.cwd(), 'content', 'blog')
 const SHOW_DRAFTS = process.env.NODE_ENV === 'development'
@@ -49,16 +49,23 @@ function readPost(file: string): Post {
     throw new Error(`${file}: date must be YYYY-MM-DD`)
   }
 
-  const words = body.split(/\s+/).filter(Boolean).length
+  // Posts from the rich-text editor are stored as HTML; older ones as Markdown.
+  const isHtml = data.format === 'html'
+  const html = isHtml ? body : (marked.parse(normalizeParagraphs(body), { async: false, gfm: true }) as string)
+  const plain = isHtml ? stripTags(body) : body
+  const words = plain.split(/\s+/).filter(Boolean).length
+  const autoSummary = isHtml
+    ? (plain.length > 200 ? plain.slice(0, 197).trimEnd() + '…' : plain)
+    : firstParagraph(normalizeParagraphs(body))
   return {
     slug,
     title,
     date,
-    summary: typeof data.summary === 'string' && data.summary ? data.summary : firstParagraph(normalizeParagraphs(body)),
+    summary: typeof data.summary === 'string' && data.summary ? data.summary : autoSummary,
     tags: Array.isArray(data.tags) ? data.tags : [],
     draft: data.draft === true,
     readingMinutes: Math.max(1, Math.round(words / 220)),
-    html: marked.parse(normalizeParagraphs(body), { async: false, gfm: true }) as string,
+    html,
   }
 }
 
