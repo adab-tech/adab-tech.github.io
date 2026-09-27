@@ -1,0 +1,59 @@
+{
+  "badge": "African-language speech technology & computational linguistics",
+  "name": "Adamu Danjuma Abubakar",
+  "tagline": "Ph.D. Candidate & Teaching Fellow · University of Alabama",
+  "intro": "I build African-language speech systems from a humanities foundation — literature, philology, and linguistics, not a computer-science degree. I design the linguistic framing and the product, and I work with engineering to ship it. Try Murya, then the CV.",
+  "location": "Tuscaloosa, AL · Open to roles, remote, and relocation",
+  "email": "contact@adamu.tech",
+  "buttons": [
+    { "label": "Roles, gigs & collabs", "url": "mailto:contact@adamu.tech?subject=Work%20with%20Adamu", "icon": "mail", "primary": true },
+    { "label": "Try Murya", "url": "https://app.murya.ng", "icon": "cpu", "primary": false },
+    { "label": "Read the pre-print", "url": "/papers/agentic-ai", "icon": "book", "primary": false },
+    { "label": "CV", "url": "/cv", "icon": "file", "primary": false }
+  ],
+  "numbers": {
+    "show": true,
+    "kicker": "Murya in numbers",
+    "heading": "What can be checked",
+    "intro": "Open weights and dataset cards back these figures. The listening study is still collecting ratings, so no naturalness score is published yet.",
+    "items": [
+      { "metric": "In progress", "label": "MOS Listening Study", "sub": "Blind, anonymous ITU-T P.800-style naturalness study live at app.murya.ng/listen — results pending sufficient rater volume" },
+      { "metric": "30,729", "label": "Lexicon Entries", "sub": "Used for dictionary-grounded answers (Robinson 1914 + Wiktionary CC BY-SA + an authorized subset of Newman 1977)" },
+      { "metric": "< 110ms", "label": "Time to First Audio", "sub": "Speech synthesis in the browser, offline-capable, with a server fallback" },
+      { "metric": "24 kHz", "label": "Output Sampling Rate", "sub": "Output audio for both voices, Malama Asabe and Malam Garba" }
+    ],
+    "specsTitle": "Model & Architecture Specifications",
+    "specsLinkLabel": "Hugging Face Model Card",
+    "specsLinkUrl": "https://huggingface.co/adab-tech/murya-piper-hausa-tts",
+    "specs": [
+      { "label": "Base Architecture", "value": "8-Speaker WAXAL-Piper VITS Multi-Speaker ONNX (24 kHz)" },
+      { "label": "Voice Personas", "value": "Malama Asabe (Female) · Malam Garba (Male)" },
+      { "label": "Training Corpus", "value": "WAXAL (hau subset, arXiv:2602.02734)" },
+      { "label": "Tone", "value": "Syllable weight and right-to-left tone mapping (after Litvinova)" },
+      { "label": "Runs", "value": "In the browser (ONNX/WASM), with server streaming as fallback" },
+      { "label": "License", "value": "CC-BY-NC-SA 4.0 (Open Weights)" }
+    ],
+    "evidenceTitle": "Evaluation & data provenance",
+    "evidence": [
+      { "title": "MOS Evaluation Protocol", "text": "A blind, randomized Mean Opinion Score study (ITU-T P.800-style, 1–5 naturalness scale, real-human-speech anchor) is live and collecting ratings at app.murya.ng/listen. No score is published until each voice clears a floor of 20 ratings — the study is ongoing and results aren't final yet." },
+      { "title": "30k Ƙamus Lexicon Provenance", "text": "Compiled from C.H. Robinson (1914, Public Domain) and Prof. Paul Newman (1977, authorized research subset). Verified entries are deduplicated, tone-contoured, and phonetically normalized." },
+      { "title": "What runs offline", "text": "Speech synthesis and dictionary lookup run entirely in the browser. Live conversation uses an optional server connection for speech recognition (Faster-Whisper) and responses (Aya 8B)." }
+    ],
+    "footnote": "**Dialect Boundary Notice:** Acoustic tuning is calibrated for Standard Kano Hausa (Eastern dialect). Sokoto and Gobirawa acoustic variations are scheduled for Murya v2."
+  },
+  "principles": {
+    "show": true,
+    "kicker": "Design principles",
+    "heading": "Local, offline, and culturally grounded",
+    "items": [
+      { "title": "1. Local control", "text": "Open weights can be self-hosted, so the tools don’t depend on a proprietary cloud API that could be shut down or paywalled." },
+      { "title": "2. Works offline", "text": "The 30k-entry dictionary and speech synthesis run in the browser, so they work on low bandwidth or none, which is common across the Sahel." },
+      { "title": "3. Cultural pragmatics", "text": "Responses follow Hausa norms of modesty and respect (*Kunya & Girmamawa*) and gendered address, instead of translated Western conversational templates." }
+    ]
+  },
+  "contact": {
+    "heading": "Hiring, consulting & collaboration",
+    "text": "Available for industry roles, contract work, and research collaboration in African-language speech, low-resource NLP, and shipping research as product. [contact@adamu.tech](mailto:contact@adamu.tech?subject=Work%20with%20Adamu) · [CV](/cv)",
+    "note": "Mail to that address is routed privately (TLS). Inquiries are kept for legitimate work and research contact only — not shared or sold."
+  }
+}

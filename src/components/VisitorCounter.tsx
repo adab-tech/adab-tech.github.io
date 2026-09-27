@@ -1,89 +1,65 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Eye, Users, TrendingUp } from 'lucide-react'
+import { Eye } from 'lucide-react'
+
+// Page views via CounterAPI (free, no cookies). Public pages count one view
+// per browser session (<PageViewPing/> in GlobalShell); the admin only reads
+// the number, so your own admin visits aren't counted.
+const COUNTER = 'https://api.counterapi.dev/v1/adamu-tech/pageviews'
+const SESSION_KEY = 'adamu_tech_session_hit'
+
+export function PageViewPing() {
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(SESSION_KEY)) return
+      sessionStorage.setItem(SESSION_KEY, '1')
+    } catch {
+      return
+    }
+    fetch(`${COUNTER}/up`, { cache: 'no-store' }).catch(() => {})
+  }, [])
+  return null
+}
 
 export function VisitorCounter({ showDetails = false }: { showDetails?: boolean }) {
-  const [visits, setVisits] = useState<number>(1420)
-  const [uniqueVisitors, setUniqueVisitors] = useState<number>(468)
+  const [count, setCount] = useState<number | null>(null)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const fetchRealGlobalVisits = async () => {
-      try {
-        const isSessionCounted = sessionStorage.getItem('adamu_tech_session_hit')
-        const endpoint = isSessionCounted 
-          ? 'https://api.counterapi.dev/v1/adamu-tech/pageviews/'
-          : 'https://api.counterapi.dev/v1/adamu-tech/pageviews/up'
-
-        const res = await fetch(endpoint, { cache: 'no-store' })
-        if (res.ok) {
-          const data = await res.json()
-          if (data && typeof data.count === 'number') {
-            const liveCount = data.count + 1400
-            setVisits(liveCount)
-            setUniqueVisitors(Math.floor(liveCount * 0.38))
-            localStorage.setItem('adamu_tech_global_visits', liveCount.toString())
-            sessionStorage.setItem('adamu_tech_session_hit', 'true')
-            return
-          }
-        }
-      } catch {}
-
-      try {
-        const storedVisits = localStorage.getItem('adamu_tech_global_visits')
-        let currentVisits = storedVisits ? parseInt(storedVisits, 10) : 1420
-        currentVisits += 1
-        localStorage.setItem('adamu_tech_global_visits', currentVisits.toString())
-        setVisits(currentVisits)
-        setUniqueVisitors(Math.floor(currentVisits * 0.38))
-      } catch {}
+    let cancelled = false
+    fetch(`${COUNTER}/`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data) => {
+        if (cancelled) return
+        if (typeof data?.count === 'number') setCount(data.count)
+        else setFailed(true)
+      })
+      .catch(() => !cancelled && setFailed(true))
+    return () => {
+      cancelled = true
     }
-
-    fetchRealGlobalVisits()
   }, [])
+
+  const value = count !== null ? count.toLocaleString() : failed ? 'unavailable' : '…'
 
   if (showDetails) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] shadow-sm space-y-1">
-          <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
-            <Eye className="h-3.5 w-3.5 text-amber-400" />
-            <span>Total Real Page Views</span>
-          </div>
-          <div className="text-2xl font-mono font-bold text-zinc-50">
-            {visits.toLocaleString()}
-          </div>
+      <div className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] shadow-sm space-y-1 max-w-sm">
+        <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
+          <Eye className="h-3.5 w-3.5 text-amber-400" />
+          <span>Visits to the public site</span>
         </div>
-
-        <div className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] shadow-sm space-y-1">
-          <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
-            <Users className="h-3.5 w-3.5 text-blue-400" />
-            <span>Unique Sessions</span>
-          </div>
-          <div className="text-2xl font-mono font-bold text-zinc-50">
-            {uniqueVisitors.toLocaleString()}
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] shadow-sm space-y-1 col-span-2 sm:col-span-1">
-          <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
-            <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-            <span>Global Velocity</span>
-          </div>
-          <div className="text-2xl font-mono font-bold text-emerald-400">
-            +24.6%
-          </div>
-        </div>
+        <div className="text-2xl font-mono font-bold text-zinc-50">{value}</div>
+        <p className="text-[11px] text-zinc-400">One per browser session, counted since the counter started. Admin pages are not counted.</p>
       </div>
     )
   }
 
   return (
     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-zinc-800 bg-[#0E1526] font-mono text-[11px] text-zinc-300 shadow-sm">
-      <Eye className="h-3 w-3 text-amber-400 animate-pulse" />
-      <span><strong>{visits.toLocaleString()}</strong> live visits</span>
+      <Eye className="h-3 w-3 text-amber-400" />
+      <span><strong>{value}</strong> visits</span>
     </div>
   )
 }

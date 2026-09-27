@@ -32,6 +32,12 @@ export function AdminHeader() {
 
         <nav className="flex flex-wrap items-center gap-2">
           <a
+            href="/admin/"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
+          >
+            <span>Dashboard</span>
+          </a>
+          <a
             href={ghostEnabled() ? `${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post` : '/admin/blog/'}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 text-xs font-mono text-amber-300 hover:text-white transition-colors"
           >

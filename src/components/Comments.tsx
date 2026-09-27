@@ -79,17 +79,25 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
     script.async = true
     document.head.appendChild(script)
 
-    // Hide HCB's own "Not using Html Comment Box yet?" advert. Matched by its
-    // text (its markup isn't documented) so nothing else is touched.
-    const box = document.getElementById('HCB_comment_box')
+    // Hide HCB's own "Not using Html Comment Box yet?" advert. Its markup
+    // isn't documented, so find the smallest element in the comments section
+    // whose text (spaces and nbsp normalised) is that line, and hide it.
+    // Moderator login and the form are never matched.
+    const section = document.getElementById('comments-heading')?.closest('section')
+    const norm = (t: string) => t.replace(/[\s\u00a0]+/g, ' ').trim().toLowerCase()
     const hidePromo = () => {
-      box?.querySelectorAll('a, p, div, span').forEach((el) => {
-        const text = el.textContent?.trim() ?? ''
-        if (/^not using html ?comment ?box yet\??$/i.test(text)) (el as HTMLElement).style.display = 'none'
+      section?.querySelectorAll<HTMLElement>('a, p, div, span, small, li, td').forEach((el) => {
+        const text = norm(el.textContent ?? '')
+        if (!text.includes('not using') || !text.includes('comment box')) return
+        if (text.length > 60 || /moderator|post comment|login/.test(text)) return
+        // skip if a smaller matching element is inside; hide the innermost
+        const inner = [...el.querySelectorAll<HTMLElement>('*')].some((c) => norm(c.textContent ?? '').includes('not using'))
+        if (!inner || el.tagName === 'A') el.style.display = 'none'
       })
     }
     const observer = new MutationObserver(hidePromo)
-    if (box) observer.observe(box, { childList: true, subtree: true })
+    if (section) observer.observe(section, { childList: true, subtree: true, characterData: true })
+    hidePromo()
     return () => {
       observer.disconnect()
       script.remove()

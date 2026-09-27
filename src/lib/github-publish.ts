@@ -179,3 +179,22 @@ export async function deployState(commitSha: string): Promise<DeployState> {
     return 'unknown'
   }
 }
+
+// Any text file in the repo (the site content files under content/site/).
+export async function readFile(path: string): Promise<{ text: string; sha: string }> {
+  const file = await gh<{ content: string; sha: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${BRANCH}`)
+  return { text: fromBase64(file.content), sha: file.sha }
+}
+
+export type RecentRun = { status: string; conclusion: string | null; title: string; created_at: string; html_url: string }
+
+// Latest site deploys, for the admin overview. Needs "Actions: Read".
+export async function recentDeploys(count = 5): Promise<RecentRun[]> {
+  const { workflow_runs } = await gh<{
+    workflow_runs: { status: string; conclusion: string | null; display_title: string; created_at: string; html_url: string; path: string }[]
+  }>(`/actions/runs?branch=${BRANCH}&per_page=20`)
+  return workflow_runs
+    .filter((r) => r.path.endsWith('deploy.yml'))
+    .slice(0, count)
+    .map((r) => ({ status: r.status, conclusion: r.conclusion, title: r.display_title, created_at: r.created_at, html_url: r.html_url }))
+}

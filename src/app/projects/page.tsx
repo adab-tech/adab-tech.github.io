@@ -3,160 +3,21 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
+import { ProjectLogo } from '@/components/ProjectLogo'
+import { PROJECTS, primaryLink } from '@/lib/site-content'
 import { 
   Layers, ExternalLink, Code2, ArrowRight
 } from 'lucide-react'
 
-interface ProjectItem {
-  id: string
-  title: string
-  category: 'AI & Speech' | 'Academic & Grants' | 'Philology & Humanities' | 'Infrastructure'
-  role: string
-  status: string
-  statusColor: 'emerald' | 'blue' | 'amber'
-  description: string
-  highlights: string[]
-  liveUrl?: string
-  repoUrl?: string
-  paperUrl?: string
-  modelUrl?: string
-  tags: string[]
-}
-
-const PROJECTS_DATA: ProjectItem[] = [
-  {
-    id: 'murya-os',
-    title: 'Murya',
-    category: 'AI & Speech',
-    role: 'Founder & linguistic lead',
-    status: 'Live (v1.2)',
-    statusColor: 'emerald',
-    description: 'Hausa speech synthesis and live spoken conversation. Speech synthesis and dictionary lookup run in the browser and work offline; answers are grounded in the Ƙamus lexicon.',
-    highlights: [
-      'Blind MOS naturalness study running at app.murya.ng/listen; no score is published until each voice has enough ratings',
-      '8-speaker Piper VITS model fine-tuned on the WAXAL Hausa corpus; open weights on Hugging Face',
-      'Under 110 ms to first audio, running in the browser',
-      'Echo suppression so the assistant doesn’t hear its own voice in live conversation'
-    ],
-    liveUrl: 'https://app.murya.ng',
-    repoUrl: 'https://huggingface.co/adab-tech',
-    modelUrl: 'https://huggingface.co/adab-tech/murya-piper-hausa-tts',
-    tags: ['Speech AI', 'Piper VITS', 'FastAPI', 'WASM ONNX', 'Hausa NLP']
-  },
-  {
-    id: 'mapping-voices',
-    title: 'Mapping Voices',
-    category: 'Philology & Humanities',
-    role: 'Creator & curator',
-    status: 'Dataset v0.4.0 · DOI',
-    statusColor: 'blue',
-    description: 'An open research dataset and interactive atlas of real oral-history and voice-testimony collections worldwide — a single geographic entry point into collections otherwise scattered across hundreds of institutional sites, searchable by country, language, theme, period, and access, with a published methodology and persistent identifiers.',
-    highlights: [
-      '221 real, publicly documented collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478)',
-      'Zero-dependency static app (Leaflet + OpenStreetMap) with Language Explorer, Theme Explorer, and Coverage Gaps views',
-      'Full UI localization in English, Hausa, French, and Arabic with native CLDR pluralization',
-      'Open source (MIT code / CC BY 4.0 data) with a public contribution pipeline for institutions and researchers'
-    ],
-    liveUrl: 'https://adamu.tech/mapping/',
-    repoUrl: 'https://github.com/adab-tech/mapping',
-    tags: ['Digital Humanities', 'Oral History', 'Open Data', 'Zenodo DOI', 'Leaflet', 'i18n']
-  },
-  {
-    id: 'hausa-30k-lexicon',
-    title: 'Hausa Lexicon (Ƙamus)',
-    category: 'Philology & Humanities',
-    role: 'Curator & Maintainer',
-    status: 'Open dataset',
-    statusColor: 'blue',
-    description: 'Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.',
-    highlights: [
-      '20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms',
-      '30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)',
-      'Newman (1977) subset is not redistributed'
-    ],
-    modelUrl: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
-    repoUrl: 'https://huggingface.co/adab-tech',
-    tags: ['Lexical Infrastructure', 'Hugging Face', 'Hausa Philology', 'Open Data']
-  },
-  {
-    id: 'agentic-ai-monograph',
-    title: 'Humanities Perspectives on Agentic AI',
-    category: 'Philology & Humanities',
-    role: 'Author',
-    status: 'Pre-print',
-    statusColor: 'blue',
-    description: 'Working paper on why the humanities belong at the centre of agentic-AI governance, drawing on postcolonial theory, cultural pragmatics, and four case studies.',
-    highlights: [
-      'Grounding conversational AI in Hausa norms of modesty and respect (Kunya & Girmamawa)',
-      'Critical analysis of Western anthropocentric agent architectures',
-      'A governance framework for autonomous AI agents'
-    ],
-    paperUrl: '/papers/agentic-ai',
-    repoUrl: 'https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ',
-    tags: ['Digital Humanities', 'AI Ethics', 'Pragmatics', 'Pre-print']
-  },
-  {
-    id: 'imodoye-archive',
-    title: "Imodoye Writers' Residency",
-    category: 'Philology & Humanities',
-    role: 'Founder & platform lead',
-    status: 'Live',
-    statusColor: 'emerald',
-    description: "Platform for Imodoye, a writers' residency in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
-    highlights: [
-      'Content management for fellows, cohorts, partners, and publications',
-      'Blind-review editorial workflow feeding submissions to Imodoye Review',
-      'Public residency archive and impact reporting, backed by the live database'
-    ],
-    liveUrl: 'https://imodoye.ng',
-    repoUrl: 'https://github.com/adab-tech/imodoye-web',
-    tags: ["Writers' Residency", 'Literary Fellowship', 'Next.js', 'Neon Postgres']
-  },
-  {
-    id: 'global-opportunities',
-    title: 'Global Opportunities',
-    category: 'Academic & Grants',
-    role: 'Founder',
-    status: 'Live',
-    statusColor: 'emerald',
-    description: 'A global discovery engine and automated deadline tracker for scholarships, research fellowships, international grants, and academic positions worldwide.',
-    highlights: [
-      'Plain-English opportunity summaries with verified deadline tracking',
-      'Automated background web aggregation and listing refresh',
-      'Passwordless instant opportunity saving and email match alerts',
-      'Built for international researchers, scholars, and fellows'
-    ],
-    liveUrl: 'https://globalopportunities.app',
-    repoUrl: 'https://github.com/adab-tech/globalopportunities',
-    tags: ['Next.js', 'Grants Engine', 'Scholarships', 'Automated Alerts', 'Global Mobility']
-  },
-  {
-    id: 'adab-infrastructure',
-    title: 'Adab Infrastructure (PropTech)',
-    category: 'Infrastructure',
-    role: 'Technical Architect',
-    status: 'Live',
-    statusColor: 'emerald',
-    description: 'Full-stack property listing and real estate marketplace platform operating across Nigeria with intelligent search portals and verified lister workflows.',
-    highlights: [
-      'Property search with filters, Google Maps integration, and structured data for SEO',
-      'Supabase-backed CMS for listings, inquiries, and services content',
-      'Dedicated lister portal, separate from the admin CMS, for verified agent onboarding'
-    ],
-    liveUrl: 'https://adab.ng',
-    repoUrl: 'https://github.com/adab-tech/adab-real-estate-web',
-    tags: ['PropTech', 'Next.js', 'Supabase', 'Vercel']
-  }
-]
-
 export default function ProjectsPage() {
   const [activeTab, setActiveTab] = useState<string>('All')
 
-  const filteredProjects = activeTab === 'All' 
-    ? PROJECTS_DATA 
-    : PROJECTS_DATA.filter(p => p.category === activeTab)
+  const filteredProjects = activeTab === 'All'
+    ? PROJECTS.projects
+    : PROJECTS.projects.filter(p => p.category === activeTab)
 
-  const categories = ['All', 'AI & Speech', 'Academic & Grants', 'Philology & Humanities', 'Infrastructure']
+  // Only categories that have projects get a filter button.
+  const categories = ['All', ...PROJECTS.categories.filter((c) => PROJECTS.projects.some((p) => p.category === c))]
 
   return (
     <GlobalShell>
@@ -173,10 +34,10 @@ export default function ProjectsPage() {
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-mono font-bold text-zinc-50 tracking-tight">
-            Engineered Systems & Research Platforms
+            {PROJECTS.heading}
           </h1>
           <p className="text-sm sm:text-base text-zinc-400 max-w-3xl font-sans leading-relaxed">
-            Speech technology, open research datasets, and platforms I have built or lead, with my role in each.
+            {PROJECTS.intro}
           </p>
         </div>
 
@@ -207,12 +68,27 @@ export default function ProjectsPage() {
               <div className="space-y-4">
                 {/* Title & Status */}
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="space-y-1 min-w-0">
-                    <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-50">
-                      {p.title}
-                    </h2>
-                    <div className="text-xs font-mono text-amber-400">
-                      {p.role}
+                  <div className="flex items-start gap-3 min-w-0">
+                    {primaryLink(p) ? (
+                      <a
+                        href={primaryLink(p)}
+                        {...(/^https?:/.test(primaryLink(p)) ? { target: '_blank', rel: 'noreferrer' } : {})}
+                        aria-label={`Open ${p.title}`}
+                        title={`Open ${p.title}`}
+                        className="shrink-0 rounded-xl transition-transform hover:scale-105"
+                      >
+                        <ProjectLogo project={p} />
+                      </a>
+                    ) : (
+                      <ProjectLogo project={p} />
+                    )}
+                    <div className="space-y-1 min-w-0">
+                      <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-50">
+                        {p.title}
+                      </h2>
+                      <div className="text-xs font-mono text-amber-400">
+                        {p.role}
+                      </div>
                     </div>
                   </div>
                   <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
@@ -289,7 +165,7 @@ export default function ProjectsPage() {
                       className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200"
                     >
                       <Code2 className="w-3.5 h-3.5" />
-                      <span>Source</span>
+                      <span>{p.repoLabel || 'Source'}</span>
                     </a>
                   )}
                 </div>
