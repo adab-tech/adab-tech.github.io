@@ -3,7 +3,6 @@ title: "Qadr: On Destiny, Perseverance, and the Lessons Learned"
 date: 2026-09-27
 summary: "As he completes his doctoral studies in Romance Languages at the University of Alabama, doctoral candidate Adamu Danjuma Abubakar reflects on the challenges, losses, lessons, and moments of gratitude that shaped his academic journey. In this personal essay, he explores the meaning of Qadr (destiny), the power of perseverance, and the importance of hope in the face of adversity."
 tags: [reflection, research, graduate school, dissertation]
-draft: true
 ---
 Writing a doctoral dissertation in any discipline, and in any language, is far from easy. It is demanding, challenging, and, at times, exhausting. It tests your resolve and requires you to give your best. More than anything else, it is a process of continuous revision and refinement. Looking back now, the journey feels almost dreamlike. Was it rewarding? Absolutely. Yet it was also a process that could be difficult to navigate alone. As some would say, however, “You gotta do it anyway!”
 In this reflection, I share aspects of my journey as a doctoral student and some of the lessons I learned along the way. It is my hope that these experiences will inspire someone, somewhere.
