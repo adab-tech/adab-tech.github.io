@@ -32,10 +32,30 @@ paid Ghost plan.)
 
 ## Sharing
 
-Every post page on adamu.tech has share buttons (X, LinkedIn, Facebook,
+Every post page on adamu.tech ends with share buttons (X, LinkedIn, Facebook,
 WhatsApp, email, copy link, and the phone's share sheet where available) and a
 generated preview image (`/blog/<slug>/og.png`) so links show a card with the
 title when shared. Ghost posts use Ghost's own sharing and previews.
+
+## Comments
+
+Each post ends with a **Reply by email** link (subject filled in with the post
+title) and, once enabled, a public comment thread by
+[giscus](https://giscus.app): free, no ads or tracking, stored as GitHub
+Discussions in this repo, with reactions and replies. Commenters sign in with
+GitHub; readers without GitHub use the email link.
+
+Enabled (category id set in `src/config/blog.ts`). To set it up again on another repo:
+
+1. Install the giscus app on this repo: <https://github.com/apps/giscus> →
+   Install → Only select repositories → `adab-tech/adab-tech.github.io`.
+2. Open <https://giscus.app>, type `adab-tech/adab-tech.github.io` under
+   Repository, choose **Announcements** as the category, and copy the value
+   of `data-category-id` from the generated snippet.
+3. Put it in `src/config/blog.ts` (`GISCUS.categoryId`) and commit.
+
+Moderate in the repo's **Discussions** tab: each post gets one discussion
+(titled with its path), where you can hide, delete, or lock comments.
 
 ## Admin setup (first time on a device)
 
