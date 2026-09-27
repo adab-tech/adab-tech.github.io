@@ -68,7 +68,7 @@ const ECOSYSTEM_PROJECTS = [
     statusColor: 'emerald',
     role: 'Founder & Lead Architect',
     type: 'Tier 5 · Global Oral-History Atlas',
-    desc: 'Open, interactive atlas of 191 real, independently verified oral-history and voice-testimony archives across 118 countries, filterable by country, theme, language, and decade.',
+    desc: 'Open research dataset and atlas of 221 real, publicly documented oral-history and voice-testimony collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478).',
     url: 'https://adamu.tech/mapping/',
     repo: 'https://github.com/adab-tech/mapping'
   }

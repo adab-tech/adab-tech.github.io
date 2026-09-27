@@ -3,8 +3,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
-import { ArrowLeft, Printer, Mail, Globe, MapPin, BookOpen, GraduationCap, Briefcase, Languages, ExternalLink, Cpu } from 'lucide-react'
 import { VisitorCounter } from '@/components/VisitorCounter'
+import { ArrowLeft, Printer, Mail, Globe, MapPin, BookOpen, GraduationCap, Briefcase, Languages, ExternalLink, Cpu, Database } from 'lucide-react'
 
 const LANGUAGES_DATA = [
   { name: 'Hausa', level: 'Native / Bilingual (C2)', note: 'First Language · West Chadic Dialectologist · ACTFL Certified' },
@@ -57,7 +57,7 @@ export default function AcademicCVPage() {
           
           {/* Header & Bio */}
           <div className="space-y-4 border-b border-zinc-800 pb-6 sm:pb-8">
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
               <div className="space-y-2">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-zinc-50 tracking-tight">
                   Adamu Danjuma Abubakar
@@ -75,7 +75,7 @@ export default function AcademicCVPage() {
               </div>
 
               {/* External Profile Badges */}
-              <div className="flex flex-wrap items-center gap-2 shrink-0 pt-2 md:pt-0">
+              <div className="flex flex-wrap items-center gap-2 pt-2 lg:pt-0 lg:shrink-0 lg:max-w-xs lg:justify-end">
                 <a
                   href="https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ"
                   target="_blank"
@@ -84,6 +84,15 @@ export default function AcademicCVPage() {
                 >
                   <BookOpen className="h-3.5 w-3.5" />
                   <span>Google Scholar</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+                <a
+                  href="https://orcid.org/0009-0009-4672-4956"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 bg-zinc-900 font-mono text-xs font-semibold text-lime-400 hover:border-lime-500 transition-colors shadow-sm"
+                >
+                  <span>ORCID 0009-0009-4672-4956</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
                 <a
@@ -286,6 +295,46 @@ export default function AcademicCVPage() {
                   Les Larmes d'une Plume Esseulée
                 </div>
                 <div className="text-zinc-400 font-mono text-[11px]">French Literary Collection (2020)</div>
+              </div>
+            </div>
+          </section>
+
+          {/* Research Datasets & Digital Projects (self-published, archived with DOIs) */}
+          <section className="space-y-4">
+            <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
+              <Database className="h-5 w-5 text-amber-500 shrink-0" />
+              Research Datasets & Digital Projects
+            </h2>
+
+            <div className="space-y-3 text-xs sm:text-sm font-sans">
+              <div className="p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-2">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1">
+                  <div className="font-mono font-bold text-zinc-100 text-sm">
+                    Mapping Voices: An Open Atlas of Oral-History and Voice-Testimony Collections
+                  </div>
+                  <span className="text-zinc-400 font-mono text-xs shrink-0">2026</span>
+                </div>
+                <div className="text-zinc-400 font-mono text-[11px]">
+                  Dataset (v0.4.0) · Zenodo · CC BY 4.0 · Creator &amp; curator ·{' '}
+                  <a href="https://doi.org/10.5281/zenodo.22996478" target="_blank" rel="noreferrer" className="text-amber-400 underline break-all">
+                    doi:10.5281/zenodo.22996478
+                  </a>
+                </div>
+                <p className="text-zinc-300 leading-relaxed text-xs sm:text-sm">
+                  Open research dataset and interactive atlas indexing 221 real, publicly documented oral-history and
+                  voice-testimony collections across 120 countries and territories and 125 languages. Persistent
+                  identifiers, controlled vocabularies (ISO 639-3, ISO 3166, UN M49), a published methodology, and an
+                  append-only review log; released as CSV, JSON, and GeoJSON with an interface in English, Hausa,
+                  French, and Arabic.
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]">
+                  <a href="https://adamu.tech/mapping/" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-1">
+                    <span>Live atlas</span><ExternalLink className="h-3 w-3" />
+                  </a>
+                  <a href="https://github.com/adab-tech/mapping" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-1">
+                    <span>Source &amp; methodology</span><ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
               </div>
             </div>
           </section>
