@@ -18,6 +18,19 @@ const TOKEN_KEY = 'adamu_tech_github_publish_token'
 
 export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions`
 
+// Signing in to the admin = saving this token in the browser. Pages listen
+// for TOKEN_EVENT (and other tabs' 'storage' events) to notice sign-in/out.
+export const TOKEN_EVENT = 'adamu-token-change'
+
+export function subscribeToken(cb: () => void): () => void {
+  window.addEventListener('storage', cb)
+  window.addEventListener(TOKEN_EVENT, cb)
+  return () => {
+    window.removeEventListener('storage', cb)
+    window.removeEventListener(TOKEN_EVENT, cb)
+  }
+}
+
 export function getToken(): string {
   try {
     return localStorage.getItem(TOKEN_KEY) || ''
@@ -28,10 +41,14 @@ export function getToken(): string {
 
 export function saveToken(token: string): void {
   localStorage.setItem(TOKEN_KEY, token.trim())
+  window.dispatchEvent(new Event(TOKEN_EVENT))
 }
 
 export function forgetToken(): void {
-  localStorage.removeItem(TOKEN_KEY)
+  try {
+    localStorage.removeItem(TOKEN_KEY)
+  } catch {}
+  window.dispatchEvent(new Event(TOKEN_EVENT))
 }
 
 async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -59,7 +76,11 @@ async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
     try {
       detail = (await res.json()).message || ''
     } catch {}
-    if (res.status === 401) throw new Error('GitHub rejected the token (expired or mistyped). Paste a new one.')
+    if (res.status === 401) {
+      // Expired or revoked: sign out here, so the admin asks for a new token.
+      forgetToken()
+      throw new Error('GitHub rejected the token (expired, revoked or mistyped). Sign in again with a new one.')
+    }
     if (res.status === 403 || res.status === 404) {
       throw new Error(`GitHub refused access (${res.status}). Check the token is for ${OWNER}/${REPO} with Contents: Read and write. ${detail}`)
     }

@@ -1,26 +1,24 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { VisitorCounter } from '@/components/VisitorCounter'
 import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { AdminHeader } from '@/components/AdminHeader'
 import { SiteOverview } from '@/components/admin/SiteOverview'
 import { GHOST_URL, ghostEnabled } from '@/config/blog'
-import { Activity, AlertCircle, Check, Edit3, Key, Mail } from 'lucide-react'
+import { Activity, AlertCircle, Edit3, Key, Mail } from 'lucide-react'
 
 // Admin front page. Everything shown here is real: the controls save to
 // GitHub (the only way anything reaches the public site), the page views come
 // from the site's public counter, and deploys come from GitHub Actions.
 export default function AdminDashboardPage() {
-  const { isAuthenticated, loading, updatePassword } = useAdminAuth()
+  const { isAuthenticated, loading, logout } = useAdminAuth()
   const router = useRouter()
-  const [newPass, setNewPass] = useState('')
-  const [passNotice, setPassNotice] = useState('')
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/admin/login')
+      router.push('/admin/login/')
     }
   }, [isAuthenticated, loading, router])
 
@@ -30,18 +28,6 @@ export default function AdminDashboardPage() {
         Verifying session…
       </div>
     )
-  }
-
-  const handlePasswordChange = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (newPass.trim().length < 4) {
-      setPassNotice('Password must be at least 4 characters long.')
-      return
-    }
-    updatePassword(newPass.trim())
-    setNewPass('')
-    setPassNotice('Admin password updated on this device.')
-    setTimeout(() => setPassNotice(''), 3500)
   }
 
   return (
@@ -77,39 +63,32 @@ export default function AdminDashboardPage() {
           <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
             <h3 className="text-base font-mono font-bold text-zinc-100 flex items-center gap-2">
               <Key className="h-4 w-4 text-gold-400" />
-              Admin password
+              Sign-in on this device
             </h3>
-            <p className="text-xs font-sans text-zinc-400">
-              Changes the password for this admin on this device. Publishing is protected separately by your GitHub token.
+            <p className="text-xs font-sans text-zinc-400 leading-relaxed">
+              You are signed in with your GitHub token, saved in this browser only. Other browsers, other devices and private windows
+              ask for it once. Signing out removes it from this browser; to cut off every device at once, revoke the token on GitHub.
             </p>
-
-            {passNotice && (
-              <div className="p-3 rounded-lg bg-zinc-800 border border-zinc-700 text-gold-400 text-xs font-mono flex items-center gap-2">
-                <Check className="h-3.5 w-3.5" />
-                <span>{passNotice}</span>
-              </div>
-            )}
-
-            <form onSubmit={handlePasswordChange} className="space-y-3">
-              <div className="space-y-1">
-                <label htmlFor="new-admin-pass" className="text-xs font-mono text-zinc-400">New password</label>
-                <input
-                  id="new-admin-pass"
-                  type="password"
-                  required
-                  value={newPass}
-                  onChange={(e) => setNewPass(e.target.value)}
-                  placeholder="Enter new admin password…"
-                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
-                />
-              </div>
+            <div className="flex flex-wrap gap-2">
               <button
-                type="submit"
-                className="w-full py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors"
+                type="button"
+                onClick={() => {
+                  logout()
+                  router.push('/admin/login/')
+                }}
+                className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors"
               >
-                Save new password
+                Sign out on this device
               </button>
-            </form>
+              <a
+                href="https://github.com/settings/personal-access-tokens"
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-2 rounded-lg border border-zinc-700 font-mono text-xs text-zinc-300 hover:text-white"
+              >
+                Manage tokens on GitHub
+              </a>
+            </div>
           </div>
 
           <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
