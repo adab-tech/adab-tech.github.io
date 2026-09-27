@@ -25,3 +25,62 @@ html, body {
 .animate-pulse-slow {
   animation: pulse-slow 3s ease-in-out infinite;
 }
+
+/* Blog: display serif for titles, readable body text for posts. */
+.font-serif-display {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+}
+
+.post-body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #e4e4e7;
+  max-width: 68ch;
+  overflow-wrap: break-word;
+}
+.post-body > * + * { margin-top: 1.25em; }
+.post-body p, .post-body li, .post-body blockquote { unicode-bidi: plaintext; } /* Arabic lines read right-to-left */
+.post-body h2, .post-body h3, .post-body h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #fafafa;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 2em;
+}
+.post-body h2 { font-size: 1.75rem; }
+.post-body h3 { font-size: 1.375rem; }
+.post-body h4 { font-size: 1.125rem; }
+.post-body a { color: #fbbf24; text-decoration: underline; text-underline-offset: 3px; }
+.post-body a:hover { color: #fcd34d; }
+.post-body strong { color: #fafafa; }
+.post-body ul, .post-body ol { padding-left: 1.5em; }
+.post-body ul { list-style: disc; }
+.post-body ol { list-style: decimal; }
+.post-body li + li { margin-top: 0.4em; }
+.post-body blockquote {
+  border-left: 3px solid #f59e0b;
+  padding-left: 1.1em;
+  color: #d4d4d8;
+  font-style: italic;
+}
+.post-body img { max-width: 100%; height: auto; border-radius: 0.75rem; }
+.post-body hr { border: 0; border-top: 1px solid #27272a; margin: 2.5em 0; }
+.post-body code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.875em;
+  background: #18213a;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3em;
+}
+.post-body pre {
+  background: #0e1526;
+  border: 1px solid #27272a;
+  border-radius: 0.75rem;
+  padding: 1em;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.post-body pre code { background: none; padding: 0; }
+.post-body table { width: 100%; border-collapse: collapse; font-size: 0.95rem; display: block; overflow-x: auto; }
+.post-body th, .post-body td { border: 1px solid #27272a; padding: 0.5em 0.75em; text-align: left; }

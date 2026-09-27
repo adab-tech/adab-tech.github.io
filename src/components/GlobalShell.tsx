@@ -58,6 +58,12 @@ export function GlobalShell({ children }: ShellProps) {
               Projects
             </Link>
             <Link 
+              href="/blog" 
+              className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
+            >
+              Blog
+            </Link>
+            <Link 
               href="/papers/agentic-ai" 
               className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
             >
@@ -107,6 +113,13 @@ export function GlobalShell({ children }: ShellProps) {
                 className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
               >
                 Projects
+              </Link>
+              <Link
+                href="/blog"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
+              >
+                Blog
               </Link>
               <Link
                 href="/papers/agentic-ai"
