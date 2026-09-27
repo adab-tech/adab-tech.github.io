@@ -129,7 +129,7 @@ const PROJECTS_DATA: ProjectItem[] = [
     ],
     liveUrl: 'https://adamu.tech/mapping/',
     repoUrl: 'https://github.com/adab-tech/mapping',
-    tags: ['Digital Humanities', 'Oral History', 'Leaflet', 'Open Data', 'i18n']
+    tags: ['Digital Humanities', 'Oral History', 'Open Data', 'Zenodo DOI', 'Leaflet', 'i18n']
   },
   {
     id: 'adab-infrastructure',
