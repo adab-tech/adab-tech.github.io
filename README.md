@@ -15,6 +15,7 @@ This repository is a Next.js app (not a static HTML GitHub Pages tree). Producti
 | `/projects` | Projects |
 | `/about` `/academic-cv` `/curriculum-vitae` `/skills` | Old URLs; redirect to `/cv` |
 | `/contact` | Contact form |
+| `/blog` | Blog; posts are Markdown files in `content/blog/` (how to publish: [docs/BLOG.md](docs/BLOG.md)); RSS at `/feed.xml` |
 | `/papers/agentic-ai` | Working paper |
 | `/admin` | Private tools; not linked from the site, `noindex` |
 | `/mapping` | Mapping Voices — redirect (`public/mapping/index.html`) to the atlas deployed from [adab-tech/mapping](https://github.com/adab-tech/mapping); dataset DOI [10.5281/zenodo.22996478](https://doi.org/10.5281/zenodo.22996478) |
