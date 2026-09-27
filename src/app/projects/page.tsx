@@ -120,10 +120,10 @@ const PROJECTS_DATA: ProjectItem[] = [
     role: 'Founder & Lead Architect',
     status: 'Live Production',
     statusColor: 'emerald',
-    description: 'An open, interactive atlas of real oral-history and voice-testimony archives worldwide — a single geographic entry point into a landscape of collections otherwise scattered across hundreds of independent institutional sites, filterable by country, theme, language, and decade.',
+    description: 'An open research dataset and interactive atlas of real oral-history and voice-testimony collections worldwide — a single geographic entry point into collections otherwise scattered across hundreds of institutional sites, searchable by country, language, theme, period, and access, with a published methodology and persistent identifiers.',
     highlights: [
-      '191 independently verified real archive entries across 118 countries on every inhabited continent',
-      'Zero-dependency static app (Leaflet + OpenStreetMap) — no backend, no build step',
+      '221 real, publicly documented collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478)',
+      'Zero-dependency static app (Leaflet + OpenStreetMap) with Language Explorer, Theme Explorer, and Coverage Gaps views',
       'Full UI localization in English, Hausa, French, and Arabic with native CLDR pluralization',
       'Open source (MIT code / CC BY 4.0 data) with a public contribution pipeline for institutions and researchers'
     ],
@@ -207,8 +207,8 @@ export default function ProjectsPage() {
             >
               <div className="space-y-4">
                 {/* Title & Status */}
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="space-y-1 min-w-0">
                     <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-50">
                       {p.title}
                     </h2>
@@ -216,7 +216,7 @@ export default function ProjectsPage() {
                       {p.role}
                     </div>
                   </div>
-                  <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border shrink-0 ${
+                  <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
                     p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
                     p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
                     'text-amber-400 bg-amber-500/10 border-amber-500/30'
