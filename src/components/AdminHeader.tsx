@@ -3,6 +3,7 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
+import { GHOST_URL, ghostEnabled } from '@/config/blog'
 import { ShieldCheck, LogOut, ExternalLink } from 'lucide-react'
 
 export function AdminHeader() {
@@ -31,7 +32,7 @@ export function AdminHeader() {
 
         <nav className="flex flex-wrap items-center gap-2">
           <a
-            href="/admin/blog/"
+            href={ghostEnabled() ? `${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post` : '/admin/blog/'}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 text-xs font-mono text-amber-300 hover:text-white transition-colors"
           >
             <span>Write a post</span>

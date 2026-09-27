@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { usePostsStore, ResearchPost, StreamCategory, ContactInquiry } from '@/lib/posts-store'
 import { AdminHeader } from '@/components/AdminHeader'
+import { GHOST_URL, ghostEnabled } from '@/config/blog'
 import { Activity, Edit3, Eye, FileCode, Plus, CheckCircle2, Layers, Quote, Key, Mail, Check, Inbox, Reply, Trash2, Calendar, AlertCircle } from 'lucide-react'
 
 export default function AdminDashboardPage() {
@@ -122,18 +123,36 @@ export default function AdminDashboardPage() {
         )}
 
         {/* Blog publishing (commits to GitHub; the only way a post reaches the public site) */}
-        <a
-          href="/admin/blog/"
-          className="block p-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
-        >
-          <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
-            <Edit3 className="h-5 w-5" />
-            <span>Write a blog post →</span>
-          </div>
-          <p className="text-sm text-zinc-300 mt-1">
-            Write, preview, and publish to adamu.tech/blog. Edit or delete published posts.
-          </p>
-        </a>
+        {ghostEnabled() ? (
+          <a
+            href={`${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block p-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
+          >
+            <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+              <Edit3 className="h-5 w-5" />
+              <span>Write a blog post in Ghost →</span>
+            </div>
+            <p className="text-sm text-zinc-300 mt-1">
+              Opens the Ghost editor. Published posts appear on adamu.tech/blog immediately.{' '}
+              <span className="text-zinc-400">(Older Markdown posts: <span className="underline">/admin/blog</span>.)</span>
+            </p>
+          </a>
+        ) : (
+          <a
+            href="/admin/blog/"
+            className="block p-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
+          >
+            <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+              <Edit3 className="h-5 w-5" />
+              <span>Write a blog post →</span>
+            </div>
+            <p className="text-sm text-zinc-300 mt-1">
+              Write, preview, and publish to adamu.tech/blog. Edit or delete published posts.
+            </p>
+          </a>
+        )}
 
         {/* Real-Time Live Traffic & Visitor Analytics Hub */}
         <section className="space-y-3">

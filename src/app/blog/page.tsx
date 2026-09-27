@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import { Rss } from 'lucide-react'
 import { GlobalShell } from '@/components/GlobalShell'
+import { BlogList } from '@/components/BlogList'
 import { getAllPosts, formatDate } from '@/lib/blog'
 
 export const metadata: Metadata = {
@@ -27,39 +27,18 @@ export default function BlogIndexPage() {
           </a>
         </header>
 
-        {posts.length === 0 ? (
-          <p className="text-zinc-400">No posts yet.</p>
-        ) : (
-          <ol className="space-y-10">
-            {posts.map((post) => (
-              <li key={post.slug}>
-                <article className="group space-y-2">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400">
-                    <time dateTime={post.date}>{formatDate(post.date)}</time>
-                    <span aria-hidden="true">·</span>
-                    <span>{post.readingMinutes} min read</span>
-                    {post.draft && (
-                      <span className="px-1.5 py-0.5 rounded border border-amber-500/40 text-amber-400">Draft</span>
-                    )}
-                  </div>
-                  <h2 className="font-serif-display text-2xl sm:text-3xl font-semibold text-zinc-50 leading-snug">
-                    <Link href={`/blog/${post.slug}/`} className="hover:text-amber-400 transition-colors">
-                      {post.title}
-                    </Link>
-                  </h2>
-                  {post.summary && <p className="text-zinc-300 leading-relaxed">{post.summary}</p>}
-                  <Link
-                    href={`/blog/${post.slug}/`}
-                    className="inline-block text-sm font-mono text-amber-400 hover:underline"
-                    aria-label={`Read “${post.title}”`}
-                  >
-                    Read →
-                  </Link>
-                </article>
-              </li>
-            ))}
-          </ol>
-        )}
+        <BlogList
+          initial={posts.map((p) => ({
+            title: p.title,
+            href: `/blog/${p.slug}/`,
+            external: false,
+            date: p.date,
+            dateLabel: formatDate(p.date),
+            summary: p.summary,
+            readingMinutes: p.readingMinutes,
+            draft: p.draft,
+          }))}
+        />
       </div>
     </GlobalShell>
   )

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { GlobalShell } from '@/components/GlobalShell'
+import { ShareButtons } from '@/components/ShareButtons'
 import { getAllPosts, getPost, formatDate } from '@/lib/blog'
 
 // Every post is generated at build time; unknown slugs are 404s.
@@ -33,7 +34,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       publishedTime: post.date,
       authors: ['Adamu Danjuma Abubakar'],
       tags: post.tags,
+      images: [{ url: `/blog/${post.slug}/og.png`, width: 1200, height: 630, alt: post.title }],
     },
+    twitter: { card: 'summary_large_image', images: [`/blog/${post.slug}/og.png`] },
   }
 }
 
@@ -70,6 +73,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span aria-hidden="true">·</span>
             <span>{post.readingMinutes} min read</span>
           </div>
+          <ShareButtons url={`https://adamu.tech/blog/${post.slug}/`} title={post.title} />
           {post.tags.length > 0 && (
             <ul className="flex flex-wrap gap-2" aria-label="Tags">
               {post.tags.map((tag) => (
@@ -82,6 +86,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </header>
 
         <div className="post-body" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+        <div className="border-t border-zinc-800 pt-6">
+          <ShareButtons url={`https://adamu.tech/blog/${post.slug}/`} title={post.title} />
+        </div>
 
         <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-800 pt-8" aria-label="More posts">
           {older ? (

@@ -4,7 +4,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { marked } from 'marked'
-import { parseFrontMatter, FILE_PATTERN, SLUG_PATTERN, DATE_PATTERN } from './blog-format'
+import { parseFrontMatter, normalizeParagraphs, FILE_PATTERN, SLUG_PATTERN, DATE_PATTERN } from './blog-format'
 
 const POSTS_DIR = path.join(process.cwd(), 'content', 'blog')
 const SHOW_DRAFTS = process.env.NODE_ENV === 'development'
@@ -54,11 +54,11 @@ function readPost(file: string): Post {
     slug,
     title,
     date,
-    summary: typeof data.summary === 'string' && data.summary ? data.summary : firstParagraph(body),
+    summary: typeof data.summary === 'string' && data.summary ? data.summary : firstParagraph(normalizeParagraphs(body)),
     tags: Array.isArray(data.tags) ? data.tags : [],
     draft: data.draft === true,
     readingMinutes: Math.max(1, Math.round(words / 220)),
-    html: marked.parse(body, { async: false, gfm: true }) as string,
+    html: marked.parse(normalizeParagraphs(body), { async: false, gfm: true }) as string,
   }
 }
 
