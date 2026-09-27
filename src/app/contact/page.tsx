@@ -58,7 +58,7 @@ const ContactPage = () => {
       <div className="container">
         <div className="section-header" data-animate="fade-up">
           <span className="section-label">Get in Touch</span>
-          <h2 className="section-title">Let's Build Together</h2>
+          <h2 className="section-title">Let&apos;s Build Together</h2>
         </div>
         
         <div className="contact-content">

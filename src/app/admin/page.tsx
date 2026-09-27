@@ -204,7 +204,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <p className="text-xs font-sans text-zinc-300 leading-relaxed bg-midnight-950 p-3 rounded-lg border border-zinc-800/80">
-                    "{inq.message}"
+                    &quot;{inq.message}&quot;
                   </p>
 
                   <div className="flex items-center justify-between pt-1 font-mono text-xs">
