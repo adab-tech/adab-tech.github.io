@@ -16,20 +16,26 @@ export function AdminHeader() {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-midnight-950/90 backdrop-blur">
-      <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 min-h-14 py-2 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center space-x-3">
           <div className="p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-gold-400">
             <ShieldCheck className="h-4 w-4" />
           </div>
           <span className="font-mono text-sm font-bold tracking-tight text-zinc-50">
-            adamu<span className="text-gold-500">.tech</span> Admin Studio
+            adamu<span className="text-gold-500">.tech</span><span className="hidden sm:inline"> Admin Studio</span>
           </span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+          <span className="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
             AUTHENTICATED
           </span>
         </div>
 
-        <nav className="flex items-center space-x-3">
+        <nav className="flex flex-wrap items-center gap-2">
+          <a
+            href="/admin/blog/"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 text-xs font-mono text-amber-300 hover:text-white transition-colors"
+          >
+            <span>Write a post</span>
+          </a>
           <a
             href="/"
             target="_blank"

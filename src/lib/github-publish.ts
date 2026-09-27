@@ -1,0 +1,129 @@
+'use client'
+
+// Publishes blog posts from the admin editor by committing Markdown files to
+// the site repo through the GitHub REST API. The site is a static export with
+// no server, so a commit to `main` is how anything gets published: the deploy
+// workflow rebuilds the site about a minute later.
+//
+// The token is a fine-grained personal access token limited to this one
+// repository. It is kept in this browser's localStorage only, never in the
+// site's code or build, and is sent only to api.github.com.
+
+const OWNER = 'adab-tech'
+const REPO = 'adab-tech.github.io'
+const BRANCH = 'main'
+const DIR = 'content/blog'
+const API = `https://api.github.com/repos/${OWNER}/${REPO}`
+const TOKEN_KEY = 'adamu_tech_github_publish_token'
+
+export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions`
+
+export function getToken(): string {
+  try {
+    return localStorage.getItem(TOKEN_KEY) || ''
+  } catch {
+    return ''
+  }
+}
+
+export function saveToken(token: string): void {
+  localStorage.setItem(TOKEN_KEY, token.trim())
+}
+
+export function forgetToken(): void {
+  localStorage.removeItem(TOKEN_KEY)
+}
+
+async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    ...init,
+    cache: 'no-store',
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${getToken()}`,
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+    },
+  })
+  if (!res.ok) {
+    let detail = ''
+    try {
+      detail = (await res.json()).message || ''
+    } catch {}
+    if (res.status === 401) throw new Error('GitHub rejected the token (expired or mistyped). Paste a new one.')
+    if (res.status === 403 || res.status === 404) {
+      throw new Error(`GitHub refused access (${res.status}). Check the token is for ${OWNER}/${REPO} with Contents: Read and write. ${detail}`)
+    }
+    if (res.status === 409 || res.status === 422) {
+      throw new Error(`The file changed on GitHub since it was opened. Reload the post list and try again. ${detail}`)
+    }
+    throw new Error(`GitHub error ${res.status}: ${detail}`)
+  }
+  return res.status === 204 ? (undefined as T) : res.json()
+}
+
+// UTF-8 safe base64, so Hausa, French and Arabic text survive the round trip.
+function toBase64(text: string): string {
+  const bytes = new TextEncoder().encode(text)
+  let bin = ''
+  bytes.forEach((b) => (bin += String.fromCharCode(b)))
+  return btoa(bin)
+}
+
+function fromBase64(b64: string): string {
+  const bin = atob(b64.replace(/\n/g, ''))
+  return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)))
+}
+
+export type RemoteFile = { name: string; path: string; sha: string }
+
+export async function checkAccess(): Promise<void> {
+  await gh(`/contents/${DIR}?ref=${BRANCH}`)
+}
+
+export async function listPosts(): Promise<RemoteFile[]> {
+  const items = await gh<{ name: string; path: string; sha: string; type: string }[]>(`/contents/${DIR}?ref=${BRANCH}`)
+  return items
+    .filter((i) => i.type === 'file' && i.name.endsWith('.md'))
+    .map(({ name, path, sha }) => ({ name, path, sha }))
+    .sort((a, b) => b.name.localeCompare(a.name))
+}
+
+export async function readPost(name: string): Promise<{ text: string; sha: string }> {
+  const file = await gh<{ content: string; sha: string }>(`/contents/${DIR}/${encodeURIComponent(name)}?ref=${BRANCH}`)
+  return { text: fromBase64(file.content), sha: file.sha }
+}
+
+// Creates or updates a post. Returns the commit SHA.
+export async function writePost(name: string, text: string, message: string, sha?: string): Promise<string> {
+  const res = await gh<{ commit: { sha: string } }>(`/contents/${DIR}/${encodeURIComponent(name)}`, {
+    method: 'PUT',
+    body: JSON.stringify({ message, content: toBase64(text), branch: BRANCH, ...(sha ? { sha } : {}) }),
+  })
+  return res.commit.sha
+}
+
+export async function deletePost(name: string, sha: string, message: string): Promise<void> {
+  await gh(`/contents/${DIR}/${encodeURIComponent(name)}`, {
+    method: 'DELETE',
+    body: JSON.stringify({ message, sha, branch: BRANCH }),
+  })
+}
+
+export type DeployState = 'building' | 'live' | 'failed' | 'unknown'
+
+// Status of the deploy run for a commit. Needs "Actions: Read" on the token;
+// without it this returns 'unknown' and the editor links to the Actions tab.
+export async function deployState(commitSha: string): Promise<DeployState> {
+  try {
+    const { workflow_runs } = await gh<{ workflow_runs: { status: string; conclusion: string | null }[] }>(
+      `/actions/runs?head_sha=${commitSha}&per_page=5`,
+    )
+    if (!workflow_runs.length) return 'building'
+    const run = workflow_runs[0]
+    if (run.status !== 'completed') return 'building'
+    return run.conclusion === 'success' ? 'live' : 'failed'
+  } catch {
+    return 'unknown'
+  }
+}

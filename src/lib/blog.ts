@@ -4,6 +4,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { marked } from 'marked'
+import { parseFrontMatter, FILE_PATTERN, SLUG_PATTERN, DATE_PATTERN } from './blog-format'
 
 const POSTS_DIR = path.join(process.cwd(), 'content', 'blog')
 const SHOW_DRAFTS = process.env.NODE_ENV === 'development'
@@ -20,31 +21,6 @@ export type PostMeta = {
 
 export type Post = PostMeta & { html: string }
 
-type FrontMatter = Record<string, string | string[] | boolean>
-
-// Parses the subset of YAML the posts use: `key: value`, `key: [a, b]`,
-// `key: true|false`, with optional quotes around values.
-function parseFrontMatter(raw: string, file: string): { data: FrontMatter; body: string } {
-  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
-  if (!match) throw new Error(`${file}: missing front matter (a block between two --- lines at the top)`)
-  const data: FrontMatter = {}
-  for (const line of match[1].split(/\r?\n/)) {
-    if (!line.trim() || line.trim().startsWith('#')) continue
-    const kv = line.match(/^([A-Za-z_][\w-]*):\s*(.*)$/)
-    if (!kv) throw new Error(`${file}: can't read front-matter line "${line}"`)
-    const [, key, value] = kv
-    const unquote = (v: string) => v.trim().replace(/^(['"])(.*)\1$/, '$2')
-    if (value.startsWith('[') && value.endsWith(']')) {
-      data[key] = value.slice(1, -1).split(',').map(unquote).filter(Boolean)
-    } else if (value === 'true' || value === 'false') {
-      data[key] = value === 'true'
-    } else {
-      data[key] = unquote(value)
-    }
-  }
-  return { data, body: match[2] }
-}
-
 function firstParagraph(markdown: string): string {
   const para = markdown
     .split(/\r?\n\s*\r?\n/)
@@ -59,17 +35,17 @@ function readPost(file: string): Post {
   const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8')
   const { data, body } = parseFrontMatter(raw, file)
 
-  const nameMatch = file.match(/^(\d{4}-\d{2}-\d{2})-(.+)\.md$/)
+  const nameMatch = file.match(FILE_PATTERN)
   if (!nameMatch) throw new Error(`${file}: name the file YYYY-MM-DD-your-slug.md`)
   const slug = nameMatch[2]
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+  if (!SLUG_PATTERN.test(slug)) {
     throw new Error(`${file}: use lowercase letters, numbers and hyphens after the date`)
   }
 
   const title = typeof data.title === 'string' ? data.title : ''
   if (!title) throw new Error(`${file}: add a title`)
   const date = typeof data.date === 'string' ? data.date : nameMatch[1]
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) {
+  if (!DATE_PATTERN.test(date) || Number.isNaN(Date.parse(date))) {
     throw new Error(`${file}: date must be YYYY-MM-DD`)
   }
 
