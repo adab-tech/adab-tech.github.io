@@ -108,29 +108,54 @@ export function initials(title: string): string {
   return (words.length > 1 ? words[0][0] + words[1][0] : (words[0] ?? '?').slice(0, 2)).toUpperCase()
 }
 
-// Build-time sanity checks: a malformed file stops the deploy with a message
-// that names the problem, and the live site stays as it was.
-export function checkSiteContent(): void {
+// Checks shared by the build and the admin editors. Each returns a list of
+// problems in plain words (empty = fine).
+const isList = (v: unknown) => Array.isArray(v)
+
+export function validateProjects(d: ProjectsContent): string[] {
   const problems: string[] = []
-  const need = (ok: unknown, msg: string) => {
-    if (!ok) problems.push(msg)
-  }
+  if (!isList(d.categories)) problems.push('categories must be a list')
+  if (!isList(d.projects)) return [...problems, 'projects must be a list']
   const ids = new Set<string>()
-  PROJECTS.projects.forEach((p, i) => {
-    const where = `projects.json, project ${i + 1} (${p.title || 'untitled'})`
-    need(p.id && /^[a-z0-9-]+$/.test(p.id), `${where}: id must be lowercase letters, numbers and dashes`)
-    need(!ids.has(p.id), `${where}: id "${p.id}" is used twice`)
+  d.projects.forEach((p, i) => {
+    const where = `Project ${i + 1} (${p.title || 'untitled'})`
+    if (!p.title) problems.push(`${where}: add a title`)
+    if (!p.id || !/^[a-z0-9-]+$/.test(p.id)) problems.push(`${where}: the id must be lowercase letters, numbers and dashes`)
+    else if (ids.has(p.id)) problems.push(`${where}: the id "${p.id}" is used by another project`)
     ids.add(p.id)
-    need(p.title, `${where}: add a title`)
-    need(PROJECTS.categories.includes(p.category), `${where}: category "${p.category}" is not in the categories list`)
-    need(['emerald', 'blue', 'amber'].includes(p.statusColor), `${where}: statusColor must be emerald, blue or amber`)
-    need(Array.isArray(p.highlights) && Array.isArray(p.tags), `${where}: highlights and tags must be lists`)
+    if (!d.categories.includes(p.category)) problems.push(`${where}: category "${p.category}" is not in the category list`)
+    if (!['emerald', 'blue', 'amber'].includes(p.statusColor)) problems.push(`${where}: status colour must be emerald, blue or amber`)
+    if (!isList(p.highlights) || !isList(p.tags)) problems.push(`${where}: highlights and tags must be lists`)
   })
-  need(HOME.name, 'home.json: add a name')
-  need(Array.isArray(HOME.buttons), 'home.json: buttons must be a list')
-  need(CV.name, 'cv.json: add a name')
+  return problems
+}
+
+export function validateHome(d: HomeContent): string[] {
+  const problems: string[] = []
+  if (!d.name) problems.push('Add a name')
+  if (!isList(d.buttons)) problems.push('buttons must be a list')
+  if (!d.numbers || !isList(d.numbers.items) || !isList(d.numbers.specs) || !isList(d.numbers.evidence)) problems.push('the numbers section is incomplete')
+  if (!d.principles || !isList(d.principles.items)) problems.push('the principles section is incomplete')
+  if (!d.contact) problems.push('the contact section is missing')
+  return problems
+}
+
+export function validateCv(d: CvContent): string[] {
+  const problems: string[] = []
+  if (!d.name) problems.push('Add a name')
   for (const key of ['profiles', 'education', 'experience', 'languages', 'publicationGroups', 'datasets'] as const) {
-    need(Array.isArray(CV[key]), `cv.json: ${key} must be a list`)
+    if (!isList(d[key])) problems.push(`${key} must be a list`)
   }
+  return problems
+}
+
+// Build-time check: a malformed file stops the deploy with a message that
+// names the problem, and the live site stays as it was.
+export function checkSiteContent(): void {
+  const problems = [
+    ...validateHome(HOME).map((p) => `home.json: ${p}`),
+    ...validateProjects(PROJECTS).map((p) => `projects.json: ${p}`),
+    ...validateCv(CV).map((p) => `cv.json: ${p}`),
+  ]
   if (problems.length) throw new Error(`Site content has problems:\n- ${problems.join('\n- ')}`)
 }

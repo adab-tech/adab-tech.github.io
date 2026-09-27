@@ -6,6 +6,7 @@ import { Menu, X, ArrowUp } from 'lucide-react'
 import { LogoMark } from '@/components/LogoMark'
 import { SocialNavIcons } from '@/components/SocialNavIcons'
 import { ProjectIcons } from '@/components/ProjectLogo'
+import { PageViewPing } from '@/components/VisitorCounter'
 
 interface ShellProps {
   children: React.ReactNode
@@ -146,6 +147,8 @@ export function GlobalShell({ children }: ShellProps) {
           </div>
         )}
       </header>
+
+      <PageViewPing />
 
       {/* Main Page Content */}
       <main className="flex-1">

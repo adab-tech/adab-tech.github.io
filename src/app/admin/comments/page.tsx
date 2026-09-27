@@ -3,10 +3,10 @@
 import React, { useCallback, useEffect, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Check, ExternalLink, KeyRound, Loader2, RefreshCw, Reply, Trash2 } from 'lucide-react'
+import { ArrowLeft, Check, ExternalLink, KeyRound, Loader2, MessageSquare, RefreshCw, Reply, Trash2 } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
 import { useAdminAuth } from '@/lib/auth'
-import { COMMENTS_API } from '@/config/blog'
+import { COMMENTS_API, GISCUS, hcbEnabled } from '@/config/blog'
 import { adminApprove, adminDelete, adminList, adminReply, type AdminComment } from '@/lib/comments-api'
 
 // Moderation for the site's own comment service. The admin key is the
@@ -61,23 +61,30 @@ export default function AdminCommentsPage() {
               <ArrowLeft className="h-3.5 w-3.5" /> Admin
             </Link>
             <h1 className="text-2xl font-mono font-bold text-zinc-50">Blog comments</h1>
-            <p className="text-sm text-zinc-400">Approve comments before they appear on the site, reply as the author, or delete.</p>
+            <p className="text-sm text-zinc-400">
+              {COMMENTS_API
+                ? 'Approve comments before they appear on the site, reply as the author, or delete.'
+                : 'See, reply to and delete readers’ comments on each post.'}
+            </p>
           </div>
-          {key && (
+          {COMMENTS_API && key && (
             <button type="button" onClick={() => setKey('')} className="text-xs font-mono text-zinc-400 hover:text-red-300 inline-flex items-center gap-1.5">
               <KeyRound className="h-3.5 w-3.5" /> Forget key on this device
             </button>
           )}
         </div>
-        {!COMMENTS_API ? (
-          <p className="p-4 rounded-xl border border-zinc-800 bg-[#0B1120] text-sm text-zinc-300">
-            The comment service is not connected yet. Deploy it (see docs/BLOG.md, “Comments”) and set <code>COMMENTS_API</code> in{' '}
-            <code>src/config/blog.ts</code>.
-          </p>
-        ) : key ? (
-          <Moderation adminKey={key} />
+        {COMMENTS_API ? (
+          key ? <Moderation adminKey={key} /> : <KeyForm />
+        ) : hcbEnabled() ? (
+          <HcbGuide />
         ) : (
-          <KeyForm />
+          <p className="p-4 rounded-xl border border-zinc-800 bg-[#0B1120] text-sm text-zinc-300">
+            Comments use giscus (GitHub Discussions). Moderate them in the{' '}
+            <a className="text-amber-400 underline" href={`https://github.com/${GISCUS.repo}/discussions`} target="_blank" rel="noreferrer">
+              repository’s Discussions
+            </a>
+            .
+          </p>
         )}
       </main>
     </div>
@@ -236,6 +243,94 @@ function Moderation({ adminKey }: { adminKey: string }) {
           </li>
         ))}
       </ul>
+    </div>
+  )
+}
+
+type FeedPost = { title: string; url: string; date: string }
+
+// HTML Comment Box keeps the comments on its own servers and has no API, so
+// moderation happens on each post: log in there once, then delete or reply
+// right under the comment. This lists every post with a direct link.
+function HcbGuide() {
+  const [posts, setPosts] = useState<FeedPost[] | null>(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/feed.xml', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.text() : Promise.reject(new Error(`feed.xml: ${r.status}`))))
+      .then((xml) => {
+        const doc = new DOMParser().parseFromString(xml, 'application/xml')
+        const items = [...doc.querySelectorAll('item')].map((item) => {
+          const link = item.querySelector('link')?.textContent ?? ''
+          return {
+            title: item.querySelector('title')?.textContent ?? link,
+            // Same site as this page, so it works on previews and locally too.
+            url: link.replace(/^https?:\/\/[^/]+/, ''),
+            date: new Date(item.querySelector('pubDate')?.textContent ?? '').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+          }
+        })
+        if (!cancelled) setPosts(items)
+      })
+      .catch((err) => !cancelled && setError(err instanceof Error ? err.message : String(err)))
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return (
+    <div className="space-y-6">
+      <section className="p-5 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3">
+        <h2 className="font-mono font-bold text-amber-400">How to delete or reply to a comment</h2>
+        <ol className="list-decimal pl-5 space-y-1.5 text-sm text-zinc-200 leading-relaxed">
+          <li>Open the post from the list below (it jumps straight to the comments).</li>
+          <li>
+            Under the comment box, click <strong>Moderator login</strong> and sign in with the HTML Comment Box account you used to get the
+            code. You only need to do this once per browser.
+          </li>
+          <li>
+            Moderation buttons now appear on each comment. Click <strong>delete</strong> on the one to remove; it disappears for everyone.
+          </li>
+          <li>To answer someone, write a comment on the post while logged in; it is marked as yours.</li>
+        </ol>
+        <p className="text-xs text-zinc-400">
+          The same login on{' '}
+          <a className="text-amber-400 underline" href="https://www.htmlcommentbox.com" target="_blank" rel="noreferrer">
+            htmlcommentbox.com
+          </a>{' '}
+          is where the comment box’s own settings live.
+        </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="font-mono font-bold text-zinc-100 flex items-center gap-2">
+          <MessageSquare className="h-4 w-4 text-amber-400" /> Comments on each post
+        </h2>
+        {error && <p className="text-sm text-red-300">Couldn’t load the post list ({error}).</p>}
+        {!posts && !error && <p className="text-sm text-zinc-400">Loading posts…</p>}
+        {posts && posts.length === 0 && <p className="text-sm text-zinc-400">No published posts yet.</p>}
+        <ul className="space-y-2">
+          {posts?.map((p) => (
+            <li key={p.url}>
+              <a
+                href={`${p.url}#comments-heading`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex flex-wrap items-center justify-between gap-2 p-4 rounded-xl border border-zinc-800 bg-[#0B1120] hover:border-amber-500/60 transition-colors"
+              >
+                <span className="min-w-0">
+                  <span className="block font-semibold text-zinc-100" dir="auto">{p.title}</span>
+                  <span className="block text-xs font-mono text-zinc-400">{p.date}</span>
+                </span>
+                <span className="text-xs font-mono text-amber-400 inline-flex items-center gap-1">
+                  Open comments <ExternalLink className="h-3 w-3" />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   )
 }
