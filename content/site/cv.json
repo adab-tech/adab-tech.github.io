@@ -1,0 +1,95 @@
+{
+  "name": "Adamu Danjuma Abubakar",
+  "headline": "Computational Linguist · African-Language Speech Technology",
+  "location": "Tuscaloosa, AL · Open to Relocation & Global Remote",
+  "website": "adamu.tech",
+  "email": "contact@adamu.tech",
+  "profiles": [
+    { "label": "Google Scholar", "url": "https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ", "color": "blue" },
+    { "label": "ORCID 0009-0009-4672-4956", "url": "https://orcid.org/0009-0009-4672-4956", "color": "lime" },
+    { "label": "Hugging Face", "url": "https://huggingface.co/adab-tech", "color": "amber" }
+  ],
+  "education": [
+    { "degree": "Ph.D. Candidate in Romance Languages", "date": "Expected Dec 2026", "institution": "The University of Alabama · Tuscaloosa, AL", "highlight": true },
+    { "degree": "Master of Arts (M.A.) in Romance Languages", "date": "2023", "institution": "The University of Alabama · Tuscaloosa, AL", "highlight": false },
+    { "degree": "Bachelor of Arts (B.A. Hons) in French", "date": "2019", "institution": "University of Ilorin · Ilorin, Nigeria", "highlight": false }
+  ],
+  "experience": [
+    {
+      "title": "Founder & Linguistic Lead — Murya (app.murya.ng)",
+      "dates": "2024 – Present",
+      "featured": true,
+      "summary": "Founded **Murya**, a Hausa speech synthesis and conversational platform live at [app.murya.ng](https://app.murya.ng). I lead its linguistic design and product and work with engineering to ship it:",
+      "bullets": [
+        "**Speech synthesis:** 24 kHz multi-speaker Piper VITS models fine-tuned on the WAXAL Hausa corpus and published as open weights (`adab-tech/murya-piper-hausa-tts`) with two voices, *Malama Asabe* (female) and *Malam Garba* (male), and under 110 ms to first audio in the browser.",
+        "**Tone:** syllable-weight segmentation (light CV vs heavy CVV/CVC) and right-to-left tonal melody mapping, following Litvinova, to guide Hausa pitch.",
+        "**Pragmatics:** Hausa politeness and respect norms (`Kunya & Girmamawa`), gendered address forms (`Namiji ka/maka vs Mace ki/miki`), and pedagogical tutor modes (`Malamin Hausa`).",
+        "**Ƙamus lexicon:** curated the 20,628-pair Robinson 1914 lexicon, published on Hugging Face (public domain), and obtained written permission from Prof. Paul Newman to use his 1977 *Modern Hausa–English Dictionary* internally (not redistributed) for dictionary-grounded lookup.",
+        "**Live voice:** real-time spoken conversation (Faster-Whisper speech recognition with echo suppression); dictionary and speech synthesis also work offline in the browser."
+      ]
+    },
+    {
+      "title": "Graduate Researcher & Teaching Fellow — University of Alabama",
+      "dates": "2021 – Present",
+      "featured": false,
+      "summary": "Teach undergraduate courses in Romance languages; present on the legacy of Nana Asma'u bint Fodio's poetry and scholarship in Hausa, Ajami, Fulfulde, and Arabic; and write on the humanities and AI governance.",
+      "bullets": []
+    },
+    {
+      "title": "AI Linguistic Specialist (RLHF & Red-Teaming) — Contract",
+      "dates": "2023 – Present",
+      "featured": false,
+      "summary": "Red-teaming, cultural-alignment review, and preference ranking for multilingual large language models, focused on low-resource African languages.",
+      "bullets": []
+    }
+  ],
+  "languages": [
+    { "name": "Hausa", "level": "Native", "note": "First language" },
+    { "name": "English", "level": "Near-native", "note": "Primary academic and professional working language" },
+    { "name": "French", "level": "Full professional", "note": "B.A. French (University of Ilorin) · M.A. Romance Languages (University of Alabama)" },
+    { "name": "Fulfulde (Fula)", "level": "Full professional", "note": "" },
+    { "name": "Nigerian Pidgin", "level": "Advanced", "note": "" },
+    { "name": "Arabic", "level": "Advanced (working)", "note": "Classical Arabic" },
+    { "name": "Sango", "level": "Fluent", "note": "" },
+    { "name": "Yoruba", "level": "Professional working", "note": "" },
+    { "name": "Spanish", "level": "Basic working", "note": "Reading" },
+    { "name": "German", "level": "Basic working", "note": "Reading" }
+  ],
+  "scholarUrl": "https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ",
+  "publicationGroups": [
+    {
+      "heading": "Book reviews",
+      "items": [
+        { "title": "Pathos and Power: Interdisciplinary Perspectives on Widowhood in Africa, Past and Present", "venue": "African Studies Review (2026), pp. 1–2 · Review of Davidson & Lawrance (Ohio UP, 2025)", "href": "" },
+        { "title": "Gender in French Banlieue Cinema: Intersectional Perspectives", "venue": "Women in French Studies 33 (1), pp. 221–223 (2025) · Review of Caporale, Mouflard & Zanzana", "href": "" },
+        { "title": "Je pars by Diary Sow", "venue": "Women in French Studies 31 (1), pp. 174–176 (2023) · Review of Diary Sow (2021)", "href": "" }
+      ]
+    },
+    {
+      "heading": "Pre-prints",
+      "items": [
+        { "title": "Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance", "venue": "Pre-print (2026) · adamu.tech", "href": "/papers/agentic-ai/" }
+      ]
+    },
+    {
+      "heading": "Creative writing",
+      "items": [
+        { "title": "This too shall pass", "venue": "Essay (2024)", "href": "" },
+        { "title": "Nature's Hymn", "venue": "Creative writing (2023)", "href": "" },
+        { "title": "Les Larmes d'une Plume Esseulée", "venue": "Collection, in French (2020)", "href": "" }
+      ]
+    }
+  ],
+  "datasets": [
+    {
+      "title": "Mapping Voices: An Open Atlas of Oral-History and Voice-Testimony Collections",
+      "year": "2026",
+      "meta": "Dataset (v0.4.0) · Zenodo · CC BY 4.0 · Creator & curator · [doi:10.5281/zenodo.22996478](https://doi.org/10.5281/zenodo.22996478)",
+      "description": "Open research dataset and interactive atlas indexing 221 real, publicly documented oral-history and voice-testimony collections across 120 countries and territories and 125 languages. Persistent identifiers, controlled vocabularies (ISO 639-3, ISO 3166, UN M49), a published methodology, and an append-only review log; released as CSV, JSON, and GeoJSON with an interface in English, Hausa, French, and Arabic.",
+      "links": [
+        { "label": "Live atlas", "url": "https://adamu.tech/mapping/" },
+        { "label": "Source & methodology", "url": "https://github.com/adab-tech/mapping" }
+      ]
+    }
+  ]
+}

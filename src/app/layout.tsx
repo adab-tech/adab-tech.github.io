@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { checkSiteContent } from '@/lib/site-content'
+
+// Stops the build with a clear message if an edited content file is malformed.
+checkSiteContent()
 
 export const viewport: Viewport = {
   width: 'device-width',
