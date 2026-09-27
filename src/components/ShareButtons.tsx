@@ -44,7 +44,7 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2" aria-label="Share this post">
-      <span className="text-xs font-mono text-zinc-400 mr-1">Share</span>
+      <span className="text-sm text-zinc-300 mr-1">Share this post</span>
       {canShare && (
         <button type="button" onClick={nativeShare} className={button} aria-label="Share with an app on this device">
           <Share2 className="h-4 w-4" />

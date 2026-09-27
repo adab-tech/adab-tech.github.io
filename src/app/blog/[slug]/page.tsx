@@ -73,7 +73,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span aria-hidden="true">·</span>
             <span>{post.readingMinutes} min read</span>
           </div>
-          <ShareButtons url={`https://adamu.tech/blog/${post.slug}/`} title={post.title} />
           {post.tags.length > 0 && (
             <ul className="flex flex-wrap gap-2" aria-label="Tags">
               {post.tags.map((tag) => (

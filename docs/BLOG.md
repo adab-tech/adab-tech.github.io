@@ -32,7 +32,7 @@ paid Ghost plan.)
 
 ## Sharing
 
-Every post page on adamu.tech has share buttons (X, LinkedIn, Facebook,
+Every post page on adamu.tech ends with share buttons (X, LinkedIn, Facebook,
 WhatsApp, email, copy link, and the phone's share sheet where available) and a
 generated preview image (`/blog/<slug>/og.png`) so links show a card with the
 title when shared. Ghost posts use Ghost's own sharing and previews.
