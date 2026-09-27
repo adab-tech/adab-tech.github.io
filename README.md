@@ -10,12 +10,13 @@ This repository is a Next.js app (not a static HTML GitHub Pages tree). Producti
 
 | Path | Page |
 |------|------|
-| `/` | Research-builder dossier (Murya, lexicon, projects) |
-| `/about` `/cv` | Biography and CV |
-| `/projects` | Engineered systems catalog |
-| `/skills` | Skills |
+| `/` | Home (Murya, projects, contact) |
+| `/cv` | CV |
+| `/projects` | Projects |
+| `/about` `/academic-cv` `/curriculum-vitae` `/skills` | Old URLs; redirect to `/cv` |
 | `/contact` | Contact form |
 | `/papers/agentic-ai` | Working paper |
+| `/admin` | Private tools; not linked from the site, `noindex` |
 | `/mapping` | Mapping Voices — redirect (`public/mapping/index.html`) to the atlas deployed from [adab-tech/mapping](https://github.com/adab-tech/mapping); dataset DOI [10.5281/zenodo.22996478](https://doi.org/10.5281/zenodo.22996478) |
 
 Related live systems: [app.murya.ng](https://app.murya.ng) · [globalopportunities.app](https://globalopportunities.app) · [imodoye.ng](https://imodoye.ng) · [Hugging Face](https://huggingface.co/adab-tech)

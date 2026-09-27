@@ -39,7 +39,7 @@ export function GlobalShell({ children }: ShellProps) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           
           {/* Logo Mark Only - Phonetic notation /a/ */}
-          <Link href="/" title="Adamu.tech Home Dossier" className="shrink-0">
+          <Link href="/" title="adamu.tech home" className="shrink-0">
             <LogoMark />
           </Link>
 
@@ -49,7 +49,7 @@ export function GlobalShell({ children }: ShellProps) {
               href="/" 
               className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
             >
-              Dossier
+              Home
             </Link>
             <Link 
               href="/projects" 
@@ -61,13 +61,13 @@ export function GlobalShell({ children }: ShellProps) {
               href="/papers/agentic-ai" 
               className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
             >
-              Pre-Print
+              Pre-print
             </Link>
             <Link 
               href="/cv" 
               className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/20 hover:bg-amber-400/20 transition-all"
             >
-              Academic CV
+              CV
             </Link>
             
             <div className="h-4 w-px bg-zinc-800" />
@@ -75,14 +75,6 @@ export function GlobalShell({ children }: ShellProps) {
             {/* Hyperlinked Icon Hub */}
             <SocialNavIcons />
 
-            <div className="h-4 w-px bg-zinc-800" />
-
-            <Link 
-              href="/admin" 
-              className="px-2.5 py-1 rounded-lg border border-zinc-800 bg-[#0E1526] text-xs font-mono text-zinc-400 hover:text-amber-400 hover:border-amber-500/40 transition-colors"
-            >
-              Admin
-            </Link>
           </nav>
 
           {/* Mobile Header Toggle */}
@@ -107,7 +99,7 @@ export function GlobalShell({ children }: ShellProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
               >
-                Dossier
+                Home
               </Link>
               <Link
                 href="/projects"
@@ -121,14 +113,14 @@ export function GlobalShell({ children }: ShellProps) {
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
               >
-                Pre-Print Paper
+                Pre-print
               </Link>
               <Link
                 href="/cv"
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2.5 text-center rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold hover:bg-amber-500/20"
               >
-                Academic CV
+                CV
               </Link>
             </div>
 
@@ -137,15 +129,6 @@ export function GlobalShell({ children }: ShellProps) {
               <SocialNavIcons />
             </div>
 
-            <div className="pt-1">
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-center p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 hover:text-amber-400"
-              >
-                Admin Studio & Traffic Tracker
-              </Link>
-            </div>
           </div>
         )}
       </header>
