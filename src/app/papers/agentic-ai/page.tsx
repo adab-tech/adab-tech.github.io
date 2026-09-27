@@ -42,7 +42,7 @@ export default function AgenticAiPaperPage() {
             className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-600 dark:text-zinc-400 hover:text-amber-500 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Back to Platform Dossier</span>
+            <span>Back to home</span>
           </Link>
 
           <div className="flex items-center space-x-2">

@@ -27,17 +27,17 @@ interface ProjectItem {
 const PROJECTS_DATA: ProjectItem[] = [
   {
     id: 'murya-os',
-    title: 'Murya Speech OS',
+    title: 'Murya',
     category: 'AI & Speech',
     role: 'Founder & linguistic lead',
-    status: 'Live Production (v1.2)',
+    status: 'Live (v1.2)',
     statusColor: 'emerald',
-    description: 'Sovereign 8-speaker neural speech synthesis and bidirectional live voice engine for Hausa. Features client-side WASM ONNX inference, offline-first IndexedDB Ƙamus grounding, and rising-edge echo cancellation.',
+    description: 'Hausa speech synthesis and live spoken conversation. Speech synthesis and dictionary lookup run in the browser and work offline; answers are grounded in the Ƙamus lexicon.',
     highlights: [
-      'Live blind MOS naturalness study at app.murya.ng/listen — results pending sufficient rater volume',
-      '8-Speaker WAXAL-Piper VITS multi-speaker neural architecture',
-      '< 110ms time-to-first-audio chunk latency in browser WASM',
-      'Rising-edge control barrier (assistant_speaking) preventing self-echo'
+      'Blind MOS naturalness study running at app.murya.ng/listen; no score is published until each voice has enough ratings',
+      '8-speaker Piper VITS model fine-tuned on the WAXAL Hausa corpus; open weights on Hugging Face',
+      'Under 110 ms to first audio, running in the browser',
+      'Echo suppression so the assistant doesn’t hear its own voice in live conversation'
     ],
     liveUrl: 'https://app.murya.ng',
     repoUrl: 'https://huggingface.co/adab-tech',
@@ -45,11 +45,80 @@ const PROJECTS_DATA: ProjectItem[] = [
     tags: ['Speech AI', 'Piper VITS', 'FastAPI', 'WASM ONNX', 'Hausa NLP']
   },
   {
+    id: 'mapping-voices',
+    title: 'Mapping Voices',
+    category: 'Philology & Humanities',
+    role: 'Creator & curator',
+    status: 'Dataset v0.4.0 · DOI',
+    statusColor: 'blue',
+    description: 'An open research dataset and interactive atlas of real oral-history and voice-testimony collections worldwide — a single geographic entry point into collections otherwise scattered across hundreds of institutional sites, searchable by country, language, theme, period, and access, with a published methodology and persistent identifiers.',
+    highlights: [
+      '221 real, publicly documented collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478)',
+      'Zero-dependency static app (Leaflet + OpenStreetMap) with Language Explorer, Theme Explorer, and Coverage Gaps views',
+      'Full UI localization in English, Hausa, French, and Arabic with native CLDR pluralization',
+      'Open source (MIT code / CC BY 4.0 data) with a public contribution pipeline for institutions and researchers'
+    ],
+    liveUrl: 'https://adamu.tech/mapping/',
+    repoUrl: 'https://github.com/adab-tech/mapping',
+    tags: ['Digital Humanities', 'Oral History', 'Open Data', 'Zenodo DOI', 'Leaflet', 'i18n']
+  },
+  {
+    id: 'hausa-30k-lexicon',
+    title: 'Hausa Lexicon (Ƙamus)',
+    category: 'Philology & Humanities',
+    role: 'Curator & Maintainer',
+    status: 'Open dataset',
+    statusColor: 'blue',
+    description: 'Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.',
+    highlights: [
+      '20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms',
+      '30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)',
+      'Newman (1977) subset is not redistributed'
+    ],
+    modelUrl: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
+    repoUrl: 'https://huggingface.co/adab-tech',
+    tags: ['Lexical Infrastructure', 'Hugging Face', 'Hausa Philology', 'Open Data']
+  },
+  {
+    id: 'agentic-ai-monograph',
+    title: 'Humanities Perspectives on Agentic AI',
+    category: 'Philology & Humanities',
+    role: 'Author',
+    status: 'Pre-print',
+    statusColor: 'blue',
+    description: 'Working paper on why the humanities belong at the centre of agentic-AI governance, drawing on postcolonial theory, cultural pragmatics, and four case studies.',
+    highlights: [
+      'Grounding conversational AI in Hausa norms of modesty and respect (Kunya & Girmamawa)',
+      'Critical analysis of Western anthropocentric agent architectures',
+      'A governance framework for autonomous AI agents'
+    ],
+    paperUrl: '/papers/agentic-ai',
+    repoUrl: 'https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ',
+    tags: ['Digital Humanities', 'AI Ethics', 'Pragmatics', 'Pre-print']
+  },
+  {
+    id: 'imodoye-archive',
+    title: "Imodoye Writers' Residency",
+    category: 'Philology & Humanities',
+    role: 'Founder & platform lead',
+    status: 'Live',
+    statusColor: 'emerald',
+    description: "Platform for Imodoye, a writers' residency in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
+    highlights: [
+      'Content management for fellows, cohorts, partners, and publications',
+      'Blind-review editorial workflow feeding submissions to Imodoye Review',
+      'Public residency archive and impact reporting, backed by the live database'
+    ],
+    liveUrl: 'https://imodoye.ng',
+    repoUrl: 'https://github.com/adab-tech/imodoye-web',
+    tags: ["Writers' Residency", 'Literary Fellowship', 'Next.js', 'Neon Postgres']
+  },
+  {
     id: 'global-opportunities',
-    title: 'Global Opportunities Platform',
+    title: 'Global Opportunities',
     category: 'Academic & Grants',
     role: 'Founder',
-    status: 'Live Production',
+    status: 'Live',
     statusColor: 'emerald',
     description: 'A global discovery engine and automated deadline tracker for scholarships, research fellowships, international grants, and academic positions worldwide.',
     highlights: [
@@ -63,80 +132,11 @@ const PROJECTS_DATA: ProjectItem[] = [
     tags: ['Next.js', 'Grants Engine', 'Scholarships', 'Automated Alerts', 'Global Mobility']
   },
   {
-    id: 'agentic-ai-monograph',
-    title: 'Humanities Perspectives on Agentic AI',
-    category: 'Philology & Humanities',
-    role: 'Author & Principal Investigator',
-    status: 'Pre-Print Research',
-    statusColor: 'blue',
-    description: 'Academic monograph and theoretical framework examining postcolonial epistemologies, cultural pragmatics, and ethical governance for autonomous AI agents.',
-    highlights: [
-      'Grounding conversational AI in Chadic social etiquette (Kunya & Girmamawa)',
-      'Critical analysis of Western anthropocentric agent architectures',
-      'Operational framework for sovereign digital governance'
-    ],
-    paperUrl: '/papers/agentic-ai',
-    repoUrl: 'https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ',
-    tags: ['Digital Humanities', 'AI Ethics', 'Chadic Pragmatics', 'Pre-Print']
-  },
-  {
-    id: 'hausa-30k-lexicon',
-    title: 'Hausa Lexicon (Ƙamus)',
-    category: 'Philology & Humanities',
-    role: 'Curator & Maintainer',
-    status: 'Open Dataset · Internal Extension',
-    statusColor: 'amber',
-    description: 'Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.',
-    highlights: [
-      '20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms',
-      '30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)',
-      'Newman (1977) subset is not redistributed'
-    ],
-    modelUrl: 'https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914',
-    repoUrl: 'https://huggingface.co/adab-tech',
-    tags: ['Lexical Infrastructure', 'Hugging Face', 'Hausa Philology', 'Open Data']
-  },
-  {
-    id: 'imodoye-archive',
-    title: "Imodoye Writers' Residency & Fellowship",
-    category: 'Philology & Humanities',
-    role: 'Founder & platform lead',
-    status: 'Live Production',
-    statusColor: 'emerald',
-    description: "Full-stack platform for Imodoye — the first writers' residency of its kind in Northern Nigeria, founded in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
-    highlights: [
-      'Next.js + Neon Postgres, with an admin CMS covering fellows, cohorts, partners, and publications',
-      'Blind-review editorial workflow feeding submissions to Imodoye Review',
-      'Public residency archive and impact reporting, backed by the live database'
-    ],
-    liveUrl: 'https://imodoye.ng',
-    repoUrl: 'https://github.com/adab-tech/imodoye-web',
-    tags: ["Writers' Residency", 'Literary Fellowship', 'Next.js', 'Neon Postgres']
-  },
-  {
-    id: 'mapping-voices',
-    title: 'Mapping Voices',
-    category: 'Philology & Humanities',
-    role: 'Founder & Lead Architect',
-    status: 'Live Production',
-    statusColor: 'emerald',
-    description: 'An open research dataset and interactive atlas of real oral-history and voice-testimony collections worldwide — a single geographic entry point into collections otherwise scattered across hundreds of institutional sites, searchable by country, language, theme, period, and access, with a published methodology and persistent identifiers.',
-    highlights: [
-      '221 real, publicly documented collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478)',
-      'Zero-dependency static app (Leaflet + OpenStreetMap) with Language Explorer, Theme Explorer, and Coverage Gaps views',
-      'Full UI localization in English, Hausa, French, and Arabic with native CLDR pluralization',
-      'Open source (MIT code / CC BY 4.0 data) with a public contribution pipeline for institutions and researchers'
-    ],
-    liveUrl: 'https://adamu.tech/mapping/',
-    repoUrl: 'https://github.com/adab-tech/mapping',
-    tags: ['Digital Humanities', 'Oral History', 'Open Data', 'Zenodo DOI', 'Leaflet', 'i18n']
-  },
-  {
     id: 'adab-infrastructure',
     title: 'Adab Infrastructure (PropTech)',
     category: 'Infrastructure',
     role: 'Technical Architect',
-    status: 'Live Production',
+    status: 'Live',
     statusColor: 'emerald',
     description: 'Full-stack property listing and real estate marketplace platform operating across Nigeria with intelligent search portals and verified lister workflows.',
     highlights: [
@@ -168,7 +168,7 @@ export default function ProjectsPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono text-xs font-semibold">
               <Layers className="w-3.5 h-3.5" />
-              Sovereign Ecosystem & Systems Portfolio
+              Projects
             </span>
             
           </div>
@@ -177,7 +177,7 @@ export default function ProjectsPage() {
             Engineered Systems & Research Platforms
           </h1>
           <p className="text-sm sm:text-base text-zinc-400 max-w-3xl font-sans leading-relaxed">
-            A comprehensive catalog of production speech AI engines, academic discovery platforms, computational linguistics datasets, and digital humanities repositories built and maintained by Adamu Danjuma Abubakar.
+            Speech technology, open research datasets, and platforms I have built or lead, with my role in each.
           </p>
         </div>
 
