@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
         tags,
         bibtex: bibtexInput
       })
-      setNotification('Publication updated successfully!')
+      setNotification('Updated in this browser only (not on the public site).')
     } else {
       addPost({
         title,
@@ -67,7 +67,7 @@ export default function AdminDashboardPage() {
         pdfUrl: '#',
         links: [{ label: 'View Article', url: '#' }]
       })
-      setNotification('New research publication live!')
+      setNotification('Saved in this browser only (not on the public site). Use “Write a blog post” to publish.')
     }
 
     setEditingId(null)
@@ -121,6 +121,20 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
+        {/* Blog publishing (commits to GitHub; the only way a post reaches the public site) */}
+        <a
+          href="/admin/blog/"
+          className="block p-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
+        >
+          <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+            <Edit3 className="h-5 w-5" />
+            <span>Write a blog post →</span>
+          </div>
+          <p className="text-sm text-zinc-300 mt-1">
+            Write, preview, and publish to adamu.tech/blog. Edit or delete published posts.
+          </p>
+        </a>
+
         {/* Real-Time Live Traffic & Visitor Analytics Hub */}
         <section className="space-y-3">
           <div className="flex items-center justify-between">
@@ -169,7 +183,7 @@ export default function AdminDashboardPage() {
               Inquiries & Booking Inbox ({inquiries.length})
             </h2>
             <span className="text-xs font-mono text-zinc-400">
-              Target Mail: <strong className="text-zinc-200">adamudanjuma1@outlook.com</strong> / <strong className="text-zinc-200">contact@adamu.tech</strong>
+              Target Mail: <strong className="text-zinc-200">contact@adamu.tech</strong>
             </span>
           </div>
 
@@ -204,7 +218,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <p className="text-xs font-sans text-zinc-300 leading-relaxed bg-midnight-950 p-3 rounded-lg border border-zinc-800/80">
-                    "{inq.message}"
+                    &quot;{inq.message}&quot;
                   </p>
 
                   <div className="flex items-center justify-between pt-1 font-mono text-xs">
@@ -247,6 +261,7 @@ export default function AdminDashboardPage() {
               <Edit3 className="h-5 w-5 text-gold-400" />
               {editingId ? 'Edit Research Publication' : 'Create New Research Publication'}
             </h2>
+            <span className="text-xs font-mono text-zinc-400">Saved in this browser only; not on the public site.</span>
 
             {editingId && (
               <button
@@ -469,7 +484,7 @@ export default function AdminDashboardPage() {
             <div className="space-y-2 font-mono text-xs">
               <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
                 <span className="text-zinc-400">Primary Recipient Email:</span>
-                <span className="text-emerald-400 font-bold">adamudanjuma1@outlook.com</span>
+                <span className="text-emerald-400 font-bold">Private inbox (not shown here: this page ships as public code)</span>
               </div>
               <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between">
                 <span className="text-zinc-400">Domain Email:</span>

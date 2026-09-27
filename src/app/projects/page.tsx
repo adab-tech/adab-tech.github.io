@@ -4,8 +4,7 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { 
-  Layers, ExternalLink, Code2, ArrowRight, Cpu, BookOpen, 
-  Globe, Database, Shield, Sparkles, Building2, Search, Filter 
+  Layers, ExternalLink, Code2, ArrowRight
 } from 'lucide-react'
 
 interface ProjectItem {

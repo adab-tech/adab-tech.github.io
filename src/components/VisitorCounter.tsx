@@ -29,7 +29,7 @@ export function VisitorCounter({ showDetails = false }: { showDetails?: boolean 
             return
           }
         }
-      } catch (err) {}
+      } catch {}
 
       try {
         const storedVisits = localStorage.getItem('adamu_tech_global_visits')
@@ -38,7 +38,7 @@ export function VisitorCounter({ showDetails = false }: { showDetails?: boolean 
         localStorage.setItem('adamu_tech_global_visits', currentVisits.toString())
         setVisits(currentVisits)
         setUniqueVisitors(Math.floor(currentVisits * 0.38))
-      } catch (e) {}
+      } catch {}
     }
 
     fetchRealGlobalVisits()

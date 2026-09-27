@@ -1,13 +1,13 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { 
   Cpu, BookOpen, ExternalLink, ArrowRight, Shield, Activity, 
-  Terminal, Database, Layers, CheckCircle2, Award, Zap, Code, 
-  Share2, Play, Pause, Volume2, Globe, FileText, Check, AlertCircle, 
-  MapPin, Mail, Sparkles, Building2
+  Layers, CheckCircle2, 
+  FileText, 
+  MapPin, Mail, Sparkles
 } from 'lucide-react'
 
 // Ordered by what best shows the work: the product, then the citable research
@@ -96,13 +96,6 @@ const BENCHMARKS_DATA = [
 ]
 
 export default function HomePage() {
-  const [playingAudio, setPlayingAudio] = useState(false)
-  const [audioSpeed, setAudioSpeed] = useState('1.0x')
-
-  const toggleDemoAudio = () => {
-    setPlayingAudio(!playingAudio)
-  }
-
   return (
     <GlobalShell>
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16 sm:space-y-24">
@@ -215,27 +208,27 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs font-mono">
               <div className="space-y-1">
-                <span className="text-zinc-500">Base Architecture:</span>
+                <span className="text-zinc-400">Base Architecture:</span>
                 <div className="text-zinc-200">8-Speaker WAXAL-Piper VITS Multi-Speaker ONNX (24 kHz)</div>
               </div>
               <div className="space-y-1">
-                <span className="text-zinc-500">Voice Personas:</span>
+                <span className="text-zinc-400">Voice Personas:</span>
                 <div className="text-zinc-200">Malama Asabe (Female) · Malam Garba (Male)</div>
               </div>
               <div className="space-y-1">
-                <span className="text-zinc-500">Training Corpus:</span>
+                <span className="text-zinc-400">Training Corpus:</span>
                 <div className="text-zinc-200">WAXAL (hau subset, arXiv:2602.02734)</div>
               </div>
               <div className="space-y-1">
-                <span className="text-zinc-500">Tone:</span>
+                <span className="text-zinc-400">Tone:</span>
                 <div className="text-zinc-200">Syllable weight and right-to-left tone mapping (after Litvinova)</div>
               </div>
               <div className="space-y-1">
-                <span className="text-zinc-500">Runs:</span>
+                <span className="text-zinc-400">Runs:</span>
                 <div className="text-zinc-200">In the browser (ONNX/WASM), with server streaming as fallback</div>
               </div>
               <div className="space-y-1">
-                <span className="text-zinc-500">License:</span>
+                <span className="text-zinc-400">License:</span>
                 <div className="text-zinc-200">CC-BY-NC-SA 4.0 (Open Weights)</div>
               </div>
             </div>
@@ -320,7 +313,7 @@ export default function HomePage() {
                       {p.status}
                     </span>
                   </div>
-                  <div className="text-xs font-mono text-amber-400/90">{p.role} · <span className="text-zinc-500">{p.type}</span></div>
+                  <div className="text-xs font-mono text-amber-400/90">{p.role} · <span className="text-zinc-400">{p.type}</span></div>
                   <p className="text-xs text-zinc-300 font-sans leading-relaxed">{p.desc}</p>
                 </div>
 

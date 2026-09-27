@@ -35,7 +35,7 @@ export function isAdminAuthenticated(): boolean {
     if (!session) return false
     const parsed = JSON.parse(session)
     return !!parsed.authenticated
-  } catch (e) {
+  } catch {
     return false
   }
 }

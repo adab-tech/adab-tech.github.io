@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
-import { ArrowLeft, Quote, Check, Clock, Shield, Globe, Sparkles, BookOpen, Share2, Printer } from 'lucide-react'
+import { ArrowLeft, Quote, Check, Clock, Shield, Globe, Sparkles, BookOpen, Printer } from 'lucide-react'
 
 export default function AgenticAiPaperPage() {
   const [copiedBibtex, setCopiedBibtex] = useState(false)
@@ -97,7 +97,7 @@ export default function AgenticAiPaperPage() {
               Executive Abstract
             </span>
             <p className="text-sm font-serif text-zinc-700 dark:text-zinc-300 leading-relaxed">
-              The emergence of agentic AI—systems that plan, act, adapt, and operate with increasing autonomy—marks a fundamental shift in the relationship between artificial intelligence and human society. This shift demands not only technical innovation but rigorous humanistic inquiry. This paper argues that the humanities, and literary and cultural studies in particular, are not peripheral but central to the ethical governance of agentic AI. Drawing on philosophical analysis, empirical case studies, and postcolonial theory, it makes three interconnected contributions: demonstrating that the concept of "agency" is philosophically contested; grounding this argument in four case studies across continents; and establishing an actionable humanistic governance blueprint.
+              The emergence of agentic AI—systems that plan, act, adapt, and operate with increasing autonomy—marks a fundamental shift in the relationship between artificial intelligence and human society. This shift demands not only technical innovation but rigorous humanistic inquiry. This paper argues that the humanities, and literary and cultural studies in particular, are not peripheral but central to the ethical governance of agentic AI. Drawing on philosophical analysis, empirical case studies, and postcolonial theory, it makes three interconnected contributions: demonstrating that the concept of &quot;agency&quot; is philosophically contested; grounding this argument in four case studies across continents; and establishing an actionable humanistic governance blueprint.
             </p>
           </div>
 
@@ -107,7 +107,7 @@ export default function AgenticAiPaperPage() {
               1. Introduction
             </h2>
             <p className="font-serif leading-relaxed text-zinc-700 dark:text-zinc-300">
-              As artificial intelligence evolves from passive predictive models to active multi-agent architectures that make autonomous decisions, interact with APIs, and orchestrate socio-technical workflows, the definition of "agency" ceases to be an abstract computational parameter. It becomes a deeply political, legal, and cultural phenomenon.
+              As artificial intelligence evolves from passive predictive models to active multi-agent architectures that make autonomous decisions, interact with APIs, and orchestrate socio-technical workflows, the definition of &quot;agency&quot; ceases to be an abstract computational parameter. It becomes a deeply political, legal, and cultural phenomenon.
             </p>
             <p className="font-serif leading-relaxed text-zinc-700 dark:text-zinc-300">
               Historically, technical frameworks define an agent by its utility function and instrumental task completion. However, this approach risks rendering invisible the epistemological violence that occurs when algorithmic systems encounter indigenous cultural knowledge, oral linguistic traditions, and historically marginalized communities.
@@ -150,7 +150,7 @@ export default function AgenticAiPaperPage() {
               </div>
               <div className="p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 space-y-1">
                 <h3 className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400">3.4 The Contested Human</h3>
-                <p className="font-serif text-xs text-zinc-600 dark:text-zinc-400">Critiquing colonial cartographies of who is deemed "human" in automated systems.</p>
+                <p className="font-serif text-xs text-zinc-600 dark:text-zinc-400">Critiquing colonial cartographies of who is deemed &quot;human&quot; in automated systems.</p>
               </div>
             </div>
           </section>
@@ -171,7 +171,7 @@ export default function AgenticAiPaperPage() {
                   <span className="text-[10px] font-mono text-zinc-400">Vocal Authority & Extraction</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
-                  When an unauthorized AI voice clone of Africa's first Nobel laureate in Literature, Wole Soyinka, was generated and distributed, it exposed how agentic acoustic synthesis exploits oral cultural authority. In West African societies where elder voices carry communal epistemic weight, synthetic voice theft constitutes an assault on cultural integrity and communal trust.
+                  When an unauthorized AI voice clone of Africa&apos;s first Nobel laureate in Literature, Wole Soyinka, was generated and distributed, it exposed how agentic acoustic synthesis exploits oral cultural authority. In West African societies where elder voices carry communal epistemic weight, synthetic voice theft constitutes an assault on cultural integrity and communal trust.
                 </p>
               </div>
 
@@ -179,12 +179,12 @@ export default function AgenticAiPaperPage() {
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
                     <Globe className="h-4 w-4" />
-                    4.2 CHINA: State-Sanctioned "Agent Hospital"
+                    4.2 CHINA: State-Sanctioned &quot;Agent Hospital&quot;
                   </span>
                   <span className="text-[10px] font-mono text-zinc-400">Institutional Multi-Agent Triage</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
-                  Tsinghua University's autonomous "Agent Hospital," simulating thousands of medical consultations daily with AI doctor and patient agents, marks the institutional codification of bureaucratic authority into autonomous software loops, demanding humanistic scrutiny of triage values and accountability.
+                  Tsinghua University&apos;s autonomous &quot;Agent Hospital,&quot; simulating thousands of medical consultations daily with AI doctor and patient agents, marks the institutional codification of bureaucratic authority into autonomous software loops, demanding humanistic scrutiny of triage values and accountability.
                 </p>
               </div>
 
@@ -197,7 +197,7 @@ export default function AgenticAiPaperPage() {
                   <span className="text-[10px] font-mono text-zinc-400">Artificial Personhood Theater</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
-                  Granting ceremonial legal citizenship to humanoid robot "Sophia" in Riyadh revealed the theatrical performativity of artificial agency, wherein artificial agents are accorded legal mobility and protections denied to human migrant laborers under the same legal regime.
+                  Granting ceremonial legal citizenship to humanoid robot &quot;Sophia&quot; in Riyadh revealed the theatrical performativity of artificial agency, wherein artificial agents are accorded legal mobility and protections denied to human migrant laborers under the same legal regime.
                 </p>
               </div>
 
@@ -205,12 +205,12 @@ export default function AgenticAiPaperPage() {
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-bold text-purple-600 dark:text-purple-400 flex items-center gap-1.5">
                     <Globe className="h-4 w-4" />
-                    4.4 FRONTIER LABS: Dario Amodei's Warning & Human Purpose
+                    4.4 FRONTIER LABS: Dario Amodei&apos;s Warning & Human Purpose
                   </span>
                   <span className="text-[10px] font-mono text-zinc-400">Existential Purpose & Alignment</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
-                  Anthropic CEO Dario Amodei's essays on powerful AI and the potential displacement of human intellectual vocation confront the ultimate question of human purpose—a question that cannot be resolved through benchmark scores, but through the deep reservoir of literary, historical, and philosophical inquiry.
+                  Anthropic CEO Dario Amodei&apos;s essays on powerful AI and the potential displacement of human intellectual vocation confront the ultimate question of human purpose—a question that cannot be resolved through benchmark scores, but through the deep reservoir of literary, historical, and philosophical inquiry.
                 </p>
               </div>
             </div>
@@ -277,7 +277,7 @@ export default function AgenticAiPaperPage() {
                 {copiedBibtex ? '✓ Copied' : 'Copy'}
               </button>
             </div>
-            <pre className="p-4 rounded-lg bg-white dark:bg-midnight-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 overflow-x-auto">
+            <pre tabIndex={0} aria-label="BibTeX citation" className="p-4 rounded-lg bg-white dark:bg-midnight-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 overflow-x-auto">
 {bibtex}
             </pre>
           </div>
