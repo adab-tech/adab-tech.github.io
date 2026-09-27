@@ -23,5 +23,14 @@ export const GISCUS = {
 
 export const commentsEnabled = () => Boolean(GISCUS.categoryId)
 
+// Own comment service (comments-worker/, Cloudflare free tier): readers
+// comment with just a name, no account; comments appear after approval in
+// /admin/comments. Set this to the Worker URL printed by the "Deploy comments
+// worker" workflow, e.g. 'https://adamu-comments.<name>.workers.dev'.
+// While empty, the giscus thread above is used instead.
+export const COMMENTS_API = ''
+
+export const ownCommentsEnabled = () => Boolean(COMMENTS_API)
+
 // Readers without GitHub can always reply privately by email.
 export const REPLY_EMAIL = 'contact@adamu.tech'

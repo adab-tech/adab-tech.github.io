@@ -91,7 +91,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <ShareButtons url={`https://adamu.tech/blog/${post.slug}/`} title={post.title} />
         </div>
 
-        {!post.draft && <Comments title={post.title} />}
+        {!post.draft && <Comments title={post.title} slug={post.slug} />}
 
         <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-800 pt-8" aria-label="More posts">
           {older ? (
