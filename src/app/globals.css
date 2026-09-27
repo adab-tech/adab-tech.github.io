@@ -140,3 +140,5 @@ html, body {
 }
 .hcb-dark .comment, .hcb-dark blockquote { border-color: #27272a; }
 .hcb-dark img { max-width: 100%; height: auto; }
+/* HTML Comment Box's advert link (also hidden by script in Comments.tsx). */
+.hcb-dark .home-desc { display: none !important; }
