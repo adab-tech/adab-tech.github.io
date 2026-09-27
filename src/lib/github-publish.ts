@@ -35,16 +35,25 @@ export function forgetToken(): void {
 }
 
 async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    ...init,
-    cache: 'no-store',
-    headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${getToken()}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-    },
-  })
+  // Only CORS-safelisted headers plus Authorization/Content-Type, so the
+  // browser's preflight to api.github.com can't be refused over a header.
+  let res: Response
+  try {
+    res = await fetch(`${API}${path}`, {
+      ...init,
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/vnd.github+json',
+        Authorization: `Bearer ${getToken().trim()}`,
+        ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+      },
+    })
+  } catch (err) {
+    throw new Error(
+      `Couldn't reach GitHub from this browser (${err instanceof Error ? err.message : String(err)}). ` +
+        'Check the connection, and turn off ad or privacy blockers for adamu.tech, then try again.',
+    )
+  }
   if (!res.ok) {
     let detail = ''
     try {
