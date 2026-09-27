@@ -4,7 +4,13 @@
 name = "adamu-comments"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
-workers_dev = true
+
+# adamu.tech is on Cloudflare, so the service answers on the site's own domain
+# (https://adamu.tech/api/...). These paths only exist on Cloudflare's
+# edge; the rest of the site is untouched. Requires the adamu.tech DNS record
+# to be proxied (orange cloud) in Cloudflare.
+workers_dev = false
+routes = [{ pattern = "adamu.tech/api/*", zone_name = "adamu.tech" }]
 
 [vars]
 ALLOWED_ORIGINS = "https://adamu.tech,https://www.adamu.tech"

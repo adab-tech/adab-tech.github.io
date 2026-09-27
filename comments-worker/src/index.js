@@ -1,5 +1,6 @@
 // Blog comments API for adamu.tech: a Cloudflare Worker with a D1 database.
 //
+// Served at https://adamu.tech/api/... (paths below are relative to /api).
 // Public:  GET  /comments?post=<slug>            approved comments, oldest first
 //          POST /comments {post,name,body,website,t}  new comment -> pending
 // Admin (Authorization: Bearer <ADMIN_KEY>):
@@ -34,7 +35,8 @@ export default {
 
 async function route(request, env) {
   const url = new URL(request.url)
-  const path = url.pathname.replace(/\/+$/, '')
+  // Served at adamu.tech/api/comments…; accept both with and without /api.
+  const path = url.pathname.replace(/\/+$/, '').replace(/^\/api(?=\/)/, '')
 
   if (path === '/comments' && request.method === 'GET') {
     const post = url.searchParams.get('post') || ''

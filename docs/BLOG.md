@@ -43,36 +43,40 @@ title when shared. Ghost posts use Ghost's own sharing and previews.
 Each post ends with **Reply by email** (subject filled in with the post title)
 and a public comment section:
 
-- **The site's own comment service** (`comments-worker/`, free on Cloudflare):
+- **The site's own comment service** (`comments-worker/`, a free Cloudflare
+  Worker on the adamu.tech zone, answering at `https://adamu.tech/api/...`):
   readers write a name and a comment, no account needed. Nothing appears
   until you approve it at adamu.tech/admin → **Comments**, where you can also
   reply as the author (shown with an "Author" badge) or delete. Spam is kept
   off by moderation, a hidden honeypot field, a minimum time on the form, and
-  a limit of 5 comments per 10 minutes per visitor. Used when `COMMENTS_API` is
-  set in `src/config/blog.ts`.
-- Until then, **giscus** (GitHub sign-in; comments stored as GitHub
-  Discussions in this repo, moderated in the Discussions tab).
+  a limit of 5 comments per 10 minutes per visitor.
+- Until that service is deployed, posts automatically fall back to **giscus**
+  (GitHub sign-in; comments stored as GitHub Discussions in this repo). Each
+  post checks whether `https://adamu.tech/api` answers, so nothing needs to
+  change on the site when the service goes live.
 
 ### Turning on the own comment service (one time, free)
 
-1. Create a free account at <https://dash.cloudflare.com/sign-up>. Open
-   **Workers & Pages** once and choose a workers.dev subdomain when asked.
-2. Copy your **Account ID** (Workers & Pages overview, right-hand side).
-3. **My Profile → API Tokens → Create Token →** "Edit Cloudflare Workers"
-   template; add the permission **Account → D1 → Edit**; create and copy the
-   token.
-4. In this GitHub repo: **Settings → Secrets and variables → Actions → New
+adamu.tech is already on Cloudflare, so the service runs on the same domain.
+Its DNS record must be **proxied** (orange cloud) in Cloudflare → DNS.
+
+1. Copy your **Account ID** (Cloudflare dashboard → adamu.tech → Overview,
+   right-hand side).
+2. **My Profile → API Tokens → Create Token →** "Edit Cloudflare Workers"
+   template (it includes Workers Routes for your zones); add the permission
+   **Account → D1 → Edit**; create and copy the token.
+3. In this GitHub repo: **Settings → Secrets and variables → Actions → New
    repository secret**, three times:
    - `CLOUDFLARE_API_TOKEN`: the token
    - `CLOUDFLARE_ACCOUNT_ID`: the account ID
    - `COMMENTS_ADMIN_KEY`: a long password you choose (used to moderate)
-5. **Actions → Deploy comments worker → Run workflow.** The run summary shows
-   the service URL (`https://adamu-comments.<subdomain>.workers.dev`).
-6. Put that URL in `COMMENTS_API` in `src/config/blog.ts` and commit. Then
-   open adamu.tech/admin → **Comments** and enter the admin key.
+4. **Actions → Deploy comments worker → Run workflow.**
+5. Check <https://adamu.tech/api/comments?post=test> shows `{"comments":[]}`.
+   Posts now show the no-account comment form. Open adamu.tech/admin →
+   **Comments** and enter the admin key to moderate.
 
-Cloudflare's free plan allows 100,000 requests a day, far more than a personal
-blog needs.
+Cloudflare's free plan allows 100,000 Worker requests a day, far more than a
+personal blog needs.
 
 ## Admin setup (first time on a device)
 
