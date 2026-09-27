@@ -28,7 +28,11 @@ export const metadata: Metadata = {
     description: 'Hausa speech technology, open research datasets, and computational linguistics for African languages.',
     url: 'https://adamu.tech',
     siteName: 'adamu.tech',
-    type: 'website'
+    type: 'website',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'adamu.tech' }]
+  },
+  twitter: {
+    card: 'summary_large_image',
   }
 }
 

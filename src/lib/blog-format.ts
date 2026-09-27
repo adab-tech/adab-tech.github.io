@@ -99,3 +99,24 @@ export function validatePost(p: PostFields, slug: string): string[] {
   if (!p.body.trim()) problems.push('Write something in the post.')
   return problems
 }
+
+// Writers press Enter once between paragraphs; Markdown needs a blank line.
+// Insert one between adjacent text lines, but leave lists, tables, quotes,
+// indented continuations, and fenced code blocks as they are.
+const KEEP_TOGETHER = /^\s*(?:[-*+]\s|\d+[.)]\s|\||>)/
+export function normalizeParagraphs(markdown: string): string {
+  const lines = markdown.replace(/\r\n?/g, '\n').split('\n')
+  const out: string[] = []
+  let inFence = false
+  lines.forEach((line, i) => {
+    if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
+    out.push(line)
+    const next = lines[i + 1]
+    if (inFence || next === undefined) return
+    const bothText = line.trim() !== '' && next.trim() !== ''
+    const together =
+      (KEEP_TOGETHER.test(line) && KEEP_TOGETHER.test(next)) || /^\s{2,}\S/.test(next) || /^\s*(```|~~~)/.test(next)
+    if (bothText && !together) out.push('')
+  })
+  return out.join('\n')
+}

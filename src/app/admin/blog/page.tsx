@@ -10,6 +10,7 @@ import { useAdminAuth } from '@/lib/auth'
 import {
   PostFields,
   FILE_PATTERN,
+  normalizeParagraphs,
   parsePostFile,
   postFileName,
   serializePost,
@@ -251,7 +252,7 @@ function Editor() {
   }, [status])
 
   const preview = useMemo(
-    () => (tab === 'preview' ? (marked.parse(post.body || '*Nothing written yet.*', { async: false, gfm: true }) as string) : ''),
+    () => (tab === 'preview' ? (marked.parse(normalizeParagraphs(post.body) || '*Nothing written yet.*', { async: false, gfm: true }) as string) : ''),
     [tab, post.body],
   )
 

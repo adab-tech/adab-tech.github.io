@@ -5,7 +5,37 @@ post is one Markdown file in `content/blog/`. Adding a file to `main` publishes
 it: the deploy workflow rebuilds the site and the post appears at
 `adamu.tech/blog/<slug>/` about a minute later.
 
-## Publish from the admin (easiest)
+## Writing in Ghost (blog.adamu.tech)
+
+Ghost is the main writing suite: a modern editor with formatting, links,
+images, galleries, video, audio, embeds, and newsletters. Posts go live the
+moment you press Publish. adamu.tech/blog reads published Ghost posts live
+from Ghost's Content API and lists them next to the older Markdown posts.
+
+One-time setup:
+
+1. Create a Ghost(Pro) site at <https://ghost.org> (the Starter plan is enough).
+2. In Ghost: **Settings → Domain**, set `blog.adamu.tech`. At the company that
+   manages the adamu.tech DNS, add the `CNAME` record Ghost shows for `blog`.
+3. In Ghost: **Settings → Integrations → Add custom integration** (name it
+   "adamu.tech"). Copy the **Content API key** and the **API URL**.
+4. Put them in `src/config/blog.ts` (`GHOST_URL`, `GHOST_CONTENT_API_KEY`) and
+   commit. The Content API key is read-only and meant to be public. Never use
+   the **Admin** API key here.
+5. Optional, in Ghost: **Settings → Navigation**, add a link back to
+   `https://adamu.tech`.
+
+After that, **Write a blog post** in the adamu.tech admin opens the Ghost
+editor.
+
+## Sharing
+
+Every post page on adamu.tech has share buttons (X, LinkedIn, Facebook,
+WhatsApp, email, copy link, and the phone's share sheet where available) and a
+generated preview image (`/blog/<slug>/og.png`) so links show a card with the
+title when shared. Ghost posts use Ghost's own sharing and previews.
+
+## Publish from the admin (Markdown posts)
 
 1. Go to adamu.tech/admin, log in, and choose **Write a blog post**
    (or **Write a post** in the admin header).
@@ -88,6 +118,9 @@ file and commit again.
 | `![description](/blog-images/photo.jpg)` | An image (upload images to `public/blog-images/`) |
 
 Hausa, French, and Arabic text work as typed (ƙ, ɗ, ɓ, ʼy, é, عربي).
+
+Pressing Enter once between paragraphs is fine: single line breaks between
+lines of text are treated as paragraph breaks.
 
 ## What was built (technical notes)
 
