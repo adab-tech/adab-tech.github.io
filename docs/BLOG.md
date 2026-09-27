@@ -46,7 +46,7 @@ and a public comment section. The site uses the first one that is set up:
 1. **HTML Comment Box** ([htmlcommentbox.com](https://www.htmlcommentbox.com)):
    hosted, free for small sites, readers comment anonymously (no account, no
    email), each post has its own thread, restyled to match the site. To set
-   up: on htmlcommentbox.com click **Get the code**, then copy the value after
+   up (done): on htmlcommentbox.com click **Get the code**, then copy the value after
    `mod=` (and `opts=`) from the snippet into `HCB` in `src/config/blog.ts`.
    Moderate by clicking **Moderator login** under the comments on any post.
 2. **Own comment service** (`comments-worker/`, Cloudflare): optional, off
