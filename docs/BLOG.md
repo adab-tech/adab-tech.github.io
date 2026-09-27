@@ -45,7 +45,7 @@ title) and, once enabled, a public comment thread by
 Discussions in this repo, with reactions and replies. Commenters sign in with
 GitHub; readers without GitHub use the email link.
 
-To enable the comment thread (one time):
+Enabled (category id set in `src/config/blog.ts`). To set it up again on another repo:
 
 1. Install the giscus app on this repo: <https://github.com/apps/giscus> →
    Install → Only select repositories → `adab-tech/adab-tech.github.io`.

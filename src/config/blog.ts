@@ -18,7 +18,7 @@ export const GISCUS = {
   repo: 'adab-tech/adab-tech.github.io',
   repoId: 'R_kgDOP38YGA',
   category: 'Announcements',
-  categoryId: '', // e.g. 'DIC_kwDO…'
+  categoryId: 'DIC_kwDOP38YGM4Czwp6',
 }
 
 export const commentsEnabled = () => Boolean(GISCUS.categoryId)
