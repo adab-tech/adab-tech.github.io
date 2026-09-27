@@ -79,19 +79,20 @@ personal blog needs.
 
 ## Admin setup (first time on a device)
 
-1. Go to adamu.tech/admin, log in, and choose **Write a blog post**
+1. Go to adamu.tech/admin and sign in with your GitHub token (see
+   docs/ADMIN.md, “Signing in”), then choose **Blog posts**
    (or **Write a post** in the admin header).
-2. **First time on a device:** the page asks for a GitHub token, because the
-   site has no server and publishing means saving the post to this repo.
-   - Open GitHub → Settings → Developer settings → **Fine-grained tokens** →
-     Generate new token (the page links there).
+2. The token is the only sign-in: the site has no server, so publishing
+   means saving the post to this repo, and the token is what allows that.
+   - Create it at GitHub → Settings → Developer settings → **Fine-grained
+     tokens** → Generate new token (the sign-in page links there).
    - Repository access: **Only select repositories** →
      `adab-tech/adab-tech.github.io`.
-   - Permissions: **Contents: Read and write**. Optional: **Actions:
-     Read-only**, so the editor can tell you when the post is live.
-   - Paste it into the page. It is stored in that browser only and sent only
-     to GitHub. **Forget GitHub token on this device** removes it. If a token
-     leaks, revoke it on GitHub; it can only change this repository's files.
+   - Permissions: **Contents: Read and write** and **Actions: Read-only**
+     (so the editor can tell you when the post is live).
+   - It is stored in that browser only and sent only to GitHub. **Sign out**
+     removes it. If a token leaks, revoke it on GitHub; it can only change
+     this repository’s files.
 3. Write the title and text, check **Preview**, then **Publish**. The web
    address is made from the title (editable). **Save as draft** stores the post
    in the repo without putting it on the site.
