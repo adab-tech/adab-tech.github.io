@@ -112,3 +112,31 @@ html, body {
 .rich-editor div[data-youtube-video].ProseMirror-selectednode { outline: 3px solid #f59e0b; outline-offset: 2px; }
 .rich-editor .selectedCell { background: rgba(245, 158, 11, 0.15); }
 .rich-editor td, .rich-editor th { min-width: 6rem; }
+
+/* HTML Comment Box, restyled to match the site (it ships a light theme). */
+.hcb-dark { color: #e4e4e7; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; max-width: 100%; }
+.hcb-dark * { max-width: 100%; }
+.hcb-dark a { color: #fbbf24; }
+.hcb-dark input[type="text"], .hcb-dark input:not([type]), .hcb-dark textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  background: #0e1526;
+  color: #f4f4f5;
+  border: 1px solid #3f3f46;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+.hcb-dark textarea { min-height: 8rem; }
+.hcb-dark input[type="submit"], .hcb-dark button {
+  background: #f59e0b;
+  color: #09090b;
+  border: 0;
+  border-radius: 9999px;
+  padding: 0.6rem 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.hcb-dark .comment, .hcb-dark blockquote { border-color: #27272a; }
+.hcb-dark img { max-width: 100%; height: auto; }

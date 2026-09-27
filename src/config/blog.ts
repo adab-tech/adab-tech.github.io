@@ -28,9 +28,22 @@ export const commentsEnabled = () => Boolean(GISCUS.categoryId)
 // comments appear after approval in /admin/comments. Each post checks that the
 // service answers and falls back to the giscus thread above if it doesn't
 // (e.g. before the worker has been deployed), so this can stay set.
-export const COMMENTS_API = 'https://adamu.tech/api'
+// Not in use (the author chose not to set up Cloudflare); set to
+// 'https://adamu.tech/api' after deploying comments-worker/ to switch it on.
+export const COMMENTS_API = ''
 
 export const ownCommentsEnabled = () => Boolean(COMMENTS_API)
+
+// HTML Comment Box (htmlcommentbox.com): hosted, free for small sites,
+// readers comment anonymously with no account. Paste the values from the
+// snippet it generates ("Get the code"): the `mod=` part is your moderator key
+// and `opts=` the options number. While empty, giscus is used.
+export const HCB = {
+  mod: '', // e.g. '%241%24wq1rdBcg%24...'
+  opts: '16798',
+}
+
+export const hcbEnabled = () => Boolean(HCB.mod)
 
 // Readers without GitHub can always reply privately by email.
 export const REPLY_EMAIL = 'contact@adamu.tech'
