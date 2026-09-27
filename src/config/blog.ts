@@ -39,7 +39,7 @@ export const ownCommentsEnabled = () => Boolean(COMMENTS_API)
 // snippet it generates ("Get the code"): the `mod=` part is your moderator key
 // and `opts=` the options number. While empty, giscus is used.
 export const HCB = {
-  mod: '', // e.g. '%241%24wq1rdBcg%24...'
+  mod: '%241%24wq1rdBcg%24I.XUuA.YkL4Mf.1qCpGVf.',
   opts: '16798',
 }
 
