@@ -1,0 +1,61 @@
+---
+title: "Qadr: On Destiny, Perseverance, and the Lessons Learned"
+date: 2026-09-27
+summary: "As he completes his doctoral studies in Romance Languages at the University of Alabama, doctoral candidate Adamu Danjuma Abubakar reflects on the challenges, losses, lessons, and moments of gratitude that shaped his academic journey. In this personal essay, he explores the meaning of Qadr (destiny), the power of perseverance, and the importance of hope in the face of adversity."
+tags: [reflection, research, graduate school, dissertation]
+draft: true
+---
+Writing a doctoral dissertation in any discipline, and in any language, is far from easy. It is demanding, challenging, and, at times, exhausting. It tests your resolve and requires you to give your best. More than anything else, it is a process of continuous revision and refinement. Looking back now, the journey feels almost dreamlike. Was it rewarding? Absolutely. Yet it was also a process that could be difficult to navigate alone. As some would say, however, “You gotta do it anyway!”
+In this reflection, I share aspects of my journey as a doctoral student and some of the lessons I learned along the way. It is my hope that these experiences will inspire someone, somewhere.
+When I arrived at the University of Alabama in 2021, after earning my bachelor's degree from the University of Ilorin in 2019, I knew I wanted to pursue graduate studies in a field I deeply cared about. At the time, however, I had no idea what my dissertation would eventually focus on. What I did know was that I wanted to explore new opportunities.
+That desire led me to apply for the Commonwealth Shared Scholarship, through which I was admitted to the M.Sc. program in Diplomacy and International Security at the University of Strathclyde. I also received admission to Anglia Ruskin University. I still remember a mentor advising me to prepare for Glasgow's freezing weather. Yet destiny had a different path for me. Instead, I came to Alabama, completed my coursework, and by the fourth year of my PhD in Romance Languages, I finally found my dissertation topic: “The Emergence of Women's Voices in Contemporary Central African Literature: A Study of Adrienne Yabouza's Novels.”
+Two years into the program, another life-defining event occurred. In 2023, I earned my MA en route to the PhD. That same year, however, I was involved in a car accident in Ogere while traveling home from Lagos. About two months later, I underwent two surgeries after sustaining multiple fractures in my left hand. The orthopedic surgeon, whom I remain grateful to, insisted that the procedures were necessary, despite my earlier reluctance to undergo surgery.
+Before long, the summer break ended and classes resumed. Continuing my studies was not easy. I spent two weeks at home recovering, enduring significant pain while trying to stay on track academically. Three years later, I look back on that period with gratitude to the Almighty for bringing me through it and allowing me to continue moving forward.
+Loss, too, became an important part of my journey. Many people, including my younger brother Abdul Wahab, have departed from this world. About two years ago, while waiting for a departmental meeting, I received news that one of my aunts, a retired nurse based in Kaduna, had passed away.
+Being far from home made the loss even more painful. Distance offered no comfort. I remember vividly that it was in her home that I wrote the statement of purpose I submitted with my application to the University of Alabama Graduate School. When I was preparing for the National Youth Service Corps (NYSC) orientation camp in Ise-Orun, Emure, she paid for my transportation. After I came to the United States, she continued to support me in ways that words cannot adequately express.
+She was not the only person whose memory accompanied me through this journey. Many mentors, scholars, and well-wishers who invested in me have passed away since passed away. I also remember leading scholars who have passed away. Among those I remember are Professors Pius Adesanmi, Muhammad Mustapha Akanbi, Gilbert Doho, Tijani Yunus, and Abdul Ganiyu Ambali. These were individuals I admired deeply. Their absence reminds me of the inevitability of death, the fragility of life, and the swift passage of time.
+Those realities reinforced an important lesson: while I came here to study, I had to commit myself fully to my goals. I often told myself that I must either succeed or return home. Had I left, perhaps I would have written this dissertation elsewhere, or perhaps it would never have been written at all. Such is life.
+I came to love my dissertation topic. It pushed me to reflect on what it means to work in a field that has often overlooked literary voices from the Central African Republic and other underrepresented countries such as Chad, Burundi, and Niger. Conducting research in a literary tradition that remains relatively unexplored presented its own challenges.
+The more I immersed myself in the works of Adrienne Yabouza, the more convinced I became that these voices deserved greater scholarly attention. Literary studies often focus on well-established traditions, but the Central African Republic remains largely absent from many critical conversations. That absence made the research more difficult, but it also made it more meaningful.
+Did I ever feel like giving up? No. However, living and studying far from my family often brought feelings of homesickness. The dissertation-writing process can be profoundly lonely. At times, it feels like digging endlessly in search of something you cannot yet see, trusting that persistence will eventually reveal it.
+Distractions were another challenge. If left unchecked, they could easily consume time that should have been devoted to reading, writing, and thinking. At this stage of academic life, one is expected to work independently and take ownership of one's research. That responsibility requires discipline.
+Even during periods when I should have been resting, I often found myself glued to my computer. Gradually, I developed the habit of working late into the night. I would search for quiet places where I could think clearly and organize my ideas. I sacrificed sleep more times than I care to admit.
+Writing itself was often one of the most difficult parts of the process. Sometimes I was full of ideas but struggled to translate them into words on a page. I typed. I wrote on paper. But, sometimes, instead of typing, I recorded voice notes, especially while walking to school. Piece by piece, those recorded reflections accumulated and eventually became part of my work.
+On some days, I would spend hours reading, highlighting passages, and recording my thoughts about them as though I were performing in a Shakespearean play. Looking back now, the experience feels surreal.
+Today, I am grateful for the opportunity to contribute to scholarship and earn a degree in the humanities. I was fortunate to be guided by a committee of distinguished scholars whose expertise spans literature, sociolinguistics, and anthropology. Their support greatly enriched my research.
+The committee was everything a doctoral student could hope for. Its members, including its chair, were patient, supportive, and generous with their time. They provided thoughtful feedback, expert guidance, and unwavering encouragement.
+Throughout the writing process, Professor Cheryl Toman was always available whenever I needed help. Her commitment to my research and her leadership ensured that the entire committee remained engaged and supportive. I cannot claim to have accomplished this entirely on my own. My work is still developing, but it has taken shape because of the collective efforts of many people who believed in me.
+To my committee, working with you has been one of the greatest honors of my academic life.
+Thank you.
+To all my teachers, from primary school to the present day, thank you as well. You inspired my love of learning, often without realizing it. I firmly believe that the pursuit of knowledge never exhausts the mind. You will always inspire me, your lifelong student.
+Once again, thank you.
+There is a saying: if wishes were horses, beggars would ride. If dreams were horses, I would have walked home proudly to tell my family what we had accomplished together. Their sacrifices are woven into every success I have achieved.
+I miss them deeply, and I know they miss me too. Where I come from, neither my father nor my mother had the opportunity to earn a college degree. Achieving a dream, earning a title, or obtaining a degree is therefore never an individual accomplishment. It is a collective one. Many people contributed to my journey, and I will never forget them.
+To my grandparents, parents, brothers, sisters, uncles, aunts, nephews, nieces, and the entire family, I am grateful beyond words.
+To those who are not related to me, to friends, colleagues, acquaintances, mentors, and even those I have never met but who prayed for me from afar, thank you.
+Looking back, I will always remember moments such as:
+•	Working long hours, often in isolation.
+•	Attending writing workshops and dedicating uninterrupted blocks of time to writing.
+•	Staring at a blank screen for hours without knowing what to write.
+•	Sleeping late and waking early for classes.
+•	Continuing to work while traveling, attending conferences, and during university holidays.
+•	The challenge of establishing contact with the author I studied, a task that became easier with my advisor's support.
+•	Balancing ambition with the limitations imposed by the scope of the project.
+•	Taking advantage of open-access resources, interlibrary loans, and networking opportunities.
+•	Building relationships with scholars outside literature, especially researchers working on the Central African Republic.
+•	Joining the Central African Studies Caucus of the African Studies Association.
+•	Writing the preface to a book by Achille Sylvester Ndonaye.
+•	Presenting research at conferences, including Harvard, UNC Chapel Hill, and many others.
+If this reflection reaches you, or someone who is struggling, doubting themselves, or wondering whether the journey is truly worth it, my message is simple: keep going and never give up.
+The road may be longer than you expected and, at times, more difficult to navigate. The obstacles may be far greater than you imagined. But do not stop.
+Remember these powerful words from Nelson Mandela: “It always seems impossible until it is done.”
+And do not be afraid to try again. One day, you may look back with gratitude and realize that every challenge, every setback, and every disappointment was preparing you for something greater, something you may never have imagined even in your wildest dreams.
+Was the journey easy? Certainly not.
+Would I do it all over again? Without hesitation.
+Along the way, I experienced loss, uncertainty, homesickness, pain, and moments of self-doubt. Yet I also experienced kindness, mentorship, friendship, opportunity, and grace. Looking back, I see a journey marked by unexpected turns: opportunities I never planned for, losses I never anticipated, challenges I never welcomed, and blessings I could never have imagined.
+From Ilorin to Alabama, from uncertainty to conviction, from coursework to dissertation, every step taught me something about patience, perseverance, and destiny.
+Looking back now, I understand why this reflection is titled Qadr. Some roads I wanted to take were closed. Others, which I never expected, opened before me. I did not come to Alabama knowing what my dissertation would be about, and I certainly could not have predicted many of the experiences that would shape me along the way. Yet every detour, every setback, every blessing, and every opportunity brought me to this moment.
+Perhaps that is the beauty of destiny: we only fully understand the journey when we look back.
+We plan. We strive. We dream. We work hard. Yet some things unfold according to a wisdom far greater than our own.
+That is Qadr.
+From beginning to end, to God alone be the glory. May He be praised forever.
