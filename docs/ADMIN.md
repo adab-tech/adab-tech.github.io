@@ -2,11 +2,61 @@
 
 adamu.tech/admin is the control room for the whole site. The site has no
 server: every change is saved to this GitHub repository and the site rebuilds
-about a minute later. The first time on a device, an editor asks for a GitHub
-token (setup steps are on that screen and in docs/BLOG.md). The token is kept
-in that browser only.
+about a minute later. With the admin server (below) you only ever type your
+password. Without it, the first time on a device an editor asks for a GitHub
+token, kept in that browser only.
 
-## Signing in
+## Admin server (password only, no tokens)
+
+Once the small admin server is set up, adamu.tech/admin needs **only your
+password**, on any device, and no screen ever asks for a GitHub token. The
+server is a free Cloudflare Worker at `adamu.tech/api/admin`
+(`admin-worker/`). It keeps the GitHub token as an encrypted Cloudflare
+secret, checks your password, and saves your edits to GitHub for you.
+
+### One-time setup (about 10 minutes)
+
+1. **Cloudflare account ID:** Cloudflare dashboard → adamu.tech → Overview,
+   right-hand column → copy **Account ID**.
+2. **Cloudflare API token:** My Profile → API Tokens → **Create Token** →
+   template **Edit Cloudflare Workers** → (account and zone: yours) → Create →
+   copy it.
+3. **GitHub token, for the server (the last one you will ever make):**
+   <https://github.com/settings/personal-access-tokens/new> → name
+   “adamu.tech admin server” → expiry: the longest offered → Only select
+   repositories: `adab-tech.github.io` → Permissions: **Contents: Read and
+   write**, **Actions: Read-only** → Generate → copy it.
+4. **Put the four values in GitHub:** this repository → **Settings → Secrets
+   and variables → Actions → New repository secret**, four times:
+   - `CLOUDFLARE_ACCOUNT_ID`: from step 1
+   - `CLOUDFLARE_API_TOKEN`: from step 2
+   - `ADMIN_GITHUB_TOKEN`: from step 3
+   - `ADMIN_PASSWORD`: the password you want to sign in with (at least 10
+     characters; you can change it later from the dashboard)
+5. **Deploy:** this repository → **Actions → Deploy admin server → Run
+   workflow**. When it finishes (about a minute), its summary says the admin
+   server is live.
+6. If the summary says it doesn’t answer: Cloudflare → adamu.tech → **DNS** →
+   the `adamu.tech` record must show **Proxied** (orange cloud). Then run step
+   5 again.
+
+Then go to adamu.tech/admin and sign in with your `ADMIN_PASSWORD`.
+
+### After setup
+
+- **Signing in:** just the password; you stay signed in for 30 days on that
+  browser (a secure cookie), or until you sign out.
+- **Changing the password:** Admin → **Admin password** (current password,
+  then the new one twice). It works at once on every device. Only a keyed hash
+  is saved (`content/admin/auth.json`), useless without the server’s secrets.
+- **Forgot it:** delete `content/admin/auth.json` on GitHub; the
+  `ADMIN_PASSWORD` secret works again.
+- **When the GitHub token in step 3 expires,** make a new one the same way,
+  update the `ADMIN_GITHUB_TOKEN` secret, and run step 5 again.
+
+## Signing in without the admin server
+
+Until the admin server is set up, the admin works as below.
 
 adamu.tech/admin asks only for a password; no GitHub token is needed to sign
 in. A sign-in lasts 30 days in that browser, or until you sign out.

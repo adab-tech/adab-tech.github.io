@@ -2,13 +2,13 @@
 
 import React, { useState, useSyncExternalStore } from 'react'
 import { KeyRound, Loader2 } from 'lucide-react'
-import { checkAccess, forgetToken, getToken, saveToken } from '@/lib/github-publish'
+import { TOKEN_EVENT, checkAccess, forgetToken, getToken, isServerMode, saveToken } from '@/lib/github-publish'
 
 // Shared by every admin editor that saves to GitHub (blog, home page,
 // projects, CV): the one-time token setup and a hook that reads the token.
 
 // The token lives in localStorage; read it without a hydration mismatch.
-export const TOKEN_EVENT = 'adamu-token-change'
+export { TOKEN_EVENT }
 const subscribeToken = (cb: () => void) => {
   window.addEventListener('storage', cb)
   window.addEventListener(TOKEN_EVENT, cb)
@@ -18,6 +18,10 @@ const subscribeToken = (cb: () => void) => {
   }
 }
 export const useToken = () => useSyncExternalStore(subscribeToken, getToken, () => '')
+
+// Whether this browser can save to GitHub: through the admin server (no token
+// needed) or with a saved token.
+export const useCanPublish = () => useSyncExternalStore(subscribeToken, () => isServerMode() || getToken() !== '', () => false)
 
 export function forgetTokenHere() {
   forgetToken()

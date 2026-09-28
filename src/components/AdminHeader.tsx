@@ -10,8 +10,8 @@ export function AdminHeader() {
   const { logout } = useAdminAuth()
   const router = useRouter()
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
     router.push('/admin/login')
   }
 

@@ -1,0 +1,79 @@
+name: Deploy admin server
+
+# Deploys admin-worker/ (adamu.tech/api/admin) to Cloudflare's free tier, so
+# the admin needs only a password. Needs four repository secrets (Settings ->
+# Secrets and variables -> Actions): CLOUDFLARE_API_TOKEN,
+# CLOUDFLARE_ACCOUNT_ID, ADMIN_GITHUB_TOKEN, ADMIN_PASSWORD. Without them the
+# job does nothing and passes. See docs/ADMIN.md, "Admin server".
+on:
+  push:
+    branches: ["main"]
+    paths: ["admin-worker/**", ".github/workflows/admin-worker.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: admin-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      WRANGLER: npx --yes wrangler@4
+    defaults:
+      run:
+        working-directory: admin-worker
+    steps:
+      - name: Check secrets
+        id: secrets
+        working-directory: .
+        run: |
+          missing=""
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID ADMIN_GITHUB_TOKEN ADMIN_PASSWORD; do
+            if [ -z "${!name}" ]; then missing="$missing $name"; fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Admin server not deployed; missing secrets:$missing (see docs/ADMIN.md, Admin server)."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v7
+        if: steps.secrets.outputs.ready == 'true'
+
+      - uses: actions/setup-node@v7
+        if: steps.secrets.outputs.ready == 'true'
+        with:
+          node-version: "22"
+
+      - name: Deploy the Worker
+        if: steps.secrets.outputs.ready == 'true'
+        run: $WRANGLER deploy
+
+      - name: Set its secrets
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          printf '%s' "$ADMIN_GITHUB_TOKEN" | $WRANGLER secret put GITHUB_TOKEN
+          printf '%s' "$ADMIN_PASSWORD" | $WRANGLER secret put ADMIN_PASSWORD
+
+      - name: Check it answers
+        if: steps.secrets.outputs.ready == 'true'
+        working-directory: .
+        run: |
+          sleep 10
+          body=$(curl -s https://adamu.tech/api/admin/session || true)
+          echo "adamu.tech/api/admin/session -> $body"
+          if echo "$body" | grep -q '"signedIn"'; then
+            echo "### Admin server is live. Sign in at https://adamu.tech/admin with ADMIN_PASSWORD." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Deployed, but adamu.tech/api/admin doesn't answer yet. In Cloudflare -> DNS, make sure the adamu.tech record is Proxied (orange cloud)."
+            echo "### Deployed, but adamu.tech/api/admin does not answer yet: turn on the orange cloud (Proxied) for adamu.tech in Cloudflare → DNS." >> "$GITHUB_STEP_SUMMARY"
+          fi

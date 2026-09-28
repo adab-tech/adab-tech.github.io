@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
   const [attempts, setAttempts] = useState(0)
   const [locked, setLocked] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
-  const { login, isAuthenticated } = useAdminAuth()
+  const { login, isAuthenticated, serverMode } = useAdminAuth()
   const router = useRouter()
 
   useEffect(() => {
@@ -104,8 +104,17 @@ export default function AdminLoginPage() {
           </button>
           {showHelp && (
             <p className="mt-2 text-zinc-300 leading-relaxed">
-              On GitHub, delete the file <code>public/admin-auth.json</code> in the adab-tech.github.io repository. About a minute later the
-              default password works again; sign in and set a new one under <strong>Admin password</strong>.
+              {serverMode ? (
+                <>
+                  On GitHub, delete the file <code>content/admin/auth.json</code> in the adab-tech.github.io repository. The starting password
+                  (your <code>ADMIN_PASSWORD</code> secret) then works again; sign in and set a new one under <strong>Admin password</strong>.
+                </>
+              ) : (
+                <>
+                  On GitHub, delete the file <code>public/admin-auth.json</code> in the adab-tech.github.io repository. About a minute later the
+                  default password works again; sign in and set a new one under <strong>Admin password</strong>.
+                </>
+              )}
             </p>
           )}
         </div>

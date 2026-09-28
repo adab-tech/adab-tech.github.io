@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { CheckCircle2, Edit3, FileText, Home, Layers, Loader2, MessageSquare, XCircle } from 'lucide-react'
-import { useToken } from '@/components/admin/GitHubConnect'
+import { useCanPublish } from '@/components/admin/GitHubConnect'
 import { parsePostFile } from '@/lib/blog-format'
 import { ACTIONS_URL, listPosts, readPost, recentDeploys, type RecentRun } from '@/lib/github-publish'
 import { PROJECTS } from '@/lib/site-content'
@@ -18,7 +18,7 @@ const AREAS = [
 ]
 
 export function SiteOverview() {
-  const token = useToken()
+  const token = useCanPublish()
   const [posts, setPosts] = useState<{ published: number; drafts: number } | null>(null)
   const [deploys, setDeploys] = useState<RecentRun[] | null>(null)
   const [deployError, setDeployError] = useState('')
