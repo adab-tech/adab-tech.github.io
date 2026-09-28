@@ -50,8 +50,8 @@ In longer text you can write `**bold**`, `*italic*`, `` `code` `` and
 ## Project logos and the icon row
 
 Each project shows its logo on its card; clicking the logo opens the
-project’s site. The **My platforms** row (under the home-page buttons and in
-the footer of every page) shows the logo of each project with “Show in the icon
+project’s site. The **My platforms** row, under the buttons at the top of the
+home page, shows the logo of each project with “Show in the icon
 row” ticked.
 
 Where a logo comes from:
