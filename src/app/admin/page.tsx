@@ -13,9 +13,11 @@ import { Activity, AlertCircle, Check, Edit3, Key, Mail } from 'lucide-react'
 // GitHub (the only way anything reaches the public site), the page views come
 // from the site's public counter, and deploys come from GitHub Actions.
 export default function AdminDashboardPage() {
-  const { isAuthenticated, loading, updatePassword } = useAdminAuth()
+  const { isAuthenticated, loading, changePassword } = useAdminAuth()
   const router = useRouter()
   const [newPass, setNewPass] = useState('')
+  const [repeatPass, setRepeatPass] = useState('')
+  const [savingPass, setSavingPass] = useState(false)
   const [passNotice, setPassNotice] = useState('')
 
   useEffect(() => {
@@ -32,16 +34,20 @@ export default function AdminDashboardPage() {
     )
   }
 
-  const handlePasswordChange = (e: React.FormEvent) => {
+  const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (newPass.trim().length < 4) {
-      setPassNotice('Password must be at least 4 characters long.')
-      return
+    setPassNotice('')
+    setSavingPass(true)
+    try {
+      await changePassword(newPass, repeatPass)
+      setNewPass('')
+      setRepeatPass('')
+      setPassNotice('Saved. The new password works on every device in about a minute.')
+    } catch (err) {
+      setPassNotice(err instanceof Error ? err.message : String(err))
+    } finally {
+      setSavingPass(false)
     }
-    updatePassword(newPass.trim())
-    setNewPass('')
-    setPassNotice('Admin password updated on this device.')
-    setTimeout(() => setPassNotice(''), 3500)
   }
 
   return (
@@ -80,7 +86,8 @@ export default function AdminDashboardPage() {
               Admin password
             </h3>
             <p className="text-xs font-sans text-zinc-400">
-              Changes the password for this admin on this device. Publishing is protected separately by your GitHub token.
+              Your own password, for every device. Only a hash of it is saved to the site, never the password. Saving uses your GitHub
+              token. Forgot it? Use “First time here, or forgot your password?” on the sign-in page.
             </p>
 
             {passNotice && (
@@ -99,15 +106,29 @@ export default function AdminDashboardPage() {
                   required
                   value={newPass}
                   onChange={(e) => setNewPass(e.target.value)}
-                  placeholder="Enter new admin password…"
+                  autoComplete="new-password"
+                  placeholder="At least 10 characters"
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="new-admin-pass-2" className="text-xs font-mono text-zinc-400">Repeat new password</label>
+                <input
+                  id="new-admin-pass-2"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={repeatPass}
+                  onChange={(e) => setRepeatPass(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors"
+                disabled={savingPass}
+                className="w-full py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors disabled:opacity-50"
               >
-                Save new password
+                {savingPass ? 'Saving…' : 'Save new password'}
               </button>
             </form>
           </div>

@@ -1,49 +1,39 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { checkAccess, commitFiles, forgetToken, getToken, saveToken, textToBase64 } from '@/lib/github-publish'
+import { AUTH_FILE, checkPassword, fetchPasswordRecord, hashPassword, passwordProblem } from '@/lib/admin-password'
 
-const PASS_KEY = 'adamu_tech_admin_password'
+// Admin sign-in with your own password. Only a hash of it is published
+// (see lib/admin-password.ts); the session is remembered in this browser for
+// 30 days or until you sign out.
 const AUTH_KEY = 'adamu_tech_admin_session'
-const DEFAULT_PASS = 'adamu2026'
-
-export function getAdminPassword(): string {
-  if (typeof window === 'undefined') return DEFAULT_PASS
-  return localStorage.getItem(PASS_KEY) || DEFAULT_PASS
-}
-
-export function setAdminPassword(newPassword: string): void {
-  if (typeof window !== 'undefined' && newPassword.trim().length >= 4) {
-    localStorage.setItem(PASS_KEY, newPassword.trim())
-  }
-}
-
-export function verifyAdminPassword(password: string): boolean {
-  const currentSecret = getAdminPassword()
-  if (password === currentSecret) {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(AUTH_KEY, JSON.stringify({ authenticated: true, timestamp: Date.now() }))
-    }
-    return true
-  }
-  return false
-}
+const SESSION_DAYS = 30
 
 export function isAdminAuthenticated(): boolean {
   if (typeof window === 'undefined') return false
   try {
-    const session = localStorage.getItem(AUTH_KEY)
-    if (!session) return false
-    const parsed = JSON.parse(session)
-    return !!parsed.authenticated
+    const session = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null')
+    return Boolean(session?.authenticated) && Date.now() - Number(session.timestamp) < SESSION_DAYS * 86_400_000
   } catch {
     return false
   }
 }
 
+function startSession() {
+  localStorage.setItem(AUTH_KEY, JSON.stringify({ authenticated: true, timestamp: Date.now() }))
+  // The old browser-only password is no longer used.
+  localStorage.removeItem('adamu_tech_admin_password')
+}
+
 export function logoutAdmin(): void {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(AUTH_KEY)
-  }
+  if (typeof window !== 'undefined') localStorage.removeItem(AUTH_KEY)
+}
+
+// Writes a new password hash to the repo (needs the GitHub token in this browser).
+async function publishPassword(password: string) {
+  const record = await hashPassword(password)
+  await commitFiles([{ path: AUTH_FILE, base64: textToBase64(JSON.stringify(record, null, 2) + '\n') }], 'Admin: set the admin password')
 }
 
 export function useAdminAuth() {
@@ -51,14 +41,47 @@ export function useAdminAuth() {
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    setIsAuthenticated(isAdminAuthenticated())
-    setLoading(false)
+    const t = setTimeout(() => {
+      setIsAuthenticated(isAdminAuthenticated())
+      setLoading(false)
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
-  const login = (password: string) => {
-    const success = verifyAdminPassword(password)
-    if (success) setIsAuthenticated(true)
-    return success
+  // 'ok' | 'wrong' | 'not-set'
+  const login = async (password: string): Promise<'ok' | 'wrong' | 'not-set'> => {
+    const record = await fetchPasswordRecord()
+    if (!record) return 'not-set'
+    if (!(await checkPassword(password, record))) return 'wrong'
+    startSession()
+    setIsAuthenticated(true)
+    return 'ok'
+  }
+
+  // First time, or forgot the password: prove it's you with the GitHub token.
+  const setupWithToken = async (token: string, password: string, repeat: string) => {
+    const problem = passwordProblem(password, repeat)
+    if (problem) throw new Error(problem)
+    const previous = getToken()
+    saveToken(token)
+    try {
+      await checkAccess()
+    } catch (err) {
+      if (previous) saveToken(previous)
+      else forgetToken()
+      throw err
+    }
+    await publishPassword(password)
+    startSession()
+    setIsAuthenticated(true)
+  }
+
+  // From the dashboard, when already signed in (uses the saved token).
+  const changePassword = async (password: string, repeat: string) => {
+    const problem = passwordProblem(password, repeat)
+    if (problem) throw new Error(problem)
+    if (!getToken()) throw new Error('Connect GitHub first: open any editor (e.g. Blog posts) once on this device.')
+    await publishPassword(password)
   }
 
   const logout = () => {
@@ -66,9 +89,5 @@ export function useAdminAuth() {
     setIsAuthenticated(false)
   }
 
-  const updatePassword = (newPass: string) => {
-    setAdminPassword(newPass)
-  }
-
-  return { isAuthenticated, loading, login, logout, updatePassword, currentPassword: getAdminPassword() }
+  return { isAuthenticated, loading, login, setupWithToken, changePassword, logout }
 }

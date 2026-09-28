@@ -6,6 +6,26 @@ about a minute later. The first time on a device, an editor asks for a GitHub
 token (setup steps are on that screen and in docs/BLOG.md). The token is kept
 in that browser only.
 
+## Signing in
+
+adamu.tech/admin asks for **your own admin password**. The password is not in
+the site’s code or anywhere in the repository: `public/admin-auth.json` holds
+only a salted PBKDF2 hash of it (600,000 rounds), which can’t be turned back
+into the password. A sign-in lasts 30 days in that browser, or until you
+sign out.
+
+- **First time, or forgot the password:** on the sign-in page choose
+  **First time here, or forgot your password?**, paste your GitHub token (it
+  proves the site is yours) and choose a new password of at least 10
+  characters. It works on every device about a minute later.
+- **Change it:** Admin → **Admin password** (uses the GitHub token saved in
+  that browser).
+- The check runs in the browser, because the site has no server. It keeps out
+  anyone who doesn’t know the password; publishing is still protected by the
+  GitHub token.
+
+## What you can change
+
 | Area | Where | What you can do |
 |---|---|---|
 | Blog posts | Admin → Blog posts | Write, format, add images and videos, publish, save as draft, edit, delete |
