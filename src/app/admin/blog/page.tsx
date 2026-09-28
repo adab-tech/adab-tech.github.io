@@ -4,10 +4,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { marked } from 'marked'
-import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, Loader2, RefreshCw, Trash2, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, KeyRound, Loader2, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
 import { RichEditor } from '@/components/admin/RichEditor'
-import { TokenSetup, useToken } from '@/components/admin/GitHubConnect'
+import { TOKEN_EVENT, TokenSetup, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import {
   PostFields,
@@ -24,6 +24,7 @@ import {
   RemoteFile,
   deletePost,
   deployState,
+  forgetToken,
   listPosts,
   readPost,
   commitFiles,
@@ -84,7 +85,7 @@ export default function AdminBlogPage() {
   const token = useToken()
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) router.push('/admin/login/')
+    if (!loading && !isAuthenticated) router.push('/admin/login')
   }, [isAuthenticated, loading, router])
 
   if (loading || !isAuthenticated) {
@@ -109,6 +110,18 @@ export default function AdminBlogPage() {
               Publishing commits the post to GitHub; adamu.tech/blog updates about a minute later.
             </p>
           </div>
+          {token && (
+            <button
+              type="button"
+              onClick={() => {
+                forgetToken()
+                window.dispatchEvent(new Event(TOKEN_EVENT))
+              }}
+              className="text-xs font-mono text-zinc-400 hover:text-red-300 inline-flex items-center gap-1.5"
+            >
+              <KeyRound className="h-3.5 w-3.5" /> Forget GitHub token on this device
+            </button>
+          )}
         </div>
         {token ? <Editor /> : <TokenSetup />}
       </main>

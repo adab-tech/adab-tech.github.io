@@ -2,31 +2,32 @@
 
 adamu.tech/admin is the control room for the whole site. The site has no
 server: every change is saved to this GitHub repository and the site rebuilds
-about a minute later.
+about a minute later. The first time on a device, an editor asks for a GitHub
+token (setup steps are on that screen and in docs/BLOG.md). The token is kept
+in that browser only.
 
 ## Signing in
 
-You sign in with a **GitHub token**, not a password. The token is the key that
-lets the admin save to the repository, so it is the only thing worth
-protecting; a password checked in the browser would be written into the
-site’s public code where anyone could read it (the old admin password worked
-that way and has been removed).
+adamu.tech/admin asks only for a password; no GitHub token is needed to sign
+in. A sign-in lasts 30 days in that browser, or until you sign out.
 
-- The token is saved in the browser you sign in with, until you **Sign out**
-  or it expires. A different browser, another device or a private window asks
-  for it once. So do some phone browsers and in-app browsers (opening a link
-  inside WhatsApp, Gmail or GitHub’s app uses a separate browser) and clearing
-  site data.
-- When the browser offers to save the password on the sign-in page, accept.
-  The account shows as `adab-tech`; next time the token fills in by itself,
-  including on your other devices signed in to the same Chrome, Safari
-  (iCloud Keychain) or password manager.
-- When a token expires or is revoked, the admin signs you out and asks for a
-  new one. Create it from the sign-in page (**No token, or it expired?**):
-  only `adab-tech.github.io`, **Contents: Read and write**, **Actions:
-  Read-only**, expiry up to a year.
-- To lock every device out at once, revoke the token on GitHub
-  (Settings → Developer settings → Fine-grained tokens).
+- **Default password:** `adamu2026` works until you set your own. Change it
+  straight away: Admin → **Admin password**.
+- **Changing it:** if that browser is connected to GitHub (you have written a
+  post or edited a page there), the new password is saved for every device
+  and the default stops working everywhere, about a minute later. If not, you
+  can paste the GitHub token in the same box to do that, or leave it empty to
+  change the password on that device only (the default then still works on
+  other devices).
+- **Nothing readable is stored:** only a salted PBKDF2 hash of the password
+  (in `public/admin-auth.json`, or in that browser for a device-only
+  password), which can’t be turned back into the password.
+- **Forgot it:** delete `public/admin-auth.json` on GitHub; about a minute
+  later the default works again, then set a new one. (A device-only password
+  is cleared by clearing that browser’s data for adamu.tech.)
+- The check runs in the browser, because the site has no server. It keeps out
+  anyone who doesn’t know the password; publishing is still protected by the
+  GitHub token, which the editors ask for once per browser.
 
 ## What you can change
 
@@ -37,7 +38,7 @@ that way and has been removed).
 | Projects | Admin → Projects | Add, edit, reorder, duplicate or remove projects; upload a logo; choose which appear on the home page and in the icon row |
 | CV | Admin → CV | Profile buttons, education, experience, languages, publications, datasets |
 | Comments | Admin → Comments | A link to every post’s comments, and how to delete or reply (below) |
-| Status | Admin (front page) | Post and draft counts, the latest site updates and whether they went live, visits, sign-out |
+| Status | Admin (front page) | Post and draft counts, the latest site updates and whether they went live, visits |
 
 Each editor has **Save & publish** at the bottom. Nothing changes on the
 site until you press it; **Discard changes** undoes everything since the last

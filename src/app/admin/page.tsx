@@ -1,24 +1,31 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { VisitorCounter } from '@/components/VisitorCounter'
 import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { AdminHeader } from '@/components/AdminHeader'
 import { SiteOverview } from '@/components/admin/SiteOverview'
+import { useToken } from '@/components/admin/GitHubConnect'
 import { GHOST_URL, ghostEnabled } from '@/config/blog'
-import { Activity, AlertCircle, Edit3, Key, Mail } from 'lucide-react'
+import { Activity, AlertCircle, Check, Edit3, Key, Mail } from 'lucide-react'
 
 // Admin front page. Everything shown here is real: the controls save to
 // GitHub (the only way anything reaches the public site), the page views come
 // from the site's public counter, and deploys come from GitHub Actions.
 export default function AdminDashboardPage() {
-  const { isAuthenticated, loading, logout } = useAdminAuth()
+  const { isAuthenticated, loading, changePassword } = useAdminAuth()
   const router = useRouter()
+  const [newPass, setNewPass] = useState('')
+  const [repeatPass, setRepeatPass] = useState('')
+  const [savingPass, setSavingPass] = useState(false)
+  const [passToken, setPassToken] = useState('')
+  const githubToken = useToken()
+  const [passNotice, setPassNotice] = useState('')
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/admin/login/')
+      router.push('/admin/login')
     }
   }, [isAuthenticated, loading, router])
 
@@ -28,6 +35,27 @@ export default function AdminDashboardPage() {
         Verifying session…
       </div>
     )
+  }
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setPassNotice('')
+    setSavingPass(true)
+    try {
+      const where = await changePassword(newPass, repeatPass, passToken)
+      setNewPass('')
+      setRepeatPass('')
+      setPassToken('')
+      setPassNotice(
+        where === 'everywhere'
+          ? 'Saved. Your new password works on every device in about a minute, and the default no longer does.'
+          : 'Saved on this device only. On other devices the default password still works until you save with the GitHub token.',
+      )
+    } catch (err) {
+      setPassNotice(err instanceof Error ? err.message : String(err))
+    } finally {
+      setSavingPass(false)
+    }
   }
 
   return (
@@ -63,32 +91,72 @@ export default function AdminDashboardPage() {
           <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
             <h3 className="text-base font-mono font-bold text-zinc-100 flex items-center gap-2">
               <Key className="h-4 w-4 text-gold-400" />
-              Sign-in on this device
+              Admin password
             </h3>
-            <p className="text-xs font-sans text-zinc-400 leading-relaxed">
-              You are signed in with your GitHub token, saved in this browser only. Other browsers, other devices and private windows
-              ask for it once. Signing out removes it from this browser; to cut off every device at once, revoke the token on GitHub.
+            <p className="text-xs font-sans text-zinc-400">
+              Change the default to your own password (at least 10 characters). Only a scrambled fingerprint (hash) of it is kept, never the
+              password itself.
             </p>
-            <div className="flex flex-wrap gap-2">
+
+            {passNotice && (
+              <div className="p-3 rounded-lg bg-zinc-800 border border-zinc-700 text-gold-400 text-xs font-mono flex items-center gap-2">
+                <Check className="h-3.5 w-3.5" />
+                <span>{passNotice}</span>
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordChange} className="space-y-3">
+              <div className="space-y-1">
+                <label htmlFor="new-admin-pass" className="text-xs font-mono text-zinc-400">New password</label>
+                <input
+                  id="new-admin-pass"
+                  type="password"
+                  required
+                  value={newPass}
+                  onChange={(e) => setNewPass(e.target.value)}
+                  autoComplete="new-password"
+                  placeholder="At least 10 characters"
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                />
+              </div>
+              <div className="space-y-1">
+                <label htmlFor="new-admin-pass-2" className="text-xs font-mono text-zinc-400">Repeat new password</label>
+                <input
+                  id="new-admin-pass-2"
+                  type="password"
+                  autoComplete="new-password"
+                  required
+                  value={repeatPass}
+                  onChange={(e) => setRepeatPass(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                />
+              </div>
+              {!githubToken && (
+                <div className="space-y-1">
+                  <label htmlFor="pass-token" className="text-xs font-mono text-zinc-400">GitHub token (optional)</label>
+                  <input
+                    id="pass-token"
+                    type="password"
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={passToken}
+                    onChange={(e) => setPassToken(e.target.value)}
+                    placeholder="github_pat_…"
+                    className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                  />
+                  <p className="text-[11px] text-zinc-500">
+                    With it, the new password works on all your devices. Without it, only on this device (the default still works elsewhere).
+                  </p>
+                </div>
+              )}
               <button
-                type="button"
-                onClick={() => {
-                  logout()
-                  router.push('/admin/login/')
-                }}
-                className="px-3 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors"
+                type="submit"
+                disabled={savingPass}
+                className="w-full py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 font-mono text-xs text-zinc-100 font-bold transition-colors disabled:opacity-50"
               >
-                Sign out on this device
+                {savingPass ? 'Saving…' : 'Save new password'}
               </button>
-              <a
-                href="https://github.com/settings/personal-access-tokens"
-                target="_blank"
-                rel="noreferrer"
-                className="px-3 py-2 rounded-lg border border-zinc-700 font-mono text-xs text-zinc-300 hover:text-white"
-              >
-                Manage tokens on GitHub
-              </a>
-            </div>
+            </form>
           </div>
 
           <div className="p-6 rounded-2xl border border-zinc-800 bg-midnight-900 space-y-4">
