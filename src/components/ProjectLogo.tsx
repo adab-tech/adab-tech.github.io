@@ -31,9 +31,22 @@ export function ProjectLogo({ project, size = 'md' }: { project: Project; size?:
     )
   }
   return (
-    <span className={`${box} shrink-0 inline-flex items-center justify-center bg-white border border-zinc-700 overflow-hidden p-1.5`}>
+    <span
+      className={`${box} shrink-0 inline-flex items-center justify-center overflow-hidden border border-zinc-700 ${
+        project.logo && project.logoFill ? '' : 'bg-white p-1.5'
+      }`}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element -- static export, tiny icons */}
-      <img ref={img} src={src} alt="" width={32} height={32} loading="lazy" className="h-full w-full object-contain" onError={() => setFailed(true)} />
+      <img
+        ref={img}
+        src={src}
+        alt=""
+        width={32}
+        height={32}
+        loading="lazy"
+        className={`h-full w-full ${project.logo && project.logoFill ? 'object-cover' : 'object-contain'}`}
+        onError={() => setFailed(true)}
+      />
     </span>
   )
 }

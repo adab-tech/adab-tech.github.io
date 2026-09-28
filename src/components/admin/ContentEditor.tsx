@@ -567,9 +567,17 @@ function LogoInput({ field, value, onChange, ctx, parent }: { field: Extract<Fie
     <div className="space-y-1.5">
       <Label field={field} htmlFor={id} />
       <div className="flex flex-wrap items-center gap-3">
-        <span className="h-12 w-12 shrink-0 rounded-xl bg-white border border-zinc-700 inline-flex items-center justify-center overflow-hidden p-1.5">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {src ? <img src={src} alt="" className="h-full w-full object-contain" /> : <span className="text-[10px] text-zinc-500">none</span>}
+        <span
+          className={`h-12 w-12 shrink-0 rounded-xl border border-zinc-700 inline-flex items-center justify-center overflow-hidden ${
+            value && parent.logoFill ? '' : 'bg-white p-1.5'
+          }`}
+        >
+          {src ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={src} alt="" className={`h-full w-full ${value && parent.logoFill ? 'object-cover' : 'object-contain'}`} />
+          ) : (
+            <span className="text-[10px] text-zinc-500">none</span>
+          )}
         </span>
         <div className="flex-1 min-w-[12rem] space-y-1.5">
           <input id={id} className={input} value={value} onChange={(e) => onChange(e.target.value)} placeholder="/project-logos/name.svg or https://…" spellCheck={false} />

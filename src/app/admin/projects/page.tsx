@@ -7,6 +7,7 @@ import { validateProjects } from '@/lib/site-content'
 const project: Field[] = [
   { key: 'title', label: 'Name', type: 'text' },
   { key: 'logo', label: 'Logo', type: 'logo', help: 'Shown on the project cards and in the “My platforms” icon row. Leave empty to use the live site’s own icon.' },
+  { key: 'logoFill', label: 'Logo has its own background (fill the whole tile, no white frame)', type: 'bool' },
   { key: 'liveUrl', label: 'Live site', type: 'url', help: 'Where the logo and “Launch Platform” go. Leave empty if there is no site.', placeholder: 'https://…' },
   { key: 'iconRow', label: 'Show in the “My platforms” icon row', type: 'bool', default: true },
   { key: 'showOnHome', label: 'Show on the home page', type: 'bool', default: true },

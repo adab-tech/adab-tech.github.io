@@ -14,6 +14,7 @@ export interface Project {
   id: string
   title: string
   logo: string // path under public/ or an https URL; empty = the site's own favicon or initials
+  logoFill?: boolean // the logo has its own background: show it edge to edge, not on a white tile
   iconRow: boolean // show in the row of project icons
   category: string
   role: string
