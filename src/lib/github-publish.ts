@@ -5,9 +5,12 @@
 // no server, so a commit to `main` is how anything gets published: the deploy
 // workflow rebuilds the site about a minute later.
 //
-// The token is a fine-grained personal access token limited to this one
-// repository. It is kept in this browser's localStorage only, never in the
-// site's code or build, and is sent only to api.github.com.
+// Two ways to reach GitHub:
+// 1. The admin server (admin-worker/, at adamu.tech/api/admin), when it is
+//    deployed: it holds the GitHub token as a Cloudflare secret, so the
+//    browser needs only the admin sign-in. detectAdminServer() turns this on.
+// 2. Otherwise a fine-grained token for this one repository, kept in this
+//    browser's localStorage only and sent only to api.github.com.
 
 const OWNER = 'adab-tech'
 const REPO = 'adab-tech.github.io'
@@ -17,6 +20,47 @@ const API = `https://api.github.com/repos/${OWNER}/${REPO}`
 const TOKEN_KEY = 'adamu_tech_github_publish_token'
 
 export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions`
+
+export const TOKEN_EVENT = 'adamu-token-change'
+const SERVER = '/api/admin'
+let serverMode = false
+let detecting: Promise<boolean> | null = null
+
+// True when the admin server answers on this site (checked once per page).
+export function detectAdminServer(): Promise<boolean> {
+  if (!detecting) {
+    detecting = fetch(`${SERVER}/session`, { cache: 'no-store', credentials: 'same-origin' })
+      .then(async (res) => {
+        const type = res.headers.get('Content-Type') || ''
+        if (!type.includes('application/json')) return false
+        const body = await res.json().catch(() => null)
+        return Boolean(body && 'signedIn' in body)
+      })
+      .catch(() => false)
+      .then((on) => {
+        serverMode = on
+        if (typeof window !== 'undefined') window.dispatchEvent(new Event(TOKEN_EVENT))
+        return on
+      })
+  }
+  return detecting
+}
+
+export const isServerMode = () => serverMode
+
+// Calls to the admin server itself (sign-in, password).
+export async function adminServer<T>(route: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${SERVER}/${route}`, {
+    method: body === undefined ? 'GET' : 'POST',
+    cache: 'no-store',
+    credentials: 'same-origin',
+    headers: { 'X-Admin': '1', ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || `Admin server error ${res.status}`)
+  return data as T
+}
 
 export function getToken(): string {
   try {
@@ -39,15 +83,22 @@ async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
   // browser's preflight to api.github.com can't be refused over a header.
   let res: Response
   try {
-    res = await fetch(`${API}${path}`, {
-      ...init,
-      cache: 'no-store',
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${getToken().trim()}`,
-        ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-      },
-    })
+    res = serverMode
+      ? await fetch(`${SERVER}/github${path}`, {
+          ...init,
+          cache: 'no-store',
+          credentials: 'same-origin',
+          headers: { Accept: 'application/vnd.github+json', 'X-Admin': '1', ...(init.body ? { 'Content-Type': 'application/json' } : {}) },
+        })
+      : await fetch(`${API}${path}`, {
+          ...init,
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${getToken().trim()}`,
+            ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+          },
+        })
   } catch (err) {
     throw new Error(
       `Couldn't reach GitHub from this browser (${err instanceof Error ? err.message : String(err)}). ` +
@@ -59,6 +110,7 @@ async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
     try {
       detail = (await res.json()).message || ''
     } catch {}
+    if (res.status === 401 && serverMode) throw new Error('You were signed out. Sign in again at adamu.tech/admin.')
     if (res.status === 401) throw new Error('GitHub rejected the token (expired or mistyped). Paste a new one.')
     if (res.status === 403 || res.status === 404) {
       throw new Error(`GitHub refused access (${res.status}). Check the token is for ${OWNER}/${REPO} with Contents: Read and write. ${detail}`)

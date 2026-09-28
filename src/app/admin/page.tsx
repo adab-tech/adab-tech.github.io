@@ -14,12 +14,13 @@ import { Activity, AlertCircle, Check, Edit3, Key, Mail } from 'lucide-react'
 // GitHub (the only way anything reaches the public site), the page views come
 // from the site's public counter, and deploys come from GitHub Actions.
 export default function AdminDashboardPage() {
-  const { isAuthenticated, loading, changePassword } = useAdminAuth()
+  const { isAuthenticated, loading, changePassword, serverMode } = useAdminAuth()
   const router = useRouter()
   const [newPass, setNewPass] = useState('')
   const [repeatPass, setRepeatPass] = useState('')
   const [savingPass, setSavingPass] = useState(false)
   const [passToken, setPassToken] = useState('')
+  const [currentPass, setCurrentPass] = useState('')
   const githubToken = useToken()
   const [passNotice, setPassNotice] = useState('')
 
@@ -42,13 +43,16 @@ export default function AdminDashboardPage() {
     setPassNotice('')
     setSavingPass(true)
     try {
-      const where = await changePassword(newPass, repeatPass, passToken)
+      const where = await changePassword(newPass, repeatPass, passToken, currentPass)
       setNewPass('')
       setRepeatPass('')
       setPassToken('')
+      setCurrentPass('')
       setPassNotice(
         where === 'everywhere'
-          ? 'Saved. Your new password works on every device in about a minute, and the default no longer does.'
+          ? serverMode
+            ? 'Saved. Your new password works now, on every device.'
+            : 'Saved. Your new password works on every device in about a minute, and the default no longer does.'
           : 'Saved on this device only. On other devices the default password still works until you save with the GitHub token.',
       )
     } catch (err) {
@@ -106,6 +110,20 @@ export default function AdminDashboardPage() {
             )}
 
             <form onSubmit={handlePasswordChange} className="space-y-3">
+              {serverMode && (
+                <div className="space-y-1">
+                  <label htmlFor="current-admin-pass" className="text-xs font-mono text-zinc-400">Current password</label>
+                  <input
+                    id="current-admin-pass"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={currentPass}
+                    onChange={(e) => setCurrentPass(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                  />
+                </div>
+              )}
               <div className="space-y-1">
                 <label htmlFor="new-admin-pass" className="text-xs font-mono text-zinc-400">New password</label>
                 <input
@@ -131,7 +149,7 @@ export default function AdminDashboardPage() {
                   className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
                 />
               </div>
-              {!githubToken && (
+              {!serverMode && !githubToken && (
                 <div className="space-y-1">
                   <label htmlFor="pass-token" className="text-xs font-mono text-zinc-400">GitHub token (optional)</label>
                   <input

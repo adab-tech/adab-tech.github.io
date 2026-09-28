@@ -21,7 +21,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
-import { TokenSetup, forgetTokenHere, useToken } from '@/components/admin/GitHubConnect'
+import { TokenSetup, forgetTokenHere, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import { ACTIONS_URL, blobToBase64, commitFiles, deployState, readFile, textToBase64, type FileChange } from '@/lib/github-publish'
 
@@ -92,6 +92,7 @@ export function ContentEditorPage({
   const { isAuthenticated, loading } = useAdminAuth()
   const router = useRouter()
   const token = useToken()
+  const canPublish = useCanPublish()
 
   useEffect(() => {
     if (!loading && !isAuthenticated) router.push('/admin/login')
@@ -124,7 +125,7 @@ export function ContentEditorPage({
             )}
           </div>
         </div>
-        {token ? (
+        {canPublish ? (
           <Editor file={file} schema={schema} previewPath={previewPath} validate={validate} beforeSave={beforeSave} />
         ) : (
           <TokenSetup />

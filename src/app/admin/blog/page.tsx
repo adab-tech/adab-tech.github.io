@@ -7,7 +7,7 @@ import { marked } from 'marked'
 import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, KeyRound, Loader2, RefreshCw, Trash2, XCircle } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
 import { RichEditor } from '@/components/admin/RichEditor'
-import { TOKEN_EVENT, TokenSetup, useToken } from '@/components/admin/GitHubConnect'
+import { TOKEN_EVENT, TokenSetup, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import {
   PostFields,
@@ -83,6 +83,7 @@ export default function AdminBlogPage() {
   const { isAuthenticated, loading } = useAdminAuth()
   const router = useRouter()
   const token = useToken()
+  const canPublish = useCanPublish()
 
   useEffect(() => {
     if (!loading && !isAuthenticated) router.push('/admin/login')
@@ -123,7 +124,7 @@ export default function AdminBlogPage() {
             </button>
           )}
         </div>
-        {token ? <Editor /> : <TokenSetup />}
+        {canPublish ? <Editor /> : <TokenSetup />}
       </main>
     </div>
   )

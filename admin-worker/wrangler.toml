@@ -1,0 +1,21 @@
+# Cloudflare Worker behind adamu.tech/admin (free tier).
+# It keeps the GitHub token as an encrypted Worker secret and lets the admin
+# pages save to the site repository after you sign in with your password,
+# so no browser ever needs a GitHub token. Deployed by
+# .github/workflows/admin-worker.yml, which also sets its two secrets
+# (GITHUB_TOKEN, ADMIN_PASSWORD). See docs/ADMIN.md, "Admin server".
+name = "adamu-admin"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Answers only under https://adamu.tech/api/admin/... (the rest of the site is
+# untouched). Needs the adamu.tech DNS record proxied (orange cloud).
+workers_dev = false
+routes = [{ pattern = "adamu.tech/api/admin/*", zone_name = "adamu.tech" }]
+
+[vars]
+REPO = "adab-tech/adab-tech.github.io"
+BRANCH = "main"
+# Where a password changed from the dashboard is kept (a keyed hash; useless
+# without the Worker's secrets). Not published on the site.
+AUTH_PATH = "content/admin/auth.json"
