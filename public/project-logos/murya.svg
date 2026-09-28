@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Murya logo">
+  <!-- Murya's header mark from murya.ng (adab-tech/hausa-ai landing/index.html), gold on Murya's obsidian -->
+  <rect width="100" height="100" rx="18" fill="#030303"/>
+  <g transform="translate(10 10) scale(0.8)" fill="none" stroke="#D4AF37" stroke-width="4.5">
+    <polygon points="90.6,66.9 66.9,90.6 33.1,90.6 9.4,66.9 9.4,33.1 33.1,9.4 66.9,9.4 90.6,33.1" stroke-linejoin="round"/>
+    <circle cx="37" cy="50" r="4.3" fill="#D4AF37" stroke="none"/>
+    <path d="M44.1,41.6 A11 11 0 0 1 44.1,58.4" stroke-linecap="round"/>
+    <path d="M49.2,35.4 A19 19 0 0 1 49.2,64.6" stroke-linecap="round"/>
+    <path d="M54.4,29.3 A27 27 0 0 1 54.4,70.7" stroke-linecap="round"/>
+  </g>
+</svg>
