@@ -8,21 +8,26 @@ in that browser only.
 
 ## Signing in
 
-adamu.tech/admin asks for **your own admin password**. The password is not in
-the site’s code or anywhere in the repository: `public/admin-auth.json` holds
-only a salted PBKDF2 hash of it (600,000 rounds), which can’t be turned back
-into the password. A sign-in lasts 30 days in that browser, or until you
-sign out.
+adamu.tech/admin asks only for a password; no GitHub token is needed to sign
+in. A sign-in lasts 30 days in that browser, or until you sign out.
 
-- **First time, or forgot the password:** on the sign-in page choose
-  **First time here, or forgot your password?**, paste your GitHub token (it
-  proves the site is yours) and choose a new password of at least 10
-  characters. It works on every device about a minute later.
-- **Change it:** Admin → **Admin password** (uses the GitHub token saved in
-  that browser).
+- **Default password:** `adamu2026` works until you set your own. Change it
+  straight away: Admin → **Admin password**.
+- **Changing it:** if that browser is connected to GitHub (you have written a
+  post or edited a page there), the new password is saved for every device
+  and the default stops working everywhere, about a minute later. If not, you
+  can paste the GitHub token in the same box to do that, or leave it empty to
+  change the password on that device only (the default then still works on
+  other devices).
+- **Nothing readable is stored:** only a salted PBKDF2 hash of the password
+  (in `public/admin-auth.json`, or in that browser for a device-only
+  password), which can’t be turned back into the password.
+- **Forgot it:** delete `public/admin-auth.json` on GitHub; about a minute
+  later the default works again, then set a new one. (A device-only password
+  is cleared by clearing that browser’s data for adamu.tech.)
 - The check runs in the browser, because the site has no server. It keeps out
   anyone who doesn’t know the password; publishing is still protected by the
-  GitHub token.
+  GitHub token, which the editors ask for once per browser.
 
 ## What you can change
 

@@ -6,6 +6,10 @@
 // hashes what you type and compares. Setting or changing the password writes
 // a new hash through GitHub, so it needs the GitHub token.
 //
+// Until a password is set, the default password works (only its hash is
+// here: DEFAULT_RECORD). A password changed without the GitHub token is kept
+// on that device only (LOCAL_KEY).
+//
 // This gate runs in the browser (the site has no server): it keeps out anyone
 // who doesn't know the password, and publishing still needs the GitHub token.
 
@@ -13,8 +17,18 @@ export const AUTH_FILE = 'public/admin-auth.json'
 const AUTH_URL = '/admin-auth.json'
 export const MIN_PASSWORD = 10
 const ITERATIONS = 600_000
+const LOCAL_KEY = 'adamu_tech_admin_password_hash'
 
 export type PasswordRecord = { v: 1; kdf: 'PBKDF2-SHA256'; iterations: number; salt: string; hash: string }
+
+// Hash of the default password, used until you set your own.
+export const DEFAULT_RECORD: PasswordRecord = {
+  v: 1,
+  kdf: 'PBKDF2-SHA256',
+  iterations: 600000,
+  salt: 'DErIDV1RMVwoApbylaREwA==',
+  hash: '01w/VBHCjw90VscVD5doJ82dIB3hzmJMrjqLgu9s8Hc=',
+}
 
 const b64 = (bytes: Uint8Array) => btoa(String.fromCharCode(...bytes))
 const unb64 = (s: string) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0))
@@ -52,6 +66,21 @@ export async function fetchPasswordRecord(): Promise<PasswordRecord | null> {
   if (res.status === 404) return null
   if (!res.ok) throw new Error(`Couldn't check the password right now (${res.status}). Try again.`)
   const rec = (await res.json()) as PasswordRecord
-  if (rec?.v !== 1 || !rec.hash || !rec.salt) throw new Error('The password file is damaged. Set the password again with your GitHub token.')
+  if (rec?.v !== 1 || !rec.hash || !rec.salt) throw new Error('The password file is damaged. Delete public/admin-auth.json on GitHub to go back to the default password.')
   return rec
+}
+
+// A password changed on this device only (no GitHub token).
+export function getLocalRecord(): PasswordRecord | null {
+  try {
+    const rec = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null')
+    return rec?.v === 1 ? rec : null
+  } catch {
+    return null
+  }
+}
+
+export function setLocalRecord(rec: PasswordRecord | null): void {
+  if (rec) localStorage.setItem(LOCAL_KEY, JSON.stringify(rec))
+  else localStorage.removeItem(LOCAL_KEY)
 }

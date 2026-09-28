@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
 import { AdminHeader } from '@/components/AdminHeader'
 import { SiteOverview } from '@/components/admin/SiteOverview'
+import { useToken } from '@/components/admin/GitHubConnect'
 import { GHOST_URL, ghostEnabled } from '@/config/blog'
 import { Activity, AlertCircle, Check, Edit3, Key, Mail } from 'lucide-react'
 
@@ -18,6 +19,8 @@ export default function AdminDashboardPage() {
   const [newPass, setNewPass] = useState('')
   const [repeatPass, setRepeatPass] = useState('')
   const [savingPass, setSavingPass] = useState(false)
+  const [passToken, setPassToken] = useState('')
+  const githubToken = useToken()
   const [passNotice, setPassNotice] = useState('')
 
   useEffect(() => {
@@ -39,10 +42,15 @@ export default function AdminDashboardPage() {
     setPassNotice('')
     setSavingPass(true)
     try {
-      await changePassword(newPass, repeatPass)
+      const where = await changePassword(newPass, repeatPass, passToken)
       setNewPass('')
       setRepeatPass('')
-      setPassNotice('Saved. The new password works on every device in about a minute.')
+      setPassToken('')
+      setPassNotice(
+        where === 'everywhere'
+          ? 'Saved. Your new password works on every device in about a minute, and the default no longer does.'
+          : 'Saved on this device only. On other devices the default password still works until you save with the GitHub token.',
+      )
     } catch (err) {
       setPassNotice(err instanceof Error ? err.message : String(err))
     } finally {
@@ -86,8 +94,8 @@ export default function AdminDashboardPage() {
               Admin password
             </h3>
             <p className="text-xs font-sans text-zinc-400">
-              Your own password, for every device. Only a hash of it is saved to the site, never the password. Saving uses your GitHub
-              token. Forgot it? Use “First time here, or forgot your password?” on the sign-in page.
+              Change the default to your own password (at least 10 characters). Only a scrambled fingerprint (hash) of it is kept, never the
+              password itself.
             </p>
 
             {passNotice && (
@@ -123,6 +131,24 @@ export default function AdminDashboardPage() {
                   className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
                 />
               </div>
+              {!githubToken && (
+                <div className="space-y-1">
+                  <label htmlFor="pass-token" className="text-xs font-mono text-zinc-400">GitHub token (optional)</label>
+                  <input
+                    id="pass-token"
+                    type="password"
+                    autoComplete="off"
+                    spellCheck={false}
+                    value={passToken}
+                    onChange={(e) => setPassToken(e.target.value)}
+                    placeholder="github_pat_…"
+                    className="w-full px-3 py-2 rounded-lg border border-zinc-800 bg-midnight-950 font-mono text-xs text-zinc-100 focus:outline-none focus:border-gold-500"
+                  />
+                  <p className="text-[11px] text-zinc-500">
+                    With it, the new password works on all your devices. Without it, only on this device (the default still works elsewhere).
+                  </p>
+                </div>
+              )}
               <button
                 type="submit"
                 disabled={savingPass}

@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { checkAccess, commitFiles, forgetToken, getToken, saveToken, textToBase64 } from '@/lib/github-publish'
-import { AUTH_FILE, checkPassword, fetchPasswordRecord, hashPassword, passwordProblem } from '@/lib/admin-password'
+import { AUTH_FILE, DEFAULT_RECORD, checkPassword, fetchPasswordRecord, getLocalRecord, hashPassword, passwordProblem, setLocalRecord } from '@/lib/admin-password'
 
-// Admin sign-in with your own password. Only a hash of it is published
-// (see lib/admin-password.ts); the session is remembered in this browser for
-// 30 days or until you sign out.
+// Admin sign-in with a password: the default one until you change it, then
+// your own. Only hashes are kept (see lib/admin-password.ts); the session is
+// remembered in this browser for 30 days or until you sign out.
 const AUTH_KEY = 'adamu_tech_admin_session'
 const SESSION_DAYS = 30
 
@@ -48,40 +48,44 @@ export function useAdminAuth() {
     return () => clearTimeout(t)
   }, [])
 
-  // 'ok' | 'wrong' | 'not-set'
-  const login = async (password: string): Promise<'ok' | 'wrong' | 'not-set'> => {
-    const record = await fetchPasswordRecord()
-    if (!record) return 'not-set'
-    if (!(await checkPassword(password, record))) return 'wrong'
+  // Your password (set for every device), else the default until you set
+  // one. A password changed on this device only also works here.
+  const login = async (password: string): Promise<'ok' | 'wrong'> => {
+    const published = await fetchPasswordRecord()
+    const local = getLocalRecord()
+    // On a device with its own password, the default no longer works there.
+    const ok = local
+      ? (await checkPassword(password, local)) || (published !== null && (await checkPassword(password, published)))
+      : await checkPassword(password, published ?? DEFAULT_RECORD)
+    if (!ok) return 'wrong'
     startSession()
     setIsAuthenticated(true)
     return 'ok'
   }
 
-  // First time, or forgot the password: prove it's you with the GitHub token.
-  const setupWithToken = async (token: string, password: string, repeat: string) => {
+  // With the GitHub token (already saved in this browser, or pasted now) the
+  // new password works on every device; without it, on this device only.
+  const changePassword = async (password: string, repeat: string, token = ''): Promise<'everywhere' | 'device'> => {
     const problem = passwordProblem(password, repeat)
     if (problem) throw new Error(problem)
-    const previous = getToken()
-    saveToken(token)
-    try {
-      await checkAccess()
-    } catch (err) {
-      if (previous) saveToken(previous)
-      else forgetToken()
-      throw err
+    if (token.trim()) {
+      const previous = getToken()
+      saveToken(token.trim())
+      try {
+        await checkAccess()
+      } catch (err) {
+        if (previous) saveToken(previous)
+        else forgetToken()
+        throw err
+      }
     }
-    await publishPassword(password)
-    startSession()
-    setIsAuthenticated(true)
-  }
-
-  // From the dashboard, when already signed in (uses the saved token).
-  const changePassword = async (password: string, repeat: string) => {
-    const problem = passwordProblem(password, repeat)
-    if (problem) throw new Error(problem)
-    if (!getToken()) throw new Error('Connect GitHub first: open any editor (e.g. Blog posts) once on this device.')
-    await publishPassword(password)
+    if (getToken()) {
+      await publishPassword(password)
+      setLocalRecord(null)
+      return 'everywhere'
+    }
+    setLocalRecord(await hashPassword(password))
+    return 'device'
   }
 
   const logout = () => {
@@ -89,5 +93,5 @@ export function useAdminAuth() {
     setIsAuthenticated(false)
   }
 
-  return { isAuthenticated, loading, login, setupWithToken, changePassword, logout }
+  return { isAuthenticated, loading, login, changePassword, logout }
 }
