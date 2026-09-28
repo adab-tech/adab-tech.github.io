@@ -29,7 +29,7 @@ const project: Field[] = [
 
 const schema: Field[] = [
   { key: 'projects', label: 'Projects', type: 'list', itemLabel: 'project', titleKey: 'title', fields: project, help: 'Order here is the order on the site. Click a project to edit it.' },
-  { key: 'iconRowLabel', label: 'Icon row label', type: 'text', help: 'Text beside the row of project icons (home page and footer).' },
+  { key: 'iconRowLabel', label: 'Icon row label', type: 'text', help: 'Text beside the row of project icons near the top of the home page. Leave empty for icons only.' },
   { key: 'heading', label: 'Projects page heading', type: 'text' },
   { key: 'intro', label: 'Projects page introduction', type: 'textarea' },
   { key: 'homeHeading', label: 'Home page projects heading', type: 'text' },

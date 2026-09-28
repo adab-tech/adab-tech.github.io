@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Menu, X, ArrowUp } from 'lucide-react'
 import { LogoMark } from '@/components/LogoMark'
 import { SocialNavIcons } from '@/components/SocialNavIcons'
-import { ProjectIcons } from '@/components/ProjectLogo'
 import { PageViewPing } from '@/components/VisitorCounter'
 
 interface ShellProps {
@@ -157,7 +156,6 @@ export function GlobalShell({ children }: ShellProps) {
 
       {/* Ultra-Clean Minimal Footer */}
       <footer className="border-t border-zinc-800/80 bg-[#070C18] text-zinc-400 py-6 px-4 sm:px-6">
-        <ProjectIcons className="max-w-6xl mx-auto justify-center sm:justify-start pb-5 mb-5 border-b border-zinc-800/60" />
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-3">
           <div>© 2026 adamu.tech · Adamu Danjuma Abubakar</div>
           <div>CC-BY-NC-SA 4.0</div>
