@@ -1,44 +1,74 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
-import { checkAccess, forgetToken, getToken, saveToken, subscribeToken } from '@/lib/github-publish'
+import { useState, useEffect } from 'react'
 
-// Admin sign-in. The site is static, so there is no server to check a
-// password; a password written into the site's code would be readable by
-// anyone. The one real key is the GitHub token that can publish to this repo,
-// so signing in means giving the admin that token. It is kept in this browser
-// (localStorage) until you sign out, and sent only to api.github.com.
+const PASS_KEY = 'adamu_tech_admin_password'
+const AUTH_KEY = 'adamu_tech_admin_session'
+const DEFAULT_PASS = 'adamu2026'
 
-// Older versions kept a browser-only password and session here.
-function dropLegacyKeys() {
+export function getAdminPassword(): string {
+  if (typeof window === 'undefined') return DEFAULT_PASS
+  return localStorage.getItem(PASS_KEY) || DEFAULT_PASS
+}
+
+export function setAdminPassword(newPassword: string): void {
+  if (typeof window !== 'undefined' && newPassword.trim().length >= 4) {
+    localStorage.setItem(PASS_KEY, newPassword.trim())
+  }
+}
+
+export function verifyAdminPassword(password: string): boolean {
+  const currentSecret = getAdminPassword()
+  if (password === currentSecret) {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(AUTH_KEY, JSON.stringify({ authenticated: true, timestamp: Date.now() }))
+    }
+    return true
+  }
+  return false
+}
+
+export function isAdminAuthenticated(): boolean {
+  if (typeof window === 'undefined') return false
   try {
-    localStorage.removeItem('adamu_tech_admin_password')
-    localStorage.removeItem('adamu_tech_admin_session')
-  } catch {}
+    const session = localStorage.getItem(AUTH_KEY)
+    if (!session) return false
+    const parsed = JSON.parse(session)
+    return !!parsed.authenticated
+  } catch {
+    return false
+  }
+}
+
+export function logoutAdmin(): void {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(AUTH_KEY)
+  }
 }
 
 export function useAdminAuth() {
-  // null while the page is rendered on the server / before hydration.
-  const token = useSyncExternalStore<string | null>(subscribeToken, getToken, () => null)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(true)
 
-  // Checks the token with GitHub before keeping it.
-  const login = async (value: string) => {
-    const previous = getToken()
-    saveToken(value)
-    try {
-      await checkAccess()
-      dropLegacyKeys()
-    } catch (err) {
-      if (previous) saveToken(previous)
-      else forgetToken()
-      throw err
-    }
+  useEffect(() => {
+    setIsAuthenticated(isAdminAuthenticated())
+    setLoading(false)
+  }, [])
+
+  const login = (password: string) => {
+    const success = verifyAdminPassword(password)
+    if (success) setIsAuthenticated(true)
+    return success
   }
 
   const logout = () => {
-    forgetToken()
-    dropLegacyKeys()
+    logoutAdmin()
+    setIsAuthenticated(false)
   }
 
-  return { isAuthenticated: Boolean(token), loading: token === null, login, logout }
+  const updatePassword = (newPass: string) => {
+    setAdminPassword(newPass)
+  }
+
+  return { isAuthenticated, loading, login, logout, updatePassword, currentPassword: getAdminPassword() }
 }

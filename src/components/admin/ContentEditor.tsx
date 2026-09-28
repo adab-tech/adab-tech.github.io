@@ -13,6 +13,7 @@ import {
   Copy,
   ExternalLink,
   ImagePlus,
+  KeyRound,
   Loader2,
   Plus,
   RotateCcw,
@@ -20,7 +21,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
-import { TokenSetup, useToken } from '@/components/admin/GitHubConnect'
+import { TokenSetup, forgetTokenHere, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import { ACTIONS_URL, blobToBase64, commitFiles, deployState, readFile, textToBase64, type FileChange } from '@/lib/github-publish'
 
@@ -93,7 +94,7 @@ export function ContentEditorPage({
   const token = useToken()
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) router.push('/admin/login/')
+    if (!loading && !isAuthenticated) router.push('/admin/login')
   }, [isAuthenticated, loading, router])
 
   if (loading || !isAuthenticated) {
@@ -116,6 +117,11 @@ export function ContentEditorPage({
             <a href={previewPath} target="_blank" rel="noreferrer" className="text-xs font-mono text-amber-400 hover:underline inline-flex items-center gap-1">
               View on the site <ExternalLink className="h-3 w-3" />
             </a>
+            {token && (
+              <button type="button" onClick={forgetTokenHere} className="text-xs font-mono text-zinc-400 hover:text-red-300 inline-flex items-center gap-1.5">
+                <KeyRound className="h-3.5 w-3.5" /> Forget GitHub token on this device
+              </button>
+            )}
           </div>
         </div>
         {token ? (

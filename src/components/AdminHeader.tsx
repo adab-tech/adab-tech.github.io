@@ -12,7 +12,7 @@ export function AdminHeader() {
 
   const handleLogout = () => {
     logout()
-    router.push('/admin/login/')
+    router.push('/admin/login')
   }
 
   return (
@@ -25,9 +25,12 @@ export function AdminHeader() {
           <span className="font-mono text-sm font-bold tracking-tight text-zinc-50">
             adamu<span className="text-gold-500">.tech</span><span className="hidden sm:inline"> Admin Studio</span>
           </span>
+          <span className="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
+            AUTHENTICATED
+          </span>
         </div>
 
-        <nav className="flex flex-wrap items-center gap-2" aria-label="Admin">
+        <nav className="flex flex-wrap items-center gap-2">
           <a
             href="/admin/"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
@@ -60,7 +63,7 @@ export function AdminHeader() {
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-950/60 border border-red-900/60 text-xs font-mono text-red-300 hover:bg-red-900 hover:text-white transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
-            <span>Sign out</span>
+            <span>Logout</span>
           </button>
         </nav>
       </div>

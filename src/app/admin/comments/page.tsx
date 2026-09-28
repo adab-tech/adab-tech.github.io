@@ -44,7 +44,7 @@ export default function AdminCommentsPage() {
   const key = useSyncExternalStore(subscribe, readKey, () => '')
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) router.push('/admin/login/')
+    if (!loading && !isAuthenticated) router.push('/admin/login')
   }, [isAuthenticated, loading, router])
 
   if (loading || !isAuthenticated) {
