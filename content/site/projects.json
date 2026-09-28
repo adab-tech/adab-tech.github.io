@@ -13,7 +13,7 @@
     {
       "id": "murya-os",
       "title": "Murya",
-      "logo": "https://murya.ng/favicon.ico",
+      "logo": "/project-logos/murya.svg",
       "iconRow": true,
       "category": "AI & Speech",
       "role": "Founder & linguistic lead",
