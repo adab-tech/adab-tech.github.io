@@ -9,6 +9,7 @@ import { AdminHeader } from '@/components/AdminHeader'
 import { RichEditor } from '@/components/admin/RichEditor'
 import { TOKEN_EVENT, TokenSetup, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
+import { PostReadCount } from '@/components/VisitorCounter'
 import {
   PostFields,
   FILE_PATTERN,
@@ -338,7 +339,8 @@ function Editor() {
                   original?.name === f.name ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30' : 'text-zinc-300 hover:bg-zinc-900'
                 }`}
               >
-                {f.name.replace(/\.md$/, '')}
+                <span className="block">{f.name.replace(/\.md$/, '')}</span>
+                <PostReadCount slug={f.name.replace(/\.md$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '')} />
               </button>
             </li>
           ))}

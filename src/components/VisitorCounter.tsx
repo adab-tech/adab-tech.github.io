@@ -63,3 +63,64 @@ export function VisitorCounter({ showDetails = false }: { showDetails?: boolean 
     </div>
   )
 }
+
+// Per-post reads, same CounterAPI namespace as page views. A read is counted
+// once per browser session per post, when the visitor has scrolled halfway
+// through the page or stayed 30 seconds, so bounces don't count.
+const readCounter = (slug: string) => `https://api.counterapi.dev/v1/adamu-tech/r-${slug.slice(0, 48)}`
+
+export function PostReadPing({ slug }: { slug: string }) {
+  useEffect(() => {
+    const key = `adamu_tech_read_${slug}`
+    try {
+      if (sessionStorage.getItem(key)) return
+    } catch {
+      return
+    }
+    let done = false
+    const hit = () => {
+      if (done) return
+      done = true
+      try {
+        sessionStorage.setItem(key, '1')
+      } catch {}
+      fetch(`${readCounter(slug)}/up`, { cache: 'no-store' }).catch(() => {})
+      cleanup()
+    }
+    const onScroll = () => {
+      const seen = window.scrollY + window.innerHeight
+      if (seen >= document.documentElement.scrollHeight * 0.5) hit()
+    }
+    const timer = window.setTimeout(hit, 30000)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    const cleanup = () => {
+      window.clearTimeout(timer)
+      window.removeEventListener('scroll', onScroll)
+    }
+    return cleanup
+  }, [slug])
+  return null
+}
+
+export function PostReadCount({ slug }: { slug: string }) {
+  const [count, setCount] = useState<number | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch(`${readCounter(slug)}/`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : r.status === 400 || r.status === 404 ? { count: 0 } : Promise.reject(new Error(String(r.status)))))
+      .then((data) => !cancelled && typeof data?.count === 'number' && setCount(data.count))
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [slug])
+
+  if (count === null) return null
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] text-zinc-400" title="Reads (one per session, halfway or 30 s)">
+      <Eye className="h-3 w-3 text-amber-400" />
+      {count.toLocaleString()}
+    </span>
+  )
+}

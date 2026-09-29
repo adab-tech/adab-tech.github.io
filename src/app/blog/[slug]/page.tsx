@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react'
 import { GlobalShell } from '@/components/GlobalShell'
 import { ShareButtons } from '@/components/ShareButtons'
 import { Comments } from '@/components/Comments'
+import { PostReadPing } from '@/components/VisitorCounter'
 import { getAllPosts, getPost, formatDate } from '@/lib/blog'
 
 // Every post is generated at build time; unknown slugs are 404s.
@@ -53,6 +54,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   return (
     <GlobalShell>
       <article className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-8">
+        {!post.draft && <PostReadPing slug={post.slug} />}
         <Link href="/blog/" className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-amber-400">
           <ArrowLeft className="h-4 w-4" />
           <span>All posts</span>
