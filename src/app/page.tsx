@@ -246,7 +246,7 @@ export default function HomePage() {
 
                   {p.modelUrl && p.modelUrl !== url && (
                     <a href={p.modelUrl} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-zinc-200 flex items-center gap-1">
-                      <span>Weights</span>
+                      <span>{p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Weights'}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}

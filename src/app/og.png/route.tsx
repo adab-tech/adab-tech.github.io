@@ -7,6 +7,6 @@ export function GET() {
   return ogCard({
     kicker: 'adamu.tech',
     title: 'Hausa speech technology, open research datasets, and computational linguistics for African languages',
-    footer: 'Ph.D. candidate, University of Alabama',
+    footer: 'Ph.D. defended, University of Alabama',
   })
 }

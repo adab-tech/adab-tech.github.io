@@ -10,7 +10,7 @@
     { "label": "Hugging Face", "url": "https://huggingface.co/adab-tech", "color": "amber" }
   ],
   "education": [
-    { "degree": "Ph.D. Candidate in Romance Languages", "date": "Expected Dec 2026", "institution": "The University of Alabama · Tuscaloosa, AL", "highlight": true },
+    { "degree": "Ph.D. in Romance Languages", "date": "Defended 2026 · conferral Dec 2026", "institution": "The University of Alabama · Tuscaloosa, AL", "highlight": true },
     { "degree": "Master of Arts (M.A.) in Romance Languages", "date": "2023", "institution": "The University of Alabama · Tuscaloosa, AL", "highlight": false },
     { "degree": "Bachelor of Arts (B.A. Hons) in French", "date": "2019", "institution": "University of Ilorin · Ilorin, Nigeria", "highlight": false }
   ],

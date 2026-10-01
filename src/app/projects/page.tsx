@@ -152,7 +152,7 @@ export default function ProjectsPage() {
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200"
                     >
-                      <span>Model Weights</span>
+                      <span>{p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Model Weights'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}

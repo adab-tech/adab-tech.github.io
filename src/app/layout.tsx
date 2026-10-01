@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     default: 'Adamu Danjuma Abubakar — Computational Linguist',
     template: '%s — Adamu Danjuma Abubakar',
   },
-  description: 'Adamu Danjuma Abubakar, Ph.D. candidate at the University of Alabama: Hausa speech technology (Murya), open research datasets (Mapping Voices), and computational linguistics for African languages.',
+  description: 'Adamu Danjuma Abubakar (Ph.D. defended, University of Alabama): Hausa speech technology (Murya), open research datasets (Mapping Voices), and computational linguistics for African languages.',
   metadataBase: new URL('https://adamu.tech'),
   icons: {
     icon: [
