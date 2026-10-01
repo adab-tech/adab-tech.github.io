@@ -52,8 +52,8 @@ export default function AdminDashboardPage() {
         where === 'everywhere'
           ? serverMode
             ? 'Saved. Your new password works now, on every device.'
-            : 'Saved. Your new password works on every device in about a minute, and the default no longer does.'
-          : 'Saved on this device only. On other devices the default password still works until you save with the GitHub token.',
+            : 'Saved. Your new password works on every device in about a minute.'
+          : 'Saved on this device only. Other devices keep the previous password until you save with the GitHub token.',
       )
     } catch (err) {
       setPassNotice(err instanceof Error ? err.message : String(err))

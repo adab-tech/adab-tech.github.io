@@ -142,6 +142,15 @@ export async function checkAccess(): Promise<void> {
   await gh(`/contents/${DIR}?ref=${BRANCH}`)
 }
 
+// Any GitHub account can read a public repository, so reading proves nothing.
+// This passes only for a token whose owner can push to this repository.
+export async function checkWriteAccess(): Promise<void> {
+  const repo = await gh<{ permissions?: { push?: boolean } }>('')
+  if (!repo.permissions?.push) {
+    throw new Error('This GitHub token cannot publish to adab-tech.github.io. Use a token from the account that owns the site, with Contents: Read and write.')
+  }
+}
+
 export async function listPosts(): Promise<RemoteFile[]> {
   const items = await gh<{ name: string; path: string; sha: string; type: string }[]>(`/contents/${DIR}?ref=${BRANCH}`)
   return items

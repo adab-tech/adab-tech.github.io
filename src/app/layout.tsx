@@ -46,6 +46,26 @@ export const metadata: Metadata = {
   }
 }
 
+// Content Security Policy. GitHub Pages can't send response headers, so it is
+// set with a meta tag. It lists every outside service the site uses; anything
+// else is blocked, so an injected script could not send data (such as the
+// admin's saved GitHub token) to another server through fetch, XHR, images
+// or forms. Next's static export needs inline scripts, hence 'unsafe-inline'.
+const HCB = 'https://www.htmlcommentbox.com'
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline' https://giscus.app ${HCB}`,
+  `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${HCB}`,
+  "font-src 'self' data: https://fonts.gstatic.com",
+  `img-src 'self' data: blob: ${HCB}`,
+  `connect-src 'self' https://api.counterapi.dev https://api.github.com ${HCB}`,
+  `frame-src https://giscus.app ${HCB}`,
+  `form-action 'self' ${HCB}`,
+  "base-uri 'self'",
+  "object-src 'none'",
+  'upgrade-insecure-requests',
+].join('; ')
+
 export default function RootLayout({
   children,
 }: {
@@ -54,6 +74,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
       <head>
+        <meta httpEquiv="Content-Security-Policy" content={CSP} />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

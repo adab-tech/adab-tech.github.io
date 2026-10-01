@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { adminServer, checkAccess, commitFiles, detectAdminServer, forgetToken, getToken, saveToken, textToBase64 } from '@/lib/github-publish'
-import { AUTH_FILE, DEFAULT_RECORD, checkPassword, fetchPasswordRecord, getLocalRecord, hashPassword, passwordProblem, setLocalRecord } from '@/lib/admin-password'
+import { adminServer, checkWriteAccess, commitFiles, detectAdminServer, forgetToken, getToken, saveToken, textToBase64 } from '@/lib/github-publish'
+import { AUTH_FILE, checkPassword, fetchPasswordRecord, getLocalRecord, hashPassword, passwordProblem, setLocalRecord } from '@/lib/admin-password'
 
 // Admin sign-in with a password.
 //
@@ -10,8 +10,9 @@ import { AUTH_FILE, DEFAULT_RECORD, checkPassword, fetchPasswordRecord, getLocal
 // server checks the password, keeps you signed in with a secure cookie, and
 // holds the GitHub token: no browser needs one.
 //
-// Without it, the check happens in the browser: the default password until
-// you change it, then yours. Only hashes are kept (see lib/admin-password.ts);
+// Without it, the check happens in the browser against your password. Until
+// one is set, sign-in asks for a GitHub token that can publish to the repo,
+// then sets the password (there is no built-in default). Only hashes are kept (see lib/admin-password.ts);
 // the session is remembered in this browser for 30 days or until you sign out.
 const AUTH_KEY = 'adamu_tech_admin_session'
 const SESSION_DAYS = 30
@@ -63,9 +64,9 @@ export function useAdminAuth() {
     }
   }, [])
 
-  // Your password (set for every device), else the default until you set
-  // one. A password changed on this device only also works here.
-  const login = async (password: string): Promise<'ok' | 'wrong'> => {
+  // Your password (set for every device), or one changed on this device only.
+  // 'setup' means no password exists yet: call setupPassword instead.
+  const login = async (password: string): Promise<'ok' | 'wrong' | 'setup'> => {
     if (await detectAdminServer()) {
       try {
         await adminServer('login', { password })
@@ -78,10 +79,10 @@ export function useAdminAuth() {
     }
     const published = await fetchPasswordRecord()
     const local = getLocalRecord()
-    // On a device with its own password, the default no longer works there.
-    const ok = local
-      ? (await checkPassword(password, local)) || (published !== null && (await checkPassword(password, published)))
-      : await checkPassword(password, published ?? DEFAULT_RECORD)
+    if (!local && !published) return 'setup'
+    const ok =
+      (local !== null && (await checkPassword(password, local))) ||
+      (published !== null && (await checkPassword(password, published)))
     if (!ok) return 'wrong'
     startSession()
     setIsAuthenticated(true)
@@ -101,7 +102,7 @@ export function useAdminAuth() {
       const previous = getToken()
       saveToken(token.trim())
       try {
-        await checkAccess()
+        await checkWriteAccess()
       } catch (err) {
         if (previous) saveToken(previous)
         else forgetToken()
@@ -117,11 +118,33 @@ export function useAdminAuth() {
     return 'device'
   }
 
+  // First sign-in: the GitHub token proves ownership, then the new password
+  // is published for every device (and kept here so it works right away,
+  // before the site rebuild picks up the published hash).
+  const setupPassword = async (token: string, password: string, repeat: string): Promise<void> => {
+    const problem = passwordProblem(password, repeat)
+    if (problem) throw new Error(problem)
+    if (!token.trim()) throw new Error('Paste your GitHub token to prove you own the site.')
+    const previous = getToken()
+    saveToken(token.trim())
+    try {
+      await checkWriteAccess()
+    } catch (err) {
+      if (previous) saveToken(previous)
+      else forgetToken()
+      throw err
+    }
+    await publishPassword(password)
+    setLocalRecord(await hashPassword(password))
+    startSession()
+    setIsAuthenticated(true)
+  }
+
   const logout = async () => {
     if (serverMode) await adminServer('logout', {}).catch(() => {})
     logoutAdmin()
     setIsAuthenticated(false)
   }
 
-  return { isAuthenticated, loading, serverMode, login, changePassword, logout }
+  return { isAuthenticated, loading, serverMode, login, setupPassword, changePassword, logout }
 }
