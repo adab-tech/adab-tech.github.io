@@ -26,7 +26,7 @@ export default function ProjectsPage() {
         {/* Header Banner */}
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono text-xs font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-500 font-mono text-xs font-semibold">
               <Layers className="w-3.5 h-3.5" />
               Projects
             </span>
@@ -49,7 +49,7 @@ export default function ProjectsPage() {
               onClick={() => setActiveTab(cat)}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-mono transition-all ${
                 activeTab === cat
-                  ? 'bg-amber-500 text-zinc-950 font-bold shadow-sm'
+                  ? 'bg-gold-500 text-zinc-950 font-bold shadow-sm'
                   : 'bg-[#0E1526] text-zinc-400 border border-zinc-800 hover:text-zinc-200 hover:border-zinc-700'
               }`}
             >
@@ -63,7 +63,7 @@ export default function ProjectsPage() {
           {filteredProjects.map((p) => (
             <div 
               key={p.id}
-              className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-5 flex flex-col justify-between hover:border-amber-500/40 transition-all shadow-sm"
+              className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-5 flex flex-col justify-between hover:border-gold-500/40 transition-all shadow-sm"
             >
               <div className="space-y-4">
                 {/* Title & Status */}
@@ -86,7 +86,7 @@ export default function ProjectsPage() {
                       <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-50">
                         {p.title}
                       </h2>
-                      <div className="text-xs font-mono text-amber-400">
+                      <div className="text-xs font-mono text-gold-500">
                         {p.role}
                       </div>
                     </div>
@@ -94,7 +94,7 @@ export default function ProjectsPage() {
                   <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
                     p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
                     p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
-                    'text-amber-400 bg-amber-500/10 border-amber-500/30'
+                    'text-gold-500 bg-gold-500/10 border-gold-500/30'
                   }`}>
                     {p.status}
                   </span>
@@ -112,7 +112,7 @@ export default function ProjectsPage() {
                   <ul className="space-y-1 text-xs text-zinc-300 font-sans">
                     {p.highlights.map((h, i) => (
                       <li key={i} className="flex items-start gap-1.5">
-                        <span className="text-amber-400 font-mono">▸</span>
+                        <span className="text-gold-500 font-mono">▸</span>
                         <span>{h}</span>
                       </li>
                     ))}
@@ -128,7 +128,7 @@ export default function ProjectsPage() {
                       href={p.liveUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-bold hover:underline"
+                      className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400 font-bold hover:underline"
                     >
                       <span>Launch Platform</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -138,7 +138,7 @@ export default function ProjectsPage() {
                   {p.paperUrl && (
                     <Link
                       href={p.paperUrl}
-                      className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-bold hover:underline"
+                      className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400 font-bold hover:underline"
                     >
                       <span>Read Paper</span>
                       <ArrowRight className="w-3.5 h-3.5" />

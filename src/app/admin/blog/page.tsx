@@ -78,7 +78,7 @@ type Status =
   | { kind: 'saved'; text: string }
 
 const inputClass =
-  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500'
+  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 
 export default function AdminBlogPage() {
   const { isAuthenticated, loading } = useAdminAuth()
@@ -104,7 +104,7 @@ export default function AdminBlogPage() {
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-amber-400">
+            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-gold-500">
               <ArrowLeft className="h-3.5 w-3.5" /> Admin
             </Link>
             <h1 className="text-2xl font-mono font-bold text-zinc-50">Write a blog post</h1>
@@ -315,14 +315,14 @@ function Editor() {
       <aside className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-mono font-bold text-zinc-200">Posts on GitHub</h2>
-          <button type="button" onClick={refresh} className="p-1.5 text-zinc-400 hover:text-amber-400" aria-label="Reload posts">
+          <button type="button" onClick={refresh} className="p-1.5 text-zinc-400 hover:text-gold-500" aria-label="Reload posts">
             <RefreshCw className="h-4 w-4" />
           </button>
         </div>
         <button
           type="button"
           onClick={startNew}
-          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-amber-500/40 text-amber-400 font-mono text-xs font-bold hover:bg-amber-500/10"
+          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gold-500/40 text-gold-500 font-mono text-xs font-bold hover:bg-gold-500/10"
         >
           <FilePlus2 className="h-4 w-4" /> New post
         </button>
@@ -336,7 +336,7 @@ function Editor() {
                 type="button"
                 onClick={() => open(f)}
                 className={`w-full text-left px-3 py-2 rounded-lg text-xs font-mono break-all ${
-                  original?.name === f.name ? 'bg-amber-500/10 text-amber-300 border border-amber-500/30' : 'text-zinc-300 hover:bg-zinc-900'
+                  original?.name === f.name ? 'bg-gold-500/10 text-gold-400 border border-gold-500/30' : 'text-zinc-300 hover:bg-zinc-900'
                 }`}
               >
                 <span className="block">{f.name.replace(/\.md$/, '')}</span>
@@ -402,7 +402,7 @@ function Editor() {
             type="button"
             disabled={busy || problems.length > 0}
             onClick={() => save(false)}
-            className="px-4 py-2 rounded-lg bg-amber-500 text-zinc-950 font-mono text-sm font-bold hover:bg-amber-400 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-gold-500 text-zinc-950 font-mono text-sm font-bold hover:bg-gold-500 disabled:opacity-50"
           >
             {original && !post.draft ? 'Update post' : 'Publish'}
           </button>
@@ -410,7 +410,7 @@ function Editor() {
             type="button"
             disabled={busy || problems.length > 0}
             onClick={() => save(true)}
-            className="px-4 py-2 rounded-lg border border-zinc-700 text-zinc-200 font-mono text-sm hover:border-amber-500 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg border border-zinc-700 text-zinc-200 font-mono text-sm hover:border-gold-500 disabled:opacity-50"
           >
             Save as draft
           </button>

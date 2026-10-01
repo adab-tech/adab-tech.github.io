@@ -48,31 +48,31 @@ export function GlobalShell({ children }: ShellProps) {
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6" aria-label="Main Navigation">
             <Link 
               href="/" 
-              className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
+              className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
             >
               Home
             </Link>
             <Link 
               href="/projects" 
-              className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
+              className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
             >
               Projects
             </Link>
             <Link 
               href="/blog" 
-              className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
+              className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
             >
               Blog
             </Link>
             <Link 
               href="/papers/agentic-ai" 
-              className="text-xs font-mono text-zinc-300 hover:text-amber-400 transition-colors px-1.5 py-1"
+              className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
             >
               Pre-print
             </Link>
             <Link 
               href="/cv" 
-              className="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded-lg border border-amber-400/20 hover:bg-amber-400/20 transition-all"
+              className="text-xs font-mono font-bold text-gold-500 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20 hover:bg-gold-500/20 transition-all"
             >
               CV
             </Link>
@@ -88,7 +88,7 @@ export function GlobalShell({ children }: ShellProps) {
           <div className="flex md:hidden items-center space-x-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg border border-zinc-800 bg-[#0E1526] text-zinc-300 hover:text-amber-400 focus:outline-none"
+              className="p-2 rounded-lg border border-zinc-800 bg-[#0E1526] text-zinc-300 hover:text-gold-500 focus:outline-none"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -104,35 +104,35 @@ export function GlobalShell({ children }: ShellProps) {
               <Link
                 href="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
               >
                 Home
               </Link>
               <Link
                 href="/projects"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
               >
                 Projects
               </Link>
               <Link
                 href="/blog"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
               >
                 Blog
               </Link>
               <Link
                 href="/papers/agentic-ai"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-amber-400"
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
               >
                 Pre-print
               </Link>
               <Link
                 href="/cv"
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 text-center rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold hover:bg-amber-500/20"
+                className="p-2.5 text-center rounded-lg bg-gold-500/10 border border-gold-500/30 text-gold-500 font-bold hover:bg-gold-500/20"
               >
                 CV
               </Link>
@@ -166,7 +166,7 @@ export function GlobalShell({ children }: ShellProps) {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 p-3 rounded-full bg-amber-500 text-zinc-950 shadow-lg hover:bg-amber-400 transition-all z-30 cursor-pointer"
+          className="fixed bottom-6 right-6 p-3 rounded-full bg-gold-500 text-zinc-950 shadow-lg hover:bg-gold-500 transition-all z-30 cursor-pointer"
           aria-label="Scroll to top"
         >
           <ArrowUp className="h-4 w-4" />

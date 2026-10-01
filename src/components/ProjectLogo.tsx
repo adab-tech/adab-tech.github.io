@@ -24,7 +24,7 @@ export function ProjectLogo({ project, size = 'md' }: { project: Project; size?:
     return (
       <span
         aria-hidden="true"
-        className={`${box} shrink-0 inline-flex items-center justify-center bg-amber-500/15 border border-amber-500/40 text-amber-300 font-mono font-bold text-xs select-none`}
+        className={`${box} shrink-0 inline-flex items-center justify-center bg-gold-500/15 border border-gold-500/40 text-gold-400 font-mono font-bold text-xs select-none`}
       >
         {initials(project.title)}
       </span>
@@ -69,7 +69,7 @@ export function ProjectIcons({ label = PROJECTS.iconRowLabel, className = '' }: 
                 {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
                 title={p.title}
                 aria-label={`${p.title}${external ? ' (opens the site)' : ''}`}
-                className="block rounded-lg transition-transform duration-150 hover:scale-110 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400"
+                className="block rounded-lg transition-transform duration-150 hover:scale-110 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold-500"
               >
                 <ProjectLogo project={p} size="sm" />
               </a>

@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-[#F8F6F1] dark:bg-[#0B1120] text-zinc-900 dark:text-zinc-50 font-sans">
       <div className="w-full max-w-md p-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-midnight-900 shadow-xl space-y-6">
         <div className="text-center space-y-2">
-          <div className="inline-flex p-3 rounded-xl bg-amber-500/10 text-amber-500">
+          <div className="inline-flex p-3 rounded-xl bg-gold-500/10 text-gold-500">
             <ShieldCheck className="h-8 w-8" />
           </div>
           <h1 className="text-xl font-mono font-bold tracking-tight">Admin Studio Authentication</h1>
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter passphrase..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-amber-500"
+                className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-midnight-950 font-mono text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500"
               />
               <Lock className="h-4 w-4 text-zinc-400 absolute left-3 top-3" />
             </div>
@@ -96,7 +96,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={lockedUntil !== null && Date.now() < lockedUntil}
-            className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm disabled:opacity-50"
+            className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-lg bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-500 transition-colors shadow-sm disabled:opacity-50"
           >
             <span>Authenticate Session</span>
             <ArrowRight className="h-3.5 w-3.5" />
@@ -106,7 +106,7 @@ export default function AdminLoginPage() {
         <div className="pt-4 border-t border-zinc-100 dark:border-zinc-800 text-center">
           <a
             href="/"
-            className="text-xs font-mono text-zinc-400 hover:text-amber-500 transition-colors"
+            className="text-xs font-mono text-zinc-400 hover:text-gold-500 transition-colors"
           >
             ← Return to Public Dossier
           </a>

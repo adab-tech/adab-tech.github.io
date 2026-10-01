@@ -51,8 +51,8 @@ export function SiteOverview() {
       <h2 className="text-lg font-mono font-bold text-zinc-100">Manage the site</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {AREAS.map(({ href, icon: Icon, title, text }) => (
-          <a key={href} href={href} className="block p-4 rounded-2xl border border-zinc-800 bg-[#0B1120] hover:border-amber-500/60 hover:bg-amber-500/5 transition-colors">
-            <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+          <a key={href} href={href} className="block p-4 rounded-2xl border border-zinc-800 bg-[#0B1120] hover:border-gold-500/60 hover:bg-gold-500/5 transition-colors">
+            <div className="flex items-center gap-2 font-mono font-bold text-gold-500">
               <Icon className="h-4 w-4" />
               <span>{title} →</span>
             </div>
@@ -73,7 +73,7 @@ export function SiteOverview() {
         <div className="p-4 rounded-2xl border border-zinc-800 bg-[#0B1120] space-y-2">
           <div className="flex items-center justify-between gap-2">
             <span className="text-sm font-mono font-bold text-zinc-200">Latest site updates</span>
-            <a href={ACTIONS_URL} target="_blank" rel="noreferrer" className="text-xs font-mono text-amber-400 hover:underline">
+            <a href={ACTIONS_URL} target="_blank" rel="noreferrer" className="text-xs font-mono text-gold-500 hover:underline">
               All on GitHub
             </a>
           </div>

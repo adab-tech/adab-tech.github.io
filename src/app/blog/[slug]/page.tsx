@@ -55,14 +55,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <GlobalShell>
       <article className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-8">
         {!post.draft && <PostReadPing slug={post.slug} />}
-        <Link href="/blog/" className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-amber-400">
+        <Link href="/blog/" className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-gold-500">
           <ArrowLeft className="h-4 w-4" />
           <span>All posts</span>
         </Link>
 
         <header className="space-y-4 border-b border-zinc-800 pb-8">
           {post.draft && (
-            <p className="inline-block px-2 py-0.5 rounded border border-amber-500/40 text-amber-400 text-xs font-mono">
+            <p className="inline-block px-2 py-0.5 rounded border border-gold-500/40 text-gold-500 text-xs font-mono">
               Draft: not published
             </p>
           )}
@@ -97,13 +97,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-800 pt-8" aria-label="More posts">
           {older ? (
-            <Link href={`/blog/${older.slug}/`} className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] hover:border-amber-500/50">
+            <Link href={`/blog/${older.slug}/`} className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] hover:border-gold-500/50">
               <span className="block text-xs font-mono text-zinc-400">← Older</span>
               <span className="block text-zinc-100 font-semibold">{older.title}</span>
             </Link>
           ) : <span />}
           {newer && (
-            <Link href={`/blog/${newer.slug}/`} className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] hover:border-amber-500/50 sm:text-right">
+            <Link href={`/blog/${newer.slug}/`} className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] hover:border-gold-500/50 sm:text-right">
               <span className="block text-xs font-mono text-zinc-400">Newer →</span>
               <span className="block text-zinc-100 font-semibold">{newer.title}</span>
             </Link>

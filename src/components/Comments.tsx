@@ -110,12 +110,12 @@ export function Comments({ title, slug }: { title: string; slug: string }) {
     <section aria-labelledby="comments-heading" className="space-y-4 border-t border-zinc-800 pt-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="comments-heading" className="font-serif-display text-2xl font-semibold text-zinc-50 flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-amber-400" />
+          <MessageSquare className="h-5 w-5 text-gold-500" />
           {enabled ? 'Comments' : 'Responses'}
         </h2>
         <a
           href={mailto}
-          className="inline-flex items-center gap-2 h-11 px-4 rounded-full border border-zinc-700 text-sm text-zinc-200 hover:text-amber-400 hover:border-amber-500/60"
+          className="inline-flex items-center gap-2 h-11 px-4 rounded-full border border-zinc-700 text-sm text-zinc-200 hover:text-gold-500 hover:border-gold-500/60"
         >
           <Mail className="h-4 w-4" />
           Reply by email

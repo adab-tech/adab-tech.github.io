@@ -21,7 +21,7 @@ export default function BlogIndexPage() {
           <p className="text-base text-zinc-300 leading-relaxed max-w-2xl">
             Posts and reflections on language, research, building technology for African languages, and writing.
           </p>
-          <a href="/feed.xml" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-amber-400">
+          <a href="/feed.xml" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-gold-500">
             <Rss className="h-3.5 w-3.5" />
             <span>RSS feed</span>
           </a>

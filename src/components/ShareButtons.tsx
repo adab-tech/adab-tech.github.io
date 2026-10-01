@@ -40,7 +40,7 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
   }
 
   const button =
-    'inline-flex shrink-0 items-center justify-center h-10 min-w-10 sm:h-11 sm:min-w-11 px-2.5 rounded-full border border-zinc-700 text-zinc-300 hover:text-amber-400 hover:border-amber-500/60 transition-colors'
+    'inline-flex shrink-0 items-center justify-center h-10 min-w-10 sm:h-11 sm:min-w-11 px-2.5 rounded-full border border-zinc-700 text-zinc-300 hover:text-gold-500 hover:border-gold-500/60 transition-colors'
 
   return (
     // Label above on phones and beside on larger screens; the buttons stay on

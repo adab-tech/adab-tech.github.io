@@ -72,13 +72,13 @@ export function BlogList({ initial }: { initial: ListedPost[] }) {
                 <time dateTime={post.date}>{post.dateLabel}</time>
                 <span aria-hidden="true">·</span>
                 <span>{post.readingMinutes} min read</span>
-                {post.draft && <span className="px-1.5 py-0.5 rounded border border-amber-500/40 text-amber-400">Draft</span>}
+                {post.draft && <span className="px-1.5 py-0.5 rounded border border-gold-500/40 text-gold-500">Draft</span>}
               </div>
               <h2 className="font-serif-display text-2xl sm:text-3xl font-semibold text-zinc-50 leading-snug">
-                <LinkTag className="hover:text-amber-400 transition-colors">{post.title}</LinkTag>
+                <LinkTag className="hover:text-gold-500 transition-colors">{post.title}</LinkTag>
               </h2>
               {post.summary && <p className="text-zinc-300 leading-relaxed">{post.summary}</p>}
-              <LinkTag className="inline-block text-sm font-mono text-amber-400 hover:underline" label={`Read “${post.title}”`}>
+              <LinkTag className="inline-block text-sm font-mono text-gold-500 hover:underline" label={`Read “${post.title}”`}>
                 Read →
               </LinkTag>
             </article>

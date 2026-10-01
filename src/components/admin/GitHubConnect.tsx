@@ -29,7 +29,7 @@ export function forgetTokenHere() {
 }
 
 const inputClass =
-  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500'
+  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 
 export function TokenSetup() {
   const [value, setValue] = useState('')
@@ -57,7 +57,7 @@ export function TokenSetup() {
   return (
     <section className="p-6 rounded-2xl border border-zinc-800 bg-[#0B1120] space-y-4 max-w-3xl">
       <h2 className="text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
-        <KeyRound className="h-5 w-5 text-amber-400" /> One-time setup on this device
+        <KeyRound className="h-5 w-5 text-gold-500" /> One-time setup on this device
       </h2>
       <p className="text-sm text-zinc-300 leading-relaxed">
         The site has no server, so posts and page edits are published by saving them to your GitHub repository. This page needs a
@@ -67,7 +67,7 @@ export function TokenSetup() {
         <li>
           Open{' '}
           <a
-            className="text-amber-400 underline"
+            className="text-gold-500 underline"
             href="https://github.com/settings/personal-access-tokens/new"
             target="_blank"
             rel="noreferrer"
@@ -101,7 +101,7 @@ export function TokenSetup() {
         <button
           type="submit"
           disabled={checking || !value.trim()}
-          className="px-4 py-2 rounded-lg bg-amber-500 text-zinc-950 font-mono text-sm font-bold hover:bg-amber-400 disabled:opacity-50 inline-flex items-center justify-center gap-2"
+          className="px-4 py-2 rounded-lg bg-gold-500 text-zinc-950 font-mono text-sm font-bold hover:bg-gold-500 disabled:opacity-50 inline-flex items-center justify-center gap-2"
         >
           {checking && <Loader2 className="h-4 w-4 animate-spin" />} Connect
         </button>

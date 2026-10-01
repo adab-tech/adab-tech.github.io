@@ -55,7 +55,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased min-h-screen bg-[#0B1120] text-[#F8FAFC] font-sans selection:bg-amber-500/20 selection:text-amber-400 overflow-x-hidden" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
+      <body className="antialiased min-h-screen bg-[#0B1120] text-[#F8FAFC] font-sans selection:bg-gold-500/20 selection:text-gold-500 overflow-x-hidden" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
         {children}
       </body>
     </html>

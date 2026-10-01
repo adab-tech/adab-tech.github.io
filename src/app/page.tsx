@@ -29,8 +29,8 @@ export default function HomePage() {
           
           {/* Status & Verification Badges */}
           <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 font-mono text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-gold-500/30 bg-gold-500/10 text-gold-500 font-mono text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-gold-500" />
               {H.badge}
             </span>
             
@@ -41,7 +41,7 @@ export default function HomePage() {
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-zinc-50 tracking-tight leading-tight">
               {H.name}
             </h1>
-            <p className="text-lg sm:text-xl font-mono text-amber-400 font-medium">
+            <p className="text-lg sm:text-xl font-mono text-gold-500 font-medium">
               {H.tagline}
             </p>
             <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
@@ -49,11 +49,11 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-mono text-zinc-400 pt-1">
-              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-amber-500" /> {H.location}</span>
+              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-gold-500" /> {H.location}</span>
               {H.email && (
                 <>
                   <span>·</span>
-                  <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-amber-500" /> {H.email}</span>
+                  <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-gold-500" /> {H.email}</span>
                 </>
               )}
             </div>
@@ -63,10 +63,10 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {H.buttons.map((btn) => {
               const cls = btn.primary
-                ? 'inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/20'
-                : 'inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-zinc-700 bg-[#0E1526] text-zinc-100 font-mono text-xs font-bold hover:border-amber-500 hover:text-amber-400 transition-all shadow-sm'
+                ? 'inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-500 transition-all shadow-lg hover:shadow-gold-500/20'
+                : 'inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-zinc-700 bg-[#0E1526] text-zinc-100 font-mono text-xs font-bold hover:border-gold-500 hover:text-gold-500 transition-all shadow-sm'
               const Icon = BUTTON_ICONS[btn.icon]
-              const icon = Icon && <Icon className={`w-4 h-4 ${btn.primary ? '' : 'text-amber-400'}`} />
+              const icon = Icon && <Icon className={`w-4 h-4 ${btn.primary ? '' : 'text-gold-500'}`} />
               if (btn.url.startsWith('/'))
                 return (
                   <Link key={btn.label} href={btn.url} className={cls}>
@@ -94,7 +94,7 @@ export default function HomePage() {
         {N.show && (
         <section className="space-y-6 border-t border-zinc-800/80 pt-12">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
               <Activity className="w-4 h-4" />
               {N.kicker}
             </div>
@@ -109,7 +109,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {N.items.map((b) => (
               <div key={b.label} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-2">
-                <div className="text-3xl font-mono font-bold text-amber-400">{b.metric}</div>
+                <div className="text-3xl font-mono font-bold text-gold-500">{b.metric}</div>
                 <div className="text-xs font-mono font-bold text-zinc-100">{b.label}</div>
                 <p className="text-[11px] text-zinc-400 font-sans leading-relaxed">{b.sub}</p>
               </div>
@@ -121,7 +121,7 @@ export default function HomePage() {
             <div className="font-mono font-bold text-sm text-zinc-100 flex items-center justify-between border-b border-zinc-800 pb-3">
               <span>{N.specsTitle}</span>
               {N.specsLinkUrl && (
-                <a href={N.specsLinkUrl} target="_blank" rel="noreferrer" className="text-xs text-amber-400 hover:underline flex items-center gap-1">
+                <a href={N.specsLinkUrl} target="_blank" rel="noreferrer" className="text-xs text-gold-500 hover:underline flex items-center gap-1">
                   <span>{N.specsLinkLabel}</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
@@ -138,7 +138,7 @@ export default function HomePage() {
             </div>
 
             <div className="pt-4 border-t border-zinc-800/80 space-y-3 font-sans text-xs text-zinc-300 leading-relaxed">
-              <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+              <div className="flex items-center gap-2 font-mono font-bold text-gold-500">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>{N.evidenceTitle}</span>
               </div>
@@ -162,8 +162,8 @@ export default function HomePage() {
 
         {/* SECTION 2: DESIGN PRINCIPLES */}
         {H.principles.show && (
-        <section className="p-6 sm:p-8 rounded-2xl border border-amber-500/30 bg-[#0E1526] space-y-4">
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+        <section className="p-6 sm:p-8 rounded-2xl border border-gold-500/30 bg-[#0E1526] space-y-4">
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
             <Shield className="w-4 h-4" />
             {H.principles.kicker}
           </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs font-sans text-zinc-300 leading-relaxed">
             {H.principles.items.map((item) => (
               <div key={item.title} className="p-4 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1.5">
-                <span className="font-mono font-bold text-amber-400 text-sm block">{item.title}</span>
+                <span className="font-mono font-bold text-gold-500 text-sm block">{item.title}</span>
                 <p><InlineText text={item.text} /></p>
               </div>
             ))}
@@ -184,7 +184,7 @@ export default function HomePage() {
         {/* SECTION 3: PROJECTS */}
         <section className="space-y-6 border-t border-zinc-800/80 pt-12">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-400 uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
               <Layers className="w-4 h-4" />
               Projects
             </div>
@@ -222,23 +222,23 @@ export default function HomePage() {
                     <span className={`shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                       p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
                       p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
-                      'text-amber-400 bg-amber-500/10 border-amber-500/30'
+                      'text-gold-500 bg-gold-500/10 border-gold-500/30'
                     }`}>
                       {p.status}
                     </span>
                   </div>
-                  <div className="text-xs font-mono text-amber-400/90">{p.role} · <span className="text-zinc-400">{p.type}</span></div>
+                  <div className="text-xs font-mono text-gold-500/90">{p.role} · <span className="text-zinc-400">{p.type}</span></div>
                   <p className="text-xs text-zinc-300 font-sans leading-relaxed">{p.homeSummary || p.description}</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-zinc-800 text-xs font-mono">
                   {url && (url.startsWith('/') ? (
-                    <Link href={url} className="text-amber-400 hover:underline flex items-center gap-1">
+                    <Link href={url} className="text-gold-500 hover:underline flex items-center gap-1">
                       <span>{p.homeLinkLabel || 'Open'}</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
                   ) : (
-                    <a href={url} target="_blank" rel="noreferrer" className="text-amber-400 hover:underline flex items-center gap-1">
+                    <a href={url} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline flex items-center gap-1">
                       <span>{p.homeLinkLabel || 'Visit'}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
@@ -267,11 +267,11 @@ export default function HomePage() {
         {/* SECTION 4: CONTACT NOTICE */}
         <section className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 text-xs font-sans text-zinc-400 leading-relaxed">
           <div className="flex items-center gap-2 font-mono font-bold text-zinc-200">
-            <Mail className="w-4 h-4 text-amber-400" />
+            <Mail className="w-4 h-4 text-gold-500" />
             <span>{H.contact.heading}</span>
           </div>
           <p className="text-zinc-300">
-            <InlineText text={H.contact.text} linkClassName="text-amber-400 hover:underline font-mono" />
+            <InlineText text={H.contact.text} linkClassName="text-gold-500 hover:underline font-mono" />
           </p>
           {H.contact.note && <p>{H.contact.note}</p>}
         </section>

@@ -72,9 +72,9 @@ export default function AdminDashboardPage() {
             href={`${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-5 rounded-2xl border border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10 transition-colors"
+            className="block p-5 rounded-2xl border border-gold-500/40 bg-gold-500/5 hover:bg-gold-500/10 transition-colors"
           >
-            <div className="flex items-center gap-2 font-mono font-bold text-amber-400">
+            <div className="flex items-center gap-2 font-mono font-bold text-gold-500">
               <Edit3 className="h-5 w-5" />
               <span>Write a blog post in Ghost →</span>
             </div>
@@ -85,7 +85,7 @@ export default function AdminDashboardPage() {
 
         <section className="space-y-3">
           <h2 className="text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
-            <Activity className="h-5 w-5 text-amber-500" />
+            <Activity className="h-5 w-5 text-gold-500" />
             Visitors
           </h2>
           <VisitorCounter showDetails={true} />
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
             </p>
             <div className="p-2.5 rounded-lg bg-midnight-950 border border-zinc-800 flex items-center justify-between font-mono text-xs">
               <span className="text-zinc-400">Inbound routing</span>
-              <span className="text-amber-400 font-bold flex items-center gap-1">
+              <span className="text-gold-500 font-bold flex items-center gap-1">
                 <AlertCircle className="h-3.5 w-3.5" /> AWS SES, unverified
               </span>
             </div>

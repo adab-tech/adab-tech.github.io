@@ -57,7 +57,7 @@ export function OwnComments({ slug }: { slug: string }) {
   }
 
   const field =
-    'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-base text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500'
+    'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-base text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 
   return (
     <div className="space-y-6">
@@ -68,12 +68,12 @@ export function OwnComments({ slug }: { slug: string }) {
           {comments.map((c) => (
             <li
               key={c.id}
-              className={`p-4 rounded-xl border ${c.is_author ? 'border-amber-500/40 bg-amber-500/5' : 'border-zinc-800 bg-[#0E1526]'}`}
+              className={`p-4 rounded-xl border ${c.is_author ? 'border-gold-500/40 bg-gold-500/5' : 'border-zinc-800 bg-[#0E1526]'}`}
             >
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                 <span className="font-semibold text-zinc-100">{c.name}</span>
                 {c.is_author === 1 && (
-                  <span className="px-1.5 py-0.5 rounded text-[11px] font-mono border border-amber-500/40 text-amber-300">Author</span>
+                  <span className="px-1.5 py-0.5 rounded text-[11px] font-mono border border-gold-500/40 text-gold-400">Author</span>
                 )}
                 <span className="text-zinc-500" aria-hidden="true">·</span>
                 <time dateTime={c.created_at} className="text-zinc-400">
@@ -117,7 +117,7 @@ export function OwnComments({ slug }: { slug: string }) {
           <button
             type="submit"
             disabled={state.kind === 'sending'}
-            className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-amber-500 text-zinc-950 text-sm font-bold hover:bg-amber-400 disabled:opacity-60"
+            className="inline-flex items-center gap-2 h-11 px-5 rounded-full bg-gold-500 text-zinc-950 text-sm font-bold hover:bg-gold-500 disabled:opacity-60"
           >
             {state.kind === 'sending' && <Loader2 className="h-4 w-4 animate-spin" />}
             Post comment

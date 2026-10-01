@@ -39,7 +39,7 @@ export function AdminHeader() {
           </a>
           <a
             href={ghostEnabled() ? `${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post` : '/admin/blog/'}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-amber-500/40 bg-amber-500/10 text-xs font-mono text-amber-300 hover:text-white transition-colors"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-xs font-mono text-gold-400 hover:text-white transition-colors"
           >
             <span>Write a post</span>
           </a>

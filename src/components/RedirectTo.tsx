@@ -10,7 +10,7 @@ export function RedirectTo({ href }: { href: string }) {
       <link rel="canonical" href={`https://adamu.tech${href}`} />
       <main className="min-h-screen flex items-center justify-center p-6 text-sm text-zinc-300">
         <p>
-          This page has moved to <Link href={href} className="text-amber-400 underline">{`adamu.tech${href}`}</Link>.
+          This page has moved to <Link href={href} className="text-gold-500 underline">{`adamu.tech${href}`}</Link>.
         </p>
       </main>
     </>

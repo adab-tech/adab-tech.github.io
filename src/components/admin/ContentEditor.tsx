@@ -45,7 +45,7 @@ type PendingLogo = { blob: Blob; repoPath: string; preview: string }
 type Ctx = { root: Obj; addLogo: (file: File, base: string) => Promise<string>; previews: Map<string, string> }
 
 const input =
-  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500'
+  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 const smallBtn =
   'inline-flex items-center justify-center h-8 w-8 rounded-md text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 disabled:opacity-30 disabled:hover:bg-transparent'
 
@@ -108,14 +108,14 @@ export function ContentEditorPage({
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
-            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-amber-400">
+            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-gold-500">
               <ArrowLeft className="h-3.5 w-3.5" /> Admin
             </Link>
             <h1 className="text-2xl font-mono font-bold text-zinc-50">{title}</h1>
             <p className="text-sm text-zinc-400 max-w-2xl">{intro}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <a href={previewPath} target="_blank" rel="noreferrer" className="text-xs font-mono text-amber-400 hover:underline inline-flex items-center gap-1">
+            <a href={previewPath} target="_blank" rel="noreferrer" className="text-xs font-mono text-gold-500 hover:underline inline-flex items-center gap-1">
               View on the site <ExternalLink className="h-3 w-3" />
             </a>
             {token && (
@@ -280,8 +280,8 @@ function Editor({
   return (
     <div className="space-y-6 pb-28">
       <p className="text-xs text-zinc-400 leading-relaxed">
-        In longer text you can use <code className="text-amber-300">**bold**</code>, <code className="text-amber-300">*italic*</code>,{' '}
-        <code className="text-amber-300">`code`</code> and <code className="text-amber-300">[link text](https://…)</code>. Use the arrows to reorder,
+        In longer text you can use <code className="text-gold-400">**bold**</code>, <code className="text-gold-400">*italic*</code>,{' '}
+        <code className="text-gold-400">`code`</code> and <code className="text-gold-400">[link text](https://…)</code>. Use the arrows to reorder,
         the bin to remove, and <strong>Save &amp; publish</strong> at the bottom when done.
       </p>
       <Fields fields={schema} value={data} onChange={(v) => setData(v)} ctx={ctx} />
@@ -301,7 +301,7 @@ function Editor({
             type="button"
             onClick={save}
             disabled={!dirty || status.kind === 'working'}
-            className="px-5 py-2.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-sm font-bold hover:bg-amber-400 disabled:opacity-40 inline-flex items-center gap-2"
+            className="px-5 py-2.5 rounded-lg bg-gold-500 text-zinc-950 font-mono text-sm font-bold hover:bg-gold-500 disabled:opacity-40 inline-flex items-center gap-2"
           >
             {status.kind === 'working' && <Loader2 className="h-4 w-4 animate-spin" />} Save &amp; publish
           </button>
@@ -314,7 +314,7 @@ function Editor({
             <RotateCcw className="h-4 w-4" /> Discard changes
           </button>
           <span className="text-sm" role="status">
-            {status.kind === 'idle' && (dirty ? <span className="text-amber-300">Unsaved changes</span> : <span className="text-zinc-400">All changes saved</span>)}
+            {status.kind === 'idle' && (dirty ? <span className="text-gold-400">Unsaved changes</span> : <span className="text-zinc-400">All changes saved</span>)}
             {status.kind === 'working' && <span className="text-zinc-300">{status.text}</span>}
             {status.kind === 'error' && <span className="text-red-300">{status.text}</span>}
             {status.kind === 'deploying' && (
@@ -397,7 +397,7 @@ function FieldInput({ field, value, onChange, ctx, parent }: { field: Field; val
     case 'bool':
       return (
         <label className="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" className="mt-1 h-4 w-4 accent-amber-500" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
+          <input type="checkbox" className="mt-1 h-4 w-4 accent-gold-500" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
           <span className="space-y-0.5">
             <span className="block text-sm font-semibold text-zinc-200">{field.label}</span>
             {field.help && <span className="block text-xs text-zinc-400">{field.help}</span>}
@@ -447,7 +447,7 @@ function FieldInput({ field, value, onChange, ctx, parent }: { field: Field; val
               </button>
             </div>
           ))}
-          <button type="button" onClick={() => onChange([...list, ''])} className="inline-flex items-center gap-1.5 text-xs font-mono text-amber-400 hover:text-amber-300">
+          <button type="button" onClick={() => onChange([...list, ''])} className="inline-flex items-center gap-1.5 text-xs font-mono text-gold-500 hover:text-gold-400">
             <Plus className="h-3.5 w-3.5" /> Add {field.itemLabel ?? 'item'}
           </button>
         </div>
@@ -458,7 +458,7 @@ function FieldInput({ field, value, onChange, ctx, parent }: { field: Field; val
     case 'group':
       return (
         <fieldset className="p-4 rounded-xl border border-zinc-800 bg-[#0B1120] space-y-4">
-          <legend className="px-2 text-sm font-mono font-bold text-amber-400">{field.label}</legend>
+          <legend className="px-2 text-sm font-mono font-bold text-gold-500">{field.label}</legend>
           {field.help && <p className="text-xs text-zinc-400">{field.help}</p>}
           <Fields fields={field.fields} value={(value as Obj) ?? {}} onChange={onChange} ctx={ctx} />
         </fieldset>
@@ -491,7 +491,7 @@ function ListInput({ field, value, onChange, ctx }: { field: Extract<Field, { ty
                   type="button"
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
-                  className="flex-1 min-w-0 flex items-center gap-2 text-left py-1.5 text-sm text-zinc-100 hover:text-amber-300"
+                  className="flex-1 min-w-0 flex items-center gap-2 text-left py-1.5 text-sm text-zinc-100 hover:text-gold-400"
                 >
                   {isOpen ? <ChevronDown className="h-4 w-4 shrink-0" /> : <ChevronRight className="h-4 w-4 shrink-0" />}
                   <span className="truncate">{label}</span>
@@ -545,7 +545,7 @@ function ListInput({ field, value, onChange, ctx }: { field: Extract<Field, { ty
           onChange([...value, blank()])
           setOpen(value.length)
         }}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-zinc-700 text-xs font-mono text-amber-400 hover:border-amber-500"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-dashed border-zinc-700 text-xs font-mono text-gold-500 hover:border-gold-500"
       >
         <Plus className="h-3.5 w-3.5" /> Add {field.itemLabel}
       </button>
@@ -583,7 +583,7 @@ function LogoInput({ field, value, onChange, ctx, parent }: { field: Extract<Fie
         <div className="flex-1 min-w-[12rem] space-y-1.5">
           <input id={id} className={input} value={value} onChange={(e) => onChange(e.target.value)} placeholder="/project-logos/name.svg or https://…" spellCheck={false} />
           <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
-            <button type="button" onClick={() => pick.current?.click()} className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300">
+            <button type="button" onClick={() => pick.current?.click()} className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400">
               <ImagePlus className="h-3.5 w-3.5" /> Upload logo
             </button>
             {value && (

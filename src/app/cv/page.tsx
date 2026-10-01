@@ -10,7 +10,7 @@ import { ArrowLeft, Printer, Mail, Globe, MapPin, BookOpen, GraduationCap, Brief
 const PROFILE_COLORS: Record<string, string> = {
   blue: 'text-blue-400 hover:border-blue-500',
   lime: 'text-lime-400 hover:border-lime-500',
-  amber: 'text-amber-400 hover:border-amber-500',
+  amber: 'text-gold-500 hover:border-gold-500',
   emerald: 'text-emerald-400 hover:border-emerald-500',
   zinc: 'text-zinc-200 hover:border-zinc-400',
 }
@@ -30,7 +30,7 @@ export default function AcademicCVPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-amber-400 transition-colors"
+            className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-gold-500 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to home</span>
@@ -40,7 +40,7 @@ export default function AcademicCVPage() {
             
             <button
               onClick={handlePrint}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-500 text-zinc-950 font-mono text-xs font-bold hover:bg-amber-400 transition-colors shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-500 transition-colors shadow-sm cursor-pointer"
             >
               <Printer className="h-3.5 w-3.5" />
               <span>Print / Download PDF</span>
@@ -58,14 +58,14 @@ export default function AcademicCVPage() {
                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-mono font-bold text-zinc-50 tracking-tight">
                   {CV.name}
                 </h1>
-                <p className="text-sm sm:text-base font-mono text-amber-400 font-semibold">
+                <p className="text-sm sm:text-base font-mono text-gold-500 font-semibold">
                   {CV.headline}
                 </p>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400 pt-1">
                   {[
-                    CV.location && <span key="loc" className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-amber-500 shrink-0" /> {CV.location}</span>,
-                    CV.website && <span key="web" className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-amber-500 shrink-0" /> {CV.website}</span>,
-                    CV.email && <span key="mail" className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-amber-500 shrink-0" /> {CV.email}</span>,
+                    CV.location && <span key="loc" className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.location}</span>,
+                    CV.website && <span key="web" className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.website}</span>,
+                    CV.email && <span key="mail" className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.email}</span>,
                   ]
                     .filter(Boolean)
                     .flatMap((item, i) => (i ? [<span key={`sep${i}`}>·</span>, item] : [item]))}
@@ -95,7 +95,7 @@ export default function AcademicCVPage() {
           {CV.education.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
-              <GraduationCap className="h-5 w-5 text-amber-500 shrink-0" />
+              <GraduationCap className="h-5 w-5 text-gold-500 shrink-0" />
               Education & Academic Credentials
             </h2>
 
@@ -104,7 +104,7 @@ export default function AcademicCVPage() {
                 <div key={e.degree} className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
                     <span>{e.degree}</span>
-                    <span className={`${e.highlight ? 'text-amber-400' : 'text-zinc-400 font-mono'} text-xs`}>{e.date}</span>
+                    <span className={`${e.highlight ? 'text-gold-500' : 'text-zinc-400 font-mono'} text-xs`}>{e.date}</span>
                   </div>
                   <div className="text-zinc-400 font-mono text-xs">{e.institution}</div>
                 </div>
@@ -117,24 +117,24 @@ export default function AcademicCVPage() {
           {CV.experience.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
-              <Briefcase className="h-5 w-5 text-amber-500 shrink-0" />
+              <Briefcase className="h-5 w-5 text-gold-500 shrink-0" />
               Experience
             </h2>
 
             <div className="space-y-4 text-xs sm:text-sm font-sans">
               {CV.experience.map((x) =>
                 x.featured ? (
-                  <div key={x.title} className="p-4 sm:p-6 rounded-2xl border border-amber-500/40 bg-[#15213D] space-y-3">
+                  <div key={x.title} className="p-4 sm:p-6 rounded-2xl border border-gold-500/40 bg-[#15213D] space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
-                      <span className="text-sm sm:text-base text-amber-400 flex items-center gap-1.5">
-                        <Cpu className="h-4 w-4 shrink-0 text-amber-400" />
+                      <span className="text-sm sm:text-base text-gold-500 flex items-center gap-1.5">
+                        <Cpu className="h-4 w-4 shrink-0 text-gold-500" />
                         {x.title}
                       </span>
-                      <span className="text-amber-400 text-xs">{x.dates}</span>
+                      <span className="text-gold-500 text-xs">{x.dates}</span>
                     </div>
                     {x.summary && (
                       <p className="text-zinc-200 leading-relaxed">
-                        <InlineText text={x.summary} linkClassName="text-amber-400 underline font-bold" />
+                        <InlineText text={x.summary} linkClassName="text-gold-500 underline font-bold" />
                       </p>
                     )}
                     {x.bullets.length > 0 && (
@@ -174,7 +174,7 @@ export default function AcademicCVPage() {
           {CV.languages.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
-              <Languages className="h-5 w-5 text-amber-500 shrink-0" />
+              <Languages className="h-5 w-5 text-gold-500 shrink-0" />
               Languages
             </h2>
 
@@ -186,7 +186,7 @@ export default function AcademicCVPage() {
                 >
                   <div className="flex items-center justify-between font-mono">
                     <span className="font-bold text-zinc-100 text-sm">{l.name}</span>
-                    <span className="text-[11px] font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">{l.level}</span>
+                    <span className="text-[11px] font-bold text-gold-500 bg-gold-500/10 px-2 py-0.5 rounded border border-gold-500/30">{l.level}</span>
                   </div>
                   {l.note && <p className="text-zinc-400 font-sans text-[11px] leading-relaxed">{l.note}</p>}
                 </div>
@@ -200,7 +200,7 @@ export default function AcademicCVPage() {
           <section className="space-y-4">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
               <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-amber-500 shrink-0" />
+                <BookOpen className="h-5 w-5 text-gold-500 shrink-0" />
                 Publications
               </h2>
               {CV.scholarUrl && (
@@ -224,9 +224,9 @@ export default function AcademicCVPage() {
                     <div className="font-mono font-bold text-zinc-100 text-sm">
                       {item.href ? (
                         item.href.startsWith('/') ? (
-                          <Link href={item.href} className="hover:text-amber-400 transition-colors">{item.title}</Link>
+                          <Link href={item.href} className="hover:text-gold-500 transition-colors">{item.title}</Link>
                         ) : (
-                          <a href={item.href} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">{item.title}</a>
+                          <a href={item.href} target="_blank" rel="noreferrer" className="hover:text-gold-500 transition-colors">{item.title}</a>
                         )
                       ) : item.title}
                     </div>
@@ -242,7 +242,7 @@ export default function AcademicCVPage() {
           {CV.datasets.length > 0 && (
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
-              <Database className="h-5 w-5 text-amber-500 shrink-0" />
+              <Database className="h-5 w-5 text-gold-500 shrink-0" />
               Research Datasets & Digital Projects
             </h2>
 
@@ -255,14 +255,14 @@ export default function AcademicCVPage() {
                   </div>
                   {d.meta && (
                     <div className="text-zinc-400 font-mono text-[11px]">
-                      <InlineText text={d.meta} linkClassName="text-amber-400 underline break-all" />
+                      <InlineText text={d.meta} linkClassName="text-gold-500 underline break-all" />
                     </div>
                   )}
                   {d.description && <p className="text-zinc-300 leading-relaxed text-xs sm:text-sm"><InlineText text={d.description} /></p>}
                   {d.links.length > 0 && (
                     <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]">
                       {d.links.map((l) => (
-                        <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-1">
+                        <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline inline-flex items-center gap-1">
                           <span>{l.label}</span><ExternalLink className="h-3 w-3" />
                         </a>
                       ))}

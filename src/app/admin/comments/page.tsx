@@ -36,7 +36,7 @@ const setKey = (k: string) => {
 }
 
 const field =
-  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-amber-500'
+  'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 
 export default function AdminCommentsPage() {
   const { isAuthenticated, loading } = useAdminAuth()
@@ -57,7 +57,7 @@ export default function AdminCommentsPage() {
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-8 space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-amber-400">
+            <Link href="/admin/" className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-gold-500">
               <ArrowLeft className="h-3.5 w-3.5" /> Admin
             </Link>
             <h1 className="text-2xl font-mono font-bold text-zinc-50">Blog comments</h1>
@@ -80,7 +80,7 @@ export default function AdminCommentsPage() {
         ) : (
           <p className="p-4 rounded-xl border border-zinc-800 bg-[#0B1120] text-sm text-zinc-300">
             Comments use giscus (GitHub Discussions). Moderate them in the{' '}
-            <a className="text-amber-400 underline" href={`https://github.com/${GISCUS.repo}/discussions`} target="_blank" rel="noreferrer">
+            <a className="text-gold-500 underline" href={`https://github.com/${GISCUS.repo}/discussions`} target="_blank" rel="noreferrer">
               repository’s Discussions
             </a>
             .
@@ -113,7 +113,7 @@ function KeyForm() {
       <p className="text-sm text-zinc-300">Enter the comments admin key (the COMMENTS_ADMIN_KEY you chose). It stays in this browser.</p>
       <div className="flex flex-col sm:flex-row gap-2">
         <input type="password" className={field} value={value} onChange={(e) => setValue(e.target.value)} aria-label="Comments admin key" required />
-        <button type="submit" disabled={checking} className="px-4 py-2 rounded-lg bg-amber-500 text-zinc-950 font-mono text-sm font-bold hover:bg-amber-400 disabled:opacity-50 inline-flex items-center gap-2 justify-center">
+        <button type="submit" disabled={checking} className="px-4 py-2 rounded-lg bg-gold-500 text-zinc-950 font-mono text-sm font-bold hover:bg-gold-500 disabled:opacity-50 inline-flex items-center gap-2 justify-center">
           {checking && <Loader2 className="h-4 w-4 animate-spin" />} Connect
         </button>
       </div>
@@ -189,7 +189,7 @@ function Moderation({ adminKey }: { adminKey: string }) {
             {t === 'pending' ? 'Waiting for approval' : 'Published'}
           </button>
         ))}
-        <button type="button" onClick={load} className="ml-auto p-1.5 text-zinc-400 hover:text-amber-400" aria-label="Reload">
+        <button type="button" onClick={load} className="ml-auto p-1.5 text-zinc-400 hover:text-gold-500" aria-label="Reload">
           <RefreshCw className="h-4 w-4" />
         </button>
       </div>
@@ -204,11 +204,11 @@ function Moderation({ adminKey }: { adminKey: string }) {
           <li key={c.id} className="p-4 rounded-xl border border-zinc-800 bg-[#0B1120] space-y-2">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
               <span className="font-semibold text-zinc-100">{c.name}</span>
-              {c.is_author === 1 && <span className="text-[11px] font-mono text-amber-300">(you)</span>}
+              {c.is_author === 1 && <span className="text-[11px] font-mono text-gold-400">(you)</span>}
               <span className="text-zinc-500">·</span>
               <span className="text-zinc-400">{new Date(c.created_at).toLocaleString()}</span>
               <span className="text-zinc-500">·</span>
-              <a href={`/blog/${c.post}/`} target="_blank" rel="noreferrer" className="text-amber-400 hover:underline inline-flex items-center gap-1 font-mono text-xs break-all">
+              <a href={`/blog/${c.post}/`} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline inline-flex items-center gap-1 font-mono text-xs break-all">
                 /blog/{c.post}/ <ExternalLink className="h-3 w-3" />
               </a>
             </div>
@@ -219,7 +219,7 @@ function Moderation({ adminKey }: { adminKey: string }) {
                   <Check className="h-3.5 w-3.5" /> Approve
                 </button>
               )}
-              <button type="button" onClick={() => { setReplyTo(c); setReply('') }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-200 text-xs hover:border-amber-500">
+              <button type="button" onClick={() => { setReplyTo(c); setReply('') }} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-200 text-xs hover:border-gold-500">
                 <Reply className="h-3.5 w-3.5" /> Reply
               </button>
               <button
@@ -235,7 +235,7 @@ function Moderation({ adminKey }: { adminKey: string }) {
               <form onSubmit={sendReply} className="space-y-2 pt-2">
                 <textarea className={`${field} min-h-[6rem]`} value={reply} onChange={(e) => setReply(e.target.value)} maxLength={3000} placeholder={`Reply to ${c.name} (published under your name)`} dir="auto" required />
                 <div className="flex gap-2">
-                  <button type="submit" className="px-3 py-1.5 rounded-lg bg-amber-500 text-zinc-950 text-xs font-bold hover:bg-amber-400">Publish reply</button>
+                  <button type="submit" className="px-3 py-1.5 rounded-lg bg-gold-500 text-zinc-950 text-xs font-bold hover:bg-gold-500">Publish reply</button>
                   <button type="button" onClick={() => setReplyTo(null)} className="px-3 py-1.5 rounded-lg text-zinc-400 text-xs hover:text-zinc-200">Cancel</button>
                 </div>
               </form>
@@ -281,8 +281,8 @@ function HcbGuide() {
 
   return (
     <div className="space-y-6">
-      <section className="p-5 rounded-xl border border-amber-500/30 bg-amber-500/5 space-y-3">
-        <h2 className="font-mono font-bold text-amber-400">How to delete or reply to a comment</h2>
+      <section className="p-5 rounded-xl border border-gold-500/30 bg-gold-500/5 space-y-3">
+        <h2 className="font-mono font-bold text-gold-500">How to delete or reply to a comment</h2>
         <ol className="list-decimal pl-5 space-y-1.5 text-sm text-zinc-200 leading-relaxed">
           <li>Open the post from the list below (it jumps straight to the comments).</li>
           <li>
@@ -296,7 +296,7 @@ function HcbGuide() {
         </ol>
         <p className="text-xs text-zinc-400">
           The same login on{' '}
-          <a className="text-amber-400 underline" href="https://www.htmlcommentbox.com" target="_blank" rel="noreferrer">
+          <a className="text-gold-500 underline" href="https://www.htmlcommentbox.com" target="_blank" rel="noreferrer">
             htmlcommentbox.com
           </a>{' '}
           is where the comment box’s own settings live.
@@ -305,7 +305,7 @@ function HcbGuide() {
 
       <section className="space-y-3">
         <h2 className="font-mono font-bold text-zinc-100 flex items-center gap-2">
-          <MessageSquare className="h-4 w-4 text-amber-400" /> Comments on each post
+          <MessageSquare className="h-4 w-4 text-gold-500" /> Comments on each post
         </h2>
         {error && <p className="text-sm text-red-300">Couldn’t load the post list ({error}).</p>}
         {!posts && !error && <p className="text-sm text-zinc-400">Loading posts…</p>}
@@ -317,13 +317,13 @@ function HcbGuide() {
                 href={`${p.url}#comments-heading`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex flex-wrap items-center justify-between gap-2 p-4 rounded-xl border border-zinc-800 bg-[#0B1120] hover:border-amber-500/60 transition-colors"
+                className="flex flex-wrap items-center justify-between gap-2 p-4 rounded-xl border border-zinc-800 bg-[#0B1120] hover:border-gold-500/60 transition-colors"
               >
                 <span className="min-w-0">
                   <span className="block font-semibold text-zinc-100" dir="auto">{p.title}</span>
                   <span className="block text-xs font-mono text-zinc-400">{p.date}</span>
                 </span>
-                <span className="text-xs font-mono text-amber-400 inline-flex items-center gap-1">
+                <span className="text-xs font-mono text-gold-500 inline-flex items-center gap-1">
                   Open comments <ExternalLink className="h-3 w-3" />
                 </span>
               </a>

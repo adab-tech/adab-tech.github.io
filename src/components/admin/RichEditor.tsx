@@ -91,7 +91,7 @@ export function RichEditor({
   }
 
   return (
-    <div className="rounded-xl border border-zinc-700 bg-[#0B1120] focus-within:border-amber-500/70">
+    <div className="rounded-xl border border-zinc-700 bg-[#0B1120] focus-within:border-gold-500/70">
       {editor && <Toolbar editor={editor} onImage={() => fileInput.current?.click()} />}
       <div className="px-4 sm:px-6 py-5">
         <EditorContent editor={editor} />
@@ -221,7 +221,7 @@ function Toolbar({ editor, onImage }: { editor: Editor; onImage: () => void }) {
               onMouseDown={(e) => e.preventDefault()} // keep the text selection
               onClick={b.run}
               className={`h-9 w-9 inline-flex items-center justify-center rounded-md [&_svg]:h-4 [&_svg]:w-4 transition-colors disabled:opacity-30 ${
-                b.active ? 'bg-amber-500/20 text-amber-300' : 'text-zinc-300 hover:bg-zinc-800 hover:text-zinc-50'
+                b.active ? 'bg-gold-500/20 text-gold-400' : 'text-zinc-300 hover:bg-zinc-800 hover:text-zinc-50'
               }`}
             >
               {b.icon}

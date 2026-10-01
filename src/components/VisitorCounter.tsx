@@ -47,7 +47,7 @@ export function VisitorCounter({ showDetails = false }: { showDetails?: boolean 
     return (
       <div className="p-4 rounded-xl border border-zinc-800 bg-[#0E1526] shadow-sm space-y-1 max-w-sm">
         <div className="flex items-center gap-1.5 text-xs font-mono text-zinc-400">
-          <Eye className="h-3.5 w-3.5 text-amber-400" />
+          <Eye className="h-3.5 w-3.5 text-gold-500" />
           <span>Visits to the public site</span>
         </div>
         <div className="text-2xl font-mono font-bold text-zinc-50">{value}</div>
@@ -58,7 +58,7 @@ export function VisitorCounter({ showDetails = false }: { showDetails?: boolean 
 
   return (
     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-zinc-800 bg-[#0E1526] font-mono text-[11px] text-zinc-300 shadow-sm">
-      <Eye className="h-3 w-3 text-amber-400" />
+      <Eye className="h-3 w-3 text-gold-500" />
       <span><strong>{value}</strong> visits</span>
     </div>
   )
@@ -119,7 +119,7 @@ export function PostReadCount({ slug }: { slug: string }) {
   if (count === null) return null
   return (
     <span className="inline-flex items-center gap-1 text-[10px] text-zinc-400" title="Reads (one per session, halfway or 30 s)">
-      <Eye className="h-3 w-3 text-amber-400" />
+      <Eye className="h-3 w-3 text-gold-500" />
       {count.toLocaleString()}
     </span>
   )
