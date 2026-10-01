@@ -5,8 +5,8 @@
   "homeIntro": "Products, open datasets, and research, with my role in each.",
   "categories": [
     "AI & Speech",
-    "Academic & Grants",
     "Philology & Humanities",
+    "Academic & Grants",
     "Infrastructure"
   ],
   "projects": [
@@ -45,6 +45,38 @@
       ]
     },
     {
+      "id": "hausa-30k-lexicon",
+      "title": "Hausa Lexicon (Ƙamus)",
+      "logo": "",
+      "logoFill": false,
+      "iconRow": false,
+      "category": "Philology & Humanities",
+      "role": "Curator & maintainer",
+      "type": "Lexical resource",
+      "status": "Open dataset",
+      "statusColor": "blue",
+      "showOnHome": true,
+      "homeSummary": "20,628 Robinson (1914) Hausa–English pairs published on Hugging Face (public domain). Murya’s internal lexicon totals 30,729 entries, adding Wiktionary (CC BY-SA) and an authorized subset of Newman (1977) that is not redistributed.",
+      "homeLinkLabel": "Dataset",
+      "description": "Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.",
+      "highlights": [
+        "20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms",
+        "30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)",
+        "Newman (1977) subset is not redistributed"
+      ],
+      "liveUrl": "",
+      "paperUrl": "",
+      "modelUrl": "https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914",
+      "repoUrl": "https://huggingface.co/adab-tech",
+      "repoLabel": "Hugging Face",
+      "tags": [
+        "Lexical Infrastructure",
+        "Hugging Face",
+        "Hausa Philology",
+        "Open Data"
+      ]
+    },
+    {
       "id": "mapping-voices",
       "title": "Mapping Voices",
       "logo": "/project-logos/mapping-voices.svg",
@@ -80,38 +112,6 @@
       ]
     },
     {
-      "id": "hausa-30k-lexicon",
-      "title": "Hausa Lexicon (Ƙamus)",
-      "logo": "",
-      "logoFill": false,
-      "iconRow": false,
-      "category": "Philology & Humanities",
-      "role": "Curator & maintainer",
-      "type": "Lexical resource",
-      "status": "Open dataset",
-      "statusColor": "blue",
-      "showOnHome": true,
-      "homeSummary": "20,628 Robinson (1914) Hausa–English pairs published on Hugging Face (public domain). Murya’s internal lexicon totals 30,729 entries, adding Wiktionary (CC BY-SA) and an authorized subset of Newman (1977) that is not redistributed.",
-      "homeLinkLabel": "Dataset",
-      "description": "Robinson 1914 Hausa–English lexicon (20,628 pairs, Public Domain) published on Hugging Face, extended internally to 30,729 dictionary-constrained entries with Wiktionary (CC-BY-SA) and a Prof. Paul Newman (1977) research subset kept unpublished per that permission’s terms.",
-      "highlights": [
-        "20,628 Robinson 1914 pairs published on Hugging Face under public-domain terms",
-        "30,729 total entries used for internal lexical grounding (Robinson + Wiktionary + Newman 1977 subset)",
-        "Newman (1977) subset is not redistributed"
-      ],
-      "liveUrl": "",
-      "paperUrl": "",
-      "modelUrl": "https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914",
-      "repoUrl": "https://huggingface.co/adab-tech",
-      "repoLabel": "Hugging Face",
-      "tags": [
-        "Lexical Infrastructure",
-        "Hugging Face",
-        "Hausa Philology",
-        "Open Data"
-      ]
-    },
-    {
       "id": "agentic-ai-monograph",
       "title": "Humanities Perspectives on Agentic AI",
       "logo": "",
@@ -141,38 +141,6 @@
         "AI Ethics",
         "Pragmatics",
         "Pre-print"
-      ]
-    },
-    {
-      "id": "imodoye-archive",
-      "title": "Imodoye Writers' Residency",
-      "logo": "/project-logos/imodoye.svg",
-      "logoFill": true,
-      "iconRow": true,
-      "category": "Philology & Humanities",
-      "role": "Founder & platform lead",
-      "type": "Literary fellowship & publishing platform",
-      "status": "Live",
-      "statusColor": "emerald",
-      "showOnHome": true,
-      "homeSummary": "Platform for a writers' residency in Ilorin, Kwara State: fellows, cohorts, and publications, plus blind review for its literary journal, Imodoye Review.",
-      "homeLinkLabel": "Visit",
-      "description": "Platform for Imodoye, a writers' residency in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
-      "highlights": [
-        "Content management for fellows, cohorts, partners, and publications",
-        "Blind-review editorial workflow feeding submissions to Imodoye Review",
-        "Public residency archive and impact reporting, backed by the live database"
-      ],
-      "liveUrl": "https://imodoye.ng",
-      "paperUrl": "",
-      "modelUrl": "",
-      "repoUrl": "https://github.com/adab-tech/imodoye-web",
-      "repoLabel": "Source",
-      "tags": [
-        "Writers' Residency",
-        "Literary Fellowship",
-        "Next.js",
-        "Neon Postgres"
       ]
     },
     {
@@ -207,6 +175,38 @@
         "Scholarships",
         "Automated Alerts",
         "Global Mobility"
+      ]
+    },
+    {
+      "id": "imodoye-archive",
+      "title": "Imodoye Writers' Residency",
+      "logo": "/project-logos/imodoye.svg",
+      "logoFill": true,
+      "iconRow": true,
+      "category": "Philology & Humanities",
+      "role": "Founder & platform lead",
+      "type": "Literary fellowship & publishing platform",
+      "status": "Live",
+      "statusColor": "emerald",
+      "showOnHome": true,
+      "homeSummary": "Platform for a writers' residency in Ilorin, Kwara State: fellows, cohorts, and publications, plus blind review for its literary journal, Imodoye Review.",
+      "homeLinkLabel": "Visit",
+      "description": "Platform for Imodoye, a writers' residency in Ilorin, Kwara State by Dr. Usman Oladipo Akanbi, President of the Association of Nigerian Authors. Seven cohorts in, with its own literary journal, Imodoye Review.",
+      "highlights": [
+        "Content management for fellows, cohorts, partners, and publications",
+        "Blind-review editorial workflow feeding submissions to Imodoye Review",
+        "Public residency archive and impact reporting, backed by the live database"
+      ],
+      "liveUrl": "https://imodoye.ng",
+      "paperUrl": "",
+      "modelUrl": "",
+      "repoUrl": "https://github.com/adab-tech/imodoye-web",
+      "repoLabel": "Source",
+      "tags": [
+        "Writers' Residency",
+        "Literary Fellowship",
+        "Next.js",
+        "Neon Postgres"
       ]
     },
     {
