@@ -186,9 +186,9 @@ export default function AcademicCVPage() {
                 >
                   <div className="flex items-center justify-between font-mono">
                     <span className="font-bold text-zinc-100 text-sm">{l.name}</span>
-                    <span className="text-[11px] font-bold text-gold-500 bg-gold-500/10 px-2 py-0.5 rounded border border-gold-500/30">{l.level}</span>
+                    <span className="text-xs lg:text-[11px] font-bold text-gold-500 bg-gold-500/10 px-2 py-0.5 rounded border border-gold-500/30">{l.level}</span>
                   </div>
-                  {l.note && <p className="text-zinc-400 font-sans text-[11px] leading-relaxed">{l.note}</p>}
+                  {l.note && <p className="text-zinc-400 font-sans text-xs lg:text-[11px] leading-relaxed">{l.note}</p>}
                 </div>
               ))}
             </div>
@@ -218,7 +218,7 @@ export default function AcademicCVPage() {
 
             {CV.publicationGroups.map((group) => (
               <div key={group.heading} className="space-y-3 text-xs sm:text-sm font-sans">
-                <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-zinc-400">{group.heading}</h3>
+                <h3 className="font-mono text-xs lg:text-[11px] font-bold uppercase tracking-wider text-zinc-400">{group.heading}</h3>
                 {group.items.map((item) => (
                   <div key={item.title} className="p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                     <div className="font-mono font-bold text-zinc-100 text-sm">
@@ -230,7 +230,7 @@ export default function AcademicCVPage() {
                         )
                       ) : item.title}
                     </div>
-                    <div className="text-zinc-400 font-mono text-[11px]">{item.venue}</div>
+                    <div className="text-zinc-400 font-mono text-xs lg:text-[11px]">{item.venue}</div>
                   </div>
                 ))}
               </div>
@@ -254,13 +254,13 @@ export default function AcademicCVPage() {
                     <span className="text-zinc-400 font-mono text-xs shrink-0">{d.year}</span>
                   </div>
                   {d.meta && (
-                    <div className="text-zinc-400 font-mono text-[11px]">
+                    <div className="text-zinc-400 font-mono text-xs lg:text-[11px]">
                       <InlineText text={d.meta} linkClassName="text-gold-500 underline break-all" />
                     </div>
                   )}
                   {d.description && <p className="text-zinc-300 leading-relaxed text-xs sm:text-sm"><InlineText text={d.description} /></p>}
                   {d.links.length > 0 && (
-                    <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px]">
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs lg:text-[11px]">
                       {d.links.map((l) => (
                         <a key={l.url} href={l.url} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline inline-flex items-center gap-1">
                           <span>{l.label}</span><ExternalLink className="h-3 w-3" />

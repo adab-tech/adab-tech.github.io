@@ -142,3 +142,21 @@ html, body {
 .hcb-dark img { max-width: 100%; height: auto; }
 /* HTML Comment Box's advert link (also hidden by script in Comments.tsx). */
 .hcb-dark .home-desc { display: none !important; }
+
+/* Touch screens: comfortable tap targets (40px+) without changing the
+   desktop layout. Bordered or padded controls grow to 40px tall; bare
+   inline-flex links get a larger hit area through padding that is
+   cancelled out by a matching negative margin, so nothing moves. */
+@media (pointer: coarse) {
+  :is(a, button):is([class*="border"], [class*="px-"], .btn):not([class*="absolute"]) {
+    min-height: 40px;
+  }
+  :is(a, button)[aria-label]:not([class*="absolute"]) {
+    min-height: 40px;
+    min-width: 40px;
+  }
+  a:is(.inline-flex, .flex):not([class*="border"]):not([class*="px-"]):not([class*="absolute"]) {
+    padding-block: 12px;
+    margin-block: -12px;
+  }
+}

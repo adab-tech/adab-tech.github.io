@@ -15,7 +15,7 @@ export function InlineText({ text, linkClassName = 'text-gold-500 hover:underlin
         if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>
         if (part.startsWith('`') && part.endsWith('`'))
           return (
-            <code key={i} className="bg-zinc-800 px-1 py-0.5 rounded font-mono text-[10px] text-gold-400">
+            <code key={i} className="bg-zinc-800 px-1 py-0.5 rounded font-mono text-xs lg:text-[10px] text-gold-400">
               {part.slice(1, -1)}
             </code>
           )

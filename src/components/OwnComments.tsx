@@ -73,7 +73,7 @@ export function OwnComments({ slug }: { slug: string }) {
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                 <span className="font-semibold text-zinc-100">{c.name}</span>
                 {c.is_author === 1 && (
-                  <span className="px-1.5 py-0.5 rounded text-[11px] font-mono border border-gold-500/40 text-gold-400">Author</span>
+                  <span className="px-1.5 py-0.5 rounded text-xs lg:text-[11px] font-mono border border-gold-500/40 text-gold-400">Author</span>
                 )}
                 <span className="text-zinc-500" aria-hidden="true">·</span>
                 <time dateTime={c.created_at} className="text-zinc-400">

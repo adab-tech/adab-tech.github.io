@@ -91,7 +91,7 @@ export default function ProjectsPage() {
                       </div>
                     </div>
                   </div>
-                  <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
+                  <span className={`text-xs lg:text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
                     p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
                     p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
                     'text-gold-500 bg-gold-500/10 border-gold-500/30'
@@ -106,7 +106,7 @@ export default function ProjectsPage() {
 
                 {/* Key Highlights */}
                 <div className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800/80 space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold block">
+                  <span className="text-xs lg:text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold block">
                     Key Technical Highlights:
                   </span>
                   <ul className="space-y-1 text-xs text-zinc-300 font-sans">
@@ -174,7 +174,7 @@ export default function ProjectsPage() {
                   {p.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800"
+                      className="text-xs lg:text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800"
                     >
                       #{tag}
                     </span>

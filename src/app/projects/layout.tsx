@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, breadcrumbs, projectNodes } from '@/lib/structured-data'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      {children}
+      <JsonLd graph={[...projectNodes(), breadcrumbs([['Home', '/'], ['Projects', '/projects/']])]} />
+    </>
+  )
 }

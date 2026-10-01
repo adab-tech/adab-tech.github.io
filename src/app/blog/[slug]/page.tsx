@@ -7,6 +7,14 @@ import { ShareButtons } from '@/components/ShareButtons'
 import { Comments } from '@/components/Comments'
 import { PostReadPing } from '@/components/VisitorCounter'
 import { getAllPosts, getPost, formatDate } from '@/lib/blog'
+import { JsonLd, SITE, authorRef, breadcrumbs } from '@/lib/structured-data'
+
+// Search results show about 155 characters; cut long summaries at a word.
+function metaDescription(text: string, max = 155): string {
+  if (text.length <= max) return text
+  const cut = text.slice(0, max - 1)
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,;:.\s]+$/, '') + '…'
+}
 
 // Every post is generated at build time; unknown slugs are 404s.
 export const dynamicParams = false
@@ -25,13 +33,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!post) return { title: 'Not found', robots: { index: false } }
   return {
     title: post.title,
-    description: post.summary,
+    description: metaDescription(post.summary),
     alternates: { canonical: `/blog/${post.slug}/` },
     robots: post.draft ? { index: false } : undefined,
     openGraph: {
       type: 'article',
       title: post.title,
-      description: post.summary,
+      description: metaDescription(post.summary, 200),
       url: `/blog/${post.slug}/`,
       publishedTime: post.date,
       authors: ['Adamu Danjuma Abubakar'],
@@ -110,6 +118,27 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           )}
         </nav>
       </article>
+      {!post.draft && (
+        <JsonLd
+          graph={[
+            {
+              '@type': 'BlogPosting',
+              headline: post.title,
+              description: post.summary,
+              datePublished: post.date,
+              dateModified: post.date,
+              author: authorRef,
+              publisher: authorRef,
+              image: `${SITE}/blog/${post.slug}/og.png`,
+              url: `${SITE}/blog/${post.slug}/`,
+              mainEntityOfPage: `${SITE}/blog/${post.slug}/`,
+              keywords: post.tags.join(', '),
+              inLanguage: 'en',
+            },
+            breadcrumbs([['Home', '/'], ['Blog', '/blog/'], [post.title, `/blog/${post.slug}/`]]),
+          ]}
+        />
+      )}
     </GlobalShell>
   )
 }

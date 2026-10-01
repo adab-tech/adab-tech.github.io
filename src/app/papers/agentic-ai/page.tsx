@@ -168,7 +168,7 @@ export default function AgenticAiPaperPage() {
                     <Shield className="h-4 w-4" />
                     4.1 NIGERIA: The Wole Soyinka Deepfake
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-400">Vocal Authority & Extraction</span>
+                  <span className="text-xs lg:text-[10px] font-mono text-zinc-400">Vocal Authority & Extraction</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
                   When an unauthorized AI voice clone of Africa&apos;s first Nobel laureate in Literature, Wole Soyinka, was generated and distributed, it exposed how agentic acoustic synthesis exploits oral cultural authority. In West African societies where elder voices carry communal epistemic weight, synthetic voice theft constitutes an assault on cultural integrity and communal trust.
@@ -181,7 +181,7 @@ export default function AgenticAiPaperPage() {
                     <Globe className="h-4 w-4" />
                     4.2 CHINA: State-Sanctioned &quot;Agent Hospital&quot;
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-400">Institutional Multi-Agent Triage</span>
+                  <span className="text-xs lg:text-[10px] font-mono text-zinc-400">Institutional Multi-Agent Triage</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
                   Tsinghua University&apos;s autonomous &quot;Agent Hospital,&quot; simulating thousands of medical consultations daily with AI doctor and patient agents, marks the institutional codification of bureaucratic authority into autonomous software loops, demanding humanistic scrutiny of triage values and accountability.
@@ -194,7 +194,7 @@ export default function AgenticAiPaperPage() {
                     <Sparkles className="h-4 w-4" />
                     4.3 SAUDI ARABIA: Performative Citizenship of Sophia
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-400">Artificial Personhood Theater</span>
+                  <span className="text-xs lg:text-[10px] font-mono text-zinc-400">Artificial Personhood Theater</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
                   Granting ceremonial legal citizenship to humanoid robot &quot;Sophia&quot; in Riyadh revealed the theatrical performativity of artificial agency, wherein artificial agents are accorded legal mobility and protections denied to human migrant laborers under the same legal regime.
@@ -207,7 +207,7 @@ export default function AgenticAiPaperPage() {
                     <Globe className="h-4 w-4" />
                     4.4 FRONTIER LABS: Dario Amodei&apos;s Warning & Human Purpose
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-400">Existential Purpose & Alignment</span>
+                  <span className="text-xs lg:text-[10px] font-mono text-zinc-400">Existential Purpose & Alignment</span>
                 </div>
                 <p className="text-xs text-zinc-700 dark:text-zinc-300 font-serif leading-relaxed">
                   Anthropic CEO Dario Amodei&apos;s essays on powerful AI and the potential displacement of human intellectual vocation confront the ultimate question of human purpose—a question that cannot be resolved through benchmark scores, but through the deep reservoir of literary, historical, and philosophical inquiry.
@@ -272,7 +272,7 @@ export default function AgenticAiPaperPage() {
               <span className="font-bold text-zinc-900 dark:text-zinc-100 uppercase text-xs">Cite This Working Paper (BibTeX)</span>
               <button
                 onClick={handleCopyBibtex}
-                className="text-gold-600 dark:text-gold-500 hover:underline font-bold"
+                className="px-2 -mr-2 text-gold-600 dark:text-gold-500 hover:underline font-bold"
               >
                 {copiedBibtex ? '✓ Copied' : 'Copy'}
               </button>

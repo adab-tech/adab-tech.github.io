@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { checkSiteContent } from '@/lib/site-content'
+import { JsonLd, personNode, websiteNode } from '@/lib/structured-data'
 
 // Stops the build with a clear message if an edited content file is malformed.
 checkSiteContent()
@@ -9,7 +10,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#0B1120'
+  themeColor: '#0B132B'
 }
 
 export const metadata: Metadata = {
@@ -17,7 +18,12 @@ export const metadata: Metadata = {
     default: 'Adamu Danjuma Abubakar — Computational Linguist',
     template: '%s — Adamu Danjuma Abubakar',
   },
-  description: 'Adamu Danjuma Abubakar (Ph.D. defended, University of Alabama): Hausa speech technology (Murya), open research datasets (Mapping Voices), and computational linguistics for African languages.',
+  description: 'Adamu Danjuma Abubakar builds African-language speech technology: Murya for Hausa, open datasets such as Mapping Voices, and computational linguistics.',
+  alternates: { canonical: '/' },
+  authors: [{ name: 'Adamu Danjuma Abubakar', url: 'https://adamu.tech' }],
+  creator: 'Adamu Danjuma Abubakar',
+  keywords: ['Adamu Danjuma Abubakar', 'Hausa speech technology', 'Hausa text-to-speech', 'computational linguistics', 'African languages NLP', 'Murya', 'Mapping Voices', 'digital humanities'],
+  formatDetection: { telephone: false },
   metadataBase: new URL('https://adamu.tech'),
   icons: {
     icon: [
@@ -25,7 +31,7 @@ export const metadata: Metadata = {
       { url: '/favicon.ico' }
     ],
     shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     title: 'Adamu Danjuma Abubakar — Computational Linguist',
@@ -57,6 +63,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased min-h-screen bg-[#0B1120] text-[#F8FAFC] font-sans selection:bg-gold-500/20 selection:text-gold-500 overflow-x-hidden" style={{ backgroundColor: '#0B1120', color: '#F8FAFC' }}>
         {children}
+        <JsonLd graph={[personNode(), websiteNode()]} />
       </body>
     </html>
   )

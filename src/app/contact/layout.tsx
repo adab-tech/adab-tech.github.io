@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { JsonLd, PERSON_ID } from '@/lib/structured-data'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      {children}
+      <JsonLd graph={[{ '@type': 'ContactPage', url: 'https://adamu.tech/contact/', name: 'Contact — Adamu Danjuma Abubakar', mainEntity: { '@id': PERSON_ID } }]} />
+    </>
+  )
 }

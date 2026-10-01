@@ -52,7 +52,7 @@ export default function HomePage() {
               <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-gold-500" /> {H.location}</span>
               {H.email && (
                 <>
-                  <span>·</span>
+                  <span className="hidden sm:inline" aria-hidden="true">·</span>
                   <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-gold-500" /> {H.email}</span>
                 </>
               )}
@@ -111,7 +111,7 @@ export default function HomePage() {
               <div key={b.label} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-2">
                 <div className="text-3xl font-mono font-bold text-gold-500">{b.metric}</div>
                 <div className="text-xs font-mono font-bold text-zinc-100">{b.label}</div>
-                <p className="text-[11px] text-zinc-400 font-sans leading-relaxed">{b.sub}</p>
+                <p className="text-xs lg:text-[11px] text-zinc-400 font-sans leading-relaxed">{b.sub}</p>
               </div>
             ))}
           </div>
@@ -142,7 +142,7 @@ export default function HomePage() {
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                 <span>{N.evidenceTitle}</span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] text-zinc-400">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs lg:text-[11px] text-zinc-400">
                 {N.evidence.map((e) => (
                   <div key={e.title} className="p-3.5 rounded-xl bg-[#131C31] border border-zinc-800 space-y-1">
                     <strong className="text-zinc-200 font-mono block">{e.title}</strong>
@@ -151,7 +151,7 @@ export default function HomePage() {
                 ))}
               </div>
               {N.footnote && (
-                <div className="text-[11px] text-zinc-400 font-mono pt-1">
+                <div className="text-xs lg:text-[11px] text-zinc-400 font-mono pt-1">
                   <InlineText text={N.footnote} />
                 </div>
               )}
@@ -219,7 +219,7 @@ export default function HomePage() {
                       )}
                       <span className="font-mono font-bold text-zinc-100 text-base">{p.title}</span>
                     </span>
-                    <span className={`shrink-0 text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                    <span className={`shrink-0 text-xs lg:text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
                       p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
                       p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
                       'text-gold-500 bg-gold-500/10 border-gold-500/30'
