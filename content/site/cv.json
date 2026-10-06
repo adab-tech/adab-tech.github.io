@@ -21,7 +21,7 @@
       "featured": true,
       "summary": "Founded **Murya**, a Hausa speech synthesis and conversational platform live at [app.murya.ng](https://app.murya.ng). I lead its linguistic design and product and work with engineering to ship it:",
       "bullets": [
-        "**Speech synthesis:** 24 kHz multi-speaker Piper VITS models fine-tuned on the WAXAL Hausa corpus and published as open weights (`adab-tech/murya-piper-hausa-tts`) with two voices, *Malama Asabe* (female) and *Malam Garba* (male), and under 110 ms to first audio in the browser.",
+        "**Speech synthesis:** an 8-speaker Piper VITS model at 22,050 Hz, fine-tuned on the WAXAL Hausa corpus and published as `adab-tech/murya-piper-hausa-tts` (weights CC BY-NC-SA 4.0; application code MIT). The demo names two of the eight voices, *Malama Asabe* (female) and *Malam Garba* (male). The app plays audio at 24 kHz, with under 110 ms to first audio in the browser.",
         "**Tone:** syllable-weight segmentation (light CV vs heavy CVV/CVC) and right-to-left tonal melody mapping, following Litvinova, to guide Hausa pitch.",
         "**Pragmatics:** Hausa politeness and respect norms (`Kunya & Girmamawa`), gendered address forms (`Namiji ka/maka vs Mace ki/miki`), and pedagogical tutor modes (`Malamin Hausa`).",
         "**Ƙamus lexicon:** curated the 20,628-pair Robinson 1914 lexicon, published on Hugging Face (public domain), and obtained written permission from Prof. Paul Newman to use his 1977 *Modern Hausa–English Dictionary* internally (not redistributed) for dictionary-grounded lookup.",

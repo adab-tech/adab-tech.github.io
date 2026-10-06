@@ -20,18 +20,18 @@
       { "metric": "In progress", "label": "MOS Listening Study", "sub": "Blind, anonymous ITU-T P.800-style naturalness study live at app.murya.ng/listen — results pending sufficient rater volume" },
       { "metric": "30,729", "label": "Lexicon Entries", "sub": "Used for dictionary-grounded answers (Robinson 1914 + Wiktionary CC BY-SA + an authorized subset of Newman 1977)" },
       { "metric": "< 110ms", "label": "Time to First Audio", "sub": "Speech synthesis in the browser, offline-capable, with a server fallback" },
-      { "metric": "24 kHz", "label": "Output Sampling Rate", "sub": "Output audio for both voices, Malama Asabe and Malam Garba" }
+      { "metric": "22,050 Hz", "label": "Model sample rate", "sub": "The rate in model.onnx.json. The app plays audio at 24 kHz. Eight speakers; the demo names Malama Asabe and Malam Garba." }
     ],
     "specsTitle": "Model & Architecture Specifications",
     "specsLinkLabel": "Hugging Face Model Card",
     "specsLinkUrl": "https://huggingface.co/adab-tech/murya-piper-hausa-tts",
     "specs": [
-      { "label": "Base Architecture", "value": "8-Speaker WAXAL-Piper VITS Multi-Speaker ONNX (24 kHz)" },
-      { "label": "Voice Personas", "value": "Malama Asabe (Female) · Malam Garba (Male)" },
+      { "label": "Base Architecture", "value": "8-speaker WAXAL-Piper VITS ONNX (22,050 Hz)" },
+      { "label": "Voice Personas", "value": "8 speakers. Demo: Malama Asabe (female) and Malam Garba (male)" },
       { "label": "Training Corpus", "value": "WAXAL (hau subset, arXiv:2602.02734)" },
       { "label": "Tone", "value": "Syllable weight and right-to-left tone mapping (after Litvinova)" },
       { "label": "Runs", "value": "In the browser (ONNX/WASM), with server streaming as fallback" },
-      { "label": "License", "value": "CC-BY-NC-SA 4.0 (Open Weights)" }
+      { "label": "License", "value": "Weights CC BY-NC-SA 4.0. Application code MIT." }
     ],
     "evidenceTitle": "Evaluation & data provenance",
     "evidence": [
@@ -46,7 +46,7 @@
     "kicker": "Design principles",
     "heading": "Local, offline, and culturally grounded",
     "items": [
-      { "title": "1. Local control", "text": "Open weights can be self-hosted, so the tools don’t depend on a proprietary cloud API that could be shut down or paywalled." },
+      { "title": "1. Local control", "text": "The weights are CC BY-NC-SA 4.0 and can be self-hosted for non-commercial use. Commercial use needs a written license. The application code is MIT." },
       { "title": "2. Works offline", "text": "The 30k-entry dictionary and speech synthesis run in the browser, so they work on low bandwidth or none, which is common across the Sahel." },
       { "title": "3. Cultural pragmatics", "text": "Responses follow Hausa norms of modesty and respect (*Kunya & Girmamawa*) and gendered address, instead of translated Western conversational templates." }
     ]

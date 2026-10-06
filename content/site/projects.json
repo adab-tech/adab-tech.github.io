@@ -22,12 +22,12 @@
       "status": "Live (v1.2)",
       "statusColor": "emerald",
       "showOnHome": true,
-      "homeSummary": "Hausa speech synthesis and spoken conversation, with two voices built on an 8-speaker Piper VITS model, dictionary-grounded answers, and synthesis that works offline in the browser.",
+      "homeSummary": "Hausa speech synthesis and spoken conversation on an 8-speaker Piper VITS model at 22,050 Hz. The demo names Malama Asabe and Malam Garba. Dictionary-grounded answers, and synthesis that works offline in the browser.",
       "homeLinkLabel": "Try it",
       "description": "Hausa speech synthesis and live spoken conversation. Speech synthesis and dictionary lookup run in the browser and work offline; answers are grounded in the Ƙamus lexicon.",
       "highlights": [
         "Blind MOS naturalness study running at app.murya.ng/listen; no score is published until each voice has enough ratings",
-        "8-speaker Piper VITS model fine-tuned on the WAXAL Hausa corpus; open weights on Hugging Face",
+        "8-speaker Piper VITS model at 22,050 Hz, fine-tuned on the WAXAL Hausa corpus. Weights CC BY-NC-SA 4.0 on Hugging Face; application code MIT",
         "Under 110 ms to first audio, running in the browser",
         "Echo suppression so the assistant doesn’t hear its own voice in live conversation"
       ],
