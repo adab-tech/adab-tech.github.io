@@ -35,18 +35,18 @@ const ContactPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const openMailto = () => {
+  const draftUrl = () => {
     const subject = encodeURIComponent(CONTACT.emailSubject.replace(/\{name\}/g, () => formData.name));
     const body = encodeURIComponent(`${formData.message}\n\n— ${formData.name} (${formData.email})`);
-    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+    return `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!RELAY_URL) {
-      // Open the visitor's email client when the relay is unconfigured.
-      openMailto();
+      // A missing or blocked protocol handler must not navigate away from the form.
+      window.open(draftUrl(), '_blank', 'noopener,noreferrer');
       return;
     }
 
@@ -61,9 +61,8 @@ const ContactPage = () => {
       setStatus('sent');
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
-      console.error('Contact relay failed, falling back to mailto:', err);
+      console.error('Contact relay failed:', err);
       setStatus('error');
-      openMailto();
     }
   };
 
@@ -111,7 +110,14 @@ const ContactPage = () => {
             {RELAY_URL ? (status === 'sending' ? CONTACT.sendingLabel : CONTACT.sendLabel) : CONTACT.emailAppLabel}
           </button>
           {status === 'sent' && <p role="status">{CONTACT.successMessage}</p>}
-          {status === 'error' && <p role="status">{CONTACT.fallbackMessage}</p>}
+          {status === 'error' && (
+            <div className="space-y-1">
+              <p role="status">{CONTACT.fallbackMessage}</p>
+              <a href={draftUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-gold-500 underline">
+                {CONTACT.emailAppLabel}
+              </a>
+            </div>
+          )}
         </form>
       </div>
     </section>

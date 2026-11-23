@@ -13,7 +13,7 @@
   "sendLabel": "Send Message",
   "sendingLabel": "Sending…",
   "successMessage": "Message sent — thank you!",
-  "fallbackMessage": "Couldn't send that automatically, so your email client should have opened instead.",
+  "fallbackMessage": "Direct delivery failed. Open your email app to send this message.",
   "emailSubject": "New message from {name} via adamu.tech",
   "emailAppLabel": "Open email app",
   "emailAppHint": "This opens a draft in your email app. Review it there and press Send.",
