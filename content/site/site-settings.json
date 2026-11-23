@@ -1,0 +1,48 @@
+{
+  "siteName": "adamu.tech",
+  "keywords": [
+    "Adamu Danjuma Abubakar",
+    "Hausa speech technology",
+    "Hausa text-to-speech",
+    "computational linguistics",
+    "African languages NLP",
+    "Murya",
+    "Mapping Voices",
+    "digital humanities"
+  ],
+  "appDescription": "African-language speech technology and computational linguistics.",
+  "shareCard": {
+    "kicker": "adamu.tech",
+    "title": "Hausa speech technology, open research datasets, and computational linguistics for African languages",
+    "footer": "Ph.D. defended, University of Alabama",
+    "alt": "adamu.tech"
+  },
+  "profile": {
+    "alternateName": "Adamu Abubakar",
+    "givenName": "Adamu",
+    "additionalName": "Danjuma",
+    "familyName": "Abubakar",
+    "image": "/icon-512.png",
+    "jobTitle": "Teaching Fellow",
+    "employer": { "name": "The University of Alabama", "url": "https://www.ua.edu" },
+    "alumni": [
+      { "name": "The University of Alabama", "url": "https://www.ua.edu" },
+      { "name": "University of Ilorin", "url": "https://www.unilorin.edu.ng" }
+    ],
+    "expertise": [
+      "Computational linguistics",
+      "Speech synthesis",
+      "Text-to-speech",
+      "Hausa language",
+      "Natural language processing",
+      "Low-resource languages",
+      "Digital humanities",
+      "Francophone African literature"
+    ],
+    "profileLinks": [
+      "https://github.com/adab-tech",
+      "https://www.linkedin.com/in/adamudanjuma/",
+      "https://huggingface.co/adab-tech"
+    ]
+  }
+}

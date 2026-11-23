@@ -23,7 +23,7 @@ import {
 import { AdminHeader } from '@/components/AdminHeader'
 import { TokenSetup, forgetTokenHere, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
-import { ACTIONS_URL, blobToBase64, commitFiles, deployState, readFile, textToBase64, type FileChange } from '@/lib/github-publish'
+import { ACTIONS_URL, blobToBase64, commitContentFile, deployState, readFile, textToBase64, type FileChange } from '@/lib/github-publish'
 
 // A form editor for one content file (content/site/*.json), described by a
 // small schema. Saving commits the file, plus any uploaded logos, to GitHub
@@ -31,6 +31,7 @@ import { ACTIONS_URL, blobToBase64, commitFiles, deployState, readFile, textToBa
 
 type Json = unknown
 type Obj = Record<string, Json>
+type ContentFile = 'home' | 'projects' | 'cv' | 'contact' | 'blog-index' | 'tools' | 'paper-agentic-ai' | 'navigation' | 'site-settings'
 
 export type Field =
   | { key: string; label: string; type: 'text' | 'url' | 'textarea'; help?: string; placeholder?: string; default?: string }
@@ -83,7 +84,7 @@ export function ContentEditorPage({
 }: {
   title: string
   intro: string
-  file: 'home' | 'projects' | 'cv'
+  file: ContentFile
   schema: Field[]
   previewPath: string
   validate: (data: never) => string[]
@@ -126,7 +127,7 @@ export function ContentEditorPage({
           </div>
         </div>
         {canPublish ? (
-          <Editor file={file} schema={schema} previewPath={previewPath} validate={validate} beforeSave={beforeSave} />
+          <Editor file={file} title={title} schema={schema} previewPath={previewPath} validate={validate} beforeSave={beforeSave} />
         ) : (
           <TokenSetup />
         )}
@@ -145,12 +146,14 @@ type Status =
 
 function Editor({
   file,
+  title,
   schema,
   previewPath,
   validate,
   beforeSave,
 }: {
-  file: string
+  file: ContentFile
+  title: string
   schema: Field[]
   previewPath: string
   validate: (data: never) => string[]
@@ -163,12 +166,14 @@ function Editor({
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
   const [problems, setProblems] = useState<string[]>([])
   const [logos, setLogos] = useState(() => new Map<string, PendingLogo>()) // web path -> pending upload
+  const savedSha = useRef('')
 
   const load = async () => {
     setLoadError('')
     try {
-      const { text } = await readFile(path)
+      const { text, sha } = await readFile(path)
       const parsed = JSON.parse(text) as Obj
+      savedSha.current = sha
       setData(parsed)
       setSaved(JSON.stringify(parsed))
       setLogos(new Map())
@@ -180,9 +185,10 @@ function Editor({
   useEffect(() => {
     let cancelled = false
     readFile(path)
-      .then(({ text }) => {
+      .then(({ text, sha }) => {
         if (cancelled) return
         const parsed = JSON.parse(text) as Obj
+        savedSha.current = sha
         setData(parsed)
         setSaved(JSON.stringify(parsed))
       })
@@ -251,12 +257,19 @@ function Editor({
         if (typeof v === 'string' && logos.has(v)) used.add(v)
         return v
       })
-      const changes: FileChange[] = [{ path, base64: textToBase64(text) }]
+      const assets: FileChange[] = []
       for (const web of used) {
         const l = logos.get(web)!
-        changes.push({ path: l.repoPath, base64: await blobToBase64(l.blob) })
+        assets.push({ path: l.repoPath, base64: await blobToBase64(l.blob) })
       }
-      const commit = await commitFiles(changes, `Admin: update ${file === 'cv' ? 'CV' : file === 'home' ? 'home page' : 'projects'}`)
+      const { commit, sha } = await commitContentFile({
+        path,
+        base64: textToBase64(text),
+        expectedSha: savedSha.current,
+        assets,
+        message: `Admin: update ${title}`,
+      })
+      savedSha.current = sha
       setLogos(new Map())
       setData(out)
       setSaved(JSON.stringify(out))
