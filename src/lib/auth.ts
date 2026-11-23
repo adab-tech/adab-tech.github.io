@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { adminServer, checkWriteAccess, detectAdminServer, forgetToken, saveToken } from '@/lib/github-publish'
+import { adminServer, checkWriteAccess, clearAdminSession, detectAdminServer, forgetToken, readAdminSession, saveToken } from '@/lib/github-publish'
 import { checkPassword, fetchPasswordRecord, getLocalRecord, hashPassword, passwordProblem, setLocalRecord } from '@/lib/admin-password'
 
 const AUTH_KEY = 'adamu_tech_admin_session'
@@ -48,7 +48,7 @@ export function useAdminAuth(checkSetup = false) {
       try {
         const server = await detectAdminServer()
         const signedIn = server
-          ? (await adminServer<{ signedIn: boolean }>('session')).signedIn
+          ? await readAdminSession()
           : isAdminAuthenticated()
         const setup = checkSetup && !server && !signedIn && !(await browserPasswordRecord())
         if (cancelled) return
@@ -119,6 +119,7 @@ export function useAdminAuth(checkSetup = false) {
 
   const logout = async () => {
     if (await detectAdminServer()) await adminServer('logout', {})
+    clearAdminSession()
     clearBrowserSession()
     setIsAuthenticated(false)
   }

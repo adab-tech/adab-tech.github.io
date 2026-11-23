@@ -89,7 +89,7 @@ export function ContentEditorPage({
   validate: (data: never) => string[]
   beforeSave?: (data: Obj) => Obj
 }) {
-  const { isAuthenticated, loading } = useAdminAuth()
+  const { isAuthenticated, loading, serverMode } = useAdminAuth()
   const router = useRouter()
   const token = useToken()
   const canPublish = useCanPublish()
@@ -118,7 +118,7 @@ export function ContentEditorPage({
             <a href={previewPath} target="_blank" rel="noreferrer" className="text-xs font-mono text-gold-500 hover:underline inline-flex items-center gap-1">
               View on the site <ExternalLink className="h-3 w-3" />
             </a>
-            {token && (
+            {!serverMode && token && (
               <button type="button" onClick={forgetTokenHere} className="text-xs font-mono text-zinc-400 hover:text-red-300 inline-flex items-center gap-1.5">
                 <KeyRound className="h-3.5 w-3.5" /> Forget GitHub token on this device
               </button>

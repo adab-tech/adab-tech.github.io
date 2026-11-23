@@ -15,20 +15,20 @@ const AREAS = [
 ]
 
 export function SiteOverview() {
-  const token = useCanPublish()
+  const canPublish = useCanPublish()
   const [deploys, setDeploys] = useState<RecentRun[] | null>(null)
   const [deployError, setDeployError] = useState('')
 
   useEffect(() => {
-    if (!token) return
+    if (!canPublish) return
     let cancelled = false
     recentDeploys(3)
       .then((r) => !cancelled && setDeploys(r))
-      .catch(() => !cancelled && setDeployError('Add “Actions: Read-only” to the GitHub token to see deploys here.'))
+      .catch(() => !cancelled && setDeployError('Check that the GitHub publishing connection has Actions read access.'))
     return () => {
       cancelled = true
     }
-  }, [token])
+  }, [canPublish])
 
   return (
     <section className="space-y-4">
@@ -45,7 +45,7 @@ export function SiteOverview() {
         ))}
       </div>
 
-      {token ? (
+      {canPublish ? (
         <div className="p-4 rounded-2xl border border-zinc-800 bg-[#0B1120] space-y-2">
           <div className="flex items-center justify-between gap-2">
             <span className="text-sm font-mono font-bold text-zinc-200">Latest site updates</span>
@@ -79,7 +79,7 @@ export function SiteOverview() {
         </div>
       ) : (
         <p className="text-xs text-zinc-400">
-          Sign in to GitHub from an editor to see deploy status here.
+          Connect GitHub publishing to see deployment status here.
         </p>
       )}
     </section>

@@ -8,7 +8,7 @@ import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, KeyRound, Loader2, Re
 import { AdminHeader } from '@/components/AdminHeader'
 import { ShareButtons } from '@/components/ShareButtons'
 import { RichEditor } from '@/components/admin/RichEditor'
-import { TOKEN_EVENT, TokenSetup, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
+import { TokenSetup, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import {
   PostFields,
@@ -87,7 +87,7 @@ const inputClass =
   'w-full px-3 py-2 rounded-lg bg-[#0E1526] border border-zinc-700 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-gold-500'
 
 export default function AdminBlogPage() {
-  const { isAuthenticated, loading } = useAdminAuth()
+  const { isAuthenticated, loading, serverMode } = useAdminAuth()
   const router = useRouter()
   const token = useToken()
   const canPublish = useCanPublish()
@@ -118,26 +118,24 @@ export default function AdminBlogPage() {
               Write a post, save a draft on this device, or publish it to adamu.tech.
             </p>
           </div>
-          {token && (
+          {!serverMode && token && (
             <button
               type="button"
-              onClick={() => {
-                forgetToken()
-                window.dispatchEvent(new Event(TOKEN_EVENT))
-              }}
+              onClick={forgetToken}
               className="text-xs font-mono text-zinc-400 hover:text-red-300 inline-flex items-center gap-1.5"
             >
               <KeyRound className="h-3.5 w-3.5" /> Forget GitHub token on this device
             </button>
           )}
         </div>
-        {canPublish ? <Editor /> : <TokenSetup />}
+        {!canPublish && <TokenSetup />}
+        <Editor canPublish={canPublish} />
       </main>
     </div>
   )
 }
 
-function Editor() {
+function Editor({ canPublish }: { canPublish: boolean }) {
   const [files, setFiles] = useState<RemoteFile[] | null>(null)
   const [listError, setListError] = useState('')
   const [drafts, setDrafts] = useState<LocalBlogDraft[]>([])
@@ -161,6 +159,7 @@ function Editor() {
   const busy = status.kind === 'working'
 
   const refresh = async () => {
+    if (!canPublish) return
     setListError('')
     try {
       setFiles(await listPosts())
@@ -170,11 +169,19 @@ function Editor() {
   }
 
   useEffect(() => {
+    if (!canPublish) return
     let cancelled = false
-    const previews = pending.current
     listPosts()
       .then((f) => !cancelled && setFiles(f))
       .catch((err) => !cancelled && setListError(err instanceof Error ? err.message : String(err)))
+    return () => {
+      cancelled = true
+    }
+  }, [canPublish])
+
+  useEffect(() => {
+    let cancelled = false
+    const previews = pending.current
     listLocalDrafts()
       .then((saved) => !cancelled && setDrafts(saved))
       .catch((err) => !cancelled && setDraftError(err instanceof Error ? err.message : String(err)))
@@ -339,6 +346,7 @@ function Editor() {
   }
 
   const save = async () => {
+    if (!canPublish) return
     const prepared = preparePost()
     const fields: PostFields = { ...prepared.fields, format: 'html', draft: false }
     const { images } = prepared
@@ -395,7 +403,7 @@ function Editor() {
   }
 
   const remove = async () => {
-    if (!original) return
+    if (!canPublish || !original) return
     if (!window.confirm(`Delete “${post.title}” from the site? This removes ${original.name} from GitHub.`)) return
     setStatus({ kind: 'working', text: 'Deleting…' })
     try {
@@ -412,12 +420,6 @@ function Editor() {
     <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-6">
       {/* Post list */}
       <aside className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-mono font-bold text-zinc-200">Posts on GitHub</h2>
-          <button type="button" disabled={busy} onClick={refresh} className="p-1.5 text-zinc-400 hover:text-gold-500 disabled:opacity-50" aria-label="Reload posts">
-            <RefreshCw className="h-4 w-4" />
-          </button>
-        </div>
         <button
           type="button"
           disabled={busy}
@@ -447,25 +449,35 @@ function Editor() {
             ))}
           </ul>
         </section>
-        {listError && <p className="text-xs text-red-300">{listError}</p>}
-        {!files && !listError && <p className="text-xs text-zinc-400">Loading…</p>}
-        {files && files.length === 0 && <p className="text-xs text-zinc-400">No posts yet.</p>}
-        <ul className="space-y-1">
-          {files?.map((f) => (
-            <li key={f.name}>
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => open(f)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-mono break-all ${
-                  original?.name === f.name ? 'bg-gold-500/10 text-gold-400 border border-gold-500/30' : 'text-zinc-300 hover:bg-zinc-900'
-                }`}
-              >
-                <span className="block">{f.name.replace(/\.md$/, '')}</span>
+        {canPublish && (
+          <section className="space-y-2" aria-label="Posts on GitHub">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-mono font-bold text-zinc-200">Posts on GitHub</h2>
+              <button type="button" disabled={busy} onClick={refresh} className="p-1.5 text-zinc-400 hover:text-gold-500 disabled:opacity-50" aria-label="Reload posts">
+                <RefreshCw className="h-4 w-4" />
               </button>
-            </li>
-          ))}
-        </ul>
+            </div>
+            {listError && <p className="text-xs text-red-300">{listError}</p>}
+            {!files && !listError && <p className="text-xs text-zinc-400">Loading…</p>}
+            {files && files.length === 0 && <p className="text-xs text-zinc-400">No posts yet.</p>}
+            <ul className="space-y-1">
+              {files?.map((f) => (
+                <li key={f.name}>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => open(f)}
+                    className={`w-full text-left px-3 py-2 rounded-lg text-xs font-mono break-all ${
+                      original?.name === f.name ? 'bg-gold-500/10 text-gold-400 border border-gold-500/30' : 'text-zinc-300 hover:bg-zinc-900'
+                    }`}
+                  >
+                    <span className="block">{f.name.replace(/\.md$/, '')}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </aside>
 
       {/* Editor */}
@@ -525,7 +537,7 @@ function Editor() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              disabled={busy || problems.length > 0}
+              disabled={!canPublish || busy || problems.length > 0}
               onClick={save}
               className="px-4 py-2 rounded-lg bg-gold-500 text-zinc-950 font-mono text-sm font-bold hover:bg-gold-500 disabled:opacity-50"
             >
@@ -549,7 +561,7 @@ function Editor() {
                 <Trash2 className="h-4 w-4" /> Delete local draft
               </button>
             )}
-            {original && !localDraftId && (
+            {canPublish && original && !localDraftId && (
               <button
                 type="button"
                 disabled={busy}
