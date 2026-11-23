@@ -8,7 +8,8 @@ const project: Field[] = [
   { key: 'title', label: 'Name', type: 'text' },
   { key: 'logo', label: 'Logo', type: 'logo', help: 'Shown on the project cards and in the “My platforms” icon row. Leave empty to use the live site’s own icon.' },
   { key: 'logoFill', label: 'Logo has its own background (fill the whole tile, no white frame)', type: 'bool' },
-  { key: 'liveUrl', label: 'Live site', type: 'url', help: 'Where the logo and “Launch Platform” go. Leave empty if there is no site.', placeholder: 'https://…' },
+  { key: 'liveUrl', label: 'Live site', type: 'url', help: 'Where the logo and the live-site link go. Leave empty if there is no site.', placeholder: 'https://…' },
+  { key: 'liveLinkLabel', label: 'Live-site link text (Projects page)', type: 'text', placeholder: 'Live site' },
   { key: 'iconRow', label: 'Show in the “My platforms” icon row', type: 'bool', default: true },
   { key: 'showOnHome', label: 'Show on the home page', type: 'bool', default: true },
   { key: 'category', label: 'Category', type: 'select', options: (root) => (root.categories as string[]) ?? [] },
@@ -20,8 +21,10 @@ const project: Field[] = [
   { key: 'homeLinkLabel', label: 'Main link text (home page)', type: 'text', placeholder: 'Visit', default: 'Visit' },
   { key: 'description', label: 'Full description (Projects page)', type: 'textarea' },
   { key: 'highlights', label: 'Highlights (Projects page)', type: 'strings', itemLabel: 'highlight' },
-  { key: 'paperUrl', label: 'Paper link', type: 'url', help: 'Shows “Read Paper”. A page on this site starts with /, e.g. /papers/agentic-ai' },
+  { key: 'paperUrl', label: 'Paper link', type: 'url', help: 'A page on this site starts with /, such as /papers/agentic-ai.' },
+  { key: 'paperLinkLabel', label: 'Paper link text (Projects page)', type: 'text', placeholder: 'Paper' },
   { key: 'modelUrl', label: 'Model or dataset link', type: 'url' },
+  { key: 'modelLinkLabel', label: 'Model or dataset link text', type: 'text', help: 'Used on project cards when the model or dataset has a separate link. Leave empty to use the default label.' },
   { key: 'repoUrl', label: 'Source / profile link', type: 'url' },
   { key: 'repoLabel', label: 'Source link text', type: 'text', placeholder: 'Source', default: 'Source' },
   { key: 'tags', label: 'Tags', type: 'strings', itemLabel: 'tag' },
@@ -33,9 +36,20 @@ const schema: Field[] = [
   { key: 'iconRowLabel', label: 'Icon row label', type: 'text', help: 'Text beside the row of project icons near the top of the home page. Leave empty for icons only.' },
   { key: 'heading', label: 'Projects page heading', type: 'text' },
   { key: 'intro', label: 'Projects page introduction', type: 'textarea' },
+  { key: 'homeKicker', label: 'Small label above Home page projects', type: 'text', placeholder: 'Projects' },
   { key: 'homeHeading', label: 'Home page projects heading', type: 'text' },
   { key: 'homeIntro', label: 'Home page projects introduction', type: 'textarea' },
-  { key: 'categories', label: 'Categories (filter buttons)', type: 'strings', itemLabel: 'category' },
+  { key: 'categories', label: 'Project categories', type: 'strings', itemLabel: 'category' },
+  {
+    key: 'metadata',
+    label: 'Search',
+    type: 'group',
+    help: 'Leave a field empty to use the site default.',
+    fields: [
+      { key: 'title', label: 'Browser and search title', type: 'text', placeholder: 'Projects' },
+      { key: 'description', label: 'Search description', type: 'textarea' },
+    ],
+  },
 ]
 
 export default function AdminProjectsPage() {

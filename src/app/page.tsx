@@ -186,7 +186,7 @@ export default function HomePage() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
               <Layers className="w-4 h-4" />
-              Projects
+              {PROJECTS.homeKicker?.trim() || 'Projects'}
             </div>
             <h2 className="text-2xl sm:text-3xl font-mono font-bold text-zinc-50">
               {PROJECTS.homeHeading}
@@ -246,7 +246,7 @@ export default function HomePage() {
 
                   {p.modelUrl && p.modelUrl !== url && (
                     <a href={p.modelUrl} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-zinc-200 flex items-center gap-1">
-                      <span>{p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Weights'}</span>
+                      <span>{p.modelLinkLabel?.trim() || (p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Weights')}</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}

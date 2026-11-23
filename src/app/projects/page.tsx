@@ -85,7 +85,7 @@ export default function ProjectsPage() {
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400 font-bold hover:underline"
                     >
-                      <span>Live site</span>
+                      <span>{p.liveLinkLabel?.trim() || 'Live site'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
@@ -95,7 +95,7 @@ export default function ProjectsPage() {
                       href={p.paperUrl}
                       className="inline-flex items-center gap-1.5 text-gold-500 hover:text-gold-400 font-bold hover:underline"
                     >
-                      <span>Paper</span>
+                      <span>{p.paperLinkLabel?.trim() || 'Paper'}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
                   )}
@@ -107,7 +107,7 @@ export default function ProjectsPage() {
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200"
                     >
-                      <span>{p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Model Weights'}</span>
+                      <span>{p.modelLinkLabel?.trim() || (p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Model Weights')}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}

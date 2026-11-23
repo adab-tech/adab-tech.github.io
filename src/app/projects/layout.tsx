@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import { JsonLd, breadcrumbs, projectNodes } from '@/lib/structured-data'
+import { PROJECTS } from '@/lib/site-content'
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'Murya (Hausa speech technology), Mapping Voices (open oral-history dataset), the Hausa lexicon, and other projects by Adamu Danjuma Abubakar.',
+  title: PROJECTS.metadata?.title?.trim() || 'Projects',
+  description: PROJECTS.metadata?.description?.trim() || 'Murya (Hausa speech technology), Mapping Voices (open oral-history dataset), the Hausa lexicon, and other projects by Adamu Danjuma Abubakar.',
   alternates: { canonical: '/projects/' },
 }
 

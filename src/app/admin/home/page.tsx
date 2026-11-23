@@ -90,6 +90,18 @@ const schema: Field[] = [
       { key: 'note', label: 'Small print', type: 'textarea' },
     ],
   },
+  {
+    key: 'metadata',
+    label: 'Search and sharing',
+    type: 'group',
+    help: 'Leave a field empty to use the site default.',
+    fields: [
+      { key: 'title', label: 'Browser and search title', type: 'text' },
+      { key: 'description', label: 'Search description', type: 'textarea' },
+      { key: 'shareTitle', label: 'Social preview title', type: 'text' },
+      { key: 'shareDescription', label: 'Social preview description', type: 'textarea' },
+    ],
+  },
 ]
 
 export default function AdminHomePage() {
