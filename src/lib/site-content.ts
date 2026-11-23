@@ -5,6 +5,7 @@ import homeJson from '../../content/site/home.json'
 import projectsJson from '../../content/site/projects.json'
 import cvJson from '../../content/site/cv.json'
 import { BLOG_INDEX, validateBlogIndex } from './blog-index-content'
+import { CASE_STUDY_CONTENT, validateCaseStudies } from './case-studies'
 import { CONTACT, validateContact } from './contact-content'
 import { NAVIGATION, validateNavigation } from './navigation'
 import { AGENTIC_AI_PAPER, validateAgenticAiPaper } from './paper-agentic-ai-content'
@@ -236,6 +237,7 @@ export function checkSiteContent(): void {
     ...validateCv(CV).map((p) => `cv.json: ${p}`),
     ...validateContact(CONTACT).map((p) => `contact.json: ${p}`),
     ...validateBlogIndex(BLOG_INDEX).map((p) => `blog-index.json: ${p}`),
+    ...validateCaseStudies(CASE_STUDY_CONTENT).map((p) => `case-studies.json: ${p}`),
     ...validateNavigation(NAVIGATION).map((p) => `navigation.json: ${p}`),
     ...validateSiteSettings(SITE_SETTINGS).map((p) => `site-settings.json: ${p}`),
     ...validateAgenticAiPaper(AGENTIC_AI_PAPER).map((p) => `paper-agentic-ai.json: ${p}`),

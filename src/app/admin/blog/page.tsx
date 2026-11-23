@@ -8,6 +8,7 @@ import { ArrowLeft, CheckCircle2, ExternalLink, FilePlus2, KeyRound, Loader2, Re
 import { AdminHeader } from '@/components/AdminHeader'
 import { ShareButtons } from '@/components/ShareButtons'
 import { RichEditor } from '@/components/admin/RichEditor'
+import { RevisionHistory } from '@/components/admin/RevisionHistory'
 import { TokenSetup, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
 import {
@@ -29,9 +30,11 @@ import {
   deployState,
   forgetToken,
   listPosts,
+  postPath,
   readPost,
   commitPost,
   blobToBase64,
+  type ContentRevision,
 } from '@/lib/github-publish'
 import { deleteLocalDraft, listLocalDrafts, writeLocalDraft, type DraftImage, type LocalBlogDraft } from '@/lib/local-blog-drafts'
 
@@ -41,6 +44,14 @@ const today = () => {
 }
 
 const emptyPost = (): PostFields => ({ title: '', date: today(), summary: '', tags: [], draft: false, format: 'html', body: '' })
+
+function editorFields(text: string, name: string): PostFields {
+  const post = parsePostFile(text, name)
+  const body = post.format === 'html'
+    ? post.body
+    : (marked.parse(normalizeParagraphs(post.body), { async: false, gfm: true }) as string)
+  return { ...post, format: 'html', body }
+}
 
 // Photos are shrunk in the browser before upload (max 2000px wide) so the
 // repo and the page stay light. GIFs keep their animation, so are left as is.
@@ -152,6 +163,7 @@ function Editor({ canPublish }: { canPublish: boolean }) {
   // Images picked but not yet saved: local preview URL -> upload target.
   const pending = useRef(new Map<string, PendingImage>())
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
+  const [preview, setPreview] = useState(false)
 
   const effectiveSlug = slugEdited ? slug : slugify(post.title)
   const fileName = postFileName(post.date, effectiveSlug)
@@ -223,6 +235,7 @@ function Editor({ canPublish }: { canPublish: boolean }) {
   }, [status])
 
   const startNew = () => {
+    setPreview(false)
     setPost(emptyPost())
     setTagsText('')
     setSlug('')
@@ -239,15 +252,10 @@ function Editor({ canPublish }: { canPublish: boolean }) {
     setStatus({ kind: 'working', text: `Opening ${file.name}…` })
     try {
       const { text, sha } = await readPost(file.name)
-      const parsed = parsePostFile(text, file.name)
-      // Markdown posts are converted once; they are saved back as HTML.
-      const html =
-        parsed.format === 'html'
-          ? parsed.body
-          : (marked.parse(normalizeParagraphs(parsed.body), { async: false, gfm: true }) as string)
-      const fields: PostFields = { ...parsed, format: 'html', body: html }
+      const fields = editorFields(text, file.name)
+      setPreview(false)
       setPost(fields)
-      setEditorSeed(html)
+      setEditorSeed(fields.body)
       setEditorRevision((revision) => revision + 1)
       releaseImagePreviews(pending.current)
       setTagsText(fields.tags.join(', '))
@@ -273,6 +281,7 @@ function Editor({ canPublish }: { canPublish: boolean }) {
   }
 
   const openDraft = (draft: LocalBlogDraft) => {
+    setPreview(false)
     releaseImagePreviews(pending.current)
     let body = draft.post.body
     for (const img of draft.images) {
@@ -289,6 +298,27 @@ function Editor({ canPublish }: { canPublish: boolean }) {
     setOriginal(draft.original)
     setLocalDraftId(draft.id)
     setStatus({ kind: 'idle' })
+  }
+
+  const restoreRevision = async (revision: ContentRevision) => {
+    if (!original || !window.confirm('Load this version into the editor and replace any unsaved changes?')) return
+    setStatus({ kind: 'working', text: 'Loading previous version…' })
+    try {
+      const { text } = await readPost(original.name, revision.sha)
+      const fields = editorFields(text, original.name)
+      releaseImagePreviews(pending.current)
+      setPost(fields)
+      setTagsText(fields.tags.join(', '))
+      setSlug(original.name.match(FILE_PATTERN)?.[2] ?? '')
+      setSlugEdited(true)
+      setEditorSeed(fields.body)
+      setEditorRevision((previous) => previous + 1)
+      setLocalDraftId(null)
+      setStatus({ kind: 'saved', text: 'Version loaded. Preview and publish when ready.' })
+    } catch (err) {
+      setStatus({ kind: 'idle' })
+      throw err
+    }
   }
 
   const pickImage = async (file: File) => {
@@ -482,51 +512,72 @@ function Editor({ canPublish }: { canPublish: boolean }) {
 
       {/* Editor */}
       <section className="space-y-4 min-w-0">
+        <div className="flex flex-wrap items-start gap-2">
+          <button type="button" aria-pressed={preview} disabled={busy} onClick={() => setPreview(!preview)}
+            className="rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500">
+            {preview ? 'Back to editing' : 'Preview draft'}
+          </button>
+          {original && canPublish && (
+            <RevisionHistory key={original.name} path={postPath(original.name)} disabled={busy} onRestore={restoreRevision} />
+          )}
+        </div>
         <fieldset disabled={busy} className="min-w-0 space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_11rem] gap-3">
+          <div className={preview ? 'hidden' : 'space-y-3'}>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_11rem] gap-3">
+              <label className="space-y-1 block">
+                <span className="text-xs font-mono text-zinc-400">Title</span>
+                <input className={inputClass} value={post.title} onChange={(e) => setPost({ ...post, title: e.target.value })} />
+              </label>
+              <label className="space-y-1 block">
+                <span className="text-xs font-mono text-zinc-400">Date</span>
+                <input
+                  type="date"
+                  className={inputClass}
+                  value={post.date}
+                  onChange={(e) => setPost({ ...post, date: e.target.value })}
+                />
+              </label>
+            </div>
             <label className="space-y-1 block">
-              <span className="text-xs font-mono text-zinc-400">Title</span>
-              <input className={inputClass} value={post.title} onChange={(e) => setPost({ ...post, title: e.target.value })} />
+              <span className="text-xs font-mono text-zinc-400">Web address</span>
+              <div className="flex items-center gap-1 text-sm min-w-0">
+                <span className="text-zinc-500 font-mono shrink-0 text-xs sm:text-sm">/blog/</span>
+                <input
+                  className={inputClass}
+                  value={effectiveSlug}
+                  onChange={(e) => {
+                    setSlug(e.target.value)
+                    setSlugEdited(true)
+                  }}
+                />
+              </div>
             </label>
             <label className="space-y-1 block">
-              <span className="text-xs font-mono text-zinc-400">Date</span>
-              <input
-                type="date"
-                className={inputClass}
-                value={post.date}
-                onChange={(e) => setPost({ ...post, date: e.target.value })}
-              />
+              <span className="text-xs font-mono text-zinc-400">Summary (shown on /blog and in link previews; optional)</span>
+              <input className={inputClass} value={post.summary} onChange={(e) => setPost({ ...post, summary: e.target.value })} />
+            </label>
+            <label className="space-y-1 block">
+              <span className="text-xs font-mono text-zinc-400">Tags, separated by commas (optional)</span>
+              <input className={inputClass} value={tagsText} onChange={(e) => setTagsText(e.target.value)} placeholder="reflection, research" />
             </label>
           </div>
-          <label className="space-y-1 block">
-            <span className="text-xs font-mono text-zinc-400">Web address</span>
-            <div className="flex items-center gap-1 text-sm min-w-0">
-              <span className="text-zinc-500 font-mono shrink-0 text-xs sm:text-sm">/blog/</span>
-              <input
-                className={inputClass}
-                value={effectiveSlug}
-                onChange={(e) => {
-                  setSlug(e.target.value)
-                  setSlugEdited(true)
-                }}
-              />
-            </div>
-          </label>
-          <label className="space-y-1 block">
-            <span className="text-xs font-mono text-zinc-400">Summary (shown on /blog and in link previews; optional)</span>
-            <input className={inputClass} value={post.summary} onChange={(e) => setPost({ ...post, summary: e.target.value })} />
-          </label>
-          <label className="space-y-1 block">
-            <span className="text-xs font-mono text-zinc-400">Tags, separated by commas (optional)</span>
-            <input className={inputClass} value={tagsText} onChange={(e) => setTagsText(e.target.value)} placeholder="reflection, research" />
-          </label>
 
-          <div inert={busy}>
+          {preview && (
+            <header className="space-y-3 border-b border-zinc-800 px-4 pb-5 sm:px-6" aria-label="Draft preview">
+              <p className="text-xs text-zinc-400">Private draft preview</p>
+              <h2 className="font-serif-display text-3xl font-semibold text-zinc-50 sm:text-5xl">{post.title || 'Untitled post'}</h2>
+              <p className="text-sm text-zinc-400"><time dateTime={post.date}>{post.date}</time></p>
+              {tagsText.trim() && <p className="text-xs font-mono text-zinc-400">{tagsText}</p>}
+            </header>
+          )}
+
+          <div inert={busy || preview}>
             <RichEditor
               key={editorRevision}
               initialHtml={editorSeed}
               onChange={(html) => setPost((p) => ({ ...p, body: html }))}
               onPickImage={pickImage}
+              readOnly={preview}
             />
           </div>
 

@@ -98,7 +98,7 @@ export function GlobalShell({ children }: { children: React.ReactNode }) {
                 ref={menuToggle}
                 type="button"
                 onClick={() => setMobileMenuOpen(open => !open)}
-                className={`md:hidden p-2 rounded-lg border border-zinc-800 bg-[#0E1526] text-zinc-300 hover:text-gold-500 ${focusRing}`}
+                className={`inline-flex h-11 w-11 items-center justify-center rounded-lg border border-zinc-800 bg-[#0E1526] text-zinc-300 hover:text-gold-500 md:hidden ${focusRing}`}
                 aria-label="Toggle menu"
                 aria-expanded={mobileMenuOpen}
                 aria-controls={mobileMenuId}

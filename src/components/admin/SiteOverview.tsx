@@ -10,6 +10,7 @@ const AREAS = [
   { href: '/admin/blog/', icon: Edit3, title: 'Blog posts', text: 'Write, save private drafts, publish and share.' },
   { href: '/admin/home/', icon: Home, title: 'Home page', text: 'Headline, introduction, buttons, Murya figures, principles, contact box.' },
   { href: '/admin/projects/', icon: Layers, title: 'Projects', text: 'Add, edit, reorder or remove projects and their logos.' },
+  { href: '/admin/case-studies/', icon: BookOpen, title: 'Case studies', text: 'Project contributions, evidence, and links.' },
   { href: '/admin/cv/', icon: FileText, title: 'CV', text: 'Education, experience, languages, publications, datasets.' },
   { href: '/admin/contact/', icon: Mail, title: 'Contact page', text: 'Public email, contact form wording, and page description.' },
   { href: '/admin/blog-index/', icon: BookOpen, title: 'Blog landing page', text: 'Page introduction, list labels, and RSS feed details.' },

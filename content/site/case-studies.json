@@ -1,0 +1,85 @@
+{
+  "contact": {
+    "heading": "Discuss a role or collaboration",
+    "contactLabel": "Email Adamu",
+    "contactUrl": "mailto:contact@adamu.tech?subject=Role%20or%20collaboration",
+    "cvLabel": "View my CV",
+    "cvUrl": "/cv/"
+  },
+  "studies": [
+    {
+      "slug": "murya",
+      "projectId": "murya-os",
+      "title": "Murya",
+      "headline": "Hausa speech synthesis that runs in the browser",
+      "summary": "Murya combines Hausa speech synthesis with a searchable lexicon. Its browser runtime can generate speech and look up words without a live connection after the required assets are loaded.",
+      "role": "Founder and linguistic lead",
+      "metrics": [
+        { "value": "8", "label": "Voices in the published model" },
+        { "value": "22,050 Hz", "label": "Model sample rate" },
+        { "value": "20,628", "label": "Public Robinson Hausa–English pairs" }
+      ],
+      "sections": [
+        {
+          "heading": "The problem",
+          "body": "Hausa speakers need speech tools that remain usable when internet access is unreliable. Pronunciation, dialect coverage, and lexical grounding also matter for a system that people can actually use."
+        },
+        {
+          "heading": "My contribution",
+          "body": "I led the linguistic framing and product direction, and worked with engineering to ship the browser experience. The project brings together an eight-speaker Piper VITS model, an ONNX/WebAssembly runtime, and a Hausa–English lexicon for dictionary-grounded answers."
+        },
+        {
+          "heading": "What you can verify",
+          "body": "The live app demonstrates speech synthesis and dictionary lookup. The model card documents the weights and training corpus, and the public Robinson dataset provides 20,628 Hausa–English pairs. Live voice conversation uses an optional server connection."
+        },
+        {
+          "heading": "Evaluation and limits",
+          "body": "The listening study collects blind naturalness ratings. The project has yet to publish a Mean Opinion Score. The current acoustic tuning targets Standard Kano Hausa, and the authorized Newman research subset is kept out of the public dataset."
+        }
+      ],
+      "links": [
+        { "label": "Try Murya", "url": "https://app.murya.ng" },
+        { "label": "Model card and weights", "url": "https://huggingface.co/adab-tech/murya-piper-hausa-tts" },
+        { "label": "Public Hausa–English lexicon", "url": "https://huggingface.co/datasets/adab-tech/murya-hausa-en-lexicon-robinson1914" },
+        { "label": "Listening study", "url": "https://app.murya.ng/listen" }
+      ]
+    },
+    {
+      "slug": "mapping-voices",
+      "projectId": "mapping-voices",
+      "title": "Mapping Voices",
+      "headline": "Finding oral-history archives across languages and borders",
+      "summary": "Mapping Voices makes scattered oral-history and voice-testimony collections easier to discover. A searchable atlas pairs each indexed collection with structured metadata and a link to the institution that holds it.",
+      "role": "Creator and curator",
+      "metrics": [
+        { "value": "221", "label": "Collections in dataset v0.4.0" },
+        { "value": "120", "label": "Countries and territories represented" },
+        { "value": "125", "label": "Languages recorded in collection metadata" }
+      ],
+      "sections": [
+        {
+          "heading": "The problem",
+          "body": "Archives publish descriptions across different institutions, languages, and catalogues. Researchers can struggle to find relevant holdings across regions, especially for collections that are less visible in general discovery tools."
+        },
+        {
+          "heading": "My contribution",
+          "body": "I created the project and curate the dataset. The published methodology tracks where each record came from, how it was verified, and how geography, language, and themes were classified. The atlas turns that work into filters and interactive maps."
+        },
+        {
+          "heading": "What you can verify",
+          "body": "The v0.4.0 dataset is archived on Zenodo under CC BY 4.0. The repository contains the source, CSV, JSON and GeoJSON datasets, a data dictionary, and a review log. The public interface is localized in English, Hausa, French, and Arabic."
+        },
+        {
+          "heading": "Coverage and limits",
+          "body": "The counts describe the indexed dataset. Regional coverage is uneven, and records in v0.4.0 are partially verified pending field-by-field review. The atlas links visitors to source institutions for the recordings and testimony."
+        }
+      ],
+      "links": [
+        { "label": "Explore the atlas", "url": "/mapping/" },
+        { "label": "Source and data", "url": "https://github.com/adab-tech/mapping" },
+        { "label": "Methodology", "url": "https://github.com/adab-tech/mapping/blob/main/METHODOLOGY.md" },
+        { "label": "Cite the Zenodo dataset", "url": "https://doi.org/10.5281/zenodo.22996478" }
+      ]
+    }
+  ]
+}
