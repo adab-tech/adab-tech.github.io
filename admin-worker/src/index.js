@@ -27,7 +27,7 @@
  */
 
 import { readAnalytics } from './analytics.js'
-import { discardInstallationToken, githubHeaders, publishingConfigured, publishingToken } from './github-auth.js'
+import { GitHubPublishingError, discardInstallationToken, githubHeaders, publishingConfigured, publishingCredential } from './github-auth.js'
 
 const SESSION_DAYS = 30
 const COOKIE = '__Secure-adamu_admin'
@@ -64,7 +64,7 @@ async function github(env, token, path, init = {}) {
     redirect: 'error',
     headers: {
       ...githubHeaders,
-      Authorization: `Bearer ${token}`,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
     },
   })
@@ -144,18 +144,27 @@ export default {
       const path = '/' + route.slice('github/'.length) + url.search
       // Only this repository's API, and never the admin password file.
       if (path.includes('..') || path.includes('content/admin/auth.json') || path.includes('public/admin-auth.json')) return json({ error: 'Not allowed' }, 403)
-      let token
+      let credential
       try {
-        token = await publishingToken(env)
-      } catch {
-        return json({ message: 'GitHub App publishing could not be authenticated. Check the GitHub App installation and Worker secret settings.' }, 502)
+        credential = await publishingCredential(env)
+      } catch (err) {
+        const message = err instanceof GitHubPublishingError
+          ? err.message
+          : 'GitHub App publishing could not be authenticated. Check the GitHub App installation and Worker secret settings.'
+        return json({ message }, 502)
       }
+      const { token } = credential
       let res
       try {
         res = await github(env, token, path, {
           method,
           body: method === 'GET' || method === 'HEAD' ? undefined : await request.text(),
         })
+        if (credential.kind === 'app' && !credential.canReadActions &&
+            method === 'GET' && route === 'github/actions/workflows/deploy.yml/runs' &&
+            (res.status === 403 || res.status === 404)) {
+          res = await github(env, undefined, path, { method: 'GET' })
+        }
       } catch {
         return json({ message: 'GitHub could not be reached. Try again shortly.' }, 502)
       }

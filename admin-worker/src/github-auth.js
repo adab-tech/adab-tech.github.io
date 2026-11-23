@@ -13,6 +13,8 @@ export const githubHeaders = {
   'X-GitHub-Api-Version': '2022-11-28',
 }
 
+export class GitHubPublishingError extends Error {}
+
 function appConfiguration(env) {
   const appId = String(env.GITHUB_APP_ID ?? '').trim()
   const installationId = String(env.GITHUB_APP_INSTALLATION_ID ?? '').trim()
@@ -59,34 +61,76 @@ async function appJwt(config) {
   return `${unsigned}.${base64url(new Uint8Array(signature))}`
 }
 
-async function mintInstallationToken(config) {
-  const [, repository] = config.repo.split('/')
-  const response = await fetch(`${API}/app/installations/${config.installationId}/access_tokens`, {
-    method: 'POST',
-    redirect: 'error',
-    headers: {
-      ...githubHeaders,
-      Authorization: `Bearer ${await appJwt(config)}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      repositories: [repository],
-      permissions: { contents: 'write', actions: 'read' },
-    }),
-    signal: AbortSignal.timeout(8000),
-  })
-  if (!response.ok) throw new Error('GitHub declined the installation token request')
-  const { token, expires_at: expiresAt } = await response.json()
-  const expiration = Date.parse(expiresAt)
-  if (typeof token !== 'string' || !token || !Number.isFinite(expiration) || expiration <= Date.now()) {
-    throw new Error('GitHub returned an invalid installation token')
+async function appRequest(path, jwt, body) {
+  let response
+  try {
+    response = await fetch(`${API}${path}`, {
+      method: body === undefined ? 'GET' : 'POST',
+      redirect: 'error',
+      headers: {
+        ...githubHeaders,
+        Authorization: `Bearer ${jwt}`,
+        ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      signal: AbortSignal.timeout(8000),
+    })
+  } catch (err) {
+    if (err?.name === 'TimeoutError') throw new GitHubPublishingError('GitHub timed out while checking the App credentials. Try again shortly.')
+    throw new GitHubPublishingError('GitHub could not be reached while checking the App credentials. Try again shortly.')
   }
-  return { token, expiration }
+  if (response.status === 401) throw new GitHubPublishingError('GitHub rejected the App JWT. Check the App ID and the private key for that App.')
+  if (response.status === 404) {
+    throw new GitHubPublishingError('GitHub could not find the App installation for this repository. Check that the App is installed for the site repository.')
+  }
+  if (response.status === 403 || response.status === 422) {
+    throw new GitHubPublishingError('GitHub declined the App permissions. Check the installation and approve any pending permission changes.')
+  }
+  if (!response.ok) throw new GitHubPublishingError('GitHub App authentication is temporarily unavailable. Try again shortly.')
+  try {
+    return await response.json()
+  } catch {
+    throw new GitHubPublishingError('GitHub returned an unexpected response while checking the App credentials.')
+  }
 }
 
-export async function publishingToken(env) {
+async function mintInstallationToken(config) {
+  let jwt
+  try {
+    jwt = await appJwt(config)
+  } catch {
+    throw new GitHubPublishingError('The GitHub App private key could not be read. Enter the complete RSA PEM from the GitHub App settings.')
+  }
+  const installation = await appRequest(`/repos/${config.repo}/installation`, jwt)
+  if (String(installation?.id) !== config.installationId) {
+    throw new GitHubPublishingError('The Worker installation ID does not match the GitHub App installed on the site repository.')
+  }
+  if (installation.suspended_at) {
+    throw new GitHubPublishingError('The site repository’s GitHub App installation is suspended.')
+  }
+  if (installation.permissions?.contents !== 'write') {
+    throw new GitHubPublishingError('The GitHub App installation needs Contents read and write permission for the site repository.')
+  }
+  const canReadActions = ['read', 'write'].includes(installation.permissions.actions)
+  const [, repository] = config.repo.split('/')
+  const { token, expires_at: expiresAt } = await appRequest(
+    `/app/installations/${config.installationId}/access_tokens`,
+    jwt,
+    {
+      repositories: [repository],
+      permissions: { contents: 'write', ...(canReadActions ? { actions: 'read' } : {}) },
+    },
+  ) ?? {}
+  const expiration = Date.parse(expiresAt)
+  if (typeof token !== 'string' || !token || !Number.isFinite(expiration) || expiration <= Date.now()) {
+    throw new GitHubPublishingError('GitHub returned an unexpected installation token. Try again shortly.')
+  }
+  return { token, expiration, kind: 'app', canReadActions }
+}
+
+export async function publishingCredential(env) {
   const config = appConfiguration(env)
-  if (!config) return env.GITHUB_TOKEN?.trim()
+  if (!config) return { token: env.GITHUB_TOKEN?.trim(), kind: 'pat' }
 
   // Coalesce requests within one Worker isolate. A deployment that rotates
   // credentials should mint a new token with its current configuration.
@@ -94,18 +138,17 @@ export async function publishingToken(env) {
     cachedInstallation = { config }
   }
   const installation = cachedInstallation
-  if (installation.token && installation.expiration > Date.now() + REFRESH_EARLY_MS) return installation.token
+  if (installation.credential?.expiration > Date.now() + REFRESH_EARLY_MS) return installation.credential
 
   installation.pending ??= mintInstallationToken(config)
-    .then(({ token, expiration }) => {
-      installation.token = token
-      installation.expiration = expiration
-      return token
+    .then((credential) => {
+      installation.credential = credential
+      return credential
     })
     .finally(() => { installation.pending = null })
   return installation.pending
 }
 
 export function discardInstallationToken(token) {
-  if (cachedInstallation && token === cachedInstallation.token) cachedInstallation.token = undefined
+  if (token === cachedInstallation?.credential?.token && cachedInstallation) cachedInstallation.credential = undefined
 }
