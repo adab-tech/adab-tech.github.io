@@ -45,7 +45,7 @@ export function RevisionHistory({ path, disabled, onRestore }: {
   return (
     <div className="space-y-3">
       <button type="button" disabled={disabled || busy} aria-expanded={open} onClick={toggle}
-        className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500 disabled:opacity-50">
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500 disabled:opacity-50">
         <History className="h-4 w-4" /> Version history
       </button>
       {open && (
@@ -66,7 +66,8 @@ export function RevisionHistory({ path, disabled, onRestore }: {
                     </p>
                   </div>
                   <button type="button" disabled={disabled || busy} onClick={() => restore(revision)}
-                    className="rounded px-2 py-1 text-xs text-gold-400 hover:bg-gold-500/10 disabled:opacity-50">
+                    aria-label={`Load version from ${new Date(revision.date).toLocaleString()}`}
+                    className="min-h-11 rounded px-2 py-1 text-xs text-gold-400 hover:bg-gold-500/10 disabled:opacity-50">
                     {restoring === revision.sha ? 'Loading…' : 'Load version'}
                   </button>
                 </li>

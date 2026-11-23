@@ -323,7 +323,7 @@ function Editor({
       </p>
       <div className="flex flex-wrap items-start gap-2">
         <button type="button" aria-pressed={preview} disabled={status.kind === 'working'} onClick={() => setPreview(!preview)}
-          className="rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500">
+          className="min-h-11 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500">
           {preview ? 'Back to editing' : 'Preview draft'}
         </button>
         <RevisionHistory path={path} disabled={status.kind === 'working'} onRestore={restoreRevision} />
