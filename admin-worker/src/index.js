@@ -61,7 +61,8 @@ const sessionSignature = (env, expires) =>
 async function github(env, token, path, init = {}) {
   return fetch(`https://api.github.com/repos/${env.REPO}${path}`, {
     ...init,
-    redirect: 'error',
+    // Never forward repository credentials to a redirected URL.
+    redirect: 'manual',
     headers: {
       ...githubHeaders,
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -167,6 +168,9 @@ export default {
         }
       } catch {
         return json({ message: 'GitHub could not be reached. Try again shortly.' }, 502)
+      }
+      if (res.status >= 300 && res.status < 400) {
+        return json({ message: 'GitHub unexpectedly redirected the repository request. Try again shortly.' }, 502)
       }
       if (res.status === 401) {
         discardInstallationToken(token)

@@ -66,7 +66,8 @@ async function appRequest(path, jwt, body) {
   try {
     response = await fetch(`${API}${path}`, {
       method: body === undefined ? 'GET' : 'POST',
-      redirect: 'error',
+      // Workers supports manual and follow. Keep the App JWT on GitHub's API host.
+      redirect: 'manual',
       headers: {
         ...githubHeaders,
         Authorization: `Bearer ${jwt}`,
@@ -78,6 +79,9 @@ async function appRequest(path, jwt, body) {
   } catch (err) {
     if (err?.name === 'TimeoutError') throw new GitHubPublishingError('GitHub timed out while checking the App credentials. Try again shortly.')
     throw new GitHubPublishingError('GitHub could not be reached while checking the App credentials. Try again shortly.')
+  }
+  if (response.status >= 300 && response.status < 400) {
+    throw new GitHubPublishingError('GitHub unexpectedly redirected the App credentials request. Try again shortly.')
   }
   if (response.status === 401) throw new GitHubPublishingError('GitHub rejected the App JWT. Check the App ID and the private key for that App.')
   if (response.status === 404) {
