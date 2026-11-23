@@ -297,7 +297,9 @@ function Editor({
         <code className="text-gold-400">`code`</code> and <code className="text-gold-400">[link text](https://…)</code>. Use the arrows to reorder,
         the bin to remove, and <strong>Save &amp; publish</strong> at the bottom when done.
       </p>
-      <Fields fields={schema} value={data} onChange={(v) => setData(v)} ctx={ctx} />
+      <fieldset disabled={status.kind === 'working'} className="min-w-0">
+        <Fields fields={schema} value={data} onChange={(v) => setData(v)} ctx={ctx} />
+      </fieldset>
 
       {problems.length > 0 && (
         <ul className="p-4 rounded-xl border border-red-900/60 bg-red-950/30 text-sm text-red-200 list-disc pl-8 space-y-1">
@@ -320,7 +322,7 @@ function Editor({
           </button>
           <button
             type="button"
-            disabled={!dirty}
+            disabled={!dirty || status.kind === 'working'}
             onClick={() => window.confirm('Discard all unsaved changes?') && setData(JSON.parse(saved))}
             className="px-3 py-2.5 rounded-lg text-zinc-400 text-sm hover:text-zinc-100 disabled:opacity-30 inline-flex items-center gap-1.5"
           >
