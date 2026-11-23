@@ -2,15 +2,15 @@
  * Admin server for adamu.tech (Cloudflare Worker, free tier).
  *
  * The site itself is static. Saving from adamu.tech/admin means committing to
- * the GitHub repository, which needs a GitHub token. This Worker holds that
- * token as an encrypted secret, so browsers never see or need it. The admin
- * signs in here with a password and gets an HttpOnly session cookie; then the
- * admin pages send their GitHub API calls through /api/admin/github/..., and
- * the Worker adds the token.
+ * the GitHub repository. The admin signs in with a password and gets an
+ * HttpOnly session cookie. The Worker adds the publishing credential to
+ * requests for the configured GitHub repository.
  *
  * Secrets (set by .github/workflows/admin-worker.yml):
  *   ADMIN_PASSWORD owner-selected password, rotated through secret settings
  *   ADMIN_SESSION_SECRET independent, randomly generated 32-byte secret
+ *   GITHUB_APP_ID, GITHUB_APP_INSTALLATION_ID, GITHUB_APP_PRIVATE_KEY
+ *                  optional GitHub App credentials to mint publishing tokens
  *   GITHUB_TOKEN   optional fine-grained publishing token for REPO only
  *                  (Contents: read and write, Actions: read)
  *
@@ -27,6 +27,7 @@
  */
 
 import { readAnalytics } from './analytics.js'
+import { discardInstallationToken, githubHeaders, publishingConfigured, publishingToken } from './github-auth.js'
 
 const SESSION_DAYS = 30
 const COOKIE = '__Secure-adamu_admin'
@@ -57,18 +58,13 @@ const json = (body, status = 200, headers = {}) =>
 const sessionSignature = (env, expires) =>
   hmac(env.ADMIN_SESSION_SECRET, JSON.stringify(['session', env.ADMIN_PASSWORD, expires]))
 
-const publishingConfigured = (env) =>
-  Boolean(env.REPO && typeof env.GITHUB_TOKEN === 'string' && env.GITHUB_TOKEN.trim())
-
-async function github(env, path, init = {}) {
+async function github(env, token, path, init = {}) {
   return fetch(`https://api.github.com/repos/${env.REPO}${path}`, {
     ...init,
     redirect: 'error',
     headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      'User-Agent': 'adamu-admin-worker',
-      'X-GitHub-Api-Version': '2022-11-28',
+      ...githubHeaders,
+      Authorization: `Bearer ${token}`,
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
     },
   })
@@ -148,14 +144,24 @@ export default {
       const path = '/' + route.slice('github/'.length) + url.search
       // Only this repository's API, and never the admin password file.
       if (path.includes('..') || path.includes('content/admin/auth.json') || path.includes('public/admin-auth.json')) return json({ error: 'Not allowed' }, 403)
+      let token
+      try {
+        token = await publishingToken(env)
+      } catch {
+        return json({ message: 'GitHub App publishing could not be authenticated. Check the GitHub App installation and Worker secret settings.' }, 502)
+      }
       let res
       try {
-        res = await github(env, path, {
+        res = await github(env, token, path, {
           method,
           body: method === 'GET' || method === 'HEAD' ? undefined : await request.text(),
         })
       } catch {
         return json({ message: 'GitHub could not be reached. Try again shortly.' }, 502)
+      }
+      if (res.status === 401) {
+        discardInstallationToken(token)
+        return json({ message: 'GitHub rejected the publishing credential. Try again or check the Worker settings.' }, 502)
       }
       return new Response(res.body, {
         status: res.status,
