@@ -98,7 +98,7 @@ const latexCharacters: Record<string, string> = {
   '^': '\\textasciicircum{}',
 }
 
-function bibText(value: string): string {
+export function escapeBibTeXText(value: string): string {
   return value.trim().replace(/\s+/g, ' ').replace(/[\\{}%&#_$~^]/g, (character) =>
     latexCharacters[character] ?? `\\${character}`,
   )
@@ -125,11 +125,11 @@ export function buildBibTeX(citation: Citation): string {
   }
 
   const fields = [
-    `author = {${bibText(citation.author)}}`,
-    `title = {{${bibText(citation.title)}}}`,
+    `author = {${escapeBibTeXText(citation.author)}}`,
+    `title = {{${escapeBibTeXText(citation.title)}}}`,
     `year = {${year}}`,
   ]
-  if (type !== 'misc') fields.push(`${type === 'article' ? 'journal' : 'publisher'} = {${bibText(publication)}}`)
+  if (type !== 'misc') fields.push(`${type === 'article' ? 'journal' : 'publisher'} = {${escapeBibTeXText(publication)}}`)
   if (doi) fields.push(`doi = {${doi}}`)
 
   return `@${type}{${key},\n  ${fields.join(',\n  ')}\n}`

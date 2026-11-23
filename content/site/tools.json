@@ -1,0 +1,73 @@
+{
+  "page": {
+    "title": "Tools",
+    "description": "Format JSON and JSON Lines, inspect Unicode text and links, and generate BibTeX citations in your browser.",
+    "heading": "Research and developer tools",
+    "intro": "Format datasets, examine text, build citations, and check link destinations. The tools process your input in your browser.",
+    "navigationLabel": "Tools on this page"
+  },
+  "output": {
+    "copyLabel": "Copy output",
+    "copied": "Copied.",
+    "copyFailed": "Select and copy the output manually."
+  },
+  "data": {
+    "title": "JSON and JSON Lines",
+    "description": "Indent JSON or validate a dataset with one JSON value per line. Formatting preserves large numbers and key order.",
+    "formatLabel": "Input format",
+    "jsonLabel": "JSON",
+    "jsonLinesLabel": "JSON Lines (JSONL)",
+    "inputLabel": "Data",
+    "placeholder": "{\"id\": 1, \"text\": \"Sannu\"}",
+    "submitLabel": "Validate and format",
+    "outputLabel": "Formatted data"
+  },
+  "unicode": {
+    "title": "Unicode text",
+    "description": "Normalize text while retaining accents and language-specific letters. Inspect the characters stored in a transcript or corpus.",
+    "formLabel": "Normalization form",
+    "nfcLabel": "NFC · compose where possible",
+    "nfdLabel": "NFD · decompose into base and marks",
+    "inputLabel": "Text",
+    "placeholder": "Sannu. Ƙamus ɗin Hausa.",
+    "submitLabel": "Normalize and inspect",
+    "clusterLabel": "Text clusters",
+    "codePointLabel": "Code points",
+    "combiningLabel": "Combining marks",
+    "bytesLabel": "UTF-8 bytes",
+    "unavailableLabel": "Unavailable",
+    "previewLabel": "First 32 code points",
+    "outputLabel": "Normalized text"
+  },
+  "citation": {
+    "title": "BibTeX citation",
+    "description": "Build a citation from publication details you’ve verified. Separate multiple authors with “and”.",
+    "typeLabel": "Publication type",
+    "articleLabel": "Journal article",
+    "bookLabel": "Book",
+    "otherLabel": "Other publication",
+    "keyLabel": "Citation key",
+    "keyPlaceholder": "Abubakar2026",
+    "authorLabel": "Author(s)",
+    "authorPlaceholder": "Abubakar, Adamu",
+    "yearLabel": "Year",
+    "yearPlaceholder": "2026",
+    "titleLabel": "Title",
+    "journalLabel": "Journal",
+    "publisherLabel": "Publisher",
+    "doiLabel": "DOI (optional)",
+    "doiPlaceholder": "10.1234/example",
+    "submitLabel": "Generate BibTeX",
+    "outputLabel": "BibTeX entry"
+  },
+  "links": {
+    "title": "Link inspector",
+    "description": "Parse a link locally to see its destination and spot misleading details.",
+    "inputLabel": "HTTP or HTTPS URL",
+    "placeholder": "https://example.org/",
+    "submitLabel": "Inspect link",
+    "hostnameLabel": "Hostname",
+    "originLabel": "Origin",
+    "destinationNote": "Compare the hostname with the address you expect before entering credentials."
+  }
+}

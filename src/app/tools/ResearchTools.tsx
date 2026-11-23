@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { buildBibTeX, formatData, inspectLink, inspectText } from '@/lib/browser-tools'
+import type { ToolsContent } from '@/lib/tools-content'
 
 const fieldClass = 'w-full rounded-lg border border-zinc-700 bg-[#0B1120] px-3 py-2 text-sm text-zinc-100 focus-visible:outline-2 focus-visible:outline-gold-500'
 const actionClass = 'min-h-10 rounded-lg border border-gold-500/40 bg-gold-500/10 px-3.5 py-2 text-sm font-semibold text-gold-500 hover:bg-gold-500/20 focus-visible:outline-2 focus-visible:outline-gold-500'
@@ -23,15 +24,17 @@ function ToolCard({ id, title, description, children }: {
   )
 }
 
-function Output({ label, value }: { label: string; value: string }) {
+type OutputCopy = ToolsContent['output']
+
+function Output({ label, value, copy }: { label: string; value: string; copy: OutputCopy }) {
   const [copyStatus, setCopyStatus] = useState<{ value: string; message: string } | null>(null)
 
-  async function copy() {
+  async function copyOutput() {
     try {
       await navigator.clipboard.writeText(value)
-      setCopyStatus({ value, message: 'Copied.' })
+      setCopyStatus({ value, message: copy.copied })
     } catch {
-      setCopyStatus({ value, message: 'Select and copy the output manually.' })
+      setCopyStatus({ value, message: copy.copyFailed })
     }
   }
 
@@ -42,7 +45,7 @@ function Output({ label, value }: { label: string; value: string }) {
         <textarea className={`${fieldClass} font-mono`} rows={5} value={value} readOnly spellCheck={false} dir="auto" />
       </label>
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" className={actionClass} onClick={copy}>Copy output</button>
+        <button type="button" className={actionClass} onClick={copyOutput}>{copy.copyLabel}</button>
         <span role="status" className="text-xs text-zinc-300">{copyStatus?.value === value && copyStatus.message}</span>
       </div>
     </div>
@@ -53,7 +56,7 @@ function errorMessage(error: unknown) {
   return error instanceof Error ? error.message.slice(0, 240) : 'The input could not be processed.'
 }
 
-function DataTool() {
+function DataTool({ copy, outputCopy }: { copy: ToolsContent['data']; outputCopy: OutputCopy }) {
   const [input, setInput] = useState('')
   const [format, setFormat] = useState<'json' | 'jsonl'>('json')
   const [result, setResult] = useState<ReturnType<typeof formatData> | null>(null)
@@ -71,41 +74,41 @@ function DataTool() {
   }
 
   return (
-    <ToolCard id="data" title="JSON and JSON Lines" description="Indent JSON or validate a dataset with one JSON value per line. Formatting preserves large numbers and key order.">
+    <ToolCard id="data" title={copy.title} description={copy.description}>
       <form className="space-y-3" onSubmit={submit}>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>Input format</span>
+          <span>{copy.formatLabel}</span>
           <select className={fieldClass} value={format} onChange={(event) => setFormat(event.target.value as typeof format)}>
-            <option value="json">JSON</option>
-            <option value="jsonl">JSON Lines (JSONL)</option>
+            <option value="json">{copy.jsonLabel}</option>
+            <option value="jsonl">{copy.jsonLinesLabel}</option>
           </select>
         </label>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>Data</span>
+          <span>{copy.inputLabel}</span>
           <textarea
             className={`${fieldClass} font-mono`}
             value={input}
             onChange={(event) => setInput(event.target.value)}
             rows={5}
-            placeholder={'{"id": 1, "text": "Sannu"}'}
+            placeholder={copy.placeholder}
             required
             spellCheck={false}
           />
         </label>
-        <button className={actionClass}>Validate and format</button>
+        <button className={actionClass}>{copy.submitLabel}</button>
       </form>
       {error && <p role="alert" className="break-words text-sm text-rose-300">{error}</p>}
       {result && (
         <>
           <p role="status" className="text-sm text-emerald-300">{result.summary}</p>
-          <Output label="Formatted data" value={result.output} />
+          <Output label={copy.outputLabel} value={result.output} copy={outputCopy} />
         </>
       )}
     </ToolCard>
   )
 }
 
-function TextTool() {
+function TextTool({ copy, outputCopy }: { copy: ToolsContent['unicode']; outputCopy: OutputCopy }) {
   const [input, setInput] = useState('')
   const [form, setForm] = useState<'NFC' | 'NFD'>('NFC')
   const [result, setResult] = useState<ReturnType<typeof inspectText> | null>(null)
@@ -116,38 +119,38 @@ function TextTool() {
   }
 
   return (
-    <ToolCard id="text" title="Unicode text" description="Normalize text while retaining accents and language-specific letters. Inspect the characters stored in a transcript or corpus.">
+    <ToolCard id="text" title={copy.title} description={copy.description}>
       <form className="space-y-3" onSubmit={submit}>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>Normalization form</span>
+          <span>{copy.formLabel}</span>
           <select className={fieldClass} value={form} onChange={(event) => setForm(event.target.value as typeof form)}>
-            <option value="NFC">NFC · compose where possible</option>
-            <option value="NFD">NFD · decompose into base and marks</option>
+            <option value="NFC">{copy.nfcLabel}</option>
+            <option value="NFD">{copy.nfdLabel}</option>
           </select>
         </label>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>Text</span>
+          <span>{copy.inputLabel}</span>
           <textarea
             className={fieldClass}
             value={input}
             onChange={(event) => setInput(event.target.value)}
             rows={5}
-            placeholder="Sannu. Ƙamus ɗin Hausa."
+            placeholder={copy.placeholder}
             required
             spellCheck={false}
             dir="auto"
           />
         </label>
-        <button className={actionClass}>Normalize and inspect</button>
+        <button className={actionClass}>{copy.submitLabel}</button>
       </form>
       {result && (
         <>
           <dl className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
             {[
-              ['Text clusters', result.graphemes ?? 'Unavailable'],
-              ['Code points', result.codePoints],
-              ['Combining marks', result.combiningMarks],
-              ['UTF-8 bytes', result.bytes],
+              [copy.clusterLabel, result.graphemes ?? copy.unavailableLabel],
+              [copy.codePointLabel, result.codePoints],
+              [copy.combiningLabel, result.combiningMarks],
+              [copy.bytesLabel, result.bytes],
             ].map(([label, count]) => (
               <div key={label} className="rounded border border-zinc-800 bg-[#0B1120] p-2">
                 <dt className="text-zinc-400">{label}</dt>
@@ -156,10 +159,10 @@ function TextTool() {
             ))}
           </dl>
           <p className="text-xs leading-relaxed text-zinc-300">
-            First 32 code points<br />
+            {copy.previewLabel}<br />
             <code className="break-words">{result.preview}</code>
           </p>
-          <Output label="Normalized text" value={result.output} />
+          <Output label={copy.outputLabel} value={result.output} copy={outputCopy} />
         </>
       )}
     </ToolCard>
@@ -168,7 +171,7 @@ function TextTool() {
 
 type Citation = Parameters<typeof buildBibTeX>[0]
 
-function CitationTool() {
+function CitationTool({ copy, outputCopy }: { copy: ToolsContent['citation']; outputCopy: OutputCopy }) {
   const [citation, setCitation] = useState<Citation>({ type: 'article', key: '', author: '', title: '', year: '', publisher: '', doi: '' })
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
@@ -185,27 +188,27 @@ function CitationTool() {
   }
 
   return (
-    <ToolCard id="citations" title="BibTeX citation" description="Build a citation from publication details you’ve verified. Separate multiple authors with “and”.">
+    <ToolCard id="citations" title={copy.title} description={copy.description}>
       <form className="grid gap-3 sm:grid-cols-2" onSubmit={submit}>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>Publication type</span>
+          <span>{copy.typeLabel}</span>
           <select
             className={fieldClass}
             value={citation.type}
             onChange={(event) => setCitation({ ...citation, type: event.target.value as Citation['type'], publisher: '' })}
           >
-            <option value="article">Journal article</option>
-            <option value="book">Book</option>
-            <option value="misc">Other publication</option>
+            <option value="article">{copy.articleLabel}</option>
+            <option value="book">{copy.bookLabel}</option>
+            <option value="misc">{copy.otherLabel}</option>
           </select>
         </label>
         {([
-          ['key', 'Citation key', 'Abubakar2026'],
-          ['author', 'Author(s)', 'Abubakar, Adamu'],
-          ['year', 'Year', '2026'],
-          ['title', 'Title', ''],
-          ['publisher', citation.type === 'article' ? 'Journal' : 'Publisher', ''],
-          ['doi', 'DOI (optional)', '10.1234/example'],
+          ['key', copy.keyLabel, copy.keyPlaceholder],
+          ['author', copy.authorLabel, copy.authorPlaceholder],
+          ['year', copy.yearLabel, copy.yearPlaceholder],
+          ['title', copy.titleLabel, ''],
+          ['publisher', citation.type === 'article' ? copy.journalLabel : copy.publisherLabel, ''],
+          ['doi', copy.doiLabel, copy.doiPlaceholder],
         ] as const)
           .filter(([field]) => field !== 'publisher' || citation.type !== 'misc')
           .map(([field, label, placeholder]) => (
@@ -223,16 +226,16 @@ function CitationTool() {
             </label>
           ))}
         <div className="sm:col-span-2">
-          <button className={actionClass}>Generate BibTeX</button>
+          <button className={actionClass}>{copy.submitLabel}</button>
         </div>
       </form>
       {error && <p role="alert" className="break-words text-sm text-rose-300">{error}</p>}
-      {output && <Output label="BibTeX entry" value={output} />}
+      {output && <Output label={copy.outputLabel} value={output} copy={outputCopy} />}
     </ToolCard>
   )
 }
 
-function LinkTool() {
+function LinkTool({ copy }: { copy: ToolsContent['links'] }) {
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ReturnType<typeof inspectLink> | null>(null)
   const [error, setError] = useState('')
@@ -249,33 +252,33 @@ function LinkTool() {
   }
 
   return (
-    <ToolCard id="links" title="Link inspector" description="Parse a link locally to see its destination and spot misleading details.">
+    <ToolCard id="links" title={copy.title} description={copy.description}>
       <form className="space-y-3" onSubmit={submit}>
         <label className="block space-y-1.5 text-sm text-zinc-300">
-          <span>HTTP or HTTPS URL</span>
+          <span>{copy.inputLabel}</span>
           <input
             className={`${fieldClass} font-mono`}
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="https://example.org/"
+            placeholder={copy.placeholder}
             inputMode="url"
             required
             spellCheck={false}
             autoComplete="off"
           />
         </label>
-        <button className={actionClass}>Inspect link</button>
+        <button className={actionClass}>{copy.submitLabel}</button>
       </form>
       {error && <p role="alert" className="break-words text-sm text-rose-300">{error}</p>}
       {result && (
         <div className="space-y-3 border-t border-zinc-800 pt-4">
           <dl className="space-y-2 text-sm">
             <div>
-              <dt className="text-zinc-400">Hostname</dt>
+              <dt className="text-zinc-400">{copy.hostnameLabel}</dt>
               <dd className="break-all font-mono text-zinc-100" dir="ltr">{result.hostname}</dd>
             </div>
             <div>
-              <dt className="text-zinc-400">Origin</dt>
+              <dt className="text-zinc-400">{copy.originLabel}</dt>
               <dd className="break-all font-mono text-zinc-100" dir="ltr">{result.origin}</dd>
             </div>
           </dl>
@@ -284,22 +287,22 @@ function LinkTool() {
               {result.warnings.map((warning) => <li key={warning}>{warning}</li>)}
             </ul>
           )}
-          <p className="text-xs leading-relaxed text-zinc-400">Compare the hostname with the address you expect before entering credentials.</p>
+          <p className="text-xs leading-relaxed text-zinc-400">{copy.destinationNote}</p>
         </div>
       )}
     </ToolCard>
   )
 }
 
-export function ResearchTools() {
+export function ResearchTools({ copy }: { copy: ToolsContent }) {
   return (
     <>
-      <nav aria-label="Tools on this page" className="flex flex-wrap gap-2">
+      <nav aria-label={copy.page.navigationLabel} className="flex flex-wrap gap-2">
         {[
-          ['data', 'JSON and JSON Lines'],
-          ['text', 'Unicode text'],
-          ['citations', 'BibTeX citation'],
-          ['links', 'Link inspector'],
+          ['data', copy.data.title],
+          ['text', copy.unicode.title],
+          ['citations', copy.citation.title],
+          ['links', copy.links.title],
         ].map(([id, title]) => (
           <a key={id} href={`#${id}`} className="min-h-10 rounded-lg border border-zinc-800 px-3 py-2 text-sm text-zinc-300 hover:border-gold-500/40 hover:text-gold-500 focus-visible:outline-2 focus-visible:outline-gold-500">
             {title}
@@ -307,10 +310,10 @@ export function ResearchTools() {
         ))}
       </nav>
       <div className="grid items-start gap-5 md:grid-cols-2">
-        <DataTool />
-        <TextTool />
-        <CitationTool />
-        <LinkTool />
+        <DataTool copy={copy.data} outputCopy={copy.output} />
+        <TextTool copy={copy.unicode} outputCopy={copy.output} />
+        <CitationTool copy={copy.citation} outputCopy={copy.output} />
+        <LinkTool copy={copy.links} />
       </div>
     </>
   )
