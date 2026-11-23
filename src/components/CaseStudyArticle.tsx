@@ -3,6 +3,26 @@ import type { CaseStudy, CaseStudyContact } from '@/lib/case-studies'
 import { parsePublicUrl } from '@/lib/public-url'
 import { ArrowRight, ExternalLink, Mail } from 'lucide-react'
 
+function StudyResource({ link, preview = false, featured = false }: {
+  link: CaseStudy['links'][number]
+  preview?: boolean
+  featured?: boolean
+}) {
+  const url = parsePublicUrl(link.url)
+  if (!url || url.kind === 'email') return null
+  const classes = featured
+    ? 'inline-flex min-h-11 items-center gap-2 rounded-lg bg-gold-500 px-4 text-sm font-semibold text-zinc-950'
+    : 'inline-flex min-h-11 items-center gap-2 text-gold-500'
+  if (preview) return <span className={classes}>{link.label}</span>
+  return (
+    <a href={url.href} className={`${classes} hover:underline`}
+      {...(url.kind === 'external' ? { target: '_blank', rel: 'noopener noreferrer', title: url.host } : {})}>
+      {link.label}
+      {url.kind === 'external' && <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+    </a>
+  )
+}
+
 export function CaseStudyArticle({ study, contact, preview = false }: {
   study: CaseStudy
   contact: CaseStudyContact
@@ -10,6 +30,7 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
 }) {
   const contactLink = parsePublicUrl(contact.contactUrl)
   const cv = parsePublicUrl(contact.cvUrl)
+  const [primaryResource, ...resources] = study.links
   return (
     <article className="space-y-9 sm:space-y-12">
       <header className="max-w-3xl space-y-5">
@@ -19,6 +40,7 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
         </h1>
         <p className="max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">{study.summary}</p>
         <p className="border-l-2 border-gold-500 pl-3 font-mono text-xs font-bold text-zinc-200 sm:text-sm">{study.role}</p>
+        {primaryResource && <StudyResource link={primaryResource} preview={preview} featured />}
       </header>
 
       {study.metrics.length > 0 && (
@@ -32,7 +54,7 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
         </dl>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <div className={resources.length ? "grid gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]" : "max-w-3xl"}>
         <div className="space-y-6">
           {study.sections.map((section, index) => (
             <section key={index} className="space-y-3 border-t border-zinc-800 pt-5">
@@ -45,25 +67,13 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
             </section>
           ))}
         </div>
-        {study.links.length > 0 && (
+        {resources.length > 0 && (
           <section className="self-start space-y-4 rounded-2xl border border-zinc-800 bg-[#0E1526] p-5">
             <h2 className="text-sm font-mono font-bold text-zinc-100">Explore the work</h2>
             <ul className="space-y-3 text-sm">
-              {study.links.map((link, index) => {
-                const url = parsePublicUrl(link.url)
-                if (!url || url.kind === 'email') return null
-                return (
-                  <li key={index}>
-                    {preview ? <span className="text-gold-500">{link.label}</span> : (
-                      <a href={url.href} className="inline-flex min-h-11 items-center gap-2 text-gold-500 hover:underline"
-                        {...(url.kind === 'external' ? { target: '_blank', rel: 'noopener noreferrer', title: url.host } : {})}>
-                        {link.label}
-                        {url.kind === 'external' ? <ExternalLink className="h-3.5 w-3.5 shrink-0" /> : <ArrowRight className="h-3.5 w-3.5 shrink-0" />}
-                      </a>
-                    )}
-                  </li>
-                )
-              })}
+              {resources.map((link, index) => (
+                <li key={index}><StudyResource link={link} preview={preview} /></li>
+              ))}
             </ul>
           </section>
         )}

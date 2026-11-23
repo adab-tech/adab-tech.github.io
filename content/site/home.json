@@ -12,9 +12,7 @@
   "location": "Tuscaloosa, AL · Open to roles, remote, and relocation",
   "email": "contact@adamu.tech",
   "buttons": [
-    { "label": "Discuss a role or collaboration", "url": "mailto:contact@adamu.tech?subject=Work%20with%20Adamu", "icon": "mail", "primary": true },
-    { "label": "Try Murya", "url": "https://app.murya.ng", "icon": "cpu", "primary": false },
-    { "label": "Read the pre-print", "url": "/papers/agentic-ai", "icon": "book", "primary": false },
+    { "label": "Discuss a role or collaboration", "url": "/contact/", "icon": "mail", "primary": true },
     { "label": "View my CV", "url": "/cv", "icon": "file", "primary": false }
   ],
   "numbers": {

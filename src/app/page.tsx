@@ -8,7 +8,7 @@ import { InlineText } from '@/components/InlineText'
 import { ProjectIcons, ProjectLogo } from '@/components/ProjectLogo'
 import { HOME, PROJECTS, primaryLink } from '@/lib/site-content'
 import { 
-  Cpu, BookOpen, ExternalLink, ArrowRight, Shield, Activity, 
+  Cpu, BookOpen, ExternalLink, Shield, Activity,
   Layers, CheckCircle2, 
   FileText, 
   MapPin, Mail, Sparkles,
@@ -85,10 +85,75 @@ export default function HomePage() {
               )
             })}
           </div>
+        </section>
 
-          {/* The project sites, one icon each */}
+        {/* Featured projects */}
+        <section className="space-y-6 border-t border-zinc-800/80 pt-12">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
+              <Layers className="w-4 h-4" />
+              {PROJECTS.homeKicker?.trim() || 'Projects'}
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-mono font-bold text-zinc-50">
+              {PROJECTS.homeHeading}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {PROJECTS.projects.filter((p) => p.showOnHome).map((p) => {
+              const url = primaryLink(p) || p.repoUrl
+              return (
+              <div key={p.id} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {url ? (
+                        <a
+                          href={url}
+                          {...(/^https?:/.test(url) ? { target: '_blank', rel: 'noreferrer' } : {})}
+                          aria-label={`Open ${p.title}`}
+                          title={`Open ${p.title}`}
+                          className="shrink-0 rounded-lg transition-transform hover:scale-105"
+                        >
+                          <ProjectLogo project={p} size="sm" />
+                        </a>
+                      ) : (
+                        <ProjectLogo project={p} size="sm" />
+                      )}
+                      <h3 className="font-mono font-bold text-zinc-100 text-lg">{p.title}</h3>
+                    </div>
+                    <span className={`shrink-0 text-xs lg:text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                      p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
+                      p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
+                      'text-gold-500 bg-gold-500/10 border-gold-500/30'
+                    }`}>
+                      {p.status}
+                    </span>
+                  </div>
+                  <div className="text-xs font-mono text-gold-500/90">{p.role} · <span className="text-zinc-400">{p.type}</span></div>
+                  <p className="text-base text-zinc-300 font-sans leading-relaxed">{p.homeSummary || p.description}</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-2 border-t border-zinc-800 text-sm font-mono [&_a]:min-h-11">
+                  <CaseStudyLink projectId={p.id} />
+                  {url && (url.startsWith('/') ? (
+                    <Link href={url} className="text-gold-500 hover:underline flex items-center gap-1">
+                      <span>{p.homeLinkLabel || 'Open'}</span>
+                    </Link>
+                  ) : (
+                    <a href={url} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline flex items-center gap-1">
+                      <span>{p.homeLinkLabel || 'Visit'}</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ))}
+
+                </div>
+              </div>
+              )
+            })}
+          </div>
+          <p className="text-base text-zinc-300"><InlineText text={PROJECTS.homeIntro} linkClassName="inline-flex min-h-11 items-center font-medium text-gold-500 underline underline-offset-4" /></p>
           <ProjectIcons />
-
         </section>
 
         {/* SECTION 1: BENCHMARKS & EVALUATION EVIDENCE */}
@@ -181,90 +246,6 @@ export default function HomePage() {
           </div>
         </section>
         )}
-
-        {/* SECTION 3: PROJECTS */}
-        <section className="space-y-6 border-t border-zinc-800/80 pt-12">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
-              <Layers className="w-4 h-4" />
-              {PROJECTS.homeKicker?.trim() || 'Projects'}
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-mono font-bold text-zinc-50">
-              {PROJECTS.homeHeading}
-            </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl font-sans leading-relaxed">
-              {PROJECTS.homeIntro}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {PROJECTS.projects.filter((p) => p.showOnHome).map((p) => {
-              const url = primaryLink(p)
-              return (
-              <div key={p.id} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 flex flex-col justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-3 min-w-0">
-                      {url ? (
-                        <a
-                          href={url}
-                          {...(/^https?:/.test(url) ? { target: '_blank', rel: 'noreferrer' } : {})}
-                          aria-label={`Open ${p.title}`}
-                          title={`Open ${p.title}`}
-                          className="shrink-0 rounded-lg transition-transform hover:scale-105"
-                        >
-                          <ProjectLogo project={p} size="sm" />
-                        </a>
-                      ) : (
-                        <ProjectLogo project={p} size="sm" />
-                      )}
-                      <span className="font-mono font-bold text-zinc-100 text-base">{p.title}</span>
-                    </span>
-                    <span className={`shrink-0 text-xs lg:text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-                      p.statusColor === 'emerald' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' :
-                      p.statusColor === 'blue' ? 'text-blue-400 bg-blue-500/10 border-blue-500/30' :
-                      'text-gold-500 bg-gold-500/10 border-gold-500/30'
-                    }`}>
-                      {p.status}
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono text-gold-500/90">{p.role} · <span className="text-zinc-400">{p.type}</span></div>
-                  <p className="text-xs text-zinc-300 font-sans leading-relaxed">{p.homeSummary || p.description}</p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-zinc-800 text-xs font-mono">
-                  <CaseStudyLink projectId={p.id} />
-                  {url && (url.startsWith('/') ? (
-                    <Link href={url} className="text-gold-500 hover:underline flex items-center gap-1">
-                      <span>{p.homeLinkLabel || 'Open'}</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  ) : (
-                    <a href={url} target="_blank" rel="noreferrer" className="text-gold-500 hover:underline flex items-center gap-1">
-                      <span>{p.homeLinkLabel || 'Visit'}</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  ))}
-
-                  {p.modelUrl && p.modelUrl !== url && (
-                    <a href={p.modelUrl} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-zinc-200 flex items-center gap-1">
-                      <span>{p.modelLinkLabel?.trim() || (p.modelUrl.includes('/datasets/') ? 'Dataset' : 'Weights')}</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-
-                  {p.repoUrl && (
-                    <a href={p.repoUrl} target="_blank" rel="noreferrer" className="text-zinc-400 hover:text-zinc-200 flex items-center gap-1">
-                      <span>{p.repoLabel || 'Source'}</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              </div>
-              )
-            })}
-          </div>
-        </section>
 
         {/* SECTION 4: CONTACT NOTICE */}
         <section className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 text-xs font-sans text-zinc-400 leading-relaxed">

@@ -14,5 +14,10 @@
   "sendingLabel": "Sending…",
   "successMessage": "Message sent — thank you!",
   "fallbackMessage": "Couldn't send that automatically, so your email client should have opened instead.",
-  "emailSubject": "New message from {name} via adamu.tech"
+  "emailSubject": "New message from {name} via adamu.tech",
+  "emailAppLabel": "Open email app",
+  "emailAppHint": "This opens a draft in your email app. Review it there and press Send.",
+  "copyLabel": "Copy email address",
+  "copiedMessage": "Email address copied.",
+  "copyHelp": "Select the email address above and copy it."
 }

@@ -40,7 +40,7 @@ const schema: Field[] = [
         ],
       },
       {
-        key: 'links', label: 'Evidence links', type: 'list', itemLabel: 'link', titleKey: 'label',
+        key: 'links', label: 'Project and evidence links', help: 'The first link appears beside your introduction. Put the live demo or atlas first.', type: 'list', itemLabel: 'link', titleKey: 'label',
         fields: [
           { key: 'label', label: 'Label', type: 'text' },
           { key: 'url', label: 'Address', type: 'url' },

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
+import { Copy } from 'lucide-react';
 import { CONTACT } from '@/lib/contact-content';
 
 // Set after deploying cf-worker/ (see cf-worker/README.md) — wrangler prints
@@ -8,7 +9,21 @@ import { CONTACT } from '@/lib/contact-content';
 // back to a mailto: link instead of failing silently.
 const RELAY_URL = '';
 
+const fieldClass = 'w-full rounded-lg border border-zinc-600 bg-[#0B1120] px-3 py-2.5 text-base text-zinc-100 focus:border-gold-500 focus:outline-2 focus:outline-gold-500';
+
+// The mail link works immediately. Enhanced controls wait for their event handlers.
+const subscribe = () => () => {};
 const ContactPage = () => {
+  const interactive = useSyncExternalStore(subscribe, () => true, () => false);
+  const [copyResult, setCopyResult] = useState<'copied' | 'manual' | null>(null);
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT.email);
+      setCopyResult('copied');
+    } catch {
+      setCopyResult('manual');
+    }
+  };
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,7 +47,6 @@ const ContactPage = () => {
     if (!RELAY_URL) {
       // Open the visitor's email client when the relay is unconfigured.
       openMailto();
-      setFormData({ name: '', email: '', message: '' });
       return;
     }
 
@@ -54,48 +68,51 @@ const ContactPage = () => {
   };
 
   return (
-    <section className="contact" id="contact">
-      <div className="container">
-        <div className="section-header" data-animate="fade-up">
-          <span className="section-label">{CONTACT.label}</span>
-          <h1 className="section-title">{CONTACT.heading}</h1>
-        </div>
-        
-        <div className="contact-content">
-          <div className="contact-info" data-animate="fade-right">
-            <h3>{CONTACT.infoHeading}</h3>
-            <p>{CONTACT.intro}</p>
-            
-            <div className="info-item">
-              <a href={`mailto:${CONTACT.email}`} aria-label={CONTACT.emailLinkLabel}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-          
-          <form className="contact-form" data-animate="fade-left" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">{CONTACT.nameLabel}</label>
-              <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="email">{CONTACT.emailLabel}</label>
-              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="message">{CONTACT.messageLabel}</label>
-              <textarea id="message" name="message" rows={5} value={formData.message} onChange={handleChange} required></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-              {status === 'sending' ? CONTACT.sendingLabel : CONTACT.sendLabel}
+    <section id="contact" className="mx-auto w-full max-w-5xl space-y-8 px-4 py-8 sm:px-6 sm:py-12">
+      <header className="space-y-2">
+        <p className="text-sm font-mono font-semibold text-gold-500">{CONTACT.label}</p>
+        <h1 className="text-3xl font-mono font-bold text-zinc-50 sm:text-5xl">{CONTACT.heading}</h1>
+      </header>
+      <div className="grid gap-8 md:grid-cols-2">
+        <div className="min-w-0 space-y-3">
+          <h2 className="text-xl font-semibold text-zinc-100">{CONTACT.infoHeading}</h2>
+          <p className="max-w-prose leading-relaxed text-zinc-300">{CONTACT.intro}</p>
+          <a href={`mailto:${CONTACT.email}`} aria-label={`${CONTACT.emailLinkLabel} (${CONTACT.email})`}
+            className="inline-flex min-h-11 max-w-full items-center break-all text-gold-500 underline underline-offset-4">
+            {CONTACT.email}
+          </a>
+          <div>
+            <button type="button" disabled={!interactive} onClick={copyEmail} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-zinc-600 px-3 text-sm text-zinc-100 hover:border-gold-500">
+              <Copy className="h-4 w-4" aria-hidden="true" />{CONTACT.copyLabel}
             </button>
-            {status === 'sent' && <p role="status">{CONTACT.successMessage}</p>}
-            {status === 'error' && <p role="status">{CONTACT.fallbackMessage}</p>}
-          </form>
+            <p role="status" className="mt-2 text-sm text-zinc-300">
+              {copyResult === 'copied' && CONTACT.copiedMessage}
+              {copyResult === 'manual' && CONTACT.copyHelp}
+            </p>
+          </div>
         </div>
+        <form onSubmit={handleSubmit} method="post" inert={!interactive}
+          className="min-w-0 space-y-4 rounded-2xl border border-zinc-800 bg-[#0E1526] p-4 sm:p-6">
+          <div className="space-y-1">
+            <label htmlFor="name">{CONTACT.nameLabel}</label>
+            <input type="text" id="name" name="name" autoComplete="name" className={fieldClass} value={formData.name} onChange={handleChange} required />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="email">{CONTACT.emailLabel}</label>
+            <input type="email" id="email" name="email" autoComplete="email" className={fieldClass} value={formData.email} onChange={handleChange} required />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="message">{CONTACT.messageLabel}</label>
+            <textarea id="message" name="message" rows={5} className={fieldClass} value={formData.message} onChange={handleChange} required />
+          </div>
+          {!RELAY_URL && <p id="email-app-hint" className="text-sm leading-relaxed text-zinc-300">{CONTACT.emailAppHint}</p>}
+          <button type="submit" disabled={!interactive || status === 'sending'} aria-describedby={RELAY_URL ? undefined : 'email-app-hint'}
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-gold-500 px-4 py-2 text-base font-semibold text-zinc-950 hover:bg-gold-400">
+            {RELAY_URL ? (status === 'sending' ? CONTACT.sendingLabel : CONTACT.sendLabel) : CONTACT.emailAppLabel}
+          </button>
+          {status === 'sent' && <p role="status">{CONTACT.successMessage}</p>}
+          {status === 'error' && <p role="status">{CONTACT.fallbackMessage}</p>}
+        </form>
       </div>
     </section>
   );

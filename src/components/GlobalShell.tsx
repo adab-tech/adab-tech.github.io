@@ -8,10 +8,10 @@ import { SocialNavIcons } from '@/components/SocialNavIcons'
 import { NAVIGATION, type NavigationLink } from '@/lib/navigation'
 import { parsePublicUrl } from '@/lib/public-url'
 
-const desktopLink = 'text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1'
-const desktopFeatured = 'text-xs font-mono font-bold text-gold-500 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20 hover:bg-gold-500/20 transition-all'
-const mobileLink = 'p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500'
-const mobileFeatured = 'p-2.5 text-center rounded-lg bg-gold-500/10 border border-gold-500/30 text-gold-500 font-bold hover:bg-gold-500/20'
+const desktopLink = 'inline-flex min-h-11 items-center text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1'
+const desktopFeatured = 'inline-flex min-h-11 items-center text-xs font-mono font-bold text-gold-500 bg-gold-500/10 px-2.5 py-1 rounded-lg border border-gold-500/20 hover:bg-gold-500/20 transition-all'
+const mobileLink = 'inline-flex min-h-11 items-center justify-center p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500'
+const mobileFeatured = 'inline-flex min-h-11 items-center justify-center p-2.5 text-center rounded-lg bg-gold-500/10 border border-gold-500/30 text-gold-500 font-bold hover:bg-gold-500/20'
 const focusRing = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500'
 
 function NavigationAnchor({ item, className, onClick }: {
@@ -114,7 +114,7 @@ export function GlobalShell({ children }: { children: React.ReactNode }) {
             id={mobileMenuId}
             hidden={!mobileMenuOpen}
             aria-label="Mobile navigation"
-            className="md:hidden border-b border-zinc-800 bg-[#0B1120] px-4 sm:px-6 py-5 space-y-4 shadow-2xl"
+            className="max-h-[calc(100dvh-4rem)] overflow-y-auto md:hidden border-b border-zinc-800 bg-[#0B1120] px-4 sm:px-6 py-5 space-y-4 shadow-2xl"
           >
             {menu.length > 0 && (
               <div className="grid grid-cols-2 gap-2 text-sm font-mono">
@@ -147,7 +147,7 @@ export function GlobalShell({ children }: { children: React.ReactNode }) {
             {footer.links.length > 0 && (
               <nav aria-label="Footer links" className="flex flex-wrap justify-center gap-3">
                 {footer.links.map((item, index) => (
-                  <NavigationAnchor key={index} item={item} className="hover:text-gold-500 hover:underline" />
+                  <NavigationAnchor key={index} item={item} className="inline-flex min-h-11 items-center px-1 hover:text-gold-500 hover:underline" />
                 ))}
               </nav>
             )}
