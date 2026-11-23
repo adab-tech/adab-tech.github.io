@@ -53,13 +53,21 @@ An existing Worker `GITHUB_TOKEN` with repository **Contents read and write** an
 | Home page | Admin → Home page | Name, headline, introduction, buttons, “Murya in numbers”, specifications, principles, contact box; show or hide sections |
 | Projects | Admin → Projects | Add, edit, reorder, duplicate or remove projects; upload a logo; choose which appear on the home page and in the icon row |
 | CV | Admin → CV | Profile buttons, education, experience, languages, publications, datasets |
+| Contact | Admin → Contact page | Public email, the contact form text, and search description |
+| Blog landing page | Admin → Blog landing page | Heading, introduction, post-list labels, and RSS feed text |
+| Agentic AI paper | Admin → Agentic AI paper | Article sections, figures, citations, and public links |
+| Research tools | Admin → Research tools | Page descriptions, tool labels, and examples |
+| Navigation | Admin → Navigation and footer | Desktop and mobile menus, social links, footer text and links |
+| Search profile | Admin → Search and sharing | Search keywords, public profile details, and the default social preview image text |
 | Comments | Admin → Comments | A link to every post’s comments, and how to delete or reply (below) |
-| Status | Admin (front page) | Post and draft counts, the latest site updates and whether they went live, visits |
+| Status | Admin (front page) | Recent deployments and visits |
 
 Each editor has **Save & publish** at the bottom. Nothing changes on the
 site until you press it; **Discard changes** undoes everything since the last
 save. After saving, the editor shows “Building…” and then “Live”. If a build
 fails, the live site stays as it was and the editor links to the reason.
+If someone updates the same page on GitHub while you edit, the editor asks you
+to reload before saving so you can keep the newer changes.
 
 In longer text you can write `**bold**`, `*italic*`, `` `code` `` and
 `[link text](https://…)`.

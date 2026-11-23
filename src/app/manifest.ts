@@ -1,12 +1,14 @@
 import type { MetadataRoute } from 'next'
+import { CV } from '@/lib/site-content'
+import { SITE_SETTINGS } from '@/lib/site-settings'
 
 export const dynamic = 'force-static'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Adamu Danjuma Abubakar',
-    short_name: 'adamu.tech',
-    description: 'African-language speech technology and computational linguistics.',
+    name: CV.name,
+    short_name: SITE_SETTINGS.siteName,
+    description: SITE_SETTINGS.appDescription,
     start_url: '/',
     display: 'browser',
     background_color: '#0B132B',

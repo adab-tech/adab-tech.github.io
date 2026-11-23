@@ -2,6 +2,7 @@
 // content/site/*.json so the markup cannot drift from what the pages show.
 import cv from '../../content/site/cv.json'
 import projects from '../../content/site/projects.json'
+import { SITE_SETTINGS } from './site-settings'
 
 export const SITE = 'https://adamu.tech'
 export const PERSON_ID = `${SITE}/#person`
@@ -9,31 +10,34 @@ const WEBSITE_ID = `${SITE}/#website`
 
 type Node = Record<string, unknown>
 
-const UA = { '@type': 'CollegeOrUniversity', name: 'The University of Alabama', url: 'https://www.ua.edu' }
+const affiliation = ({ name, url }: { name: string; url: string }) => ({
+  '@type': 'CollegeOrUniversity',
+  name,
+  url: url || undefined,
+})
 
 export function personNode(): Node {
   const orcid = cv.profiles.find((p) => /orcid\.org/.test(p.url))?.url
+  const profile = SITE_SETTINGS.profile
   return {
     '@type': 'Person',
     '@id': PERSON_ID,
     name: cv.name,
-    alternateName: 'Adamu Abubakar',
-    givenName: 'Adamu',
-    additionalName: 'Danjuma',
-    familyName: 'Abubakar',
+    alternateName: profile.alternateName || undefined,
+    givenName: profile.givenName || undefined,
+    additionalName: profile.additionalName || undefined,
+    familyName: profile.familyName || undefined,
     url: SITE,
     email: `mailto:${cv.email}`,
-    image: `${SITE}/icon-512.png`,
-    jobTitle: 'Teaching Fellow',
-    worksFor: UA,
-    alumniOf: [UA, { '@type': 'CollegeOrUniversity', name: 'University of Ilorin', url: 'https://www.unilorin.edu.ng' }],
-    knowsAbout: ['Computational linguistics', 'Speech synthesis', 'Text-to-speech', 'Hausa language', 'Natural language processing', 'Low-resource languages', 'Digital humanities', 'Francophone African literature'],
+    image: profile.image ? new URL(profile.image, SITE).href : undefined,
+    jobTitle: profile.jobTitle || undefined,
+    worksFor: profile.employer.name ? affiliation(profile.employer) : undefined,
+    alumniOf: profile.alumni.map(affiliation),
+    knowsAbout: profile.expertise,
     knowsLanguage: cv.languages.map((l) => l.name),
     identifier: orcid ? { '@type': 'PropertyValue', propertyID: 'ORCID', value: orcid.replace(/^https?:\/\/orcid\.org\//, '') } : undefined,
     sameAs: [
-      'https://github.com/adab-tech',
-      'https://www.linkedin.com/in/adamudanjuma/',
-      'https://huggingface.co/adab-tech',
+      ...profile.profileLinks,
       cv.scholarUrl,
       orcid,
     ].filter(Boolean),
@@ -41,7 +45,7 @@ export function personNode(): Node {
 }
 
 export function websiteNode(): Node {
-  return { '@type': 'WebSite', '@id': WEBSITE_ID, url: SITE, name: 'adamu.tech', inLanguage: 'en', publisher: { '@id': PERSON_ID } }
+  return { '@type': 'WebSite', '@id': WEBSITE_ID, url: SITE, name: SITE_SETTINGS.siteName, inLanguage: 'en', publisher: { '@id': PERSON_ID } }
 }
 
 export const authorRef = { '@id': PERSON_ID }

@@ -1,13 +1,14 @@
-// Editable site content. The text of the home page, the projects, and the CV
-// lives in content/site/*.json so it can be changed from adamu.tech/admin
-// (or by editing the files on GitHub) without touching the page code.
-// The shapes below are the contract between those files, the pages, and the
-// admin editors; checkSiteContent() stops a build if a file is malformed.
+// Public content lives in content/site/*.json. The same validators run in
+// the admin editors and during the static site build.
 
 import homeJson from '../../content/site/home.json'
 import projectsJson from '../../content/site/projects.json'
 import cvJson from '../../content/site/cv.json'
+import { BLOG_INDEX, validateBlogIndex } from './blog-index-content'
+import { CONTACT, validateContact } from './contact-content'
+import { NAVIGATION, validateNavigation } from './navigation'
 import { parsePublicUrl } from './public-url'
+import { SITE_SETTINGS, validateSiteSettings } from './site-settings'
 
 export type StatusColor = 'emerald' | 'blue' | 'amber'
 
@@ -231,6 +232,10 @@ export function checkSiteContent(): void {
     ...validateHome(HOME).map((p) => `home.json: ${p}`),
     ...validateProjects(PROJECTS).map((p) => `projects.json: ${p}`),
     ...validateCv(CV).map((p) => `cv.json: ${p}`),
+    ...validateContact(CONTACT).map((p) => `contact.json: ${p}`),
+    ...validateBlogIndex(BLOG_INDEX).map((p) => `blog-index.json: ${p}`),
+    ...validateNavigation(NAVIGATION).map((p) => `navigation.json: ${p}`),
+    ...validateSiteSettings(SITE_SETTINGS).map((p) => `site-settings.json: ${p}`),
   ]
   if (problems.length) throw new Error(`Site content has problems:\n- ${problems.join('\n- ')}`)
 }

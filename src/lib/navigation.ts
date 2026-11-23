@@ -75,8 +75,3 @@ export function validateNavigation(value: unknown): string[] {
 
   return problems
 }
-
-export function checkNavigationContent(): void {
-  const problems = validateNavigation(NAVIGATION)
-  if (problems.length) throw new Error(`navigation.json has problems:\n- ${problems.join('\n- ')}`)
-}
