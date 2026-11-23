@@ -49,10 +49,10 @@ export const metadata: Metadata = {
   }
 }
 
-// Next's static export uses inline hydration scripts. Keep remote scripts blocked.
+// Cloudflare injects a versioned beacon and collects its reports on this origin.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com/beacon.min.js https://static.cloudflareinsights.com/beacon.min.js/",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob:",

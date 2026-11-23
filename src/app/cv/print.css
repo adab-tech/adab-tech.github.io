@@ -1,0 +1,86 @@
+@page academic-cv {
+  margin: 15mm 16mm;
+}
+
+@media print {
+  html:has(.cv-page),
+  body:has(.cv-page) {
+    background: white !important;
+    color: black !important;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  body:has(.cv-page) {
+    page: academic-cv;
+  }
+
+  div:has(> main > .cv-page),
+  .cv-page,
+  .cv-document {
+    display: block;
+    min-height: auto;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: white;
+    box-shadow: none;
+  }
+
+  div:has(> main > .cv-page) > :is(header, footer, button),
+  .cv-actions,
+  .cv-document svg {
+    display: none;
+  }
+
+  .cv-document {
+    color: black;
+    font: 10.5pt/1.35 Arial, Helvetica, sans-serif;
+    orphans: 2;
+    widows: 2;
+  }
+
+  .cv-document :where(*) {
+    color: inherit;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    min-height: auto;
+  }
+
+  .cv-document h1 { font-size: 22pt; }
+  .cv-document h1 + p { font-size: 12pt; }
+  .cv-document section { margin-top: 10pt; }
+  .cv-document h2 { font-size: 13pt; }
+  .cv-document h3 { margin-top: 5pt; font-size: 10pt; }
+  .cv-document :is(h2, h3),
+  .cv-document div:has(> h2),
+  .cv-entry > div:first-child { break-after: avoid; }
+
+  .cv-document h2,
+  .cv-document div:has(> h2) {
+    border-bottom: 0.5pt solid #777;
+    padding-bottom: 1pt;
+  }
+  .cv-document div > h2 { border: 0; }
+
+  .cv-document .cv-entry {
+    margin-top: 4pt;
+    break-inside: avoid;
+  }
+  .cv-document .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18pt;
+    row-gap: 0;
+  }
+  .cv-document ul { padding-left: 14pt; }
+  .cv-document li { break-inside: avoid; }
+  .cv-document li + li { margin-top: 2pt; }
+  .cv-document a { text-decoration: underline; }
+}

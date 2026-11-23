@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import './print.css'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { InlineText } from '@/components/InlineText'
@@ -27,10 +28,10 @@ export default function AcademicCVPage() {
 
   return (
     <GlobalShell>
-      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8 bg-[#0B1120]">
+      <div className="cv-page w-full max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-8 bg-[#0B1120]">
         
         {/* Navigation & Action Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
+        <div className="cv-actions flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800">
           <Link
             href="/"
             className="inline-flex items-center gap-2 font-mono text-xs font-bold text-zinc-400 hover:text-gold-500 transition-colors"
@@ -51,8 +52,7 @@ export default function AcademicCVPage() {
           </div>
         </div>
 
-        {/* CV Document Container - 100% Solid Obsidian Dark Canvas */}
-        <article className="p-5 sm:p-8 md:p-12 rounded-2xl border border-zinc-800 bg-[#0E1526] text-zinc-100 shadow-xl space-y-8 sm:space-y-10 font-sans">
+        <article className="cv-document p-5 sm:p-8 md:p-12 rounded-2xl border border-zinc-800 bg-[#0E1526] text-zinc-100 shadow-xl space-y-8 sm:space-y-10 font-sans">
           
           {/* Header & Bio */}
           <div className="space-y-4 border-b border-zinc-800 pb-6 sm:pb-8">
@@ -111,7 +111,7 @@ export default function AcademicCVPage() {
 
             <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm font-sans">
               {CV.education.map((e) => (
-                <div key={e.degree} className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
+                <div key={e.degree} className="cv-entry p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
                     <span>{e.degree}</span>
                     <span className={`${e.highlight ? 'text-gold-500' : 'text-zinc-400 font-mono'} text-xs`}>{e.date}</span>
@@ -134,7 +134,7 @@ export default function AcademicCVPage() {
             <div className="space-y-4 text-xs sm:text-sm font-sans">
               {CV.experience.map((x) =>
                 x.featured ? (
-                  <div key={x.title} className="p-4 sm:p-6 rounded-2xl border border-gold-500/40 bg-[#15213D] space-y-3">
+                  <div key={x.title} className="cv-entry p-4 sm:p-6 rounded-2xl border border-gold-500/40 bg-[#15213D] space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
                       <span className="text-sm sm:text-base text-gold-500 flex items-center gap-1.5">
                         <Cpu className="h-4 w-4 shrink-0 text-gold-500" />
@@ -156,7 +156,7 @@ export default function AcademicCVPage() {
                     )}
                   </div>
                 ) : (
-                  <div key={x.title} className="p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1.5">
+                  <div key={x.title} className="cv-entry p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1.5">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between font-mono font-bold text-zinc-100 gap-1">
                       <span>{x.title}</span>
                       <span className="text-zinc-400 font-mono text-xs">{x.dates}</span>
@@ -192,7 +192,7 @@ export default function AcademicCVPage() {
               {CV.languages.map((l) => (
                 <div
                   key={l.name}
-                  className="p-3.5 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1"
+                  className="cv-entry p-3.5 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1"
                 >
                   <div className="flex items-center justify-between font-mono">
                     <span className="font-bold text-zinc-100 text-sm">{l.name}</span>
@@ -230,7 +230,7 @@ export default function AcademicCVPage() {
               <div key={group.heading} className="space-y-3 text-xs sm:text-sm font-sans">
                 <h3 className="font-mono text-xs lg:text-[11px] font-bold uppercase tracking-wider text-zinc-400">{group.heading}</h3>
                 {group.items.map((item) => (
-                  <div key={item.title} className="p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
+                  <div key={item.title} className="cv-entry p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-1">
                     <div className="font-mono font-bold text-zinc-100 text-sm">
                       {item.href ? (
                         item.href.startsWith('/') ? (
@@ -258,7 +258,7 @@ export default function AcademicCVPage() {
 
             <div className="space-y-3 text-xs sm:text-sm font-sans">
               {CV.datasets.map((d) => (
-                <div key={d.title} className="p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-2">
+                <div key={d.title} className="cv-entry p-3.5 sm:p-4 rounded-xl border border-zinc-800 bg-[#131C31] space-y-2">
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-1">
                     <div className="font-mono font-bold text-zinc-100 text-sm">{d.title}</div>
                     <span className="text-zinc-400 font-mono text-xs shrink-0">{d.year}</span>
