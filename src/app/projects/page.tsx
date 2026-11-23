@@ -3,6 +3,7 @@ import { CaseStudyLink } from '@/components/CaseStudyLink'
 import { GlobalShell } from '@/components/GlobalShell'
 import { InlineText } from '@/components/InlineText'
 import { ProjectLogo } from '@/components/ProjectLogo'
+import { caseStudyFor } from '@/lib/case-studies'
 import { PROJECTS, primaryLink } from '@/lib/site-content'
 import { ArrowRight, Code2, ExternalLink } from 'lucide-react'
 
@@ -27,7 +28,7 @@ export default function ProjectsPage() {
             <div 
               key={p.id}
               className={p.showOnHome
-                ? 'min-w-0 rounded-2xl border border-zinc-800 bg-[#0E1526] p-5 sm:p-6 space-y-5 flex flex-col justify-between'
+                ? 'min-w-0 rounded-2xl border border-zinc-800 bg-[#0E1526] p-5 sm:p-6 space-y-5'
                 : 'min-w-0 border-t border-zinc-800 py-5 space-y-4 md:col-span-2'}
             >
               <div className="space-y-4">
@@ -51,9 +52,6 @@ export default function ProjectsPage() {
                       <h2 className="text-lg sm:text-xl font-mono font-bold text-zinc-50">
                         {p.title}
                       </h2>
-                      <div className="text-xs font-mono text-gold-500">
-                        {p.role}
-                      </div>
                     </div>
                   </div>
                   <span className={`text-xs lg:text-[10px] font-mono font-bold px-2.5 py-0.5 rounded border max-w-full ${
@@ -65,24 +63,16 @@ export default function ProjectsPage() {
                   </span>
                 </div>
 
-                <p className="text-xs sm:text-sm text-zinc-300 font-sans leading-relaxed">
+                <p className="text-base text-zinc-300 font-sans leading-relaxed">
                   {p.description}
                 </p>
 
-                {/* Key Highlights */}
-                {p.highlights.length > 0 && (
-                  <ul className="list-disc space-y-1 pl-4 text-sm leading-relaxed text-zinc-300">
-                    {p.highlights.map((highlight, index) => (
-                      <li key={index}>{highlight}</li>
-                    ))}
-                  </ul>
-                )}
+                <p className="text-sm font-mono text-gold-500">{p.role}</p>
               </div>
 
               {/* Action Buttons & Tags */}
               <div className="space-y-3 pt-2 border-t border-zinc-800/80">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-mono [&_a]:min-h-11">
-                  <CaseStudyLink projectId={p.id} />
                   {p.liveUrl && (
                     <a
                       href={p.liveUrl}
@@ -94,6 +84,8 @@ export default function ProjectsPage() {
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
+
+                  <CaseStudyLink projectId={p.id} />
 
                   {p.paperUrl && (
                     <Link
@@ -129,6 +121,15 @@ export default function ProjectsPage() {
                     </a>
                   )}
                 </div>
+
+                {/* Key Highlights */}
+                {!caseStudyFor(p.id) && p.highlights.length > 0 && (
+                  <ul className="list-disc space-y-1 pl-4 text-sm leading-relaxed text-zinc-300">
+                    {p.highlights.map((highlight, index) => (
+                      <li key={index}>{highlight}</li>
+                    ))}
+                  </ul>
+                )}
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {p.tags.map((tag) => (

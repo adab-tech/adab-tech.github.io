@@ -29,7 +29,7 @@
       "showOnHome": true,
       "homeSummary": "Hear Hausa text read aloud in your browser. Murya pairs offline speech synthesis with a Hausa–English dictionary.",
       "homeLinkLabel": "Try Murya",
-      "description": "Hausa speech synthesis and live spoken conversation. Speech synthesis and dictionary lookup run in the browser and work offline; answers are grounded in the Ƙamus lexicon.",
+      "description": "Hear Hausa text read aloud or look up a word in the Ƙamus dictionary. Both work offline in the browser after the first download.",
       "highlights": [
         "Blind MOS naturalness study running at app.murya.ng/listen; no score is published until each voice has enough ratings",
         "8-speaker Piper VITS model at 22,050 Hz, fine-tuned on the WAXAL Hausa corpus. Weights CC BY-NC-SA 4.0 on Hugging Face; application code MIT",
@@ -64,7 +64,7 @@
       "showOnHome": true,
       "homeSummary": "Explore 221 oral-history collections by place and language. Each record links to the institution that holds the collection.",
       "homeLinkLabel": "Open the atlas",
-      "description": "An open research dataset and interactive atlas of real oral-history and voice-testimony collections worldwide — a single geographic entry point into collections otherwise scattered across hundreds of institutional sites, searchable by country, language, theme, period, and access, with a published methodology and persistent identifiers.",
+      "description": "Find oral-history collections by country, language, or theme, then follow each record to the institution that holds it.",
       "highlights": [
         "221 real, publicly documented collections across 120 countries and territories and 125 languages, archived on Zenodo (doi:10.5281/zenodo.22996478)",
         "Zero-dependency static app (Leaflet + OpenStreetMap) with Language Explorer, Theme Explorer, and Coverage Gaps views",

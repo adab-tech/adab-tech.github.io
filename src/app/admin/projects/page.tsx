@@ -20,7 +20,7 @@ const project: Field[] = [
   { key: 'homeSummary', label: 'Short description (home page)', type: 'textarea' },
   { key: 'homeLinkLabel', label: 'Main link text (home page)', type: 'text', placeholder: 'Visit', default: 'Visit' },
   { key: 'description', label: 'Full description (Projects page)', type: 'textarea' },
-  { key: 'highlights', label: 'Highlights (Projects page)', type: 'strings', itemLabel: 'highlight' },
+  { key: 'highlights', label: 'Highlights (case study, or Projects page if there is no case study)', type: 'strings', itemLabel: 'highlight' },
   { key: 'paperUrl', label: 'Paper link', type: 'url', help: 'A page on this site starts with /, such as /papers/agentic-ai.' },
   { key: 'paperLinkLabel', label: 'Paper link text (Projects page)', type: 'text', placeholder: 'Paper' },
   { key: 'modelUrl', label: 'Model or dataset link', type: 'url' },

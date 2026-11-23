@@ -1,7 +1,15 @@
 import caseStudies from '../../content/site/case-studies.json'
 import { parsePublicUrl } from './public-url'
 
-export type CaseStudy = (typeof caseStudies.studies)[number]
+export type StudyMedia = {
+  kind: string
+  src: string
+  caption: string
+  description: string
+  lang?: string
+  credit?: string
+}
+export type CaseStudy = Omit<(typeof caseStudies.studies)[number], 'media'> & { media?: StudyMedia }
 export type CaseStudyContact = typeof caseStudies.contact
 export const CASE_STUDY_CONTENT = caseStudies
 export const CASE_STUDIES = CASE_STUDY_CONTENT.studies
@@ -44,6 +52,16 @@ export function validateCaseStudies(data: unknown): string[] {
     } else projects.add(study.projectId)
     if (!['title', 'headline', 'summary', 'role'].every((key) => text(study[key]))) {
       problems.push(`${label} needs a title, headline, summary, and role.`)
+    }
+    const media = study.media
+    if (media !== undefined && !(record(media) && media.kind === 'none')) {
+      if (!record(media) || !['audio', 'image'].includes(String(media.kind)) ||
+          !text(media.src) || !media.src.startsWith('/') || parsePublicUrl(media.src)?.kind !== 'local' ||
+          !text(media.caption) || !text(media.description) ||
+          (media.lang !== undefined && typeof media.lang !== 'string') ||
+          (media.credit !== undefined && typeof media.credit !== 'string')) {
+        problems.push(`${label} media needs a type, a public file path on this site, a caption, and a transcript or image description.`)
+      }
     }
     if (!Array.isArray(study.metrics) || !study.metrics.every((metric) => record(metric) && text(metric.value) && text(metric.label))) {
       problems.push(`${label} has a metric without a value or label.`)
