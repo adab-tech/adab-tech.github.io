@@ -67,7 +67,7 @@ const imageFileName = (date: string, slug: string, base: string, ext: string) =>
   `${date}-${slug || 'post'}-${base}-${Math.random().toString(36).slice(2, 7)}.${ext}`
 
 type PendingImage = DraftImage & { uploaded: boolean }
-type Publication = { url: string; title: string }
+type Publication = { slug: string; title: string }
 
 type Status =
   | { kind: 'idle' }
@@ -195,7 +195,7 @@ function Editor() {
       const state = await deployState(status.commit)
       if (cancelled) return
       if (state === 'live') {
-        setStatus({ kind: 'live', text: 'Live on adamu.tech.', url: status.url, title: status.title })
+        setStatus({ kind: 'live', text: 'Live on adamu.tech.', slug: status.slug, title: status.title })
       } else if (state === 'failed') {
         setStatus({ kind: 'deploy-failed', text: 'The Pages deployment did not complete. Open Actions for details.' })
       } else if (state === 'unknown' || tries >= 36) {
@@ -258,7 +258,7 @@ function Editor() {
         ? await fetch(`/blog/${savedSlug}/`, { method: 'HEAD', cache: 'no-store' }).catch(() => null)
         : null
       setStatus(response?.ok
-        ? { kind: 'live', text: 'Posted on adamu.tech.', url: `https://adamu.tech/blog/${savedSlug}/`, title: fields.title }
+        ? { kind: 'live', text: 'Posted on adamu.tech.', slug: savedSlug, title: fields.title }
         : { kind: 'idle' })
     } catch (err) {
       setStatus({ kind: 'error', text: err instanceof Error ? err.message : String(err) })
@@ -366,7 +366,6 @@ function Editor() {
       setPost(fields)
       setSlug(effectiveSlug)
       setSlugEdited(true)
-      const url = `https://adamu.tech/blog/${effectiveSlug}/`
       if (localDraftId) {
         try {
           await deleteLocalDraft(localDraftId)
@@ -376,7 +375,7 @@ function Editor() {
         }
         setLocalDraftId(null)
       }
-      setStatus({ kind: 'deploying', text: 'Saved to GitHub. Waiting for the Pages deployment…', commit, url, title: fields.title })
+      setStatus({ kind: 'deploying', text: 'Saved to GitHub. Waiting for the Pages deployment…', commit, slug: effectiveSlug, title: fields.title })
     } catch (err) {
       setStatus({ kind: 'error', text: err instanceof Error ? err.message : String(err) })
     }
@@ -566,7 +565,9 @@ function Editor() {
         </fieldset>
 
         <StatusLine status={status} />
-        {status.kind === 'live' && <ShareButtons url={status.url} title={status.title} />}
+        {status.kind === 'live' && (
+          <ShareButtons url={`https://adamu.tech/blog/${encodeURIComponent(status.slug)}/`} title={status.title} />
+        )}
       </section>
     </div>
   )
@@ -588,13 +589,12 @@ function StatusLine({ status }: { status: Status }) {
     ) : (
       <CheckCircle2 className="h-4 w-4 shrink-0" />
     )
-  const url = 'url' in status ? status.url : undefined
   return (
     <div role="status" className={`p-3 rounded-lg border text-sm flex flex-wrap items-center gap-2 ${tone}`}>
       {icon}
       <span>{status.text}</span>
-      {url && status.kind === 'live' && (
-        <a href={url} target="_blank" rel="noreferrer" className="underline inline-flex items-center gap-1">
+      {status.kind === 'live' && (
+        <a href={`/blog/${encodeURIComponent(status.slug)}/`} target="_blank" rel="noopener noreferrer" className="underline inline-flex items-center gap-1">
           View post <ExternalLink className="h-3.5 w-3.5" />
         </a>
       )}
