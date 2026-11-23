@@ -7,5 +7,11 @@ export const metadata: Metadata = {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      {/* React hoists this additional policy into the head for every admin route. */}
+      <meta httpEquiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'" />
+      {children}
+    </>
+  )
 }
