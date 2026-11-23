@@ -104,10 +104,18 @@ test('an installed GitHub App signs, scopes, caches, and renews publishing crede
   t.mock.method(Date, 'now', () => now)
   let mints = 0
   let writes = 0
+  let installationChecks = 0
+  const installationUrl = 'https://api.github.com/repos/adab-tech/adab-tech.github.io/installation'
   const mintUrl = 'https://api.github.com/app/installations/67890/access_tokens'
   const writeUrl = 'https://api.github.com/repos/adab-tech/adab-tech.github.io/git/blobs'
 
   t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (url === installationUrl) {
+      installationChecks++
+      assert.equal(init.method, 'GET')
+      assert.match(init.headers.Authorization, /^Bearer /)
+      return Response.json({ id: 67890, permissions: { contents: 'write', actions: 'read' } })
+    }
     if (url === mintUrl) {
       mints++
       assert.equal(init.method, 'POST')
@@ -143,20 +151,23 @@ test('an installed GitHub App signs, scopes, caches, and renews publishing crede
   const simultaneous = await Promise.all([publish(), publish()])
   assert.deepEqual(simultaneous.map((response) => response.status), [201, 201])
   assert.equal(mints, 1)
+  assert.equal(installationChecks, 1)
   assert.equal(writes, 2)
 
   now += 3_540_000
   assert.equal((await publish()).status, 201)
   assert.equal(mints, 2)
+  assert.equal(installationChecks, 2)
   assert.equal(writes, 3)
 
   const pkcs8 = { ...app, GITHUB_APP_PRIVATE_KEY: privateKey.export({ type: 'pkcs8', format: 'pem' }) }
   assert.equal((await publish(pkcs8)).status, 201)
   assert.equal(mints, 3)
+  assert.equal(installationChecks, 3)
   assert.equal(writes, 4)
 })
 
-test('a failed GitHub App exchange exposes only an actionable error', async (t) => {
+test('an App without Actions permissions can publish and read the public Pages workflow', async (t) => {
   const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 })
   const app = {
     ...env,
@@ -165,18 +176,85 @@ test('a failed GitHub App exchange exposes only an actionable error', async (t) 
     GITHUB_APP_INSTALLATION_ID: '43210',
     GITHUB_APP_PRIVATE_KEY: privateKey.export({ type: 'pkcs1', format: 'pem' }),
   }
-  const fetchMock = t.mock.method(globalThis, 'fetch', async (url) => {
-    assert.equal(url, 'https://api.github.com/app/installations/43210/access_tokens')
-    return Response.json({ message: 'Provider response stays private' }, { status: 403 })
+  const appPath = 'https://api.github.com/repos/adab-tech/adab-tech.github.io'
+  const runs = 'actions/workflows/deploy.yml/runs?branch=main&per_page=1'
+  const publicReads = []
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (url === `${appPath}/installation`) {
+      return Response.json({ id: 43210, permissions: { contents: 'write' } })
+    }
+    if (url === 'https://api.github.com/app/installations/43210/access_tokens') {
+      assert.deepEqual(JSON.parse(init.body), {
+        repositories: ['adab-tech.github.io'],
+        permissions: { contents: 'write' },
+      })
+      return Response.json({ token: 'no-actions-fixture', expires_at: new Date(Date.now() + 3_600_000).toISOString() }, { status: 201 })
+    }
+    if (url === `${appPath}/git/blobs`) {
+      assert.equal(init.headers.Authorization, 'Bearer no-actions-fixture')
+      return Response.json({ sha: 'local-test-blob' }, { status: 201 })
+    }
+    if (!init.headers.Authorization) {
+      assert.equal(init.method, 'GET')
+      publicReads.push(url)
+      return Response.json({ workflow_runs: [{ status: 'completed' }] })
+    }
+    return Response.json({ message: 'Resource not accessible by integration' }, { status: 403 })
   })
   const auth = await worker.fetch(post('login', { password }), app)
   const cookie = auth.headers.get('Set-Cookie').split(';')[0]
-  const response = await worker.fetch(post('github/git/blobs', { content: 'example' }, { cookie }), app)
-  assert.equal(response.status, 502)
-  assert.deepEqual(await response.json(), {
-    message: 'GitHub App publishing could not be authenticated. Check the GitHub App installation and Worker secret settings.',
+  const signedIn = (path) => request(path, { headers: { Cookie: cookie } })
+  assert.equal((await worker.fetch(post('github/git/blobs', { content: 'example' }, { cookie }), app)).status, 201)
+  assert.deepEqual(await (await worker.fetch(signedIn(`github/${runs}`), app)).json(), {
+    workflow_runs: [{ status: 'completed' }],
   })
-  assert.equal(fetchMock.mock.callCount(), 1)
+  assert.deepEqual(publicReads, [`${appPath}/${runs}`])
+  assert.equal((await worker.fetch(signedIn('github/actions/workflows/other.yml/runs'), app)).status, 403)
+  assert.equal((await worker.fetch(post(`github/${runs}`, {}, { cookie }), app)).status, 403)
+  assert.equal(publicReads.length, 1)
+})
+
+test('GitHub App setup failures expose fixed messages without provider data', async (t) => {
+  const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 })
+  const app = {
+    ...env,
+    GITHUB_TOKEN: undefined,
+    GITHUB_APP_ID: '112233',
+    GITHUB_APP_INSTALLATION_ID: '223344',
+    GITHUB_APP_PRIVATE_KEY: privateKey.export({ type: 'pkcs1', format: 'pem' }),
+  }
+  const auth = await worker.fetch(post('login', { password }), app)
+  const cookie = auth.headers.get('Set-Cookie').split(';')[0]
+  const privateMessage = { message: 'Provider response stays private' }
+  const cases = [
+    ['invalid PEM', /private key could not be read/, { GITHUB_APP_PRIVATE_KEY: 'fake-pem' }, []],
+    ['GitHub rejects JWT', /rejected the App JWT/, {}, [[401, privateMessage]]],
+    ['no installation for this repository', /could not find the App installation/, {}, [[404, privateMessage]]],
+    ['wrong installation ID', /ID does not match/, {}, [[200, { id: 987, permissions: { contents: 'write' } }]]],
+    ['missing Contents write', /needs Contents read and write/, {}, [[200, { id: 223344, permissions: { contents: 'read' } }]]],
+    ['token permissions declined', /declined the App permissions/, {}, [[200, { id: 223344, permissions: { contents: 'write' } }], [422, privateMessage]]],
+    ['provider timeout', /timed out/, {}, [[null, null]]],
+  ]
+  for (const [name, expectedMessage, overrides, replies] of cases) {
+    await t.test(name, async (ctx) => {
+      let calls = 0
+      const fetchMock = ctx.mock.method(globalThis, 'fetch', async (url) => {
+        const mockCall = calls++
+        assert.equal(url, mockCall === 0
+          ? 'https://api.github.com/repos/adab-tech/adab-tech.github.io/installation'
+          : 'https://api.github.com/app/installations/223344/access_tokens')
+        const [status, response] = replies[mockCall]
+        if (status === null) throw new DOMException('Provider timeout details', 'TimeoutError')
+        return Response.json(response, { status })
+      })
+      const response = await worker.fetch(post('github/git/blobs', { content: 'example' }, { cookie }), { ...app, ...overrides })
+      assert.equal(response.status, 502)
+      const { message } = await response.json()
+      assert.match(message, expectedMessage)
+      assert.doesNotMatch(message, /Provider response|Provider timeout details/)
+      assert.equal(fetchMock.mock.callCount(), replies.length)
+    })
+  }
 })
 
 test('password-only sign-in allows authenticated analytics and reports unavailable publishing', async (t) => {
