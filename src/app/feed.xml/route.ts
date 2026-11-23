@@ -1,4 +1,5 @@
 import { getAllPosts } from '@/lib/blog'
+import { BLOG_INDEX } from '@/lib/blog-index-content'
 
 // RSS 2.0 feed of published posts, generated at build time.
 export const dynamic = 'force-static'
@@ -27,10 +28,10 @@ ${p.tags.map((t) => `      <category>${escape(t)}</category>`).join('\n')}
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Adamu Danjuma Abubakar — Blog</title>
+    <title>${escape(BLOG_INDEX.feedTitle)}</title>
     <link>${SITE}/blog/</link>
     <atom:link href="${SITE}/feed.xml" rel="self" type="application/rss+xml" />
-    <description>Posts and reflections on language, research, African-language technology, and writing.</description>
+    <description>${escape(BLOG_INDEX.feedDescription)}</description>
     <language>en</language>
 ${posts[0] ? `    <lastBuildDate>${new Date(`${posts[0].date}T00:00:00Z`).toUTCString()}</lastBuildDate>\n` : ''}${items}
   </channel>

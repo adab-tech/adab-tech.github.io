@@ -1,0 +1,47 @@
+{
+  "menu": [
+    { "label": "Home", "url": "/", "featured": false },
+    { "label": "Projects", "url": "/projects", "featured": false },
+    { "label": "Tools", "url": "/tools/", "featured": false },
+    { "label": "Blog", "url": "/blog", "featured": false },
+    { "label": "Pre-print", "url": "/papers/agentic-ai", "featured": false },
+    { "label": "CV", "url": "/cv", "featured": true }
+  ],
+  "social": [
+    {
+      "name": "Google Scholar",
+      "url": "https://scholar.google.com/citations?hl=en&user=08cPiU8AAAAJ",
+      "ariaLabel": "Google Scholar Citations and Publications",
+      "icon": "scholar"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/adab-tech",
+      "ariaLabel": "GitHub Repositories",
+      "icon": "github"
+    },
+    {
+      "name": "Hugging Face",
+      "url": "https://huggingface.co/adab-tech",
+      "ariaLabel": "Hugging Face Weights and Models",
+      "icon": "huggingface"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/adamudanjuma",
+      "ariaLabel": "LinkedIn Profile",
+      "icon": "linkedin"
+    },
+    {
+      "name": "Email Contact",
+      "url": "mailto:contact@adamu.tech",
+      "ariaLabel": "Email contact@adamu.tech",
+      "icon": "mail"
+    }
+  ],
+  "footer": {
+    "copyright": "© 2026 adamu.tech · Adamu Danjuma Abubakar",
+    "license": "CC-BY-NC-SA 4.0",
+    "links": []
+  }
+}

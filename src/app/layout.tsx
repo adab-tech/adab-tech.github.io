@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { checkSiteContent } from '@/lib/site-content'
-import { JsonLd, personNode, websiteNode } from '@/lib/structured-data'
+import { checkSiteContent, CV, HOME } from '@/lib/site-content'
+import { SITE_SETTINGS } from '@/lib/site-settings'
+import { JsonLd, personNode, SITE, websiteNode } from '@/lib/structured-data'
 
 // Stops the build with a clear message if an edited content file is malformed.
 checkSiteContent()
+
+const homeTitle = HOME.metadata?.title?.trim() || 'Adamu Danjuma Abubakar — Computational Linguist'
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -15,16 +18,16 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Adamu Danjuma Abubakar — Computational Linguist',
-    template: '%s — Adamu Danjuma Abubakar',
+    default: homeTitle,
+    template: `%s — ${CV.name}`,
   },
-  description: 'Adamu Danjuma Abubakar builds African-language speech technology: Murya for Hausa, open datasets such as Mapping Voices, and computational linguistics.',
+  description: HOME.metadata?.description?.trim() || 'Adamu Danjuma Abubakar builds African-language speech technology: Murya for Hausa, open datasets such as Mapping Voices, and computational linguistics.',
   alternates: { canonical: '/' },
-  authors: [{ name: 'Adamu Danjuma Abubakar', url: 'https://adamu.tech' }],
-  creator: 'Adamu Danjuma Abubakar',
-  keywords: ['Adamu Danjuma Abubakar', 'Hausa speech technology', 'Hausa text-to-speech', 'computational linguistics', 'African languages NLP', 'Murya', 'Mapping Voices', 'digital humanities'],
+  authors: [{ name: CV.name, url: SITE }],
+  creator: CV.name,
+  keywords: SITE_SETTINGS.keywords,
   formatDetection: { telephone: false },
-  metadataBase: new URL('https://adamu.tech'),
+  metadataBase: new URL(SITE),
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },
@@ -34,12 +37,12 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   openGraph: {
-    title: 'Adamu Danjuma Abubakar — Computational Linguist',
-    description: 'Hausa speech technology, open research datasets, and computational linguistics for African languages.',
-    url: 'https://adamu.tech',
-    siteName: 'adamu.tech',
+    title: HOME.metadata?.shareTitle?.trim() || homeTitle,
+    description: HOME.metadata?.shareDescription?.trim() || 'Hausa speech technology, open research datasets, and computational linguistics for African languages.',
+    url: SITE,
+    siteName: SITE_SETTINGS.siteName,
     type: 'website',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'adamu.tech' }]
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: SITE_SETTINGS.shareCard.alt }]
   },
   twitter: {
     card: 'summary_large_image',

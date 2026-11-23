@@ -1,0 +1,18 @@
+{
+  "metadataTitle": "Contact",
+  "metadataDescription": "Contact Adamu Danjuma Abubakar about roles, contract work, and research collaboration.",
+  "label": "Get in Touch",
+  "heading": "Let's Build Together",
+  "infoHeading": "Contact Information",
+  "intro": "Roles, consulting, and research collaboration — email is the fastest path.",
+  "email": "contact@adamu.tech",
+  "emailLinkLabel": "Email Adamu",
+  "nameLabel": "Name",
+  "emailLabel": "Email",
+  "messageLabel": "Message",
+  "sendLabel": "Send Message",
+  "sendingLabel": "Sending…",
+  "successMessage": "Message sent — thank you!",
+  "fallbackMessage": "Couldn't send that automatically, so your email client should have opened instead.",
+  "emailSubject": "New message from {name} via adamu.tech"
+}

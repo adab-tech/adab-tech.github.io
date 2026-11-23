@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
-import { JsonLd, PERSON_ID } from '@/lib/structured-data'
+import { CONTACT } from '@/lib/contact-content'
+import { CV } from '@/lib/site-content'
+import { JsonLd, PERSON_ID, SITE } from '@/lib/structured-data'
 
 export const metadata: Metadata = {
-  title: 'Contact',
-  description: 'Contact Adamu Danjuma Abubakar about roles, contract work, and research collaboration.',
+  title: CONTACT.metadataTitle,
+  description: CONTACT.metadataDescription,
   alternates: { canonical: '/contact/' },
 }
 
@@ -11,7 +13,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
-      <JsonLd graph={[{ '@type': 'ContactPage', url: 'https://adamu.tech/contact/', name: 'Contact — Adamu Danjuma Abubakar', mainEntity: { '@id': PERSON_ID } }]} />
+      <JsonLd graph={[{
+        '@type': 'ContactPage',
+        url: `${SITE}/contact/`,
+        name: `${CONTACT.metadataTitle} — ${CV.name}`,
+        mainEntity: { '@id': PERSON_ID },
+      }]} />
     </>
   )
 }

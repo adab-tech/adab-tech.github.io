@@ -1,15 +1,24 @@
-// Editable site content. The text of the home page, the projects, and the CV
-// lives in content/site/*.json so it can be changed from adamu.tech/admin
-// (or by editing the files on GitHub) without touching the page code.
-// The shapes below are the contract between those files, the pages, and the
-// admin editors; checkSiteContent() stops a build if a file is malformed.
+// Public content lives in content/site/*.json. The same validators run in
+// the admin editors and during the static site build.
 
 import homeJson from '../../content/site/home.json'
 import projectsJson from '../../content/site/projects.json'
 import cvJson from '../../content/site/cv.json'
+import { BLOG_INDEX, validateBlogIndex } from './blog-index-content'
+import { CONTACT, validateContact } from './contact-content'
+import { NAVIGATION, validateNavigation } from './navigation'
+import { AGENTIC_AI_PAPER, validateAgenticAiPaper } from './paper-agentic-ai-content'
 import { parsePublicUrl } from './public-url'
+import { SITE_SETTINGS, validateSiteSettings } from './site-settings'
+import { TOOLS, validateTools } from './tools-content'
 
 export type StatusColor = 'emerald' | 'blue' | 'amber'
+
+// Editorial fields are optional so content saved before these controls still loads.
+interface PageMetadata {
+  title?: string
+  description?: string
+}
 
 export interface Project {
   id: string
@@ -28,16 +37,21 @@ export interface Project {
   description: string
   highlights: string[]
   liveUrl: string
+  liveLinkLabel?: string
   paperUrl: string
+  paperLinkLabel?: string
   modelUrl: string
+  modelLinkLabel?: string
   repoUrl: string
   repoLabel: string
   tags: string[]
 }
 
 export interface ProjectsContent {
+  metadata?: PageMetadata
   heading: string
   intro: string
+  homeKicker?: string
   homeHeading: string
   homeIntro: string
   iconRowLabel: string
@@ -46,6 +60,7 @@ export interface ProjectsContent {
 }
 
 export interface HomeContent {
+  metadata?: PageMetadata & { shareTitle?: string; shareDescription?: string }
   badge: string
   name: string
   tagline: string
@@ -72,16 +87,26 @@ export interface HomeContent {
 }
 
 export interface CvContent {
+  metadata?: PageMetadata
+  sectionHeadings?: {
+    education?: string
+    experience?: string
+    languages?: string
+    publications?: string
+    datasets?: string
+  }
   name: string
   headline: string
   location: string
   website: string
+  websiteUrl?: string
   email: string
   profiles: { label: string; url: string; color: string }[]
   education: { degree: string; date: string; institution: string; highlight: boolean }[]
   experience: { title: string; dates: string; featured: boolean; summary: string; bullets: string[] }[]
   languages: { name: string; level: string; note: string }[]
   scholarUrl: string
+  scholarLabel?: string
   publicationGroups: { heading: string; items: { title: string; venue: string; href: string }[] }[]
   datasets: { title: string; year: string; meta: string; description: string; links: { label: string; url: string }[] }[]
 }
@@ -122,8 +147,24 @@ function checkLink(problems: string[], label: string, value: unknown, allowEmail
   }
 }
 
+function checkOptionalText(problems: string[], label: string, value: unknown) {
+  if (value !== undefined && typeof value !== 'string') problems.push(`${label}: enter text`)
+}
+
+function checkOptionalTextGroup(problems: string[], label: string, value: unknown, keys: string[]) {
+  if (value === undefined) return
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    problems.push(`${label}: use a group of text fields`)
+    return
+  }
+  const fields = value as Record<string, unknown>
+  for (const key of keys) checkOptionalText(problems, `${label} ${key}`, fields[key])
+}
+
 export function validateProjects(d: ProjectsContent): string[] {
   const problems: string[] = []
+  checkOptionalTextGroup(problems, 'Projects page metadata', d.metadata, ['title', 'description'])
+  checkOptionalText(problems, 'Home projects section label', d.homeKicker)
   if (!isList(d.categories)) problems.push('categories must be a list')
   if (!isList(d.projects)) return [...problems, 'projects must be a list']
   const ids = new Set<string>()
@@ -139,12 +180,16 @@ export function validateProjects(d: ProjectsContent): string[] {
     for (const field of ['liveUrl', 'paperUrl', 'modelUrl', 'repoUrl', 'logo'] as const) {
       checkLink(problems, `${where} ${field}`, p[field])
     }
+    for (const field of ['liveLinkLabel', 'paperLinkLabel', 'modelLinkLabel'] as const) {
+      checkOptionalText(problems, `${where} ${field}`, p[field])
+    }
   })
   return problems
 }
 
 export function validateHome(d: HomeContent): string[] {
   const problems: string[] = []
+  checkOptionalTextGroup(problems, 'Home page metadata', d.metadata, ['title', 'description', 'shareTitle', 'shareDescription'])
   if (!d.name) problems.push('Add a name')
   if (!isList(d.buttons)) problems.push('buttons must be a list')
   else d.buttons.forEach((button) => checkLink(problems, `Button "${button.label}"`, button.url, true))
@@ -157,6 +202,10 @@ export function validateHome(d: HomeContent): string[] {
 
 export function validateCv(d: CvContent): string[] {
   const problems: string[] = []
+  checkOptionalTextGroup(problems, 'CV metadata', d.metadata, ['title', 'description'])
+  checkOptionalTextGroup(problems, 'CV section headings', d.sectionHeadings, ['education', 'experience', 'languages', 'publications', 'datasets'])
+  checkOptionalText(problems, 'Google Scholar link text', d.scholarLabel)
+  if (d.websiteUrl !== undefined) checkLink(problems, 'CV website link', d.websiteUrl)
   if (!d.name) problems.push('Add a name')
   for (const key of ['profiles', 'education', 'experience', 'languages', 'publicationGroups', 'datasets'] as const) {
     if (!isList(d[key])) problems.push(`${key} must be a list`)
@@ -185,6 +234,12 @@ export function checkSiteContent(): void {
     ...validateHome(HOME).map((p) => `home.json: ${p}`),
     ...validateProjects(PROJECTS).map((p) => `projects.json: ${p}`),
     ...validateCv(CV).map((p) => `cv.json: ${p}`),
+    ...validateContact(CONTACT).map((p) => `contact.json: ${p}`),
+    ...validateBlogIndex(BLOG_INDEX).map((p) => `blog-index.json: ${p}`),
+    ...validateNavigation(NAVIGATION).map((p) => `navigation.json: ${p}`),
+    ...validateSiteSettings(SITE_SETTINGS).map((p) => `site-settings.json: ${p}`),
+    ...validateAgenticAiPaper(AGENTIC_AI_PAPER).map((p) => `paper-agentic-ai.json: ${p}`),
+    ...validateTools(TOOLS).map((p) => `tools.json: ${p}`),
   ]
   if (problems.length) throw new Error(`Site content has problems:\n- ${problems.join('\n- ')}`)
 }

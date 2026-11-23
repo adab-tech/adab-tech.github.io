@@ -4,6 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { GlobalShell } from '@/components/GlobalShell'
 import { InlineText } from '@/components/InlineText'
+import { parsePublicUrl } from '@/lib/public-url'
 import { CV } from '@/lib/site-content'
 import { ArrowLeft, Printer, Mail, Globe, MapPin, BookOpen, GraduationCap, Briefcase, Languages, ExternalLink, Cpu, Database } from 'lucide-react'
 
@@ -14,6 +15,8 @@ const PROFILE_COLORS: Record<string, string> = {
   emerald: 'text-emerald-400 hover:border-emerald-500',
   zinc: 'text-zinc-200 hover:border-zinc-400',
 }
+const websiteLink = parsePublicUrl(CV.websiteUrl)
+const headings = CV.sectionHeadings
 
 export default function AcademicCVPage() {
   const handlePrint = () => {
@@ -64,7 +67,14 @@ export default function AcademicCVPage() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400 pt-1">
                   {[
                     CV.location && <span key="loc" className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.location}</span>,
-                    CV.website && <span key="web" className="flex items-center gap-1"><Globe className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.website}</span>,
+                    CV.website && (
+                      <span key="web" className="flex items-center gap-1">
+                        <Globe className="h-3.5 w-3.5 text-gold-500 shrink-0" />
+                        {websiteLink
+                          ? <a href={websiteLink.href} className="underline underline-offset-2 hover:text-gold-500">{CV.website}</a>
+                          : CV.website}
+                      </span>
+                    ),
                     CV.email && <span key="mail" className="flex items-center gap-1"><Mail className="h-3.5 w-3.5 text-gold-500 shrink-0" /> {CV.email}</span>,
                   ]
                     .filter(Boolean)
@@ -96,7 +106,7 @@ export default function AcademicCVPage() {
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
               <GraduationCap className="h-5 w-5 text-gold-500 shrink-0" />
-              Education & Academic Credentials
+              {headings?.education?.trim() || 'Education & Academic Credentials'}
             </h2>
 
             <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm font-sans">
@@ -118,7 +128,7 @@ export default function AcademicCVPage() {
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
               <Briefcase className="h-5 w-5 text-gold-500 shrink-0" />
-              Experience
+              {headings?.experience?.trim() || 'Experience'}
             </h2>
 
             <div className="space-y-4 text-xs sm:text-sm font-sans">
@@ -175,7 +185,7 @@ export default function AcademicCVPage() {
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
               <Languages className="h-5 w-5 text-gold-500 shrink-0" />
-              Languages
+              {headings?.languages?.trim() || 'Languages'}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -201,7 +211,7 @@ export default function AcademicCVPage() {
             <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
               <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-gold-500 shrink-0" />
-                Publications
+                {headings?.publications?.trim() || 'Publications'}
               </h2>
               {CV.scholarUrl && (
                 <a
@@ -210,7 +220,7 @@ export default function AcademicCVPage() {
                   rel="noreferrer"
                   className="text-xs font-mono text-blue-400 font-semibold hover:underline flex items-center gap-1"
                 >
-                  <span>Google Scholar Profile</span>
+                  <span>{CV.scholarLabel?.trim() || 'Google Scholar Profile'}</span>
                   <ExternalLink className="h-3 w-3" />
                 </a>
               )}
@@ -243,7 +253,7 @@ export default function AcademicCVPage() {
           <section className="space-y-4">
             <h2 className="text-base sm:text-lg font-mono font-bold text-zinc-100 flex items-center gap-2 border-b border-zinc-800 pb-2">
               <Database className="h-5 w-5 text-gold-500 shrink-0" />
-              Research Datasets & Digital Projects
+              {headings?.datasets?.trim() || 'Research Datasets & Digital Projects'}
             </h2>
 
             <div className="space-y-3 text-xs sm:text-sm font-sans">

@@ -1,6 +1,11 @@
 {
+  "metadata": {
+    "title": "Projects",
+    "description": "Murya (Hausa speech technology), Mapping Voices (open oral-history dataset), the Hausa lexicon, and other projects by Adamu Danjuma Abubakar."
+  },
   "heading": "Engineered Systems & Research Platforms",
   "intro": "Speech technology, open research datasets, and platforms I have built or lead, with my role in each.",
+  "homeKicker": "Projects",
   "homeHeading": "What I've built",
   "homeIntro": "Products, open datasets, and research, with my role in each.",
   "categories": [

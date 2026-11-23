@@ -8,6 +8,7 @@ const schema: Field[] = [
   { key: 'headline', label: 'Headline', type: 'text' },
   { key: 'location', label: 'Location and availability', type: 'text' },
   { key: 'website', label: 'Website shown', type: 'text' },
+  { key: 'websiteUrl', label: 'Website link', type: 'url', help: 'Leave empty to show the website as plain text.' },
   { key: 'email', label: 'Email shown', type: 'text' },
   {
     key: 'profiles',
@@ -61,6 +62,7 @@ const schema: Field[] = [
     ],
   },
   { key: 'scholarUrl', label: 'Google Scholar link (Publications heading)', type: 'url' },
+  { key: 'scholarLabel', label: 'Google Scholar link text', type: 'text', placeholder: 'Google Scholar Profile' },
   {
     key: 'publicationGroups',
     label: 'Publications',
@@ -106,6 +108,29 @@ const schema: Field[] = [
           { key: 'url', label: 'Link', type: 'url' },
         ],
       },
+    ],
+  },
+  {
+    key: 'sectionHeadings',
+    label: 'Section headings',
+    type: 'group',
+    help: 'Leave a field empty to use the default heading.',
+    fields: [
+      { key: 'education', label: 'Education heading', type: 'text', placeholder: 'Education & Academic Credentials' },
+      { key: 'experience', label: 'Experience heading', type: 'text', placeholder: 'Experience' },
+      { key: 'languages', label: 'Languages heading', type: 'text', placeholder: 'Languages' },
+      { key: 'publications', label: 'Publications heading', type: 'text', placeholder: 'Publications' },
+      { key: 'datasets', label: 'Datasets heading', type: 'text', placeholder: 'Research Datasets & Digital Projects' },
+    ],
+  },
+  {
+    key: 'metadata',
+    label: 'Search',
+    type: 'group',
+    help: 'Leave a field empty to use the site default.',
+    fields: [
+      { key: 'title', label: 'Browser and search title', type: 'text', placeholder: 'CV' },
+      { key: 'description', label: 'Search description', type: 'textarea' },
     ],
   },
 ]

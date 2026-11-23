@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ghostEnabled } from '@/config/blog'
+import { BLOG_INDEX } from '@/lib/blog-index-content'
 import { fetchGhostPosts, GhostPost } from '@/lib/ghost'
 
 export type ListedPost = {
@@ -49,7 +50,7 @@ export function BlogList({ initial }: { initial: ListedPost[] }) {
   const posts = [...ghost, ...initial].sort((a, b) => b.date.localeCompare(a.date))
 
   if (posts.length === 0) {
-    return <p className="text-zinc-400">{failed ? 'Posts could not be loaded. Please try again later.' : 'No posts yet.'}</p>
+    return <p className="text-zinc-400">{failed ? BLOG_INDEX.loadErrorMessage : BLOG_INDEX.emptyMessage}</p>
   }
 
   return (
@@ -71,15 +72,15 @@ export function BlogList({ initial }: { initial: ListedPost[] }) {
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-zinc-400">
                 <time dateTime={post.date}>{post.dateLabel}</time>
                 <span aria-hidden="true">·</span>
-                <span>{post.readingMinutes} min read</span>
+                <span>{post.readingMinutes} {BLOG_INDEX.readingTimeLabel}</span>
                 {post.draft && <span className="px-1.5 py-0.5 rounded border border-gold-500/40 text-gold-500">Draft</span>}
               </div>
               <h2 className="font-serif-display text-2xl sm:text-3xl font-semibold text-zinc-50 leading-snug">
                 <LinkTag className="hover:text-gold-500 transition-colors">{post.title}</LinkTag>
               </h2>
               {post.summary && <p className="text-zinc-300 leading-relaxed">{post.summary}</p>}
-              <LinkTag className="inline-block text-sm font-mono text-gold-500 hover:underline" label={`Read “${post.title}”`}>
-                Read →
+              <LinkTag className="inline-block text-sm font-mono text-gold-500 hover:underline" label={`${BLOG_INDEX.readLabel} “${post.title}”`}>
+                {BLOG_INDEX.readLabel} →
               </LinkTag>
             </article>
           </li>

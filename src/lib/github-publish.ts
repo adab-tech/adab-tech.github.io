@@ -222,13 +222,23 @@ async function branchHead(): Promise<string> {
   return ref.object.sha
 }
 
-// Writes several files (a post, its images, a rename) as ONE commit on main
-// using the Git Data API, so a publish triggers a single site rebuild.
-export async function commitFiles(changes: FileChange[], message: string): Promise<string> {
-  const { commit } = await commitFilesAtHead(await branchHead(), changes, message)
-  return commit
+export async function commitContentFile({ path, base64, expectedSha, assets, message }: {
+  path: string
+  base64: string
+  expectedSha: string
+  assets: FileChange[]
+  message: string
+}): Promise<{ commit: string; sha: string }> {
+  const head = await branchHead()
+  const latest = await readFile(path, head)
+  if (latest.sha !== expectedSha) {
+    throw new Error('This page changed on GitHub while you were editing. Copy your unsaved edits, then reload the page before trying again.')
+  }
+  const { commit, blobs } = await commitFilesAtHead(head, [{ path, base64 }, ...assets], message)
+  return { commit, sha: blobs[0].sha! }
 }
 
+// Write content and its assets in one commit so a publish triggers one build.
 async function commitFilesAtHead(head: string, changes: FileChange[], message: string) {
   const parent = await gh<{ tree: { sha: string } }>(`/git/commits/${head}`)
   const tree = await Promise.all(
@@ -325,8 +335,8 @@ export async function deployState(commitSha: string): Promise<DeployState> {
 }
 
 // Any text file in the repo (the site content files under content/site/).
-export async function readFile(path: string): Promise<{ text: string; sha: string }> {
-  const file = await gh<{ content: string; sha: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${BRANCH}`)
+export async function readFile(path: string, ref = BRANCH): Promise<{ text: string; sha: string }> {
+  const file = await gh<{ content: string; sha: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(ref)}`)
   return { text: fromBase64(file.content), sha: file.sha }
 }
 

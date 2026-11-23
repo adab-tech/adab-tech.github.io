@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { CheckCircle2, Edit3, FileText, Home, Layers, Loader2, MessageSquare, XCircle } from 'lucide-react'
+import { BookOpen, CheckCircle2, Edit3, FileText, Home, Layers, Loader2, Mail, Menu, MessageSquare, Search, Wrench, XCircle } from 'lucide-react'
 import { useCanPublish } from '@/components/admin/GitHubConnect'
 import { ACTIONS_URL, recentDeploys, type RecentRun } from '@/lib/github-publish'
 
@@ -11,6 +11,12 @@ const AREAS = [
   { href: '/admin/home/', icon: Home, title: 'Home page', text: 'Headline, introduction, buttons, Murya figures, principles, contact box.' },
   { href: '/admin/projects/', icon: Layers, title: 'Projects', text: 'Add, edit, reorder or remove projects and their logos.' },
   { href: '/admin/cv/', icon: FileText, title: 'CV', text: 'Education, experience, languages, publications, datasets.' },
+  { href: '/admin/contact/', icon: Mail, title: 'Contact page', text: 'Public email, contact form wording, and page description.' },
+  { href: '/admin/blog-index/', icon: BookOpen, title: 'Blog landing page', text: 'Page introduction, list labels, and RSS feed details.' },
+  { href: '/admin/paper-agentic-ai/', icon: FileText, title: 'Agentic AI paper', text: 'Research page copy, figures, sources, and links.' },
+  { href: '/admin/tools/', icon: Wrench, title: 'Research tools', text: 'Tool descriptions, examples, and page details.' },
+  { href: '/admin/navigation/', icon: Menu, title: 'Navigation and footer', text: 'Menus, social links, and footer copy.' },
+  { href: '/admin/site-settings/', icon: Search, title: 'Search and sharing', text: 'Public search profile and default social previews.' },
   { href: '/admin/comments/', icon: MessageSquare, title: 'Comments', text: 'Open any post’s comments to delete or reply.' },
 ]
 

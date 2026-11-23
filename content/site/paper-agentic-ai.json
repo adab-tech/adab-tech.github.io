@@ -1,0 +1,174 @@
+{
+  "title": "Humanities Perspectives on Agentic AI: Cultural Knowledge, Postcolonial Epistemologies, and a Framework for Governance",
+  "badge": "SCHOLARLY WORKING PAPER · APPLIED COMPUTATIONAL HUMANITIES",
+  "author": "Adamu Danjuma Abubakar",
+  "institution": "University of Alabama",
+  "publishedMonth": "2026-08",
+  "readingTime": "~18 min read",
+  "abstractHeading": "Executive Abstract",
+  "abstract": "The emergence of agentic AI—systems that plan, act, adapt, and operate with increasing autonomy—marks a fundamental shift in the relationship between artificial intelligence and human society. This shift demands not only technical innovation but rigorous humanistic inquiry. This paper argues that the humanities, and literary and cultural studies in particular, are not peripheral but central to the ethical governance of agentic AI. Drawing on philosophical analysis, empirical case studies, and postcolonial theory, it makes three interconnected contributions: demonstrating that the concept of \"agency\" is philosophically contested; grounding this argument in four case studies across continents; and establishing an actionable humanistic governance blueprint.",
+  "sections": [
+    {
+      "heading": "1. Introduction",
+      "style": "paragraphs",
+      "paragraphs": [
+        "As artificial intelligence evolves from passive predictive models to active multi-agent architectures that make autonomous decisions, interact with APIs, and orchestrate socio-technical workflows, the definition of \"agency\" ceases to be an abstract computational parameter. It becomes a deeply political, legal, and cultural phenomenon.",
+        "Historically, technical frameworks define an agent by its utility function and instrumental task completion. However, this approach risks rendering invisible the epistemological violence that occurs when algorithmic systems encounter indigenous cultural knowledge, oral linguistic traditions, and historically marginalized communities."
+      ],
+      "cards": []
+    },
+    {
+      "heading": "2. Conceptual Framework: AI Agency and Its Discontents",
+      "style": "paragraphs",
+      "paragraphs": [
+        "In computational science, an agent is modeled through reward maximization and reinforcement learning from human feedback (RLHF). Yet postcolonial theory and cultural studies remind us that human agency is never isolated—it is relational, culturally situated, and mediated through language and power dynamics.",
+        "By decoupling autonomy from accountability, instrumental AI frameworks fail to recognize that the actions taken by autonomous agents reproduce the historical biases and extractive epistemologies of the training corpuses upon which they are built."
+      ],
+      "cards": []
+    },
+    {
+      "heading": "3. The Humanities Tradition and AI: What Cannot Be Outsourced",
+      "style": "lenses",
+      "paragraphs": [
+        "Humanities disciplines provide irreplaceable analytical lenses that cannot be automated:"
+      ],
+      "cards": [
+        {
+          "title": "3.1 Representation and Its Politics",
+          "text": "Unpacking how autonomous systems encode power hierarchies and cultural erasure.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "3.2 Reading Power in Discourse",
+          "text": "Analyzing who governs prompt templates, tool definitions, and action boundaries.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "3.3 Instability of Language",
+          "text": "Evaluating polysemy, regional idioms, and tonal Chadic nuances beyond raw tokens.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "3.4 The Contested Human",
+          "text": "Critiquing colonial cartographies of who is deemed \"human\" in automated systems.",
+          "subtitle": "",
+          "tone": "gold"
+        }
+      ]
+    },
+    {
+      "heading": "4. AI Agency in Action: Four Empirical Case Studies",
+      "style": "case-studies",
+      "paragraphs": [],
+      "cards": [
+        {
+          "title": "4.1 NIGERIA: The Wole Soyinka Deepfake",
+          "text": "When an unauthorized AI voice clone of Africa's first Nobel laureate in Literature, Wole Soyinka, was generated and distributed, it exposed how agentic acoustic synthesis exploits oral cultural authority. In West African societies where elder voices carry communal epistemic weight, synthetic voice theft constitutes an assault on cultural integrity and communal trust.",
+          "subtitle": "Vocal Authority & Extraction",
+          "tone": "gold"
+        },
+        {
+          "title": "4.2 CHINA: State-Sanctioned \"Agent Hospital\"",
+          "text": "Tsinghua University's autonomous \"Agent Hospital,\" simulating thousands of medical consultations daily with AI doctor and patient agents, marks the institutional codification of bureaucratic authority into autonomous software loops, demanding humanistic scrutiny of triage values and accountability.",
+          "subtitle": "Institutional Multi-Agent Triage",
+          "tone": "blue"
+        },
+        {
+          "title": "4.3 SAUDI ARABIA: Performative Citizenship of Sophia",
+          "text": "Granting ceremonial legal citizenship to humanoid robot \"Sophia\" in Riyadh revealed the theatrical performativity of artificial agency, wherein artificial agents are accorded legal mobility and protections denied to human migrant laborers under the same legal regime.",
+          "subtitle": "Artificial Personhood Theater",
+          "tone": "emerald"
+        },
+        {
+          "title": "4.4 FRONTIER LABS: Dario Amodei's Warning & Human Purpose",
+          "text": "Anthropic CEO Dario Amodei's essays on powerful AI and the potential displacement of human intellectual vocation confront the ultimate question of human purpose—a question that cannot be resolved through benchmark scores, but through the deep reservoir of literary, historical, and philosophical inquiry.",
+          "subtitle": "Existential Purpose & Alignment",
+          "tone": "purple"
+        }
+      ]
+    },
+    {
+      "heading": "5. The Research Gap: What We Are Missing",
+      "style": "paragraphs",
+      "paragraphs": [
+        "Too often, humanities scholars arrive after technical architectures are finalized, invited only to offer post-hoc ethical critique. We argue for *upstream participation*: embedding digital philologists, cultural theorists, and low-resource linguists into the core architectural design of tokenizer alphabets, reward models, and agentic toolsets."
+      ],
+      "cards": []
+    },
+    {
+      "heading": "6. Toward a Humanistic Framework for AI Agency (5 Pillars)",
+      "style": "pillars",
+      "paragraphs": [],
+      "cards": [
+        {
+          "title": "6.1 Relational Agency",
+          "text": "Shifting the definition of agency from isolated instrumental task execution to relational socio-cultural accountability.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "6.2 Cultural Situatedness",
+          "text": "Enforcing indigenous linguistic honorifics (e.g. Hausa Kunya & Girmamawa protocols) to prevent conversational homogenization.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "6.3 Narrative Accountability",
+          "text": "Requiring transparent trace logs and narrative explanations for all autonomous agent tool executions.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "6.4 Epistemic Humility",
+          "text": "Equipping agentic architectures with boundary awareness to recognize what they do not know in non-Western epistemologies.",
+          "subtitle": "",
+          "tone": "gold"
+        },
+        {
+          "title": "6.5 Groundedness in Culture-Specific Knowledge Domains",
+          "text": "Validating speech models against historical lexicography (e.g. Robinson 1914 Lexicon) and authenticated community corpuses (WAXAL).",
+          "subtitle": "",
+          "tone": "gold"
+        }
+      ]
+    },
+    {
+      "heading": "7. Conclusion: The Humanities Are Not Waiting to Be Relevant — They Already Are",
+      "style": "conclusion",
+      "paragraphs": [
+        "The future of agentic AI will not be determined solely in server clusters or compute optimization pipelines. It will be decided by how faithfully these systems honor human complexity, protect vulnerable cultural heritages, and submit to ethical governance. In this grand endeavor, the humanities provide the essential compass."
+      ],
+      "cards": []
+    }
+  ],
+  "referencesHeading": "References",
+  "references": [],
+  "citation": {
+    "key": "abubakar2026agentic",
+    "author": "Abubakar, Adamu Danjuma",
+    "note": "Working paper",
+    "url": "https://adamu.tech/papers/agentic-ai",
+    "heading": "Cite This Working Paper (BibTeX)",
+    "accessibleLabel": "BibTeX citation"
+  },
+  "seo": {
+    "title": "Humanities Perspectives on Agentic AI (pre-print)",
+    "description": "Pre-print by Adamu Danjuma Abubakar on the humanities, postcolonial epistemologies, and a framework for governing agentic AI.",
+    "headline": "Humanities Perspectives on Agentic AI",
+    "articleDescription": "Why the humanities belong at the centre of agentic-AI governance: contested ideas of agency, four case studies, and a governance framework.",
+    "status": "Pre-print",
+    "language": "en"
+  },
+  "actions": {
+    "backLabel": "Back to home",
+    "printLabel": "Print / PDF",
+    "citeLabel": "Cite BibTeX",
+    "citedLabel": "BibTeX Copied",
+    "copyLabel": "Copy",
+    "copiedLabel": "✓ Copied",
+    "copyFailed": "Select and copy the BibTeX citation manually."
+  }
+}
