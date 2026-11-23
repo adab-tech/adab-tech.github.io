@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CaseStudyLink } from '@/components/CaseStudyLink'
 import { GlobalShell } from '@/components/GlobalShell'
 import { ProjectLogo } from '@/components/ProjectLogo'
 import { PROJECTS, primaryLink } from '@/lib/site-content'
@@ -78,6 +79,7 @@ export default function ProjectsPage() {
               {/* Action Buttons & Tags */}
               <div className="space-y-3 pt-2 border-t border-zinc-800/80">
                 <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+                  <CaseStudyLink projectId={p.id} />
                   {p.liveUrl && (
                     <a
                       href={p.liveUrl}

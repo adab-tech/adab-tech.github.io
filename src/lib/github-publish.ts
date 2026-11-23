@@ -201,9 +201,8 @@ export async function listPosts(ref = BRANCH): Promise<RemoteFile[]> {
     .sort((a, b) => b.name.localeCompare(a.name))
 }
 
-export async function readPost(name: string): Promise<{ text: string; sha: string }> {
-  const file = await gh<{ content: string; sha: string }>(`/contents/${DIR}/${encodeURIComponent(name)}?ref=${BRANCH}`)
-  return { text: fromBase64(file.content), sha: file.sha }
+export async function readPost(name: string, ref = BRANCH): Promise<{ text: string; sha: string }> {
+  return readFile(postPath(name), ref)
 }
 
 // Creates or updates a post. Returns the commit SHA.
@@ -338,6 +337,26 @@ export async function deployState(commitSha: string): Promise<DeployState> {
 export async function readFile(path: string, ref = BRANCH): Promise<{ text: string; sha: string }> {
   const file = await gh<{ content: string; sha: string }>(`/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(ref)}`)
   return { text: fromBase64(file.content), sha: file.sha }
+}
+
+export type ContentRevision = { sha: string; title: string; date: string; deployed: boolean }
+
+export async function listContentRevisions(path: string): Promise<ContentRevision[]> {
+  const [commits, deployments] = await Promise.all([
+    gh<{ sha: string; commit: { message: string; committer: { date: string } } }[]>(
+      `/commits?sha=${BRANCH}&path=${encodeURIComponent(path)}&per_page=12`,
+    ),
+    gh<{ workflow_runs: { head_sha: string }[] }>(
+      `${DEPLOY_RUNS}?branch=${BRANCH}&status=success&per_page=50`,
+    ).catch(() => null),
+  ])
+  const deployed = new Set(deployments?.workflow_runs.map((run) => run.head_sha))
+  return commits.map(({ sha, commit }) => ({
+    sha,
+    title: commit.message.split('\n', 1)[0],
+    date: commit.committer.date,
+    deployed: deployed.has(sha),
+  }))
 }
 
 export type RecentRun = { status: string; conclusion: string | null; title: string; created_at: string; html_url: string }

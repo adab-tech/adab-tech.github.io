@@ -52,6 +52,7 @@ An existing Worker `GITHUB_TOKEN` with repository **Contents read and write** an
 | Blog posts | Admin → Blog posts | Write, format, add images and videos, publish, save as draft, edit, delete |
 | Home page | Admin → Home page | Name, headline, introduction, buttons, “Murya in numbers”, specifications, principles, contact box; show or hide sections |
 | Projects | Admin → Projects | Add, edit, reorder, duplicate or remove projects; upload a logo; choose which appear on the home page and in the icon row |
+| Case studies | Admin → Case studies | Project contributions, evidence, public references, and case study addresses |
 | CV | Admin → CV | Profile buttons, education, experience, languages, publications, datasets |
 | Contact | Admin → Contact page | Public email, the contact form text, and search description |
 | Blog landing page | Admin → Blog landing page | Heading, introduction, post-list labels, and RSS feed text |
@@ -68,6 +69,15 @@ save. After saving, the editor shows “Building…” and then “Live”. If a
 fails, the live site stays as it was and the editor links to the reason.
 If someone updates the same page on GitHub while you edit, the editor asks you
 to reload before saving so you can keep the newer changes.
+
+**Preview draft** shows your working content privately in the editor. Blog
+posts and case studies show their article formatting. Other pages show a
+content preview that the published page presents in its own layout.
+
+**Version history** lists recent GitHub revisions for the page or open blog
+post. Versions with a confirmed Pages build are marked **Deployed**. Select
+**Load version** to bring it into the editor, then review it and publish when
+ready. The restore creates a new commit and preserves the revision history.
 
 In longer text you can write `**bold**`, `*italic*`, `` `code` `` and
 `[link text](https://…)`.

@@ -21,9 +21,10 @@ import {
   XCircle,
 } from 'lucide-react'
 import { AdminHeader } from '@/components/AdminHeader'
+import { RevisionHistory } from '@/components/admin/RevisionHistory'
 import { TokenSetup, forgetTokenHere, useCanPublish, useToken } from '@/components/admin/GitHubConnect'
 import { useAdminAuth } from '@/lib/auth'
-import { ACTIONS_URL, blobToBase64, commitContentFile, deployState, readFile, textToBase64, type FileChange } from '@/lib/github-publish'
+import { ACTIONS_URL, blobToBase64, commitContentFile, deployState, readFile, textToBase64, type ContentRevision, type FileChange } from '@/lib/github-publish'
 
 // A form editor for one content file (content/site/*.json), described by a
 // small schema. Saving commits the file, plus any uploaded logos, to GitHub
@@ -31,7 +32,7 @@ import { ACTIONS_URL, blobToBase64, commitContentFile, deployState, readFile, te
 
 type Json = unknown
 type Obj = Record<string, Json>
-type ContentFile = 'home' | 'projects' | 'cv' | 'contact' | 'blog-index' | 'tools' | 'paper-agentic-ai' | 'navigation' | 'site-settings'
+type ContentFile = 'home' | 'projects' | 'cv' | 'contact' | 'blog-index' | 'tools' | 'paper-agentic-ai' | 'navigation' | 'site-settings' | 'case-studies'
 
 export type Field =
   | { key: string; label: string; type: 'text' | 'url' | 'textarea'; help?: string; placeholder?: string; default?: string }
@@ -81,6 +82,7 @@ export function ContentEditorPage({
   previewPath,
   validate,
   beforeSave,
+  renderPreview,
 }: {
   title: string
   intro: string
@@ -89,6 +91,7 @@ export function ContentEditorPage({
   previewPath: string
   validate: (data: never) => string[]
   beforeSave?: (data: Obj) => Obj
+  renderPreview?: (data: Obj) => React.ReactNode
 }) {
   const { isAuthenticated, loading, serverMode } = useAdminAuth()
   const router = useRouter()
@@ -127,7 +130,7 @@ export function ContentEditorPage({
           </div>
         </div>
         {canPublish ? (
-          <Editor file={file} title={title} schema={schema} previewPath={previewPath} validate={validate} beforeSave={beforeSave} />
+          <Editor file={file} title={title} schema={schema} previewPath={previewPath} validate={validate} beforeSave={beforeSave} renderPreview={renderPreview} />
         ) : (
           <TokenSetup />
         )}
@@ -138,6 +141,7 @@ export function ContentEditorPage({
 
 type Status =
   | { kind: 'idle' }
+  | { kind: 'restored' }
   | { kind: 'working'; text: string }
   | { kind: 'error'; text: string }
   | { kind: 'deploying'; commit: string }
@@ -151,6 +155,7 @@ function Editor({
   previewPath,
   validate,
   beforeSave,
+  renderPreview,
 }: {
   file: ContentFile
   title: string
@@ -158,6 +163,7 @@ function Editor({
   previewPath: string
   validate: (data: never) => string[]
   beforeSave?: (data: Obj) => Obj
+  renderPreview?: (data: Obj) => React.ReactNode
 }) {
   const path = `content/site/${file}.json`
   const [data, setData] = useState<Obj | null>(null)
@@ -165,6 +171,7 @@ function Editor({
   const [loadError, setLoadError] = useState('')
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
   const [problems, setProblems] = useState<string[]>([])
+  const [preview, setPreview] = useState(false)
   const [logos, setLogos] = useState(() => new Map<string, PendingLogo>()) // web path -> pending upload
   const savedSha = useRef('')
 
@@ -199,6 +206,23 @@ function Editor({
   }, [path])
 
   const dirty = data !== null && JSON.stringify(data) !== saved
+
+  const restoreRevision = async (revision: ContentRevision) => {
+    if (dirty && !window.confirm('Replace your unsaved edits with this version?')) return
+    setStatus({ kind: 'working', text: 'Loading previous version…' })
+    try {
+      const { text } = await readFile(path, revision.sha)
+      const parsed = JSON.parse(text) as Obj
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error('This version does not contain a page document.')
+      setData(parsed)
+      setLogos(new Map())
+      setProblems([])
+      setStatus({ kind: 'restored' })
+    } catch (err) {
+      setStatus({ kind: 'idle' })
+      throw err
+    }
+  }
 
   // Warn before leaving with unsaved changes.
   useEffect(() => {
@@ -297,9 +321,23 @@ function Editor({
         <code className="text-gold-400">`code`</code> and <code className="text-gold-400">[link text](https://…)</code>. Use the arrows to reorder,
         the bin to remove, and <strong>Save &amp; publish</strong> at the bottom when done.
       </p>
-      <fieldset disabled={status.kind === 'working'} className="min-w-0">
-        <Fields fields={schema} value={data} onChange={(v) => setData(v)} ctx={ctx} />
-      </fieldset>
+      <div className="flex flex-wrap items-start gap-2">
+        <button type="button" aria-pressed={preview} disabled={status.kind === 'working'} onClick={() => setPreview(!preview)}
+          className="min-h-11 rounded-lg border border-zinc-700 px-3 py-2 text-xs font-mono text-zinc-200 hover:border-gold-500">
+          {preview ? 'Back to editing' : 'Preview draft'}
+        </button>
+        <RevisionHistory path={path} disabled={status.kind === 'working'} onRestore={restoreRevision} />
+      </div>
+      {preview ? (
+        <section className="space-y-4 rounded-2xl border border-zinc-800 bg-[#0B1120] p-4 sm:p-6" aria-label="Draft preview">
+          <p className="text-xs text-zinc-400">{renderPreview ? 'Private draft preview' : 'Private content preview. The public page applies its own layout.'}</p>
+          {renderPreview ? renderPreview(data) : <ContentPreview fields={schema} value={data} />}
+        </section>
+      ) : (
+        <fieldset disabled={status.kind === 'working'} className="min-w-0">
+          <Fields fields={schema} value={data} onChange={(v) => setData(v)} ctx={ctx} />
+        </fieldset>
+      )}
 
       {problems.length > 0 && (
         <ul className="p-4 rounded-xl border border-red-900/60 bg-red-950/30 text-sm text-red-200 list-disc pl-8 space-y-1">
@@ -330,6 +368,7 @@ function Editor({
           </button>
           <span className="text-sm" role="status">
             {status.kind === 'idle' && (dirty ? <span className="text-gold-400">Unsaved changes</span> : <span className="text-zinc-400">All changes saved</span>)}
+            {status.kind === 'restored' && <span className="text-gold-400">{dirty ? 'Version loaded. Preview and publish when ready.' : 'This version matches the current content.'}</span>}
             {status.kind === 'working' && <span className="text-zinc-300">{status.text}</span>}
             {status.kind === 'error' && <span className="text-red-300">{status.text}</span>}
             {status.kind === 'deploying' && (
@@ -356,6 +395,39 @@ function Editor({
           </span>
         </div>
       </div>
+    </div>
+  )
+}
+
+function ContentPreview({ fields, value }: { fields: Field[]; value: Obj }) {
+  return (
+    <div className="grid gap-4">
+      {fields.map((field) => {
+        const entry = value[field.key]
+        if (entry === null || entry === undefined || entry === '' || (Array.isArray(entry) && !entry.length)) return null
+        return (
+          <div key={field.key} className="min-w-0 space-y-2">
+            <p className="text-xs font-semibold text-zinc-400">{field.label}</p>
+            {field.type === 'group' && typeof entry === 'object' && !Array.isArray(entry) ? (
+              <div className="border-l border-zinc-800 pl-3"><ContentPreview fields={field.fields} value={entry as Obj} /></div>
+            ) : field.type === 'list' && Array.isArray(entry) ? (
+              <div className="grid gap-2">
+                {entry.map((item, index) => item && typeof item === 'object' && !Array.isArray(item) && (
+                  <div key={index} className="rounded-lg border border-zinc-800 p-3"><ContentPreview fields={field.fields} value={item as Obj} /></div>
+                ))}
+              </div>
+            ) : field.type === 'strings' && Array.isArray(entry) ? (
+              <ul className="list-inside list-disc space-y-1 break-words text-sm text-zinc-200">
+                {entry.map((item, index) => typeof item === 'string' && <li key={index}>{item}</li>)}
+              </ul>
+            ) : (
+              <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-zinc-200">
+                {typeof entry === 'boolean' ? (entry ? 'On' : 'Off') : String(entry)}
+              </p>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }

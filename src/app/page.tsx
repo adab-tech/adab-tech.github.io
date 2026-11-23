@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { CaseStudyLink } from '@/components/CaseStudyLink'
 import { GlobalShell } from '@/components/GlobalShell'
 import { InlineText } from '@/components/InlineText'
 import { ProjectIcons, ProjectLogo } from '@/components/ProjectLogo'
@@ -63,10 +64,10 @@ export default function HomePage() {
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {H.buttons.map((btn) => {
               const cls = btn.primary
-                ? 'inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-500 transition-all shadow-lg hover:shadow-gold-500/20'
-                : 'inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-zinc-700 bg-[#0E1526] text-zinc-100 font-mono text-xs font-bold hover:border-gold-500 hover:text-gold-500 transition-all shadow-sm'
+                ? 'inline-flex min-h-11 max-w-full items-center gap-2 px-5 py-3 rounded-xl bg-gold-500 text-zinc-950 font-mono text-xs font-bold hover:bg-gold-500 transition-all shadow-lg hover:shadow-gold-500/20'
+                : 'inline-flex min-h-11 max-w-full items-center gap-2 px-5 py-3 rounded-xl border border-zinc-700 bg-[#0E1526] text-zinc-100 font-mono text-xs font-bold hover:border-gold-500 hover:text-gold-500 transition-all shadow-sm'
               const Icon = BUTTON_ICONS[btn.icon]
-              const icon = Icon && <Icon className={`w-4 h-4 ${btn.primary ? '' : 'text-gold-500'}`} />
+              const icon = Icon && <Icon className={`w-4 h-4 shrink-0 ${btn.primary ? '' : 'text-gold-500'}`} aria-hidden="true" />
               if (btn.url.startsWith('/'))
                 return (
                   <Link key={btn.label} href={btn.url} className={cls}>
@@ -232,6 +233,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-zinc-800 text-xs font-mono">
+                  <CaseStudyLink projectId={p.id} />
                   {url && (url.startsWith('/') ? (
                     <Link href={url} className="text-gold-500 hover:underline flex items-center gap-1">
                       <span>{p.homeLinkLabel || 'Open'}</span>

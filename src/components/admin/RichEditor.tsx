@@ -43,10 +43,12 @@ export function RichEditor({
   initialHtml,
   onChange,
   onPickImage,
+  readOnly = false,
 }: {
   initialHtml: string
   onChange: (html: string) => void
   onPickImage: (file: File) => Promise<{ src: string; alt: string }>
+  readOnly?: boolean
 }) {
   const fileInput = useRef<HTMLInputElement>(null)
   const editor = useEditor({
@@ -83,6 +85,10 @@ export function RichEditor({
     if (editor && initialHtml !== editor.getHTML()) editor.commands.setContent(initialHtml, { emitUpdate: false })
   }, [editor, initialHtml])
 
+  useEffect(() => {
+    editor?.setEditable(!readOnly, false)
+  }, [editor, readOnly])
+
   const pickImage = async (file: File | undefined) => {
     if (!file || !editor) return
     const { src, alt } = await onPickImage(file)
@@ -92,7 +98,7 @@ export function RichEditor({
 
   return (
     <div className="rounded-xl border border-zinc-700 bg-[#0B1120] focus-within:border-gold-500/70">
-      {editor && <Toolbar editor={editor} onImage={() => fileInput.current?.click()} />}
+      {editor && !readOnly && <Toolbar editor={editor} onImage={() => fileInput.current?.click()} />}
       <div className="px-4 sm:px-6 py-5">
         <EditorContent editor={editor} />
       </div>
