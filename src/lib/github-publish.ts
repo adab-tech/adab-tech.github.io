@@ -153,6 +153,7 @@ async function gh<T>(path: string, init: RequestInit = {}, candidateToken?: stri
     } catch {}
     if (res.status === 401 && throughWorker) throw new Error('You were signed out. Sign in again at adamu.tech/admin.')
     if (res.status === 401) throw new Error('GitHub rejected the token (expired or mistyped). Paste a new one.')
+    if (throughWorker && (res.status === 502 || res.status === 503) && detail) throw new Error(detail)
     if (res.status === 403 || res.status === 404) {
       throw new Error(`GitHub refused access (${res.status}). Check the token is for ${OWNER}/${REPO} with Contents: Read and write. ${detail}`)
     }

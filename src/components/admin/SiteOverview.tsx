@@ -24,7 +24,7 @@ export function SiteOverview() {
     let cancelled = false
     recentDeploys(3)
       .then((r) => !cancelled && setDeploys(r))
-      .catch(() => !cancelled && setDeployError('Check that the GitHub publishing connection has Actions read access.'))
+      .catch((err: unknown) => !cancelled && setDeployError(err instanceof Error ? err.message : 'Could not load site updates.'))
     return () => {
       cancelled = true
     }
