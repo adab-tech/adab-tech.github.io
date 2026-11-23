@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CONTACT } from '@/lib/contact-content';
 
 // Set after deploying cf-worker/ (see cf-worker/README.md) — wrangler prints
 // this on first deploy. Left blank until then, in which case the form falls
@@ -20,17 +21,16 @@ const ContactPage = () => {
   };
 
   const openMailto = () => {
-    const subject = encodeURIComponent(`New message from ${formData.name} via adamu.tech`);
+    const subject = encodeURIComponent(CONTACT.emailSubject.replace(/\{name\}/g, () => formData.name));
     const body = encodeURIComponent(`${formData.message}\n\n— ${formData.name} (${formData.email})`);
-    window.location.href = `mailto:contact@adamu.tech?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!RELAY_URL) {
-      // No backend deployed yet — open the visitor's own email client
-      // pre-addressed to contact@adamu.tech instead of faking a submission.
+      // Open the visitor's email client when the relay is unconfigured.
       openMailto();
       setFormData({ name: '', email: '', message: '' });
       return;
@@ -57,19 +57,17 @@ const ContactPage = () => {
     <section className="contact" id="contact">
       <div className="container">
         <div className="section-header" data-animate="fade-up">
-          <span className="section-label">Get in Touch</span>
-          <h1 className="section-title">Let&apos;s Build Together</h1>
+          <span className="section-label">{CONTACT.label}</span>
+          <h1 className="section-title">{CONTACT.heading}</h1>
         </div>
         
         <div className="contact-content">
           <div className="contact-info" data-animate="fade-right">
-            <h3>Contact Information</h3>
-            <p>
-              Roles, consulting, and research collaboration — email is the fastest path.
-            </p>
+            <h3>{CONTACT.infoHeading}</h3>
+            <p>{CONTACT.intro}</p>
             
             <div className="info-item">
-              <a href="mailto:contact@adamu.tech" aria-label="Email Adamu">
+              <a href={`mailto:${CONTACT.email}`} aria-label={CONTACT.emailLinkLabel}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
@@ -80,26 +78,22 @@ const ContactPage = () => {
           
           <form className="contact-form" data-animate="fade-left" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">{CONTACT.nameLabel}</label>
               <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">{CONTACT.emailLabel}</label>
               <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="message">Message</label>
+              <label htmlFor="message">{CONTACT.messageLabel}</label>
               <textarea id="message" name="message" rows={5} value={formData.message} onChange={handleChange} required></textarea>
             </div>
             <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Sending…' : 'Send Message'}
+              {status === 'sending' ? CONTACT.sendingLabel : CONTACT.sendLabel}
             </button>
-            {status === 'sent' && <p role="status">Message sent — thank you!</p>}
-            {status === 'error' && (
-              <p role="status">
-                Couldn&apos;t send that automatically, so your email client should have opened instead.
-              </p>
-            )}
+            {status === 'sent' && <p role="status">{CONTACT.successMessage}</p>}
+            {status === 'error' && <p role="status">{CONTACT.fallbackMessage}</p>}
           </form>
         </div>
       </div>

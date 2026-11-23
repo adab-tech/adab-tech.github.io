@@ -1,0 +1,13 @@
+{
+  "metadataTitle": "Blog",
+  "metadataDescription": "Posts and reflections by Adamu Danjuma Abubakar on language, research, African-language technology, and writing.",
+  "heading": "Blog",
+  "intro": "Posts and reflections on language, research, building technology for African languages, and writing.",
+  "feedLabel": "RSS feed",
+  "feedTitle": "Adamu Danjuma Abubakar — Blog",
+  "feedDescription": "Posts and reflections on language, research, African-language technology, and writing.",
+  "emptyMessage": "No posts yet.",
+  "loadErrorMessage": "Posts could not be loaded. Please try again later.",
+  "readingTimeLabel": "min read",
+  "readLabel": "Read"
+}
