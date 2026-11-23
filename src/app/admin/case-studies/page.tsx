@@ -26,6 +26,18 @@ const schema: Field[] = [
       { key: 'summary', label: 'Summary', type: 'textarea' },
       { key: 'role', label: 'Your role', type: 'text' },
       {
+        key: 'media', label: 'Project preview', type: 'group',
+        help: 'Appears in the case study and on its featured homepage card.',
+        fields: [
+          { key: 'kind', label: 'Media type', type: 'select', options: ['none', 'audio', 'image'], default: 'none' },
+          { key: 'src', label: 'Public media path on this site', type: 'url', placeholder: '/project-media/example.webp' },
+          { key: 'caption', label: 'Caption', type: 'text' },
+          { key: 'description', label: 'Hausa or other transcript for audio, or alt text for an image', type: 'textarea' },
+          { key: 'lang', label: 'Transcript language code (optional)', type: 'text', placeholder: 'ha' },
+          { key: 'credit', label: 'Source or attribution (optional)', type: 'text', help: 'Use [source name](https://…) for a link.' },
+        ],
+      },
+      {
         key: 'metrics', label: 'Evidence at a glance', type: 'list', itemLabel: 'metric', titleKey: 'label',
         fields: [
           { key: 'value', label: 'Value', type: 'text' },

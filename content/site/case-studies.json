@@ -14,6 +14,14 @@
       "headline": "Hausa speech synthesis that runs in the browser",
       "summary": "Murya combines Hausa speech synthesis with a searchable lexicon. Its browser runtime can generate speech and look up words without a live connection after the required assets are loaded.",
       "role": "Founder and linguistic lead",
+      "media": {
+        "kind": "audio",
+        "src": "/project-media/murya-asabe.wav",
+        "caption": "Hear Malama Asabe speak Hausa",
+        "description": "Gaskiya ta fi ƙarfin takobi, in ji magabata.",
+        "lang": "ha",
+        "credit": "[Murya voice samples](https://murya.ng/#voices)"
+      },
       "metrics": [
         { "value": "8", "label": "Voices in the published model" },
         { "value": "22,050 Hz", "label": "Model sample rate" },
@@ -51,6 +59,14 @@
       "headline": "Finding oral-history archives across languages and borders",
       "summary": "Mapping Voices makes scattered oral-history and voice-testimony collections easier to discover. A searchable atlas pairs each indexed collection with structured metadata and a link to the institution that holds it.",
       "role": "Creator and curator",
+      "media": {
+        "kind": "image",
+        "src": "/project-media/mapping-voices.webp",
+        "caption": "Oral-history collections in the atlas",
+        "description": "Map showing collection locations across the Americas, Europe, Africa, Asia, and Oceania.",
+        "lang": "",
+        "credit": "Map © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)"
+      },
       "metrics": [
         { "value": "221", "label": "Collections in dataset v0.4.0" },
         { "value": "120", "label": "Countries and territories represented" },

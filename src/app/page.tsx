@@ -2,6 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { caseStudyFor } from '@/lib/case-studies'
+import { StudyMediaPreview } from '@/components/StudyMediaPreview'
 import { CaseStudyLink } from '@/components/CaseStudyLink'
 import { GlobalShell } from '@/components/GlobalShell'
 import { InlineText } from '@/components/InlineText'
@@ -23,10 +25,10 @@ const N = HOME.numbers
 export default function HomePage() {
   return (
     <GlobalShell>
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-16 sm:space-y-24">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-9 sm:space-y-14">
         
         {/* HERO SECTION — Clear Narrative, Academic Affiliations & Primary CTAs */}
-        <section className="space-y-8 pt-4 sm:pt-8">
+        <section className="space-y-4 sm:space-y-5">
           
           {/* Status & Verification Badges */}
           <div className="flex flex-wrap items-center gap-2.5">
@@ -38,14 +40,14 @@ export default function HomePage() {
           </div>
 
           {/* Core Title & Bio */}
-          <div className="space-y-4 max-w-3xl">
+          <div className="space-y-2 max-w-3xl">
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-zinc-50 tracking-tight leading-tight">
               {H.name}
             </h1>
-            <p className="text-lg sm:text-xl font-mono text-gold-500 font-medium">
+            <p className="max-w-2xl text-xl leading-snug text-gold-500 font-medium sm:text-2xl">
               {H.tagline}
             </p>
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
+            <p className="text-base text-zinc-300 leading-relaxed font-sans">
               <InlineText text={H.intro} />
             </p>
 
@@ -88,7 +90,7 @@ export default function HomePage() {
         </section>
 
         {/* Featured projects */}
-        <section className="space-y-6 border-t border-zinc-800/80 pt-12">
+        <section className="space-y-4 border-t border-zinc-800/80 pt-5 sm:pt-8">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs font-mono font-bold text-gold-500 uppercase tracking-wider">
               <Layers className="w-4 h-4" />
@@ -102,8 +104,9 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {PROJECTS.projects.filter((p) => p.showOnHome).map((p) => {
               const url = primaryLink(p) || p.repoUrl
+              const study = caseStudyFor(p.id)
               return (
-              <div key={p.id} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 flex flex-col justify-between">
+              <div key={p.id} className="p-5 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-3 flex flex-col">
                 <div className="space-y-2">
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="flex items-center gap-3 min-w-0">
@@ -146,8 +149,8 @@ export default function HomePage() {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   ))}
-
                 </div>
+                {study?.media && <StudyMediaPreview media={study.media} resource={study.links[0]} />}
               </div>
               )
             })}

@@ -1,5 +1,7 @@
+import { StudyMediaPreview } from '@/components/StudyMediaPreview'
 import { InlineText } from '@/components/InlineText'
 import type { CaseStudy, CaseStudyContact } from '@/lib/case-studies'
+import { PROJECTS } from '@/lib/site-content'
 import { parsePublicUrl } from '@/lib/public-url'
 import { ArrowRight, ExternalLink, Mail } from 'lucide-react'
 
@@ -31,17 +33,23 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
   const contactLink = parsePublicUrl(contact.contactUrl)
   const cv = parsePublicUrl(contact.cvUrl)
   const [primaryResource, ...resources] = study.links
+  const media = study.media?.kind === 'none' ? undefined : study.media
+  const highlights = PROJECTS.projects.find(project => project.id === study.projectId)?.highlights
   return (
     <article className="space-y-9 sm:space-y-12">
-      <header className="max-w-3xl space-y-5">
-        <p className="text-xs font-mono font-semibold uppercase tracking-[0.2em] text-gold-500">{study.title}</p>
-        <h1 className="break-words font-serif-display text-3xl font-semibold leading-tight tracking-tight text-zinc-50 min-[375px]:text-4xl sm:text-6xl">
-          {study.headline}
-        </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">{study.summary}</p>
-        <p className="border-l-2 border-gold-500 pl-3 font-mono text-xs font-bold text-zinc-200 sm:text-sm">{study.role}</p>
-        {primaryResource && <StudyResource link={primaryResource} preview={preview} featured />}
-      </header>
+      <div className={media ? "grid items-center gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]" : undefined}>
+        <header className="max-w-3xl space-y-5">
+          <p className="text-xs font-mono font-semibold uppercase tracking-[0.2em] text-gold-500">{study.title}</p>
+          <h1 className="break-words font-serif-display text-3xl font-semibold leading-tight tracking-tight text-zinc-50 min-[375px]:text-4xl sm:text-6xl">
+            {study.headline}
+          </h1>
+          <p className="max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg">{study.summary}</p>
+          <p className="border-l-2 border-gold-500 pl-3 font-mono text-xs font-bold text-zinc-200 sm:text-sm">{study.role}</p>
+          {primaryResource && <StudyResource link={primaryResource} preview={preview} featured />}
+        </header>
+
+        {media && <StudyMediaPreview media={media} resource={primaryResource} preview={preview} />}
+      </div>
 
       {study.metrics.length > 0 && (
         <dl className="grid grid-cols-1 divide-y divide-zinc-800 rounded-2xl border border-zinc-800 bg-[#0E1526] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
@@ -66,6 +74,14 @@ export function CaseStudyArticle({ study, contact, preview = false }: {
               ))}
             </section>
           ))}
+          {highlights && highlights.length > 0 && (
+            <section className="space-y-3 border-t border-zinc-800 pt-5">
+              <h2 className="text-lg font-mono font-semibold text-zinc-100">Technical details</h2>
+              <ul className="list-disc space-y-2 pl-5 leading-relaxed text-zinc-300">
+                {highlights.map((item, index) => <li key={index}>{item}</li>)}
+              </ul>
+            </section>
+          )}
         </div>
         {resources.length > 0 && (
           <section className="self-start space-y-4 rounded-2xl border border-zinc-800 bg-[#0E1526] p-5">
