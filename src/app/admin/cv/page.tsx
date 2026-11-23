@@ -6,6 +6,7 @@ import { validateCv } from '@/lib/site-content'
 const schema: Field[] = [
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'headline', label: 'Headline', type: 'text' },
+  { key: 'summary', label: 'Research and professional profile', type: 'textarea' },
   { key: 'location', label: 'Location and availability', type: 'text' },
   { key: 'website', label: 'Website shown', type: 'text' },
   { key: 'websiteUrl', label: 'Website link', type: 'url', help: 'Leave empty to show the website as plain text.' },

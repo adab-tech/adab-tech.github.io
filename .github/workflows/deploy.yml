@@ -33,6 +33,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install CV export tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-liberation
+          python3 -m venv "$RUNNER_TEMP/cv-python"
+          "$RUNNER_TEMP/cv-python/bin/pip" install python-docx==1.2.0
+          echo "$RUNNER_TEMP/cv-python/bin" >> "$GITHUB_PATH"
+
       - name: Build Next.js Static Export
         run: npm run build
 
