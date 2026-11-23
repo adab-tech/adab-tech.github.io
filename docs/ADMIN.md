@@ -1,83 +1,33 @@
-# Admin: what you can change and where
+# Site administration
 
-adamu.tech/admin is the control room for the whole site. The site has no
-server: every change is saved to this GitHub repository and the site rebuilds
-about a minute later. With the admin server (below) you only ever type your
-password. Without it, the first time on a device an editor asks for a GitHub
-token, kept in that browser only.
+Open [adamu.tech/admin](https://adamu.tech/admin/) to edit the home page, projects, CV, and blog. Publishing commits the changes to GitHub and starts the site's GitHub Pages build.
 
-## Admin server (password only, no tokens)
+## Set up this browser
 
-Once the small admin server is set up, adamu.tech/admin needs **only your
-password**, on any device, and no screen ever asks for a GitHub token. The
-server is a free Cloudflare Worker at `adamu.tech/api/admin`
-(`admin-worker/`). It keeps the GitHub token as an encrypted Cloudflare
-secret, checks your password, and saves your edits to GitHub for you.
+When the Cloudflare admin Worker is absent, the sign-in page offers browser setup. Create a [fine-grained GitHub token](https://github.com/settings/personal-access-tokens/new) for only `adab-tech/adab-tech.github.io` with **Contents read and write**. Give it **Actions read** if you want to see deployment status.
 
-### One-time setup (about 10 minutes)
+Enter the token and choose a password in the setup form on `adamu.tech`. This password and the GitHub connection are specific to this browser. The editor uses the token to authenticate each publish with GitHub. Signing out clears the token. When you sign in again, the editors offer to reconnect GitHub.
 
-1. **Cloudflare account ID:** Cloudflare dashboard → adamu.tech → Overview,
-   right-hand column → copy **Account ID**.
-2. **Cloudflare API token:** My Profile → API Tokens → **Create Token** →
-   template **Edit Cloudflare Workers** → (account and zone: yours) → Create →
-   copy it.
-3. **GitHub token, for the server (the last one you will ever make):**
-   <https://github.com/settings/personal-access-tokens/new> → name
-   “adamu.tech admin server” → expiry: the longest offered → Only select
-   repositories: `adab-tech.github.io` → Permissions: **Contents: Read and
-   write**, **Actions: Read-only** → Generate → copy it.
-4. **Put the four values in GitHub:** this repository → **Settings → Secrets
-   and variables → Actions → New repository secret**, four times:
-   - `CLOUDFLARE_ACCOUNT_ID`: from step 1
-   - `CLOUDFLARE_API_TOKEN`: from step 2
-   - `ADMIN_GITHUB_TOKEN`: from step 3
-   - `ADMIN_PASSWORD`: the password you want to sign in with (at least 10
-     characters; you can change it later from the dashboard)
-5. **Deploy:** this repository → **Actions → Deploy admin server → Run
-   workflow**. When it finishes (about a minute), its summary says the admin
-   server is live.
-6. If the summary says it doesn’t answer: Cloudflare → adamu.tech → **DNS** →
-   the `adamu.tech` record must show **Proxied** (orange cloud). Then run step
-   5 again.
+Use **Reset this browser’s password** on the sign-in page if you forget the local password. GitHub verifies access to the site repository before the browser accepts a replacement. Older devices may still read `public/admin-auth.json` if that file was published previously. The current setup stores new hashes in the browser.
 
-Then go to adamu.tech/admin and sign in with your `ADMIN_PASSWORD`.
+## Set up password sign-in on every device
 
-### After setup
+The Cloudflare Worker at `https://adamu.tech/api/admin` stores the publishing token and password as Worker secrets. After it is deployed, sign in with the admin password. The Worker uses a secure, HttpOnly cookie for the session.
 
-- **Signing in:** just the password; you stay signed in for 30 days on that
-  browser (a secure cookie), or until you sign out.
-- **Changing the password:** Admin → **Admin password** (current password,
-  then the new one twice). It works at once on every device. Only a keyed hash
-  is saved (`content/admin/auth.json`), useless without the server’s secrets.
-- **Forgot it:** delete `content/admin/auth.json` on GitHub; the
-  `ADMIN_PASSWORD` secret works again.
-- **When the GitHub token in step 3 expires,** make a new one the same way,
-  update the `ADMIN_GITHUB_TOKEN` secret, and run step 5 again.
+### Deploy from GitHub Actions
 
-## Signing in without the admin server
+1. Find the account ID for the Cloudflare account that owns `adamu.tech`.
+2. Create a Cloudflare API token for deploying the Worker and managing its route in that zone.
+3. Create a [fine-grained GitHub token](https://github.com/settings/personal-access-tokens/new) for only `adab-tech/adab-tech.github.io` with **Contents read and write** and **Actions read**.
+4. Put the values directly in this repository's **Settings → Secrets and variables → Actions**:
+   - `CLOUDFLARE_ACCOUNT_ID`
+   - `CLOUDFLARE_API_TOKEN`
+   - `ADMIN_GITHUB_TOKEN`
+   - `ADMIN_PASSWORD`, a unique password of at least 10 characters
+5. Run [Deploy admin server](https://github.com/adab-tech/adab-tech.github.io/actions/workflows/admin-worker.yml). The workflow skips deployment if it cannot find all four secrets.
+6. Open [the admin session endpoint](https://adamu.tech/api/admin/session). It should return `{"signedIn":false}` in a signed-out browser. If it returns a static 404, check that the `adamu.tech` record is proxied through Cloudflare and the Worker route is present.
 
-Until the admin server is set up, the admin works as below.
-
-adamu.tech/admin asks only for a password; no GitHub token is needed to sign
-in. A sign-in lasts 30 days in that browser, or until you sign out.
-
-- **Default password:** `adamu2026` works until you set your own. Change it
-  straight away: Admin → **Admin password**.
-- **Changing it:** if that browser is connected to GitHub (you have written a
-  post or edited a page there), the new password is saved for every device
-  and the default stops working everywhere, about a minute later. If not, you
-  can paste the GitHub token in the same box to do that, or leave it empty to
-  change the password on that device only (the default then still works on
-  other devices).
-- **Nothing readable is stored:** only a salted PBKDF2 hash of the password
-  (in `public/admin-auth.json`, or in that browser for a device-only
-  password), which can’t be turned back into the password.
-- **Forgot it:** delete `public/admin-auth.json` on GitHub; about a minute
-  later the default works again, then set a new one. (A device-only password
-  is cleared by clearing that browser’s data for adamu.tech.)
-- The check runs in the browser, because the site has no server. It keeps out
-  anyone who doesn’t know the password; publishing is still protected by the
-  GitHub token, which the editors ask for once per browser.
+In Cloudflare the corresponding Worker secrets are `GITHUB_TOKEN` and `ADMIN_PASSWORD`. For an Actions-managed deployment, update the corresponding GitHub secret and rerun the workflow when a credential needs to change. When managing the Worker directly, rotate its secret in **Cloudflare → Workers & Pages → adamu-admin → Settings → Variables and Secrets**. Rotating either credential ends existing admin sessions.
 
 ## What you can change
 
@@ -117,15 +67,10 @@ Mapping Voices, Imodoye, Global Opportunities and Adab use the logos from their
 own code. Murya uses app.murya.ng’s own icon; upload the Murya logo in
 Admin → Projects to use a sharper one.
 
-## Deleting a comment
+## Blog comments
 
-Comments are hosted by HTML Comment Box, which has no way for other sites to
-delete comments, so moderation happens on the post itself:
-
-1. Admin → Comments → **Open comments** next to the post.
-2. Under the comment box, click **Moderator login** and sign in with the HTML
-   Comment Box account used to get the code (once per browser).
-3. Click **delete** on the comment. It disappears for everyone.
+Readers can reply by email. If you enable the first-party comments Worker,
+use **Admin → Comments** to moderate. See [Blog publishing](BLOG.md#comments).
 
 ## Files behind the editors
 

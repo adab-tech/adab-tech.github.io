@@ -46,21 +46,16 @@ export const metadata: Metadata = {
   }
 }
 
-// Content Security Policy. GitHub Pages can't send response headers, so it is
-// set with a meta tag. It lists every outside service the site uses; anything
-// else is blocked, so an injected script could not send data (such as the
-// admin's saved GitHub token) to another server through fetch, XHR, images
-// or forms. Next's static export needs inline scripts, hence 'unsafe-inline'.
-const HCB = 'https://www.htmlcommentbox.com'
+// Next's static export uses inline hydration scripts. Keep remote scripts blocked.
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' https://giscus.app ${HCB}`,
-  `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com ${HCB}`,
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  `img-src 'self' data: blob: ${HCB}`,
-  `connect-src 'self' https://api.counterapi.dev https://api.github.com ${HCB}`,
-  `frame-src https://giscus.app ${HCB}`,
-  `form-action 'self' ${HCB}`,
+  "img-src 'self' data: blob:",
+  "connect-src 'self' https://api.github.com",
+  "frame-src https://www.youtube-nocookie.com",
+  "form-action 'self'",
   "base-uri 'self'",
   "object-src 'none'",
   'upgrade-insecure-requests',

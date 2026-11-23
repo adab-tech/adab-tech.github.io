@@ -3,14 +3,11 @@
 import React, { useEffect, useState } from 'react'
 import { CheckCircle2, Edit3, FileText, Home, Layers, Loader2, MessageSquare, XCircle } from 'lucide-react'
 import { useCanPublish } from '@/components/admin/GitHubConnect'
-import { parsePostFile } from '@/lib/blog-format'
-import { ACTIONS_URL, listPosts, readPost, recentDeploys, type RecentRun } from '@/lib/github-publish'
-import { PROJECTS } from '@/lib/site-content'
+import { ACTIONS_URL, recentDeploys, type RecentRun } from '@/lib/github-publish'
 
-// The admin's front page: one card for each part of the site, and live
-// numbers (posts, drafts, last deploys) read from GitHub with the saved token.
+// Keep the primary editing actions and the latest site deploys together.
 const AREAS = [
-  { href: '/admin/blog/', icon: Edit3, title: 'Blog posts', text: 'Write, edit, publish, unpublish (draft) or delete posts.' },
+  { href: '/admin/blog/', icon: Edit3, title: 'Blog posts', text: 'Write, save private drafts, publish and share.' },
   { href: '/admin/home/', icon: Home, title: 'Home page', text: 'Headline, introduction, buttons, Murya figures, principles, contact box.' },
   { href: '/admin/projects/', icon: Layers, title: 'Projects', text: 'Add, edit, reorder or remove projects and their logos.' },
   { href: '/admin/cv/', icon: FileText, title: 'CV', text: 'Education, experience, languages, publications, datasets.' },
@@ -19,25 +16,12 @@ const AREAS = [
 
 export function SiteOverview() {
   const token = useCanPublish()
-  const [posts, setPosts] = useState<{ published: number; drafts: number } | null>(null)
   const [deploys, setDeploys] = useState<RecentRun[] | null>(null)
   const [deployError, setDeployError] = useState('')
 
   useEffect(() => {
     if (!token) return
     let cancelled = false
-    listPosts()
-      .then(async (files) => {
-        const texts = await Promise.all(files.slice(0, 60).map((f) => readPost(f.name).then((r) => r.text).catch(() => '')))
-        let drafts = 0
-        for (const [i, t] of texts.entries()) {
-          try {
-            if (parsePostFile(t, files[i].name).draft) drafts++
-          } catch {}
-        }
-        if (!cancelled) setPosts({ published: files.length - drafts, drafts })
-      })
-      .catch(() => {})
     recentDeploys(3)
       .then((r) => !cancelled && setDeploys(r))
       .catch(() => !cancelled && setDeployError('Add “Actions: Read-only” to the GitHub token to see deploys here.'))
@@ -57,14 +41,6 @@ export function SiteOverview() {
               <span>{title} →</span>
             </div>
             <p className="text-sm text-zinc-300 mt-1">{text}</p>
-            {href === '/admin/blog/' && posts && (
-              <p className="text-xs font-mono text-zinc-400 mt-2">
-                {posts.published} published · {posts.drafts} draft{posts.drafts === 1 ? '' : 's'}
-              </p>
-            )}
-            {href === '/admin/projects/' && (
-              <p className="text-xs font-mono text-zinc-400 mt-2">{PROJECTS.projects.length} projects on the site</p>
-            )}
           </a>
         ))}
       </div>
@@ -103,7 +79,7 @@ export function SiteOverview() {
         </div>
       ) : (
         <p className="text-xs text-zinc-400">
-          Open any editor above once to connect GitHub on this device; post counts and deploy status then show here.
+          Sign in to GitHub from an editor to see deploy status here.
         </p>
       )}
     </section>

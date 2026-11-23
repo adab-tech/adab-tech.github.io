@@ -41,6 +41,7 @@ jobs:
           done
           if [ -n "$missing" ]; then
             echo "::notice::Admin server not deployed; missing secrets:$missing (see docs/ADMIN.md, Admin server)."
+            echo "Admin Worker deployment skipped. Add these repository secrets first:$missing" >> "$GITHUB_STEP_SUMMARY"
             echo "ready=false" >> "$GITHUB_OUTPUT"
           else
             echo "ready=true" >> "$GITHUB_OUTPUT"
@@ -53,6 +54,10 @@ jobs:
         if: steps.secrets.outputs.ready == 'true'
         with:
           node-version: "22"
+
+      - name: Verify admin sessions and publishing
+        if: steps.secrets.outputs.ready == 'true'
+        run: node --test test/auth.test.mjs
 
       - name: Deploy the Worker
         if: steps.secrets.outputs.ready == 'true'
@@ -69,11 +74,12 @@ jobs:
         working-directory: .
         run: |
           sleep 10
-          body=$(curl -s https://adamu.tech/api/admin/session || true)
-          echo "adamu.tech/api/admin/session -> $body"
-          if echo "$body" | grep -q '"signedIn"'; then
-            echo "### Admin server is live. Sign in at https://adamu.tech/admin with ADMIN_PASSWORD." >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "::warning::Deployed, but adamu.tech/api/admin doesn't answer yet. In Cloudflare -> DNS, make sure the adamu.tech record is Proxied (orange cloud)."
-            echo "### Deployed, but adamu.tech/api/admin does not answer yet: turn on the orange cloud (Proxied) for adamu.tech in Cloudflare → DNS." >> "$GITHUB_STEP_SUMMARY"
-          fi
+          for attempt in 1 2 3; do
+            if curl --fail --silent --show-error --max-time 15 https://adamu.tech/api/admin/session | jq -e '.signedIn == false' >/dev/null; then
+              echo "Admin server is live. Sign in at https://adamu.tech/admin/ with the admin password." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::The deployed admin Worker did not return the expected session response. Check its route, DNS proxy status, and secret settings."
+          exit 1

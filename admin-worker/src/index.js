@@ -11,26 +11,26 @@
  * Secrets (set by .github/workflows/admin-worker.yml):
  *   GITHUB_TOKEN   fine-grained token for REPO only (Contents: read and write,
  *                  Actions: read)
- *   ADMIN_PASSWORD the starting password. Once the password is changed from
- *                  the dashboard, AUTH_PATH in the repo holds a keyed hash of
- *                  the new one and ADMIN_PASSWORD stops working; deleting that
- *                  file brings ADMIN_PASSWORD back ("forgot password").
+ *   ADMIN_PASSWORD owner-selected password, rotated through secret settings
  *
  * Routes (all under /api/admin/):
  *   GET  session            -> { signedIn }
+ *   GET  analytics          -> real visitor metrics, signed in only
  *   POST login  {password}  -> sets the session cookie
  *   POST logout             -> clears it
- *   POST password {current, next}
  *   *    github/<path>      -> api.github.com/repos/REPO/<path>, signed in only
  *
  * The admin pages are on the same origin, so no CORS headers are sent: other
  * sites can't read responses, and the session cookie is SameSite=Strict.
- * Write requests must also carry "X-Admin: 1", which a cross-site form can't.
+ * Write requests must also carry the site's Origin and the X-Admin header.
  */
 
+import { readAnalytics } from './analytics.js'
+
 const SESSION_DAYS = 30
-const COOKIE = 'adamu_admin'
+const COOKIE = '__Secure-adamu_admin'
 const MIN_PASSWORD = 10
+const ADMIN_ORIGIN = 'https://adamu.tech'
 
 const enc = new TextEncoder()
 const b64url = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -48,16 +48,16 @@ function sameString(a, b) {
 }
 
 const json = (body, status = 200, headers = {}) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...headers } })
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } })
 
 // Keys derived from the secrets. Replacing the GitHub token (or the
 // ADMIN_PASSWORD secret) signs every browser out.
 const sessionKey = (env) => `session|${env.GITHUB_TOKEN}|${env.ADMIN_PASSWORD}`
-const pepper = (env) => `password|${env.GITHUB_TOKEN}`
 
 async function github(env, path, init = {}) {
   return fetch(`https://api.github.com/repos/${env.REPO}${path}`, {
     ...init,
+    redirect: 'error',
     headers: {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${env.GITHUB_TOKEN}`,
@@ -68,21 +68,11 @@ async function github(env, path, init = {}) {
   })
 }
 
-// The password set from the dashboard: { v: 2, salt, hash } where hash is
-// HMAC(pepper, salt + password). Returns { record, sha } or null.
-async function readPasswordRecord(env) {
-  const res = await github(env, `/contents/${env.AUTH_PATH}?ref=${env.BRANCH}`)
-  if (res.status === 404) return null
-  if (!res.ok) throw new Error(`GitHub ${res.status}`)
-  const file = await res.json()
-  const record = JSON.parse(atob(file.content.replace(/\n/g, '')))
-  return record?.v === 2 ? { record, sha: file.sha } : null
-}
-
 async function passwordMatches(env, password) {
-  const stored = await readPasswordRecord(env)
-  if (stored) return sameString(await hmac(pepper(env), stored.record.salt + password), stored.record.hash)
-  return Boolean(env.ADMIN_PASSWORD) && sameString(password, env.ADMIN_PASSWORD)
+  if (typeof password !== 'string' || password.length > 1024) return false
+  const key = `login|${env.GITHUB_TOKEN}`
+  const [expected, supplied] = await Promise.all([hmac(key, env.ADMIN_PASSWORD), hmac(key, password)])
+  return sameString(supplied, expected)
 }
 
 async function newSessionCookie(env) {
@@ -95,25 +85,34 @@ async function signedIn(request, env) {
   const cookie = request.headers.get('Cookie') || ''
   const match = cookie.match(new RegExp(`(?:^|;\\s*)${COOKIE}=([^;]+)`))
   if (!match) return false
-  const [expires, sig] = match[1].split('.')
-  if (!expires || !sig || Number(expires) < Date.now()) return false
+  const [expires, sig, extra] = match[1].split('.')
+  const expiration = Number(expires)
+  if (!sig || extra !== undefined || !Number.isSafeInteger(expiration) || expiration <= Date.now()) return false
   return sameString(sig, await hmac(sessionKey(env), expires))
 }
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url)
-    const route = url.pathname.replace(/^\/api\/admin\/?/, '')
+    if (url.origin !== ADMIN_ORIGIN || !url.pathname.startsWith('/api/admin/')) return json({ error: 'Not found.' }, 404)
+    const route = url.pathname.slice('/api/admin/'.length)
     const method = request.method
 
-    if (!env.GITHUB_TOKEN || !env.ADMIN_PASSWORD) return json({ error: 'The admin server is not configured yet.' }, 503)
-    if (method !== 'GET' && method !== 'HEAD' && request.headers.get('X-Admin') !== '1') return json({ error: 'Forbidden' }, 403)
+    if (!env.GITHUB_TOKEN || typeof env.ADMIN_PASSWORD !== 'string' || env.ADMIN_PASSWORD.length < MIN_PASSWORD || !env.LOGIN_RATE_LIMIT) {
+      return json({ error: 'The site owner still needs to configure admin sign-in.' }, 503)
+    }
+    if (method !== 'GET' && method !== 'HEAD' &&
+      (request.headers.get('Origin') !== ADMIN_ORIGIN || request.headers.get('X-Admin') !== '1')) {
+      return json({ error: 'Forbidden.' }, 403)
+    }
 
     if (route === 'session' && method === 'GET') return json({ signedIn: await signedIn(request, env) })
 
     if (route === 'login' && method === 'POST') {
-      const { password } = await request.json().catch(() => ({}))
-      if (typeof password === 'string' && (await passwordMatches(env, password))) {
+      const { success } = await env.LOGIN_RATE_LIMIT.limit({ key: request.headers.get('CF-Connecting-IP') || 'unknown' })
+      if (!success) return json({ error: 'Too many sign-in attempts. Try again in one minute.' }, 429, { 'Retry-After': '60' })
+      const credentials = await request.json().catch(() => null)
+      if (await passwordMatches(env, credentials?.password)) {
         return json({ ok: true }, 200, { 'Set-Cookie': await newSessionCookie(env) })
       }
       // Slow down guessing.
@@ -127,37 +126,21 @@ export default {
 
     if (!(await signedIn(request, env))) return json({ error: 'Signed out. Sign in again.' }, 401)
 
-    if (route === 'password' && method === 'POST') {
-      const { current, next } = await request.json().catch(() => ({}))
-      if (typeof next !== 'string' || next.length < MIN_PASSWORD) return json({ error: `Use at least ${MIN_PASSWORD} characters.` }, 400)
-      if (typeof current !== 'string' || !(await passwordMatches(env, current))) {
-        await new Promise((r) => setTimeout(r, 1500))
-        return json({ error: 'The current password is wrong.' }, 400)
-      }
-      const salt = b64url(crypto.getRandomValues(new Uint8Array(16)))
-      const record = { v: 2, note: 'Admin password as a keyed hash; delete this file to reset to the ADMIN_PASSWORD secret.', salt, hash: await hmac(pepper(env), salt + next) }
-      const existing = await readPasswordRecord(env)
-      const res = await github(env, `/contents/${env.AUTH_PATH}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          message: 'Admin: change the admin password',
-          content: btoa(JSON.stringify(record, null, 2) + '\n'),
-          branch: env.BRANCH,
-          ...(existing ? { sha: existing.sha } : {}),
-        }),
-      })
-      if (!res.ok) return json({ error: `GitHub refused the change (${res.status}).` }, 502)
-      return json({ ok: true })
-    }
+    if (route === 'analytics' && method === 'GET') return readAnalytics(env)
 
     if (route.startsWith('github/')) {
       const path = '/' + route.slice('github/'.length) + url.search
       // Only this repository's API, and never the admin password file.
-      if (path.includes('..') || path.includes(env.AUTH_PATH)) return json({ error: 'Not allowed' }, 403)
-      const res = await github(env, path, {
-        method,
-        body: method === 'GET' || method === 'HEAD' ? undefined : await request.text(),
-      })
+      if (path.includes('..') || path.includes('content/admin/auth.json') || path.includes('public/admin-auth.json')) return json({ error: 'Not allowed' }, 403)
+      let res
+      try {
+        res = await github(env, path, {
+          method,
+          body: method === 'GET' || method === 'HEAD' ? undefined : await request.text(),
+        })
+      } catch {
+        return json({ message: 'GitHub could not be reached. Try again shortly.' }, 502)
+      }
       return new Response(res.body, {
         status: res.status,
         headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/json', 'Cache-Control': 'no-store' },

@@ -1,5 +1,7 @@
 'use client'
 
+import { FILE_PATTERN } from './blog-format'
+
 // Publishes blog posts from the admin editor by committing Markdown files to
 // the site repo through the GitHub REST API. The site is a static export with
 // no server, so a commit to `main` is how anything gets published: the deploy
@@ -18,29 +20,42 @@ const BRANCH = 'main'
 const DIR = 'content/blog'
 const API = `https://api.github.com/repos/${OWNER}/${REPO}`
 const TOKEN_KEY = 'adamu_tech_github_publish_token'
+const DEPLOY_RUNS = '/actions/workflows/deploy.yml/runs'
 
-export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions`
+export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions/workflows/deploy.yml`
 
 export const TOKEN_EVENT = 'adamu-token-change'
 const SERVER = '/api/admin'
 let serverMode = false
 let detecting: Promise<boolean> | null = null
 
-// True when the admin server answers on this site (checked once per page).
+// A static deployment can return 404. Other failures must stay visible so
+// an unavailable Worker doesn't unexpectedly switch the sign-in method.
 export function detectAdminServer(): Promise<boolean> {
   if (!detecting) {
-    detecting = fetch(`${SERVER}/session`, { cache: 'no-store', credentials: 'same-origin' })
+    detecting = fetch(`${SERVER}/session`, {
+      cache: 'no-store',
+      credentials: 'same-origin',
+      signal: AbortSignal.timeout(10000),
+    })
       .then(async (res) => {
-        const type = res.headers.get('Content-Type') || ''
-        if (!type.includes('application/json')) return false
+        if (res.status === 404) return false
         const body = await res.json().catch(() => null)
-        return Boolean(body && 'signedIn' in body)
+        if (!res.ok || typeof body?.signedIn !== 'boolean') {
+          throw new Error(body?.error || 'The admin server is unavailable. Try again shortly.')
+        }
+        return true
       })
-      .catch(() => false)
       .then((on) => {
         serverMode = on
         if (typeof window !== 'undefined') window.dispatchEvent(new Event(TOKEN_EVENT))
         return on
+      })
+      .catch((error) => {
+        detecting = null
+        throw error instanceof TypeError || (error instanceof DOMException && error.name === 'TimeoutError')
+          ? new Error('The admin server could not be reached. Check your connection and try again.')
+          : error
       })
   }
   return detecting
@@ -54,11 +69,13 @@ export async function adminServer<T>(route: string, body?: unknown): Promise<T> 
     method: body === undefined ? 'GET' : 'POST',
     cache: 'no-store',
     credentials: 'same-origin',
+    signal: AbortSignal.timeout(15000),
     headers: { 'X-Admin': '1', ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
     body: body === undefined ? undefined : JSON.stringify(body),
   })
   const data = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(data.error || `Admin server error ${res.status}`)
+  if (!res.headers.get('Content-Type')?.includes('application/json')) throw new Error('The admin server returned an unexpected response.')
   return data as T
 }
 
@@ -72,18 +89,21 @@ export function getToken(): string {
 
 export function saveToken(token: string): void {
   localStorage.setItem(TOKEN_KEY, token.trim())
+  window.dispatchEvent(new Event(TOKEN_EVENT))
 }
 
 export function forgetToken(): void {
   localStorage.removeItem(TOKEN_KEY)
+  window.dispatchEvent(new Event(TOKEN_EVENT))
 }
 
-async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
+async function gh<T>(path: string, init: RequestInit = {}, candidateToken?: string): Promise<T> {
   // Only CORS-safelisted headers plus Authorization/Content-Type, so the
   // browser's preflight to api.github.com can't be refused over a header.
   let res: Response
+  const throughWorker = serverMode && candidateToken === undefined
   try {
-    res = serverMode
+    res = throughWorker
       ? await fetch(`${SERVER}/github${path}`, {
           ...init,
           cache: 'no-store',
@@ -95,7 +115,7 @@ async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
           cache: 'no-store',
           headers: {
             Accept: 'application/vnd.github+json',
-            Authorization: `Bearer ${getToken().trim()}`,
+            Authorization: `Bearer ${candidateToken ?? getToken().trim()}`,
             ...(init.body ? { 'Content-Type': 'application/json' } : {}),
           },
         })
@@ -110,7 +130,7 @@ async function gh<T>(path: string, init: RequestInit = {}): Promise<T> {
     try {
       detail = (await res.json()).message || ''
     } catch {}
-    if (res.status === 401 && serverMode) throw new Error('You were signed out. Sign in again at adamu.tech/admin.')
+    if (res.status === 401 && throughWorker) throw new Error('You were signed out. Sign in again at adamu.tech/admin.')
     if (res.status === 401) throw new Error('GitHub rejected the token (expired or mistyped). Paste a new one.')
     if (res.status === 403 || res.status === 404) {
       throw new Error(`GitHub refused access (${res.status}). Check the token is for ${OWNER}/${REPO} with Contents: Read and write. ${detail}`)
@@ -138,21 +158,21 @@ function fromBase64(b64: string): string {
 
 export type RemoteFile = { name: string; path: string; sha: string }
 
-export async function checkAccess(): Promise<void> {
-  await gh(`/contents/${DIR}?ref=${BRANCH}`)
-}
-
 // Any GitHub account can read a public repository, so reading proves nothing.
 // This passes only for a token whose owner can push to this repository.
-export async function checkWriteAccess(): Promise<void> {
-  const repo = await gh<{ permissions?: { push?: boolean } }>('')
+export async function checkWriteAccess(token?: string): Promise<void> {
+  const candidate = token?.trim()
+  if (candidate !== undefined && !candidate.startsWith('github_pat_')) {
+    throw new Error('Enter a fine-grained GitHub token for this site repository.')
+  }
+  const repo = await gh<{ permissions?: { push?: boolean } }>('', {}, candidate)
   if (!repo.permissions?.push) {
     throw new Error('This GitHub token cannot publish to adab-tech.github.io. Use a token from the account that owns the site, with Contents: Read and write.')
   }
 }
 
-export async function listPosts(): Promise<RemoteFile[]> {
-  const items = await gh<{ name: string; path: string; sha: string; type: string }[]>(`/contents/${DIR}?ref=${BRANCH}`)
+export async function listPosts(ref = BRANCH): Promise<RemoteFile[]> {
+  const items = await gh<{ name: string; path: string; sha: string; type: string }[]>(`/contents/${DIR}?ref=${encodeURIComponent(ref)}`)
   return items
     .filter((i) => i.type === 'file' && i.name.endsWith('.md'))
     .map(({ name, path, sha }) => ({ name, path, sha }))
@@ -175,12 +195,20 @@ export async function writePost(name: string, text: string, message: string, sha
 
 export type FileChange = { path: string; base64: string } | { path: string; delete: true }
 
+async function branchHead(): Promise<string> {
+  const ref = await gh<{ object: { sha: string } }>(`/git/ref/heads/${BRANCH}`)
+  return ref.object.sha
+}
+
 // Writes several files (a post, its images, a rename) as ONE commit on main
 // using the Git Data API, so a publish triggers a single site rebuild.
-// Returns the commit SHA.
 export async function commitFiles(changes: FileChange[], message: string): Promise<string> {
-  const ref = await gh<{ object: { sha: string } }>(`/git/ref/heads/${BRANCH}`)
-  const parent = await gh<{ tree: { sha: string } }>(`/git/commits/${ref.object.sha}`)
+  const { commit } = await commitFilesAtHead(await branchHead(), changes, message)
+  return commit
+}
+
+async function commitFilesAtHead(head: string, changes: FileChange[], message: string) {
+  const parent = await gh<{ tree: { sha: string } }>(`/git/commits/${head}`)
   const tree = await Promise.all(
     changes.map(async (c) => {
       if ('delete' in c) return { path: c.path, mode: '100644', type: 'blob', sha: null }
@@ -197,11 +225,44 @@ export async function commitFiles(changes: FileChange[], message: string): Promi
   })
   const commit = await gh<{ sha: string }>(`/git/commits`, {
     method: 'POST',
-    body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] }),
+    body: JSON.stringify({ message, tree: newTree.sha, parents: [head] }),
   })
   // Not forced: if main moved since we read it, GitHub refuses and the user retries.
   await gh(`/git/refs/heads/${BRANCH}`, { method: 'PATCH', body: JSON.stringify({ sha: commit.sha, force: false }) })
-  return commit.sha
+  return { commit: commit.sha, blobs: tree }
+}
+
+export async function commitPost({
+  name,
+  text,
+  images,
+  original,
+  message,
+}: {
+  name: string
+  text: string
+  images: { path: string; base64: string }[]
+  original: Pick<RemoteFile, 'name' | 'sha'> | null
+  message: string
+}): Promise<{ commit: string; file: RemoteFile }> {
+  // Validate and commit against the same branch head. If main moves again,
+  // GitHub's non-force ref update refuses to overwrite the newer commit.
+  const head = await branchHead()
+  const files = await listPosts(head)
+  if (original && files.find((file) => file.name === original.name)?.sha !== original.sha) {
+    throw new Error('This post changed on GitHub. Reload it before saving.')
+  }
+  const slug = name.match(FILE_PATTERN)?.[2]
+  if (!slug) throw new Error('Add a valid date and web address before saving.')
+  if (files.some((file) => file.name !== original?.name && file.name.match(FILE_PATTERN)?.[2] === slug)) {
+    throw new Error(`Another post already uses /blog/${slug}/. Choose a different web address.`)
+  }
+
+  const path = postPath(name)
+  const changes: FileChange[] = [{ path, base64: toBase64(text) }, ...images]
+  if (original && original.name !== name) changes.push({ path: postPath(original.name), delete: true })
+  const { commit, blobs } = await commitFilesAtHead(head, changes, message)
+  return { commit, file: { name, path, sha: blobs[0].sha! } }
 }
 
 export const postPath = (name: string) => `${DIR}/${name}`
@@ -230,7 +291,7 @@ export type DeployState = 'building' | 'live' | 'failed' | 'unknown'
 export async function deployState(commitSha: string): Promise<DeployState> {
   try {
     const { workflow_runs } = await gh<{ workflow_runs: { status: string; conclusion: string | null }[] }>(
-      `/actions/runs?head_sha=${commitSha}&per_page=5`,
+      `${DEPLOY_RUNS}?branch=${BRANCH}&head_sha=${encodeURIComponent(commitSha)}&per_page=1`,
     )
     if (!workflow_runs.length) return 'building'
     const run = workflow_runs[0]
@@ -252,10 +313,13 @@ export type RecentRun = { status: string; conclusion: string | null; title: stri
 // Latest site deploys, for the admin overview. Needs "Actions: Read".
 export async function recentDeploys(count = 5): Promise<RecentRun[]> {
   const { workflow_runs } = await gh<{
-    workflow_runs: { status: string; conclusion: string | null; display_title: string; created_at: string; html_url: string; path: string }[]
-  }>(`/actions/runs?branch=${BRANCH}&per_page=20`)
-  return workflow_runs
-    .filter((r) => r.path.endsWith('deploy.yml'))
-    .slice(0, count)
-    .map((r) => ({ status: r.status, conclusion: r.conclusion, title: r.display_title, created_at: r.created_at, html_url: r.html_url }))
+    workflow_runs: { status: string; conclusion: string | null; display_title: string; created_at: string; html_url: string }[]
+  }>(`${DEPLOY_RUNS}?branch=${BRANCH}&per_page=${count}`)
+  return workflow_runs.map((r) => ({
+    status: r.status,
+    conclusion: r.conclusion,
+    title: r.display_title,
+    created_at: r.created_at,
+    html_url: r.html_url,
+  }))
 }

@@ -1,18 +1,27 @@
 'use client'
 
-import React from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAdminAuth } from '@/lib/auth'
-import { GHOST_URL, ghostEnabled } from '@/config/blog'
 import { ShieldCheck, LogOut, ExternalLink } from 'lucide-react'
 
 export function AdminHeader() {
   const { logout } = useAdminAuth()
   const router = useRouter()
+  const [logoutError, setLogoutError] = useState('')
+  const [signingOut, setSigningOut] = useState(false)
 
   const handleLogout = async () => {
-    await logout()
-    router.push('/admin/login')
+    setSigningOut(true)
+    setLogoutError('')
+    try {
+      await logout()
+      router.replace('/admin/login/')
+    } catch {
+      setLogoutError('Could not sign out. Try again.')
+    } finally {
+      setSigningOut(false)
+    }
   }
 
   return (
@@ -25,12 +34,9 @@ export function AdminHeader() {
           <span className="font-mono text-sm font-bold tracking-tight text-zinc-50">
             adamu<span className="text-gold-500">.tech</span><span className="hidden sm:inline"> Admin Studio</span>
           </span>
-          <span className="hidden sm:inline text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">
-            AUTHENTICATED
-          </span>
         </div>
 
-        <nav className="flex flex-wrap items-center gap-2">
+        <nav aria-label="Admin" className="flex flex-wrap items-center gap-2">
           <a
             href="/admin/"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
@@ -38,35 +44,39 @@ export function AdminHeader() {
             <span>Dashboard</span>
           </a>
           <a
-            href={ghostEnabled() ? `${GHOST_URL.replace(/\/$/, '')}/ghost/#/editor/post` : '/admin/blog/'}
+            href="/admin/blog/"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-gold-500/40 bg-gold-500/10 text-xs font-mono text-gold-400 hover:text-white transition-colors"
           >
             <span>Write a post</span>
           </a>
           <a
-            href="/admin/comments/"
+            href="/admin/#visits"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
           >
-            <span>Comments</span>
+            <span>Visits</span>
           </a>
           <a
             href="/"
             target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs font-mono text-zinc-300 hover:text-white transition-colors"
           >
-            <span>Preview Site</span>
+            <span>View site</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
 
           <button
+            type="button"
             onClick={handleLogout}
+            disabled={signingOut}
             className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-red-950/60 border border-red-900/60 text-xs font-mono text-red-300 hover:bg-red-900 hover:text-white transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
-            <span>Logout</span>
+            <span>{signingOut ? 'Signing out…' : 'Sign out'}</span>
           </button>
         </nav>
       </div>
+      {logoutError && <p role="alert" className="max-w-6xl mx-auto px-4 pb-3 text-sm text-red-300">{logoutError}</p>}
     </header>
   )
 }

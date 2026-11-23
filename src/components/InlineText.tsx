@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import { parsePublicUrl } from '@/lib/public-url'
 
 // Renders the small bit of formatting allowed in editable site text:
 // **bold**, *italic*, `code` and [link text](https://…). Everything else is
@@ -21,16 +22,27 @@ export function InlineText({ text, linkClassName = 'text-gold-500 hover:underlin
           )
         const link = part.match(/^\[([^\]]+)\]\(([^)\s]+)\)$/)
         if (link) {
-          const [, label, href] = link
-          if (href.startsWith('/'))
+          const [, label, value] = link
+          const destination = parsePublicUrl(value)
+          if (!destination) return <React.Fragment key={i}>{label}</React.Fragment>
+          if (destination.kind === 'local' && destination.href.startsWith('/'))
             return (
-              <Link key={i} href={href} className={linkClassName}>
+              <Link key={i} href={destination.href} className={linkClassName}>
                 {label}
               </Link>
             )
-          const external = /^https?:/.test(href)
           return (
-            <a key={i} href={href} className={linkClassName} {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}>
+            <a
+              key={i}
+              href={destination.href}
+              className={linkClassName}
+              {...(destination.kind === 'external' ? {
+                target: '_blank',
+                rel: 'noopener noreferrer',
+                title: destination.host,
+                'aria-label': `${label} (${destination.host})`,
+              } : {})}
+            >
               {label}
             </a>
           )

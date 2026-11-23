@@ -1,15 +1,17 @@
 'use client'
 
-import React, { useState, useSyncExternalStore } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { Check, Link2, Mail, Share2 } from 'lucide-react'
+
+type CopyResult = { url: string; outcome: 'copied' | 'manual' }
 
 // Share links for a post. Plain URLs to each network's share page (no
 // third-party scripts or trackers), plus copy-link and the phone's native
 // share sheet where the browser supports it.
 export function ShareButtons({ url, title }: { url: string; title: string }) {
-  const [copied, setCopied] = useState(false)
-  // The native share sheet exists only in some browsers; checked after hydration.
-  const canShare = useSyncExternalStore(noop, () => 'share' in navigator, () => false)
+  const [copyResult, setCopyResult] = useState<CopyResult | null>(null)
+  const copyOutcome = copyResult?.url === url ? copyResult.outcome : undefined
+  const canShare = useSyncExternalStore(noop, () => typeof navigator.share === 'function', () => false)
   const u = encodeURIComponent(url)
   const t = encodeURIComponent(title)
 
@@ -18,67 +20,79 @@ export function ShareButtons({ url, title }: { url: string; title: string }) {
     { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${u}`, icon: <LinkedInIcon /> },
     { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}`, icon: <FacebookIcon /> },
     { label: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`, icon: <WhatsAppIcon /> },
-    { label: 'Email', href: `mailto:?subject=${t}&body=${encodeURIComponent(`${title}\n\n${url}`)}`, icon: <Mail className="h-4 w-4" /> },
   ]
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setCopyResult({ url, outcome: 'copied' })
     } catch {
-      window.prompt('Copy this link:', url)
+      setCopyResult({ url, outcome: 'manual' })
     }
   }
 
   const nativeShare = async () => {
     try {
       await navigator.share({ title, url })
-    } catch {
-      // cancelled or unsupported: nothing to do
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === 'AbortError')) {
+        setCopyResult({ url, outcome: 'manual' })
+      }
     }
   }
 
   const button =
-    'inline-flex shrink-0 items-center justify-center h-10 min-w-10 sm:h-11 sm:min-w-11 px-2.5 rounded-full border border-zinc-700 text-zinc-300 hover:text-gold-500 hover:border-gold-500/60 transition-colors'
+    'inline-flex min-h-11 items-center justify-center gap-1.5 rounded-full border border-zinc-700 px-3 text-xs font-medium text-zinc-200 transition-colors hover:border-gold-500/60 hover:text-gold-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold-500'
 
   return (
-    // Label above on phones and beside on larger screens; the buttons stay on
-    // one line (Copy link is icon-only on phones).
-    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3" aria-label="Share this post">
-      <span className="text-sm text-zinc-300">Share this post</span>
-      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-      {canShare && (
-        <button type="button" onClick={nativeShare} className={button} aria-label="Share with an app on this device">
-          <Share2 className="h-4 w-4" />
-        </button>
-      )}
-      {/* The phone's share sheet already offers email, so skip it there. */}
-      {links.filter((l) => !(canShare && l.label === 'Email')).map((l) => (
-        <a
-          key={l.label}
-          href={l.href}
-          target={l.label === 'Email' ? undefined : '_blank'}
-          rel="noopener noreferrer"
-          className={button}
-          aria-label={`Share on ${l.label}`}
-          title={`Share on ${l.label}`}
-        >
-          {l.icon}
+    <div className="space-y-2" role="group" aria-label="Share this post">
+      <p className="text-sm font-medium text-zinc-300">Share this post</p>
+      <div className="flex flex-wrap items-center gap-2">
+        {canShare && (
+          <button type="button" onClick={nativeShare} className={button} aria-label="Share with an app on this device">
+            <Share2 className="h-4 w-4" aria-hidden="true" />
+            Share
+          </button>
+        )}
+        {links.map(({ label, href, icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={button}
+            aria-label={`Share on ${label}`}
+          >
+            {icon}
+            {label}
+          </a>
+        ))}
+        <a href={`mailto:?subject=${t}&body=${encodeURIComponent(`${title}\n\n${url}`)}`} className={button} aria-label="Share by email">
+          <Mail className="h-4 w-4" aria-hidden="true" />
+          Email
         </a>
-      ))}
-      <button
-        type="button"
-        onClick={copy}
-        className={`${button} gap-1.5 text-xs font-mono`}
-        aria-live="polite"
-        aria-label={copied ? 'Link copied' : 'Copy link'}
-        title="Copy link"
-      >
-        {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Link2 className="h-4 w-4" />}
-        <span className="hidden sm:inline">{copied ? 'Copied' : 'Copy link'}</span>
-      </button>
+        <button type="button" onClick={copy} className={button}>
+          {copyOutcome === 'copied'
+            ? <Check className="h-4 w-4 text-emerald-400" aria-hidden="true" />
+            : <Link2 className="h-4 w-4" aria-hidden="true" />}
+          {copyOutcome === 'copied' ? 'Copied' : 'Copy link'}
+        </button>
       </div>
+      <span className="sr-only" role="status">
+        {copyOutcome === 'copied' ? 'Post link copied to clipboard.' : copyOutcome === 'manual' ? 'Copy the post link from the field below.' : ''}
+      </span>
+      {copyOutcome === 'manual' && (
+        <label className="block max-w-xl text-sm text-zinc-300">
+          Copy this link
+          <input
+            type="url"
+            readOnly
+            value={url}
+            onFocus={(event) => event.currentTarget.select()}
+            className="mt-1 block w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm text-zinc-100"
+          />
+        </label>
+      )}
     </div>
   )
 }

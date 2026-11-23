@@ -21,9 +21,14 @@ built into the site; no subscription):
   uploaded.
 - **Videos**: paste a YouTube link (embedded with youtube-nocookie.com).
   Upload long videos to YouTube rather than to the site.
-- **Publish** sends the post, its images, and any rename as one commit, so
-  the site rebuilds once; the editor shows Building… then the live link
-  (about a minute). **Save as draft** keeps it off the site.
+- **Publish** sends the post, its images, and any rename in one commit.
+  The editor follows the GitHub Pages workflow for that commit and shows
+  the live link when deployment succeeds.
+- **Save draft in this browser** saves text and attached images on this device.
+  Open it from **Drafts in this browser** to continue writing. Drafts do not
+  sync between devices, and clearing browser site data deletes them. Saving
+  edits to a published post as a local draft preserves the published version.
+  Older drafts committed to GitHub are visible in the repository and its history.
 - Posts written here are stored as HTML (`format: html` in the header);
   older Markdown posts open in the editor and are saved back as HTML.
 
@@ -32,27 +37,19 @@ paid Ghost plan.)
 
 ## Sharing
 
-Every post page on adamu.tech ends with one row of share buttons (X, LinkedIn,
-Facebook, WhatsApp, email, copy link; on phones the device's share sheet replaces
-the email button) and a
-generated preview image (`/blog/<slug>/og.png`) so links show a card with the
-title when shared. Ghost posts use Ghost's own sharing and previews.
+When a post goes live, the editor shows sharing controls for its public link.
+You can also reopen a live post from the GitHub list to share it. The public
+post page includes the same sharing controls and a generated preview image
+at `/blog/<slug>/og.png`. Social links open the platform's share composer so
+you can review the post before sharing it. Ghost posts use Ghost's own sharing
+and previews.
 
 ## Comments
 
-Each post ends with **Reply by email** (subject filled in with the post title)
-and a public comment section. The site uses the first one that is set up:
-
-1. **HTML Comment Box** ([htmlcommentbox.com](https://www.htmlcommentbox.com)):
-   hosted, free for small sites, readers comment anonymously (no account, no
-   email), each post has its own thread, restyled to match the site. To set
-   up (done): on htmlcommentbox.com click **Get the code**, then copy the value after
-   `mod=` (and `opts=`) from the snippet into `HCB` in `src/config/blog.ts`.
-   Moderate by clicking **Moderator login** under the comments on any post.
-2. **Own comment service** (`comments-worker/`, Cloudflare): optional, off
-   (`COMMENTS_API` empty); see below if you ever want it.
-3. **giscus** (GitHub sign-in; GitHub Discussions in this repo): used while
-   neither of the above is set up.
+Each post includes **Reply by email**. Public comments use the optional
+first-party Cloudflare Worker in `comments-worker/`. Existing comments from
+hosted providers remain in their own dashboards. The site no longer loads
+third-party comment scripts into the same origin as the admin editor.
 
 ### Turning on the own comment service (one time, free)
 
@@ -92,9 +89,9 @@ personal blog needs.
    - Paste it into the page. It is stored in that browser only and sent only
      to GitHub. **Forget GitHub token on this device** removes it. If a token
      leaks, revoke it on GitHub; it can only change this repository's files.
-3. Write the title and text, check **Preview**, then **Publish**. The web
-   address is made from the title (editable). **Save as draft** stores the post
-   in the repo without putting it on the site.
+3. Write the title and text, then select **Publish**. The editor shows the post
+   formatting as you write. You can edit the web address generated from the
+   title. **Save draft in this browser** makes a local copy you can reopen later.
 4. The editor shows "Building…" and then "Live on adamu.tech" with a link
    (or a link to Actions if the token has no Actions permission).
 5. Click a post in the list on the left to edit or delete it. Changing the
