@@ -26,7 +26,7 @@ const schema: Field[] = [
   { key: 'sendLabel', label: 'Send button when direct delivery is enabled', type: 'text' },
   { key: 'sendingLabel', label: 'Sending button', type: 'text' },
   { key: 'successMessage', label: 'Message after a successful submission', type: 'textarea' },
-  { key: 'fallbackMessage', label: 'Message when opening the visitor’s email app after a relay error', type: 'textarea' },
+  { key: 'fallbackMessage', label: 'Message offering email after a delivery error', type: 'textarea' },
   { key: 'emailSubject', label: 'Subject for the visitor’s email app', type: 'text', help: 'Use {name} to insert the visitor’s name.' },
   { key: 'metadataTitle', label: 'Browser tab title', type: 'text' },
   { key: 'metadataDescription', label: 'Search description', type: 'textarea' },
