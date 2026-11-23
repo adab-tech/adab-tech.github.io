@@ -78,18 +78,25 @@ test('signed-in publishing forwards the configured repository request', async (t
 
   const login = await worker.fetch(post('login', { password }), env)
   const cookie = login.headers.get('Set-Cookie').split(';')[0]
+  let calls = 0
   const fetchMock = t.mock.method(globalThis, 'fetch', async (url, init) => {
     assert.equal(url, 'https://api.github.com/repos/adab-tech/adab-tech.github.io/git/blobs')
     assert.equal(init.method, 'POST')
+    assert.equal(init.redirect, 'manual')
     assert.deepEqual(JSON.parse(init.body), { content: 'example' })
     assert.equal(init.headers.Authorization, 'Bearer test-token')
+    if (calls++ > 0) return Response.redirect('https://example.invalid/unexpected', 302)
     return Response.json({ sha: 'local-test-blob' }, { status: 201 })
   })
 
   const response = await worker.fetch(post('github/git/blobs', { content: 'example' }, { cookie }), env)
   assert.equal(response.status, 201)
   assert.deepEqual(await response.json(), { sha: 'local-test-blob' })
-  assert.equal(fetchMock.mock.callCount(), 1)
+  const redirected = await worker.fetch(post('github/git/blobs', { content: 'example' }, { cookie }), env)
+  assert.equal(redirected.status, 502)
+  assert.equal(redirected.headers.has('Location'), false)
+  assert.match((await redirected.json()).message, /unexpectedly redirected/)
+  assert.equal(fetchMock.mock.callCount(), 2)
 })
 
 test('an installed GitHub App signs, scopes, caches, and renews publishing credentials', async (t) => {
@@ -110,6 +117,7 @@ test('an installed GitHub App signs, scopes, caches, and renews publishing crede
   const writeUrl = 'https://api.github.com/repos/adab-tech/adab-tech.github.io/git/blobs'
 
   t.mock.method(globalThis, 'fetch', async (url, init) => {
+    assert.equal(init.redirect, 'manual')
     if (url === installationUrl) {
       installationChecks++
       assert.equal(init.method, 'GET')
@@ -119,7 +127,6 @@ test('an installed GitHub App signs, scopes, caches, and renews publishing crede
     if (url === mintUrl) {
       mints++
       assert.equal(init.method, 'POST')
-      assert.equal(init.redirect, 'error')
       assert.deepEqual(JSON.parse(init.body), {
         repositories: ['adab-tech.github.io'],
         permissions: { contents: 'write', actions: 'read' },
@@ -228,6 +235,7 @@ test('GitHub App setup failures expose fixed messages without provider data', as
   const privateMessage = { message: 'Provider response stays private' }
   const cases = [
     ['invalid PEM', /private key could not be read/, { GITHUB_APP_PRIVATE_KEY: 'fake-pem' }, []],
+    ['provider redirect', /unexpectedly redirected/, {}, [[302, privateMessage]]],
     ['GitHub rejects JWT', /rejected the App JWT/, {}, [[401, privateMessage]]],
     ['no installation for this repository', /could not find the App installation/, {}, [[404, privateMessage]]],
     ['wrong installation ID', /ID does not match/, {}, [[200, { id: 987, permissions: { contents: 'write' } }]]],
