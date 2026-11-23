@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { CaseStudyLink } from '@/components/CaseStudyLink'
 import { GlobalShell } from '@/components/GlobalShell'
+import { InlineText } from '@/components/InlineText'
 import { ProjectLogo } from '@/components/ProjectLogo'
 import { PROJECTS, primaryLink } from '@/lib/site-content'
 import { ArrowRight, Code2, ExternalLink } from 'lucide-react'
@@ -16,7 +17,7 @@ export default function ProjectsPage() {
             {PROJECTS.heading}
           </h1>
           <p className="text-sm sm:text-base text-zinc-400 max-w-3xl font-sans leading-relaxed">
-            {PROJECTS.intro}
+            <InlineText text={PROJECTS.intro} />
           </p>
         </div>
 
@@ -25,7 +26,9 @@ export default function ProjectsPage() {
           {PROJECTS.projects.map((p) => (
             <div 
               key={p.id}
-              className="p-6 rounded-2xl border border-zinc-800 bg-[#0E1526] space-y-5 flex flex-col justify-between hover:border-gold-500/40 transition-all shadow-sm"
+              className={p.showOnHome
+                ? 'min-w-0 rounded-2xl border border-zinc-800 bg-[#0E1526] p-5 sm:p-6 space-y-5 flex flex-col justify-between'
+                : 'min-w-0 border-t border-zinc-800 py-5 space-y-4 md:col-span-2'}
             >
               <div className="space-y-4">
                 {/* Title & Status */}
@@ -78,7 +81,7 @@ export default function ProjectsPage() {
 
               {/* Action Buttons & Tags */}
               <div className="space-y-3 pt-2 border-t border-zinc-800/80">
-                <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm font-mono [&_a]:min-h-11">
                   <CaseStudyLink projectId={p.id} />
                   {p.liveUrl && (
                     <a

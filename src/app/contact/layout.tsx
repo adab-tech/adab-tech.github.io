@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { GlobalShell } from '@/components/GlobalShell'
 import { CONTACT } from '@/lib/contact-content'
 import { CV } from '@/lib/site-content'
 import { JsonLd, PERSON_ID, SITE } from '@/lib/structured-data'
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {children}
+      <GlobalShell>{children}</GlobalShell>
       <JsonLd graph={[{
         '@type': 'ContactPage',
         url: `${SITE}/contact/`,

@@ -2,10 +2,9 @@
   "menu": [
     { "label": "Home", "url": "/", "featured": false },
     { "label": "Projects", "url": "/projects", "featured": false },
-    { "label": "Tools", "url": "/tools/", "featured": false },
+    { "label": "CV", "url": "/cv/", "featured": false },
     { "label": "Blog", "url": "/blog", "featured": false },
-    { "label": "Pre-print", "url": "/papers/agentic-ai", "featured": false },
-    { "label": "CV", "url": "/cv", "featured": true }
+    { "label": "Contact", "url": "/contact/", "featured": true }
   ],
   "social": [
     {
@@ -42,6 +41,9 @@
   "footer": {
     "copyright": "© 2026 adamu.tech · Adamu Danjuma Abubakar",
     "license": "CC-BY-NC-SA 4.0",
-    "links": []
+    "links": [
+      { "label": "Tools", "url": "/tools/" },
+      { "label": "Pre-print", "url": "/papers/agentic-ai/" }
+    ]
   }
 }

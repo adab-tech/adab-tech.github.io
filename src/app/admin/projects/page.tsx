@@ -11,7 +11,7 @@ const project: Field[] = [
   { key: 'liveUrl', label: 'Live site', type: 'url', help: 'Where the logo and the live-site link go. Leave empty if there is no site.', placeholder: 'https://…' },
   { key: 'liveLinkLabel', label: 'Live-site link text (Projects page)', type: 'text', placeholder: 'Live site' },
   { key: 'iconRow', label: 'Show in the “My platforms” icon row', type: 'bool', default: true },
-  { key: 'showOnHome', label: 'Show on the home page', type: 'bool', default: true },
+  { key: 'showOnHome', label: 'Feature on the home page and Projects page', type: 'bool', default: true },
   { key: 'category', label: 'Category', type: 'select', options: (root) => (root.categories as string[]) ?? [] },
   { key: 'role', label: 'My role', type: 'text' },
   { key: 'type', label: 'Kind of project (home page)', type: 'text', placeholder: 'e.g. Open research dataset & atlas' },
@@ -33,7 +33,7 @@ const project: Field[] = [
 
 const schema: Field[] = [
   { key: 'projects', label: 'Projects', type: 'list', itemLabel: 'project', titleKey: 'title', fields: project, help: 'Order here is the order on the site. Click a project to edit it.' },
-  { key: 'iconRowLabel', label: 'Icon row label', type: 'text', help: 'Text beside the row of project icons near the top of the home page. Leave empty for icons only.' },
+  { key: 'iconRowLabel', label: 'Icon row label', type: 'text', help: 'Text beside the row of project icons below the featured projects. Leave empty for icons only.' },
   { key: 'heading', label: 'Projects page heading', type: 'text' },
   { key: 'intro', label: 'Projects page introduction', type: 'textarea' },
   { key: 'homeKicker', label: 'Small label above Home page projects', type: 'text', placeholder: 'Projects' },
