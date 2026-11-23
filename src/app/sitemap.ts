@@ -8,7 +8,7 @@ export const dynamic = 'force-static'
 const SITE = 'https://adamu.tech'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = ['/', '/cv/', '/projects/', '/blog/', '/papers/agentic-ai/', '/contact/', '/mapping/']
+  const pages = ['/', '/cv/', '/projects/', '/tools/', '/blog/', '/papers/agentic-ai/', '/contact/', '/mapping/']
   const posts = getAllPosts().filter((p) => !p.draft)
   return [
     ...pages.map((path) => ({ url: `${SITE}${path}` })),

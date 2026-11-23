@@ -15,7 +15,12 @@ routes = [{ pattern = "adamu.tech/api/admin/*", zone_name = "adamu.tech" }]
 
 [vars]
 REPO = "adab-tech/adab-tech.github.io"
-BRANCH = "main"
-# Where a password changed from the dashboard is kept (a keyed hash; useless
-# without the Worker's secrets). Not published on the site.
-AUTH_PATH = "content/admin/auth.json"
+ANALYTICS_ZONE_ID = "c79da83c86c986fcdd5e686c129e4d84"
+
+[[ratelimits]]
+name = "LOGIN_RATE_LIMIT"
+namespace_id = "2026112301"
+
+  [ratelimits.simple]
+  limit = 5
+  period = 60

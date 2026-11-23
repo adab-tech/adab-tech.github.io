@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { Menu, X, ArrowUp } from 'lucide-react'
 import { LogoMark } from '@/components/LogoMark'
 import { SocialNavIcons } from '@/components/SocialNavIcons'
-import { PageViewPing } from '@/components/VisitorCounter'
 
 interface ShellProps {
   children: React.ReactNode
@@ -57,6 +56,12 @@ export function GlobalShell({ children }: ShellProps) {
               className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
             >
               Projects
+            </Link>
+            <Link
+              href="/tools/"
+              className="text-xs font-mono text-zinc-300 hover:text-gold-500 transition-colors px-1.5 py-1"
+            >
+              Tools
             </Link>
             <Link 
               href="/blog" 
@@ -116,6 +121,13 @@ export function GlobalShell({ children }: ShellProps) {
                 Projects
               </Link>
               <Link
+                href="/tools/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
+              >
+                Tools
+              </Link>
+              <Link
                 href="/blog"
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2.5 text-center rounded-lg bg-zinc-900/80 border border-zinc-800 text-zinc-200 hover:text-gold-500"
@@ -146,8 +158,6 @@ export function GlobalShell({ children }: ShellProps) {
           </div>
         )}
       </header>
-
-      <PageViewPing />
 
       {/* Main Page Content */}
       <main className="flex-1">

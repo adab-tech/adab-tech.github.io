@@ -1,20 +1,8 @@
 'use client'
 
-// The admin password is never stored anywhere, in the code or in the repo.
-// public/admin-auth.json holds only a salted PBKDF2-SHA256 hash of it
-// (600,000 rounds), which cannot be turned back into the password. Signing in
-// hashes what you type and compares. Setting or changing the password writes
-// a new hash through GitHub, so it needs the GitHub token.
-//
-// There is no built-in default. Until a password is set, signing in asks for
-// a GitHub token that can publish to this repository (proof that you own the
-// site) and a new password. A password changed without the GitHub token is
-// kept on that device only (LOCAL_KEY).
-//
-// This gate runs in the browser (the site has no server): it keeps out anyone
-// who doesn't know the password, and publishing still needs the GitHub token.
-
-export const AUTH_FILE = 'public/admin-auth.json'
+// When a site has no admin Worker, a browser may store a local password hash
+// to unlock the editing UI, and GitHub still authorizes every save. Support
+// legacy public hashes for sign-in only. New hashes stay on the device.
 const AUTH_URL = '/admin-auth.json'
 export const MIN_PASSWORD = 10
 const ITERATIONS = 600_000
@@ -54,11 +42,11 @@ export async function checkPassword(password: string, record: PasswordRecord): P
 
 // The published hash, or null if no password has been set yet.
 export async function fetchPasswordRecord(): Promise<PasswordRecord | null> {
-  const res = await fetch(`${AUTH_URL}?t=${Date.now()}`, { cache: 'no-store' })
+  const res = await fetch(AUTH_URL, { cache: 'no-store', signal: AbortSignal.timeout(10000) })
   if (res.status === 404) return null
   if (!res.ok) throw new Error(`Couldn't check the password right now (${res.status}). Try again.`)
   const rec = (await res.json()) as PasswordRecord
-  if (rec?.v !== 1 || !rec.hash || !rec.salt) throw new Error('The password file is damaged. Delete public/admin-auth.json on GitHub, then sign in again to set a new password with your GitHub token.')
+  if (rec?.v !== 1 || !rec.hash || !rec.salt) throw new Error('The legacy password file is invalid. The site owner can remove public/admin-auth.json from GitHub to recover.')
   return rec
 }
 

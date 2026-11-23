@@ -7,6 +7,7 @@
 import homeJson from '../../content/site/home.json'
 import projectsJson from '../../content/site/projects.json'
 import cvJson from '../../content/site/cv.json'
+import { parsePublicUrl } from './public-url'
 
 export type StatusColor = 'emerald' | 'blue' | 'amber'
 
@@ -113,6 +114,14 @@ export function initials(title: string): string {
 // problems in plain words (empty = fine).
 const isList = (v: unknown) => Array.isArray(v)
 
+function checkLink(problems: string[], label: string, value: unknown, allowEmail = false) {
+  if (value === '') return
+  const destination = parsePublicUrl(value)
+  if (!destination || (destination.kind === 'email' && !allowEmail)) {
+    problems.push(`${label}: use a local path or an HTTPS URL${allowEmail ? ', or a mailto link' : ''}`)
+  }
+}
+
 export function validateProjects(d: ProjectsContent): string[] {
   const problems: string[] = []
   if (!isList(d.categories)) problems.push('categories must be a list')
@@ -124,9 +133,12 @@ export function validateProjects(d: ProjectsContent): string[] {
     if (!p.id || !/^[a-z0-9-]+$/.test(p.id)) problems.push(`${where}: the id must be lowercase letters, numbers and dashes`)
     else if (ids.has(p.id)) problems.push(`${where}: the id "${p.id}" is used by another project`)
     ids.add(p.id)
-    if (!d.categories.includes(p.category)) problems.push(`${where}: category "${p.category}" is not in the category list`)
+    if (isList(d.categories) && !d.categories.includes(p.category)) problems.push(`${where}: category "${p.category}" is not in the category list`)
     if (!['emerald', 'blue', 'amber'].includes(p.statusColor)) problems.push(`${where}: status colour must be emerald, blue or amber`)
     if (!isList(p.highlights) || !isList(p.tags)) problems.push(`${where}: highlights and tags must be lists`)
+    for (const field of ['liveUrl', 'paperUrl', 'modelUrl', 'repoUrl', 'logo'] as const) {
+      checkLink(problems, `${where} ${field}`, p[field])
+    }
   })
   return problems
 }
@@ -135,7 +147,9 @@ export function validateHome(d: HomeContent): string[] {
   const problems: string[] = []
   if (!d.name) problems.push('Add a name')
   if (!isList(d.buttons)) problems.push('buttons must be a list')
+  else d.buttons.forEach((button) => checkLink(problems, `Button "${button.label}"`, button.url, true))
   if (!d.numbers || !isList(d.numbers.items) || !isList(d.numbers.specs) || !isList(d.numbers.evidence)) problems.push('the numbers section is incomplete')
+  else checkLink(problems, 'Technical specifications link', d.numbers.specsLinkUrl)
   if (!d.principles || !isList(d.principles.items)) problems.push('the principles section is incomplete')
   if (!d.contact) problems.push('the contact section is missing')
   return problems
@@ -146,6 +160,20 @@ export function validateCv(d: CvContent): string[] {
   if (!d.name) problems.push('Add a name')
   for (const key of ['profiles', 'education', 'experience', 'languages', 'publicationGroups', 'datasets'] as const) {
     if (!isList(d[key])) problems.push(`${key} must be a list`)
+  }
+  checkLink(problems, 'Google Scholar link', d.scholarUrl)
+  if (isList(d.profiles)) d.profiles.forEach((profile) => checkLink(problems, `Profile "${profile.label}"`, profile.url))
+  if (isList(d.publicationGroups)) {
+    d.publicationGroups.forEach((group) => {
+      if (!isList(group.items)) problems.push(`Publications in "${group.heading}" must be a list`)
+      else group.items.forEach((entry) => checkLink(problems, `Publication "${entry.title}"`, entry.href))
+    })
+  }
+  if (isList(d.datasets)) {
+    d.datasets.forEach((dataset) => {
+      if (!isList(dataset.links)) problems.push(`Links for "${dataset.title}" must be a list`)
+      else dataset.links.forEach((link) => checkLink(problems, `Dataset "${dataset.title}" link "${link.label}"`, link.url))
+    })
   }
   return problems
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useSyncExternalStore } from 'react'
 import { KeyRound, Loader2 } from 'lucide-react'
-import { TOKEN_EVENT, checkAccess, forgetToken, getToken, isServerMode, saveToken } from '@/lib/github-publish'
+import { TOKEN_EVENT, checkWriteAccess, forgetToken, getToken, isServerMode, saveToken } from '@/lib/github-publish'
 
 // Shared by every admin editor that saves to GitHub (blog, home page,
 // projects, CV): the one-time token setup and a hook that reads the token.
@@ -25,7 +25,6 @@ export const useCanPublish = () => useSyncExternalStore(subscribeToken, () => is
 
 export function forgetTokenHere() {
   forgetToken()
-  window.dispatchEvent(new Event(TOKEN_EVENT))
 }
 
 const inputClass =
@@ -40,14 +39,10 @@ export function TokenSetup() {
     e.preventDefault()
     setChecking(true)
     setError('')
-    const previous = getToken()
-    saveToken(value)
     try {
-      await checkAccess()
-      window.dispatchEvent(new Event(TOKEN_EVENT))
+      await checkWriteAccess(value)
+      saveToken(value)
     } catch (err) {
-      if (previous) saveToken(previous)
-      else forgetToken()
       setError(err instanceof Error ? err.message : String(err))
     } finally {
       setChecking(false)
