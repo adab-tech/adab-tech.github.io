@@ -2,19 +2,20 @@
  * Admin server for adamu.tech (Cloudflare Worker, free tier).
  *
  * The site itself is static. Saving from adamu.tech/admin means committing to
- * the GitHub repository, which needs a GitHub token. This Worker holds that
- * token as an encrypted secret, so browsers never see or need it. The admin
- * signs in here with a password and gets an HttpOnly session cookie; then the
- * admin pages send their GitHub API calls through /api/admin/github/..., and
- * the Worker adds the token.
+ * the GitHub repository. The admin signs in with a password and gets an
+ * HttpOnly session cookie. The Worker adds the publishing credential to
+ * requests for the configured GitHub repository.
  *
  * Secrets (set by .github/workflows/admin-worker.yml):
- *   GITHUB_TOKEN   fine-grained token for REPO only (Contents: read and write,
- *                  Actions: read)
  *   ADMIN_PASSWORD owner-selected password, rotated through secret settings
+ *   ADMIN_SESSION_SECRET independent, randomly generated 32-byte secret
+ *   GITHUB_APP_ID, GITHUB_APP_INSTALLATION_ID, GITHUB_APP_PRIVATE_KEY
+ *                  optional GitHub App credentials to mint publishing tokens
+ *   GITHUB_TOKEN   optional fine-grained publishing token for REPO only
+ *                  (Contents: read and write, Actions: read)
  *
  * Routes (all under /api/admin/):
- *   GET  session            -> { signedIn }
+ *   GET  session            -> { signedIn, publishingConfigured }
  *   GET  analytics          -> real visitor metrics, signed in only
  *   POST login  {password}  -> sets the session cookie
  *   POST logout             -> clears it
@@ -26,10 +27,12 @@
  */
 
 import { readAnalytics } from './analytics.js'
+import { discardInstallationToken, githubHeaders, publishingConfigured, publishingToken } from './github-auth.js'
 
 const SESSION_DAYS = 30
 const COOKIE = '__Secure-adamu_admin'
 const MIN_PASSWORD = 10
+const MIN_SESSION_SECRET_LENGTH = 32
 const ADMIN_ORIGIN = 'https://adamu.tech'
 
 const enc = new TextEncoder()
@@ -50,19 +53,18 @@ function sameString(a, b) {
 const json = (body, status = 200, headers = {}) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', ...headers } })
 
-// Keys derived from the secrets. Replacing the GitHub token (or the
-// ADMIN_PASSWORD secret) signs every browser out.
-const sessionKey = (env) => `session|${env.GITHUB_TOKEN}|${env.ADMIN_PASSWORD}`
+// Password and session-secret changes sign every browser out. A publishing
+// token can be added or rotated independently of an admin session.
+const sessionSignature = (env, expires) =>
+  hmac(env.ADMIN_SESSION_SECRET, JSON.stringify(['session', env.ADMIN_PASSWORD, expires]))
 
-async function github(env, path, init = {}) {
+async function github(env, token, path, init = {}) {
   return fetch(`https://api.github.com/repos/${env.REPO}${path}`, {
     ...init,
     redirect: 'error',
     headers: {
-      Accept: 'application/vnd.github+json',
-      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      'User-Agent': 'adamu-admin-worker',
-      'X-GitHub-Api-Version': '2022-11-28',
+      ...githubHeaders,
+      Authorization: `Bearer ${token}`,
       ...(init.body ? { 'Content-Type': 'application/json' } : {}),
     },
   })
@@ -70,14 +72,14 @@ async function github(env, path, init = {}) {
 
 async function passwordMatches(env, password) {
   if (typeof password !== 'string' || password.length > 1024) return false
-  const key = `login|${env.GITHUB_TOKEN}`
-  const [expected, supplied] = await Promise.all([hmac(key, env.ADMIN_PASSWORD), hmac(key, password)])
+  const digest = (value) => hmac(env.ADMIN_SESSION_SECRET, JSON.stringify(['password', value]))
+  const [expected, supplied] = await Promise.all([digest(env.ADMIN_PASSWORD), digest(password)])
   return sameString(supplied, expected)
 }
 
 async function newSessionCookie(env) {
   const expires = Date.now() + SESSION_DAYS * 86_400_000
-  const value = `${expires}.${await hmac(sessionKey(env), String(expires))}`
+  const value = `${expires}.${await sessionSignature(env, String(expires))}`
   return `${COOKIE}=${value}; Path=/api/admin; Max-Age=${SESSION_DAYS * 86400}; HttpOnly; Secure; SameSite=Strict`
 }
 
@@ -88,7 +90,7 @@ async function signedIn(request, env) {
   const [expires, sig, extra] = match[1].split('.')
   const expiration = Number(expires)
   if (!sig || extra !== undefined || !Number.isSafeInteger(expiration) || expiration <= Date.now()) return false
-  return sameString(sig, await hmac(sessionKey(env), expires))
+  return sameString(sig, await sessionSignature(env, expires))
 }
 
 export default {
@@ -98,7 +100,11 @@ export default {
     const route = url.pathname.slice('/api/admin/'.length)
     const method = request.method
 
-    if (!env.GITHUB_TOKEN || typeof env.ADMIN_PASSWORD !== 'string' || env.ADMIN_PASSWORD.length < MIN_PASSWORD || !env.LOGIN_RATE_LIMIT) {
+    if (
+      typeof env.ADMIN_PASSWORD !== 'string' || env.ADMIN_PASSWORD.length < MIN_PASSWORD ||
+      typeof env.ADMIN_SESSION_SECRET !== 'string' || env.ADMIN_SESSION_SECRET.trim().length < MIN_SESSION_SECRET_LENGTH ||
+      env.ADMIN_SESSION_SECRET === env.ADMIN_PASSWORD || !env.LOGIN_RATE_LIMIT
+    ) {
       return json({ error: 'The site owner still needs to configure admin sign-in.' }, 503)
     }
     if (method !== 'GET' && method !== 'HEAD' &&
@@ -106,7 +112,10 @@ export default {
       return json({ error: 'Forbidden.' }, 403)
     }
 
-    if (route === 'session' && method === 'GET') return json({ signedIn: await signedIn(request, env) })
+    if (route === 'session' && method === 'GET') {
+      const authenticated = await signedIn(request, env)
+      return json({ signedIn: authenticated, publishingConfigured: authenticated && publishingConfigured(env) })
+    }
 
     if (route === 'login' && method === 'POST') {
       const { success } = await env.LOGIN_RATE_LIMIT.limit({ key: request.headers.get('CF-Connecting-IP') || 'unknown' })
@@ -129,17 +138,30 @@ export default {
     if (route === 'analytics' && method === 'GET') return readAnalytics(env)
 
     if (route.startsWith('github/')) {
+      if (!publishingConfigured(env)) {
+        return json({ message: 'GitHub publishing is not configured for this admin server.' }, 503)
+      }
       const path = '/' + route.slice('github/'.length) + url.search
       // Only this repository's API, and never the admin password file.
       if (path.includes('..') || path.includes('content/admin/auth.json') || path.includes('public/admin-auth.json')) return json({ error: 'Not allowed' }, 403)
+      let token
+      try {
+        token = await publishingToken(env)
+      } catch {
+        return json({ message: 'GitHub App publishing could not be authenticated. Check the GitHub App installation and Worker secret settings.' }, 502)
+      }
       let res
       try {
-        res = await github(env, path, {
+        res = await github(env, token, path, {
           method,
           body: method === 'GET' || method === 'HEAD' ? undefined : await request.text(),
         })
       } catch {
         return json({ message: 'GitHub could not be reached. Try again shortly.' }, 502)
+      }
+      if (res.status === 401) {
+        discardInstallationToken(token)
+        return json({ message: 'GitHub rejected the publishing credential. Try again or check the Worker settings.' }, 502)
       }
       return new Response(res.body, {
         status: res.status,

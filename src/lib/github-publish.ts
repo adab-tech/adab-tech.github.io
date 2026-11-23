@@ -27,6 +27,7 @@ export const ACTIONS_URL = `https://github.com/${OWNER}/${REPO}/actions/workflow
 export const TOKEN_EVENT = 'adamu-token-change'
 const SERVER = '/api/admin'
 let serverMode = false
+let serverPublishingConfigured = false
 let detecting: Promise<boolean> | null = null
 
 // A static deployment can return 404. Other failures must stay visible so
@@ -62,6 +63,26 @@ export function detectAdminServer(): Promise<boolean> {
 }
 
 export const isServerMode = () => serverMode
+export const canPublish = () => serverMode ? serverPublishingConfigured : getToken() !== ''
+
+export function clearAdminSession() {
+  setServerPublishing(false)
+}
+
+function setServerPublishing(configured: boolean) {
+  if (serverPublishingConfigured === configured) return
+  serverPublishingConfigured = configured
+  window.dispatchEvent(new Event(TOKEN_EVENT))
+}
+
+export async function readAdminSession(): Promise<boolean> {
+  const { signedIn, publishingConfigured } = await adminServer<{
+    signedIn: boolean
+    publishingConfigured: boolean
+  }>('session')
+  setServerPublishing(signedIn === true && publishingConfigured === true)
+  return signedIn === true
+}
 
 // Calls to the admin server itself (sign-in, password).
 export async function adminServer<T>(route: string, body?: unknown): Promise<T> {

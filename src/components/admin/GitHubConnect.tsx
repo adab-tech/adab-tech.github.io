@@ -2,7 +2,7 @@
 
 import React, { useState, useSyncExternalStore } from 'react'
 import { KeyRound, Loader2 } from 'lucide-react'
-import { TOKEN_EVENT, checkWriteAccess, forgetToken, getToken, isServerMode, saveToken } from '@/lib/github-publish'
+import { TOKEN_EVENT, canPublish, checkWriteAccess, forgetToken, getToken, isServerMode, saveToken } from '@/lib/github-publish'
 
 // Shared by every admin editor that saves to GitHub (blog, home page,
 // projects, CV): the one-time token setup and a hook that reads the token.
@@ -19,9 +19,7 @@ const subscribeToken = (cb: () => void) => {
 }
 export const useToken = () => useSyncExternalStore(subscribeToken, getToken, () => '')
 
-// Whether this browser can save to GitHub: through the admin server (no token
-// needed) or with a saved token.
-export const useCanPublish = () => useSyncExternalStore(subscribeToken, () => isServerMode() || getToken() !== '', () => false)
+export const useCanPublish = () => useSyncExternalStore(subscribeToken, canPublish, () => false)
 
 export function forgetTokenHere() {
   forgetToken()
@@ -34,6 +32,25 @@ export function TokenSetup() {
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const [checking, setChecking] = useState(false)
+
+  if (isServerMode()) {
+    return (
+      <section className="p-4 rounded-2xl border border-zinc-800 bg-[#0B1120] space-y-2 max-w-3xl">
+        <h2 className="text-sm font-mono font-bold text-zinc-100">GitHub publishing setup</h2>
+        <p className="text-sm text-zinc-300">
+          Connect the site’s GitHub App in Cloudflare to publish changes. You can already write and save drafts on this device.
+        </p>
+        <a
+          href="https://github.com/adab-tech/adab-tech.github.io/blob/main/docs/ADMIN.md#connect-github-publishing"
+          target="_blank"
+          rel="noreferrer"
+          className="text-sm text-gold-500 underline"
+        >
+          GitHub publishing setup guide
+        </a>
+      </section>
+    )
+  }
 
   const connect = async (e: React.FormEvent) => {
     e.preventDefault()

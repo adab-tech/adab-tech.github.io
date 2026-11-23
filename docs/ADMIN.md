@@ -12,22 +12,38 @@ Use **Reset this browser’s password** on the sign-in page if you forget the lo
 
 ## Set up password sign-in on every device
 
-The Cloudflare Worker at `https://adamu.tech/api/admin` stores the publishing token and password as Worker secrets. After it is deployed, sign in with the admin password. The Worker uses a secure, HttpOnly cookie for the session.
+Sign in with the same site password on every device. The Cloudflare Worker uses a secure, HttpOnly cookie for the session. The dashboard and local blog drafts are available with password sign-in. The GitHub publishing connection is a separate setup.
+
+In the [adamu-admin Worker settings](https://dash.cloudflare.com/5e2c8f3d32eb5621a3b94964b6a89ba1/workers/services/view/adamu-admin/production/settings), open **Variables and Secrets** and add these values as **Secret** types:
+
+- `ADMIN_PASSWORD` is a unique site password of at least 10 characters. A password manager can generate and remember it.
+- `ADMIN_SESSION_SECRET` is a separate random signing key. Generate one with `openssl rand -hex 32` on your computer if one is missing. Rotating either sign-in secret ends existing sessions.
+
+The Worker uses `CLOUDFLARE_ANALYTICS_TOKEN` with **Analytics Read** on the site's zone to show visits after sign-in.
+
+### Connect GitHub publishing
+
+A private GitHub App lets the Worker request short-lived publishing credentials automatically. Set it up once for the website repository.
+
+1. Sign in as `adab-tech` and open [New GitHub App](https://github.com/settings/apps/new). Name the app, set the homepage to `https://adamu.tech`, disable the webhook, and choose **Only on this account**.
+2. Under repository permissions, set **Contents** to **Read and write** and **Actions** to **Read-only**. Create the app, then copy its **App ID** from the General settings.
+3. In the app's **Install App** tab, install it on `adab-tech` and select only `adab-tech.github.io`. The installation settings URL ends with the numeric installation ID.
+4. Generate a private key in the app's General settings. In **Variables and Secrets** on the [adamu-admin Worker settings](https://dash.cloudflare.com/5e2c8f3d32eb5621a3b94964b6a89ba1/workers/services/view/adamu-admin/production/settings), save `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, and `GITHUB_APP_PRIVATE_KEY` as **Secret** types. Paste the full downloaded PEM, including its header and footer, into the private key field.
+5. Reload the [site dashboard](https://adamu.tech/admin/) after deploying those secrets. Confirm that the latest site updates load, then publish from the editor when a post or page is ready.
+
+An existing Worker `GITHUB_TOKEN` with repository **Contents read and write** and **Actions read** also works if no GitHub App is configured. Updating publishing credentials preserves password sessions.
 
 ### Deploy from GitHub Actions
 
 1. Find the account ID for the Cloudflare account that owns `adamu.tech`.
 2. Create a Cloudflare API token for deploying the Worker and managing its route in that zone.
-3. Create a [fine-grained GitHub token](https://github.com/settings/personal-access-tokens/new) for only `adab-tech/adab-tech.github.io` with **Contents read and write** and **Actions read**.
-4. Put the values directly in this repository's **Settings → Secrets and variables → Actions**:
+3. In this repository's **Settings → Secrets and variables → Actions**, save:
    - `CLOUDFLARE_ACCOUNT_ID`
    - `CLOUDFLARE_API_TOKEN`
-   - `ADMIN_GITHUB_TOKEN`
-   - `ADMIN_PASSWORD`, a unique password of at least 10 characters
-5. Run [Deploy admin server](https://github.com/adab-tech/adab-tech.github.io/actions/workflows/admin-worker.yml). The workflow skips deployment if it cannot find all four secrets.
-6. Open [the admin session endpoint](https://adamu.tech/api/admin/session). It should return `{"signedIn":false}` in a signed-out browser. If it returns a static 404, check that the `adamu.tech` record is proxied through Cloudflare and the Worker route is present.
-
-In Cloudflare the corresponding Worker secrets are `GITHUB_TOKEN` and `ADMIN_PASSWORD`. For an Actions-managed deployment, update the corresponding GitHub secret and rerun the workflow when a credential needs to change. When managing the Worker directly, rotate its secret in **Cloudflare → Workers & Pages → adamu-admin → Settings → Variables and Secrets**. Rotating either credential ends existing admin sessions.
+   - `ADMIN_PASSWORD` and `ADMIN_SESSION_SECRET` from the sign-in setup
+   - Optional publishing secrets `GITHUB_APP_ID`, `GITHUB_APP_INSTALLATION_ID`, and `GITHUB_APP_PRIVATE_KEY`. For an existing token-based setup, use `ADMIN_GITHUB_TOKEN`.
+4. Run [Deploy admin server](https://github.com/adab-tech/adab-tech.github.io/actions/workflows/admin-worker.yml). The workflow checks its four required secrets before deploying.
+5. Open [the admin session endpoint](https://adamu.tech/api/admin/session). In a signed-out browser it should return `{"signedIn":false,"publishingConfigured":false}`. A static 404 means the Worker route is not active. Check that the DNS record is proxied through Cloudflare and that `adamu.tech/api/admin/*` points to `adamu-admin`.
 
 ## What you can change
 

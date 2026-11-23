@@ -1,10 +1,7 @@
 name: Deploy admin server
 
-# Deploys admin-worker/ (adamu.tech/api/admin) to Cloudflare's free tier, so
-# the admin needs only a password. Needs four repository secrets (Settings ->
-# Secrets and variables -> Actions): CLOUDFLARE_API_TOKEN,
-# CLOUDFLARE_ACCOUNT_ID, ADMIN_GITHUB_TOKEN, ADMIN_PASSWORD. Without them the
-# job does nothing and passes. See docs/ADMIN.md, "Admin server".
+# Deploys the password sign-in Worker to adamu.tech/api/admin.
+# See docs/ADMIN.md for required and optional secrets.
 on:
   push:
     branches: ["main"]
@@ -26,6 +23,10 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       ADMIN_GITHUB_TOKEN: ${{ secrets.ADMIN_GITHUB_TOKEN }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+      ADMIN_SESSION_SECRET: ${{ secrets.ADMIN_SESSION_SECRET }}
+      GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
+      GITHUB_APP_INSTALLATION_ID: ${{ secrets.GITHUB_APP_INSTALLATION_ID }}
+      GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
       WRANGLER: npx --yes wrangler@4
     defaults:
       run:
@@ -36,7 +37,7 @@ jobs:
         working-directory: .
         run: |
           missing=""
-          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID ADMIN_GITHUB_TOKEN ADMIN_PASSWORD; do
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID ADMIN_PASSWORD ADMIN_SESSION_SECRET; do
             if [ -z "${!name}" ]; then missing="$missing $name"; fi
           done
           if [ -n "$missing" ]; then
@@ -59,15 +60,23 @@ jobs:
         if: steps.secrets.outputs.ready == 'true'
         run: node --test test/auth.test.mjs
 
-      - name: Deploy the Worker
-        if: steps.secrets.outputs.ready == 'true'
-        run: $WRANGLER deploy
-
-      - name: Set its secrets
+      - name: Deploy the Worker with its secrets
         if: steps.secrets.outputs.ready == 'true'
         run: |
-          printf '%s' "$ADMIN_GITHUB_TOKEN" | $WRANGLER secret put GITHUB_TOKEN
-          printf '%s' "$ADMIN_PASSWORD" | $WRANGLER secret put ADMIN_PASSWORD
+          umask 077
+          worker_secrets=$(mktemp)
+          trap 'rm -f "$worker_secrets"' EXIT
+          node --input-type=module - "$worker_secrets" <<'JS'
+          import { writeFileSync } from 'node:fs'
+          const names = [
+            'ADMIN_PASSWORD', 'ADMIN_SESSION_SECRET',
+            'GITHUB_APP_ID', 'GITHUB_APP_INSTALLATION_ID', 'GITHUB_APP_PRIVATE_KEY',
+          ]
+          const secrets = Object.fromEntries(names.filter((name) => process.env[name]).map((name) => [name, process.env[name]]))
+          if (process.env.ADMIN_GITHUB_TOKEN) secrets.GITHUB_TOKEN = process.env.ADMIN_GITHUB_TOKEN
+          writeFileSync(process.argv[2], JSON.stringify(secrets))
+          JS
+          $WRANGLER deploy --secrets-file "$worker_secrets"
 
       - name: Check it answers
         if: steps.secrets.outputs.ready == 'true'

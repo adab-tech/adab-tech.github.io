@@ -1,9 +1,6 @@
 # Cloudflare Worker behind adamu.tech/admin (free tier).
-# It keeps the GitHub token as an encrypted Worker secret and lets the admin
-# pages save to the site repository after you sign in with your password,
-# so no browser ever needs a GitHub token. Deployed by
-# .github/workflows/admin-worker.yml, which also sets its two secrets
-# (GITHUB_TOKEN, ADMIN_PASSWORD). See docs/ADMIN.md, "Admin server".
+# Sign-in uses a site password. The Worker uses its own GitHub credentials
+# to publish changes to the repository. See docs/ADMIN.md for setup.
 name = "adamu-admin"
 main = "src/index.js"
 compatibility_date = "2026-09-01"
