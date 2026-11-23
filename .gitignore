@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+/public/downloads/Adamu-Danjuma-Abubakar-CV.docx
+/public/downloads/Adamu-Danjuma-Abubakar-CV.pdf
 
 # production
 /build

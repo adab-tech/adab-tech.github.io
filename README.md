@@ -24,6 +24,11 @@ Related live systems: [app.murya.ng](https://app.murya.ng) · [globalopportuniti
 
 ## Local development
 
+The dev server and production build regenerate the CV downloads from
+`content/site/cv.json`. Install LibreOffice Writer (`soffice` on PATH) and
+`python-docx==1.2.0` in the Python 3 environment used by `npm`. Run
+`npm run export:cv` to refresh the files while the dev server is running.
+
 ```bash
 npm install
 npm run dev

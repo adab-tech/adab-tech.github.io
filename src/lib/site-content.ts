@@ -98,6 +98,7 @@ export interface CvContent {
   }
   name: string
   headline: string
+  summary?: string
   location: string
   website: string
   websiteUrl?: string
@@ -204,6 +205,7 @@ export function validateHome(d: HomeContent): string[] {
 export function validateCv(d: CvContent): string[] {
   const problems: string[] = []
   checkOptionalTextGroup(problems, 'CV metadata', d.metadata, ['title', 'description'])
+  checkOptionalText(problems, 'CV profile', d.summary)
   checkOptionalTextGroup(problems, 'CV section headings', d.sectionHeadings, ['education', 'experience', 'languages', 'publications', 'datasets'])
   checkOptionalText(problems, 'Google Scholar link text', d.scholarLabel)
   if (d.websiteUrl !== undefined) checkLink(problems, 'CV website link', d.websiteUrl)
